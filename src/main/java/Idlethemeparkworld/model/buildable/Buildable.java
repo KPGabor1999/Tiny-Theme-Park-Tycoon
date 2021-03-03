@@ -7,6 +7,6 @@ public abstract class Buildable {
     protected boolean underConstruction;
     protected int condition;
     
-    public abstract void build();
+    public abstract void build(); //i'm not actually sure if we actually need this
     public abstract void upgrade();
 }

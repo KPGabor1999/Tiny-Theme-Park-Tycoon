@@ -1,5 +1,7 @@
 package Idlethemeparkworld.model;
 
+import Idlethemeparkworld.model.buildable.Building;
+
 public class Tile {
     private int x, y;
     private boolean isBase;

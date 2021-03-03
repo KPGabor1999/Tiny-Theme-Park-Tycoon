@@ -1,5 +1,8 @@
 package Idlethemeparkworld.model;
 
+import Idlethemeparkworld.model.buildable.Building;
+import Idlethemeparkworld.model.buildable.attraction.Attraction;
+
 public class Park {
     private int funds;
     private Tile[][] tiles;
