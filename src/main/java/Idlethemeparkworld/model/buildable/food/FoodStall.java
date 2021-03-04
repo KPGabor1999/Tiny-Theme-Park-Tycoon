@@ -2,7 +2,7 @@ package Idlethemeparkworld.model.buildable.food;
 
 import Idlethemeparkworld.model.buildable.Building;
 
-public class FoodStall {
+public abstract class FoodStall extends Building {
     protected int capacity;
     protected int occupied;
     protected int price;
