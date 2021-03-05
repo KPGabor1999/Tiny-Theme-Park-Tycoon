@@ -1,11 +1,13 @@
 package Idlethemeparkworld;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import javax.swing.AbstractAction;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -58,7 +60,7 @@ public class Main extends JFrame{
         menuBar.add(menuGame);
         setJMenuBar(menuBar);
         
-        setLayout(new BorderLayout(0, 10));
+        getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         
         /*---------------------------------------------------------*/
         
@@ -78,13 +80,46 @@ public class Main extends JFrame{
 
         JPanel informationPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         ((FlowLayout)informationPanel.getLayout()).setHgap(50);
+        informationPanel.setMaximumSize( new Dimension(Integer.MAX_VALUE,50));
+        
         informationPanel.setBackground(Color.darkGray);
         informationPanel.add(timeLabel);
         informationPanel.add(moneyLabel);
         informationPanel.add(visitorCountLabel);
         informationPanel.add(happinessLabel);
         
-        add(informationPanel, BorderLayout.NORTH);
+        add(informationPanel);
+        
+        /*---------------------------------------------------------*/
+        
+        JComboBox buildingChooser = new javax.swing.JComboBox<>();
+        JButton buildButton = new javax.swing.JButton();
+        JButton administrationButton = new javax.swing.JButton();
+        JButton slowButton = new javax.swing.JButton();
+        JButton pauseButton = new javax.swing.JButton();
+        JButton accelerateButton = new javax.swing.JButton();
+        
+        buildingChooser.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Attraction1", "Attraction2", "FoodStall1", "FoodStall2" }));
+        
+        buildButton.setText("Build");
+        administrationButton.setText("Administration");
+        slowButton.setText("<<");
+        pauseButton.setText("||");
+        accelerateButton.setText(">>");
+
+        JPanel controlPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        ((FlowLayout)controlPanel.getLayout()).setHgap(20);
+        informationPanel.setMaximumSize( new Dimension(Integer.MAX_VALUE,50));
+        
+        controlPanel.setBackground(Color.darkGray);
+        controlPanel.add(buildingChooser);
+        controlPanel.add(buildButton);
+        controlPanel.add(administrationButton);
+        controlPanel.add(slowButton);
+        controlPanel.add(pauseButton);
+        controlPanel.add(accelerateButton);
+        
+        add(controlPanel);
         
         setLocationRelativeTo(null);
         //pack();
