@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import javax.swing.AbstractAction;
 import javax.swing.BoxLayout;
@@ -17,6 +18,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
+import Idlethemeparkworld.view.AdministrationDialog;
 
 public class Main extends JFrame{  
     private final JLabel timeLabel; 
@@ -132,6 +134,14 @@ public class Main extends JFrame{
         controlPanel.add(accelerateButton);
         controlPanel.setMaximumSize( new Dimension(Integer.MAX_VALUE,50));
         
+        administrationButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setPricesAndEmployees();
+            }
+            
+        });
+        
         add(controlPanel);
         
         JPanel buildingPanel = new JPanel(new GridLayout(10, 10));              //Játéktábla legenerálása.
@@ -146,10 +156,16 @@ public class Main extends JFrame{
             }
         }
         add(buildingPanel);
+        System.out.println("buttonGrid generation complete!");
         
         setLocationRelativeTo(null);
         //pack();
         setVisible(true);
+    }
+    
+    public void setPricesAndEmployees(){
+        AdministrationDialog adminDialog = new AdministrationDialog(this, "Administration");
+        adminDialog.setVisible(true);
     }
     
     public static void main(String[] args) {
