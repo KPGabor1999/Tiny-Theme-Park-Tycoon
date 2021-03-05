@@ -3,6 +3,7 @@ package Idlethemeparkworld;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import javax.swing.AbstractAction;
@@ -22,6 +23,7 @@ public class Main extends JFrame{
     private final JLabel moneyLabel; 
     private final JLabel visitorCountLabel;
     private final JLabel happinessLabel; 
+    private final JButton[][] buttonGrid;
     public Main() throws IOException{
         setTitle("Idle Theme Park World");
         setSize(600, 600);
@@ -99,7 +101,17 @@ public class Main extends JFrame{
         JButton pauseButton = new javax.swing.JButton();
         JButton accelerateButton = new javax.swing.JButton();
         
-        buildingChooser.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Attraction1", "Attraction2", "FoodStall1", "FoodStall2" }));
+        buildingChooser.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {
+            "Trash can",
+            "Bathrooms",
+            "Hot dog stand",
+            "Ice cream parlor",
+            "Burger joint",
+            "Carousel",
+            "Ferris Wheel",
+            "Swinging Ship",
+            "Roller coaster",
+            "Haunted mansion"}));
         
         buildButton.setText("Build");
         administrationButton.setText("Administration");
@@ -118,8 +130,22 @@ public class Main extends JFrame{
         controlPanel.add(slowButton);
         controlPanel.add(pauseButton);
         controlPanel.add(accelerateButton);
+        controlPanel.setMaximumSize( new Dimension(Integer.MAX_VALUE,50));
         
         add(controlPanel);
+        
+        JPanel buildingPanel = new JPanel(new GridLayout(10, 10));              //Játéktábla legenerálása.
+        buttonGrid = new JButton[10][10];
+        for(int row=0; row<buttonGrid.length; row++){
+            for(int column=0; column<buttonGrid[0].length; column++){
+                JButton currentButton = buttonGrid[row][column];
+                currentButton = new JButton("B");
+                currentButton.setSize(32, 32);
+                currentButton.setBackground(Color.green);
+                buildingPanel.add(currentButton);
+            }
+        }
+        add(buildingPanel);
         
         setLocationRelativeTo(null);
         //pack();
