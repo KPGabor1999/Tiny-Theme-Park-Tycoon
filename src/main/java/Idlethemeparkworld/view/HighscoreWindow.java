@@ -1,5 +1,6 @@
 package Idlethemeparkworld.view;
 
+import Idlethemeparkworld.misc.Highscore;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JDialog;
@@ -15,9 +16,9 @@ import javax.swing.table.TableRowSorter;
 public class HighscoreWindow extends JDialog {
     private final JTable table;
     
-    public HighscoreWindow(ArrayList<Highscore> highScores, JFrame parent) {
+    public HighscoreWindow(ArrayList<Highscore> highscores, JFrame parent) {
         super(parent, true);
-        table = new JTable(new HighscoreTableModel(highScores));
+        table = new JTable(new HighscoreTable(highscores));
         table.setFillsViewportHeight(true);
 
         TableRowSorter<TableModel> sorter
