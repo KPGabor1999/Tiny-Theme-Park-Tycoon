@@ -115,5 +115,10 @@ public class AdministrationDialog extends JDialog {
         this.getContentPane().add(employeeSettingsPanel);
         
         this.pack();
+        
+        int screenHeight = (int) (Toolkit.getDefaultToolkit().getScreenSize().height - this.getHeight()) / 2;
+        int screenWidth = (int) (Toolkit.getDefaultToolkit().getScreenSize().width - this.getWidth()) / 2;
+        System.out.println(screenHeight + " " + screenWidth);
+        this.setLocation(screenWidth, screenHeight);
     }
 }
