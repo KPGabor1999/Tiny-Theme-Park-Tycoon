@@ -1,18 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Idlethemeparkworld.view;
 
 import java.awt.*;
 import javax.swing.*;
 import static javax.swing.BoxLayout.Y_AXIS;
 
-/**
- *
- * @author KrazyXL
- */
 public class AdministrationDialog extends JDialog {
     private JLabel pricesLabel;
     
