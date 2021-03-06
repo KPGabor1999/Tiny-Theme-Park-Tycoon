@@ -29,7 +29,7 @@ public class Highscores {
                 highscores.add(new Highscore(data[0], Integer.parseInt(data[1])));
              }
         } catch(IOException e) {
-            System.err.println("Error reading leaderboard");
+            
         }
     }
     
