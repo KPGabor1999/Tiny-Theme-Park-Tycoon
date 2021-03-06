@@ -18,9 +18,17 @@ public class Park {
     }
     
     private void initializePark(){
-        /*  1.Make sure all tiles are empty
-            2.Spawn in the gate tile
-        */
+        //1.Make sure all tiles are empty
+        for(int row=0; row<tiles.length; row++){
+            for(int column=0; column<tiles[0].length; column++){
+                tiles[row][column] = new Tile(column, row);
+            }
+        }
+        //2.Spawn in the gate tile
+    }
+    
+    public Tile getTile(int x, int y){
+        return tiles[y][x];
     }
     
     public Building getBuildings(){

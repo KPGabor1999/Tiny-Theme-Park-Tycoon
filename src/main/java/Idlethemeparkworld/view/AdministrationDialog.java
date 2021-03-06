@@ -1,7 +1,9 @@
 package Idlethemeparkworld.view;
 
 import java.awt.*;
+import static java.awt.Component.CENTER_ALIGNMENT;
 import javax.swing.*;
+import javax.swing.JDialog;
 import static javax.swing.BoxLayout.Y_AXIS;
 
 public class AdministrationDialog extends JDialog {
@@ -30,6 +32,7 @@ public class AdministrationDialog extends JDialog {
     public AdministrationDialog(Frame owner, String title){
         super(owner, title);
         
+        this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         this.getContentPane().setLayout(new BoxLayout(this.getContentPane(), Y_AXIS));
         
         pricesLabel = new JLabel("Árak");
