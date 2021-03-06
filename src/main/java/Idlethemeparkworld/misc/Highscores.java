@@ -26,12 +26,12 @@ public class Highscores {
 
     public void putHighscore(String name, int score) {
         if (highscores.size() < maxscores) {
-            insertscore(name, score);
+            insertScore(name, score);
         } else {
-            int leastscore = highscores.get(highscores.size() - 1).getScore();
-            if (leastscore < score) {
+            int worstScore = highscores.get(highscores.size() - 1).getScore();
+            if (worstScore < score) {
                 highscores.remove(highscores.size() - 1);
-                insertscore(name, score);
+                insertScore(name, score);
             }
         }
     }
@@ -40,7 +40,7 @@ public class Highscores {
         Collections.sort(highscores, (Highscore t, Highscore t1) -> t1.getScore() - t.getScore());
     }
 
-    private void insertscore(String name, int score) {
+    private void insertScore(String name, int score) {
         highscores.add(new Highscore(name, score));
         sortHighscores();
         
