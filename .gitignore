@@ -33,3 +33,6 @@ gradle-app.setting
 *.iws
 *.iml
 com_crashlytics_export_strings.xml
+
+## misc
+leaderboard.txt
