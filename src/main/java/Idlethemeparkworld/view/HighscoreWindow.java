@@ -30,7 +30,7 @@ public class HighscoreWindow extends JDialog {
         table.setRowSorter(sorter);
 
         add(new JScrollPane(table));
-        setSize(400, 400);
+        setSize(400, 250);
         setTitle("Leaderboards");
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
