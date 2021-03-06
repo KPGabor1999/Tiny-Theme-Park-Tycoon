@@ -1,22 +1,24 @@
 package Idlethemeparkworld;
 
+import Idlethemeparkworld.misc.Highscores;
+import Idlethemeparkworld.view.HighscoreWindow;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-import javax.swing.AbstractAction;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import java.awt.event.ActionEvent;
+import java.io.IOException;
+import javax.swing.AbstractAction;
+import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 import Idlethemeparkworld.view.AdministrationDialog;
 
@@ -26,6 +28,8 @@ public class Main extends JFrame{
     private final JLabel visitorCountLabel;
     private final JLabel happinessLabel; 
     private final JButton[][] buttonGrid;
+    Highscores highscores;
+    
     public Main() throws IOException{
         setTitle("Idle Theme Park World");
         setSize(600, 600);
@@ -43,10 +47,11 @@ public class Main extends JFrame{
             }
         });
         
+        this.highscores = new Highscores(10);
         JMenuItem menuHighScores = new JMenuItem(new AbstractAction("Leaderboards") {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //
+                new HighscoreWindow(highscores.getHighscores(), Main.this);
             }
         });
         
