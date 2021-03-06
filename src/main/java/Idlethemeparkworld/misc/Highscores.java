@@ -1,10 +1,12 @@
 package Idlethemeparkworld.misc;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Scanner;
 
 public class Highscores {
     int maxscores;
@@ -12,12 +14,23 @@ public class Highscores {
 
     public Highscores(int maxscores){
         this.maxscores = maxscores;
-        this.highscores = readHighscores();
+        this.highscores = new ArrayList<>();
+        readHighscores();
     }
 
-    private ArrayList<Highscore> readHighscores(){
-        ArrayList<Highscore> hs = new ArrayList<>();
-        return hs;
+    private void readHighscores(){
+        highscores.clear();
+        try{
+            File f = new File("leaderboard.txt");
+            Scanner sc = new Scanner(f);
+            while (sc.hasNextLine()) {
+                String line = sc.nextLine();
+                String[] data = line.split("\t");
+                highscores.add(new Highscore(data[0], Integer.parseInt(data[1])));
+             }
+        } catch(IOException e) {
+            System.err.println("Error reading leaderboard");
+        }
     }
     
     public ArrayList<Highscore> getHighscores() {
