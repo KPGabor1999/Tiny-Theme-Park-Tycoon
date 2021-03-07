@@ -40,6 +40,14 @@ public class Park {
         //2.Spawn in the gate tile
     }
     
+    public int getWidth(){
+        return 10;
+    }
+    
+    public int getHeight(){
+        return 10;
+    }
+    
     public Tile getTile(int x, int y){
         return tiles[y][x];
     }

@@ -37,6 +37,6 @@ public class BuildingOptionsDialog extends JDialog{
             int width = (Toolkit.getDefaultToolkit().getScreenSize().width - this.getWidth())/2;
             int height = (Toolkit.getDefaultToolkit().getScreenSize().height - this.getHeight())/2;
             this.setLocation(width, height);
-        }
+        } 
     }
 }

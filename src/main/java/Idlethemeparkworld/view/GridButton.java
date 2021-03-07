@@ -9,11 +9,12 @@ import javax.swing.JButton;
  * @author KrazyXL
  */
 public class GridButton extends JButton{
-    private Tile assignedTile;
     
-    public GridButton(Tile assignedTile){
-        super("GRASS");
-        this.assignedTile = assignedTile ;
-        
+    public GridButton(){
+        super("");
+    }
+    
+    public void changeTile(String type){
+        setText(type);
     }
 }

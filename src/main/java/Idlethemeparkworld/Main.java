@@ -23,6 +23,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.WindowConstants;
 import Idlethemeparkworld.view.AdministrationDialog;
+import Idlethemeparkworld.view.Board;
 import Idlethemeparkworld.view.BuildingOptionsDialog;
 import Idlethemeparkworld.view.GridButton;
 
@@ -31,7 +32,7 @@ public class Main extends JFrame{
     private final JLabel moneyLabel; 
     private final JLabel visitorCountLabel;
     private final JLabel happinessLabel; 
-    private final GridButton[][] buttonGrid;
+    private Board board;
     
     Park park;
     Highscores highscores;
@@ -157,14 +158,8 @@ public class Main extends JFrame{
         
         park = new Park();
         
-        JPanel buildingPanel = new JPanel(new GridLayout(10, 10));              //Játéktábla legenerálása.
-        buttonGrid = new GridButton[10][10];
-        for(int row=0; row<buttonGrid.length; row++){
-            for(int column=0; column<buttonGrid[0].length; column++){
-                addGridButton(buildingPanel, row, column);
-            }
-        }
-        add(buildingPanel);
+        board = new Board(park);
+        add(board);
         System.out.println("buttonGrid generation complete!");
         
         setLocationRelativeTo(null);
@@ -175,27 +170,6 @@ public class Main extends JFrame{
     public void setPricesAndEmployees(){
         AdministrationDialog adminDialog = new AdministrationDialog(this, "Administration");
         adminDialog.setVisible(true);
-    }
-    
-    public void addGridButton(JPanel buildingPanel, int row, int column){
-        GridButton currentButton = buttonGrid[row][column];
-                currentButton = new GridButton(park.getTile(column, row));
-                currentButton.setSize(32, 32);
-                currentButton.setBackground(Color.green);
-                currentButton.addActionListener(new ActionListener(){
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        showBuildingOptions(row, column);
-                    }
-                });
-        buildingPanel.add(currentButton);
-    }
-    
-    public void showBuildingOptions(int row, int column){
-        //Display building details using tile grid
-        Building currentBuilding = park.getTile(row, column).getBuilding();
-        BuildingOptionsDialog buildingOptions = new BuildingOptionsDialog(this, currentBuilding);
-        buildingOptions.setVisible(true);
     }
     
     public static void main(String[] args) {

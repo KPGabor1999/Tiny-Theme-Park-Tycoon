@@ -10,7 +10,7 @@ public enum BuildType {
     CAROUSEL(1,1),
     FERRISWHEEL(1,1),
     SWINGINGSHIP(1,1),
-    TOLLERCOASTER(1,1),
+    ROLLERCOASTER(1,1),
     HAUNTEDMANSION(1,1);
     
     private final int width, length;
