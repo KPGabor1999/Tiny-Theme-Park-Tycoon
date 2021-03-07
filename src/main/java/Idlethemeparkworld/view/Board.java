@@ -38,7 +38,7 @@ public class Board extends JPanel {
         this.park.build(BuildType.CAROUSEL, 6, 1);
         
         setBackground(Color.BLACK);
-        resizeMap(10, 10);
+        resizeMap(park.getHeight(), park.getWidth());
         updateMap();
     }
 
@@ -55,27 +55,27 @@ public class Board extends JPanel {
         removeAll();
         setLayout(new GridLayout(rows, columns));
         buttonGrid = new GridButton[rows][columns];
-        for(int row=0; row<buttonGrid.length; row++){
-            for(int column=0; column<buttonGrid[0].length; column++){
-                addGridButton(row, column);
+        for(int y=0; y<buttonGrid.length; y++){
+            for(int x=0; x<buttonGrid[0].length; x++){
+                addGridButton(x, y);
             }
         }
     }
 
-    private void addGridButton(int row, int column){
-        buttonGrid[row][column] = new GridButton();
-        buttonGrid[row][column].setSize(32, 32);
-        buttonGrid[row][column].addActionListener(new ActionListener(){
+    private void addGridButton(int x, int y){
+        buttonGrid[y][x] = new GridButton();
+        buttonGrid[y][x].setSize(32, 32);
+        buttonGrid[y][x].addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                showBuildingOptions(row, column);
+                showBuildingOptions(x, y);
             }
         });
-        add(buttonGrid[row][column]);
+        add(buttonGrid[y][x]);
     }
     
-    private void showBuildingOptions(int row, int column){
-        Building currentBuilding = park.getTile(row, column).getBuilding();
+    private void showBuildingOptions(int x, int y){
+        Building currentBuilding = park.getTile(x, y).getBuilding();
         JFrame parentFrame = (JFrame) getRootPane().getParent();
         BuildingOptionsDialog buildingOptions = new BuildingOptionsDialog(parentFrame, currentBuilding);
         buildingOptions.setVisible(true);

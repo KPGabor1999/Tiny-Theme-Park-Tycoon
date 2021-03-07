@@ -41,11 +41,11 @@ public class Park {
     }
     
     public int getWidth(){
-        return 10;
+        return tiles[0].length;
     }
     
     public int getHeight(){
-        return 10;
+        return tiles.length;
     }
     
     public Tile getTile(int x, int y){
