@@ -16,8 +16,6 @@ public abstract class Building extends Buildable{
         return name;
     }
     
-    
-    
     public void build(){
         
     }
