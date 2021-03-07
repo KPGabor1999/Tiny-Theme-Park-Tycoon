@@ -97,11 +97,10 @@ public class Board extends JPanel {
                     } else if(b instanceof FoodStall){
                         gd.setBackground(Color.ORANGE);
                     } else if(b instanceof Infrastructure){
-                        gd.setBackground(Color.BLUE);
+                        gd.setBackground(Color.CYAN);
                     }
                     gd.changeTile(park.getTile(x, y).getBuilding().getName());
                 }
-                
             }
         }
     }
