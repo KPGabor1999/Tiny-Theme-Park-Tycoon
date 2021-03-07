@@ -32,6 +32,8 @@ public class Board extends JPanel {
         this.park.build(BuildType.SWINGINGSHIP, 0, 4);
         
         this.park.build(BuildType.BURGERJOINT, 1, 0);
+        this.park.build(BuildType.HOTDOGSTAND, 1, 1);
+        this.park.build(BuildType.ICECREAMPARLOR, 1, 2);
         
         this.park.build(BuildType.PAVEMENT, 2, 0);
         this.park.build(BuildType.TOILET, 2, 1);
