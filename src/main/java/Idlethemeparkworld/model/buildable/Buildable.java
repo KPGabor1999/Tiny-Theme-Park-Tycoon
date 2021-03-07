@@ -6,9 +6,8 @@ public abstract class Buildable {
     protected BuildType buildingType; 
     protected int buildingCost;
     protected int upgradeCost;
-    protected int upKeepCost;
+    protected int upkeepCost;
     protected boolean underConstruction;
-    protected int condition;
 
     public BuildType getBuildingType() {
         return buildingType;
@@ -22,16 +21,12 @@ public abstract class Buildable {
         return upgradeCost;
     }
 
-    public int getUpKeepCost() {
-        return upKeepCost;
+    public int getUpkeepCost() {
+        return upkeepCost;
     }
 
     public boolean isUnderConstruction() {
         return underConstruction;
-    }
-
-    public int getCondition() {
-        return condition;
     }
     
     

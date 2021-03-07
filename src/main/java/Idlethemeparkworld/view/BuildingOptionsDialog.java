@@ -19,21 +19,19 @@ import javax.swing.WindowConstants;
  * @author KrazyXL
  */
 public class BuildingOptionsDialog extends JDialog{
+    //Itt csak azok legyenek, amik mindegyik épülettípusra vonatkoznak, a többi legyen csak az if feltétel ágakban.
     JPanel statsPanel;
     JLabel nameLabel;
-    JLabel descriptionLabel;
     JLabel capacityTextLabel;
     JLabel capacityNumberLabel;
     JLabel occupiedTextLabel;
     JLabel occupiedNumberLabel;
-    JLabel foodPriceTextLabel;
-    JLabel foodPriceNumberLabel;
-    JLabel foodQualityTextLabel;
-    JLabel foodQualityNumberLabel;
-    JLabel upKeepCostTextLabel;
-    JLabel upKeepCostNumberLabel;
-    JLabel conditionTextLabel;
+    JLabel upkeepCostTextLabel;
+    JLabel upkeepCostNumberLabel;
+    
+    JLabel conditionTextLabel;      //Ez csak az attrakciókhoz kell.
     JLabel conditionNumberLabel;
+    
     JButton upgradeButton;
     JButton demolishButton;
     
@@ -46,29 +44,73 @@ public class BuildingOptionsDialog extends JDialog{
         if(currentBuilding == null){
             nameLabel = new JLabel("Grass");
             nameLabel.setAlignmentX(CENTER_ALIGNMENT);
-            descriptionLabel = new JLabel("Free real estate to build buildings on.");
+            JLabel descriptionLabel = new JLabel("Free real estate to build buildings on.");
             descriptionLabel.setAlignmentX(CENTER_ALIGNMENT);
             
             this.getContentPane().add(nameLabel);
             this.getContentPane().add(descriptionLabel);
         } else if(currentBuilding instanceof Attraction){
+            nameLabel = new JLabel(currentBuilding.getName());
+            nameLabel.setAlignmentX(CENTER_ALIGNMENT);
+            
+            //isRunning
+            statsPanel = new JPanel(new GridLayout(7, 2));
+            JLabel funTextLabel = new JLabel("Fun: ");
+            JLabel funNumberLabel = new JLabel(((Attraction) currentBuilding).getFun()+ "");
+            capacityTextLabel = new JLabel("Capacity: ");
+            capacityNumberLabel = new JLabel(((Attraction) currentBuilding).getCapacity() + "");
+            occupiedTextLabel = new JLabel("Occupied: ");
+            occupiedNumberLabel = new JLabel(((Attraction) currentBuilding).getOccupied() + "");
+            JLabel runTimeTextLabel = new JLabel("Runtime: ");
+            JLabel runTimeNumberLabel = new JLabel(((Attraction) currentBuilding).getRuntime() + "");
+            JLabel entryFeeTextLabel = new JLabel("Entry fee: ");
+            JLabel entryFeeNumberLabel = new JLabel(((Attraction) currentBuilding).getEntryFee() + "");
+            upkeepCostTextLabel = new JLabel("Upkeep cost: ");
+            upkeepCostNumberLabel = new JLabel(((Attraction) currentBuilding).getUpkeepCost() + "");
+            JLabel conditionTextLabel = new JLabel("Condition: ");
+            JLabel conditionNumberLabel = new JLabel(((Attraction) currentBuilding).getCondition() + "");
+            
+            upgradeButton = new JButton("Upgrade: costs " + currentBuilding.getUpgradeCost() + "$");
+            upgradeButton.setAlignmentX(CENTER_ALIGNMENT);
+            //Fejlesztés gomb eseménykezelése
+            
+            demolishButton = new JButton("Demolish: returns " + currentBuilding.getBuildingCost()/2 + "$");
+            demolishButton.setAlignmentX(CENTER_ALIGNMENT);
+            //Lebontás gomb eseménykezelése
+            
+            this.getContentPane().add(nameLabel);
+            statsPanel.add(funTextLabel);
+            statsPanel.add(funNumberLabel);
+            statsPanel.add(capacityTextLabel);
+            statsPanel.add(capacityNumberLabel);
+            statsPanel.add(occupiedTextLabel);
+            statsPanel.add(occupiedNumberLabel);
+            statsPanel.add(runTimeTextLabel);
+            statsPanel.add(runTimeNumberLabel);
+            statsPanel.add(entryFeeTextLabel);
+            statsPanel.add(entryFeeNumberLabel);
+            statsPanel.add(upkeepCostTextLabel);
+            statsPanel.add(upkeepCostNumberLabel);
+            statsPanel.add(conditionTextLabel);
+            statsPanel.add(conditionNumberLabel);
+            this.getContentPane().add(statsPanel);
+            this.getContentPane().add(upgradeButton);
+            this.getContentPane().add(demolishButton);
         } else if(currentBuilding instanceof FoodStall){
             nameLabel = new JLabel(currentBuilding.getName());
             nameLabel.setAlignmentX(CENTER_ALIGNMENT);
             
-            statsPanel = new JPanel(new GridLayout(6, 2));
+            statsPanel = new JPanel(new GridLayout(5, 2));
             capacityTextLabel = new JLabel("Capacity: ");
             capacityNumberLabel = new JLabel(((FoodStall) currentBuilding).getCapacity() + "");
             occupiedTextLabel = new JLabel("Occupied: ");
             occupiedNumberLabel = new JLabel(((FoodStall) currentBuilding).getOccupied()+ "");
-            foodPriceTextLabel = new JLabel("Food price: ");
-            foodPriceNumberLabel = new JLabel(((FoodStall) currentBuilding).getFoodPrice()+ "");
-            foodQualityTextLabel = new JLabel("Food quality: ");
-            foodQualityNumberLabel = new JLabel(((FoodStall) currentBuilding).getFoodQuality()+ "");
-            upKeepCostTextLabel = new JLabel("Upkeep cost: ");
-            upKeepCostNumberLabel = new JLabel(((FoodStall) currentBuilding).getUpKeepCost()+ "");
-            conditionTextLabel = new JLabel("Condition: ");
-            conditionNumberLabel = new JLabel(((FoodStall) currentBuilding).getCondition()+ "");
+            JLabel foodPriceTextLabel = new JLabel("Food price: ");
+            JLabel foodPriceNumberLabel = new JLabel(((FoodStall) currentBuilding).getFoodPrice()+ "");
+            JLabel foodQualityTextLabel = new JLabel("Food quality: ");
+            JLabel foodQualityNumberLabel = new JLabel(((FoodStall) currentBuilding).getFoodQuality()+ "");
+            upkeepCostTextLabel = new JLabel("Upkeep cost: ");
+            upkeepCostNumberLabel = new JLabel(((FoodStall) currentBuilding).getUpkeepCost()+ "");
             
             upgradeButton = new JButton("Upgrade: costs " + currentBuilding.getUpgradeCost() + "$");
             upgradeButton.setAlignmentX(CENTER_ALIGNMENT);
@@ -87,8 +129,8 @@ public class BuildingOptionsDialog extends JDialog{
             statsPanel.add(foodPriceNumberLabel);
             statsPanel.add(foodQualityTextLabel);
             statsPanel.add(foodQualityNumberLabel);
-            statsPanel.add(upKeepCostTextLabel);
-            statsPanel.add(upKeepCostNumberLabel);
+            statsPanel.add(upkeepCostTextLabel);
+            statsPanel.add(upkeepCostNumberLabel);
             this.getContentPane().add(statsPanel);
             this.getContentPane().add(upgradeButton);
             this.getContentPane().add(demolishButton);
