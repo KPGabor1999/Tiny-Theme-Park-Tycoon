@@ -1,9 +1,13 @@
 package Idlethemeparkworld.view;
 
+import Idlethemeparkworld.model.buildable.Buildable;
 import Idlethemeparkworld.model.buildable.Building;
 import Idlethemeparkworld.model.buildable.attraction.Attraction;
 import Idlethemeparkworld.model.buildable.food.FoodStall;
 import Idlethemeparkworld.model.buildable.infrastucture.Infrastructure;
+import Idlethemeparkworld.model.buildable.infrastucture.Pavement;
+import Idlethemeparkworld.model.buildable.infrastucture.Toilet;
+import Idlethemeparkworld.model.buildable.infrastucture.TrashCan;
 import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
@@ -135,6 +139,57 @@ public class BuildingOptionsDialog extends JDialog{
             this.getContentPane().add(upgradeButton);
             this.getContentPane().add(demolishButton);
         } else if(currentBuilding instanceof Infrastructure){
+            nameLabel = new JLabel(currentBuilding.getName());
+            nameLabel.setAlignmentX(CENTER_ALIGNMENT);
+            
+            //Ha járda, description panel.
+            if(currentBuilding instanceof Pavement){
+                nameLabel = new JLabel("Pavement");
+                nameLabel.setAlignmentX(CENTER_ALIGNMENT);
+                JLabel descriptionLabel = new JLabel("Use pavement tiles to connect buildings and help people get around.");
+                descriptionLabel.setAlignmentX(CENTER_ALIGNMENT);
+            
+                this.getContentPane().add(nameLabel);
+                this.getContentPane().add(descriptionLabel);
+            } else if(currentBuilding instanceof TrashCan){
+                statsPanel = new JPanel(new GridLayout(2, 2));
+                capacityTextLabel = new JLabel("Capacity: ");
+                capacityNumberLabel = new JLabel(((TrashCan) currentBuilding).getCapacity() + "");
+                JLabel filledTextLabel = new JLabel("Filled: ");
+                JLabel filledNumberLabel = new JLabel(((TrashCan) currentBuilding).getFilled() + "");
+                
+                statsPanel.add(capacityTextLabel);
+                statsPanel.add(capacityNumberLabel);
+                statsPanel.add(filledTextLabel);
+                statsPanel.add(filledNumberLabel);
+                this.getContentPane().add(statsPanel);
+            } else if(currentBuilding instanceof Toilet){
+                statsPanel = new JPanel(new GridLayout(3, 2));
+                capacityTextLabel = new JLabel("Capacity: ");
+                capacityNumberLabel = new JLabel(((Infrastructure) currentBuilding).getCapacity() + "");
+                occupiedTextLabel = new JLabel("Occupied: ");
+                occupiedNumberLabel = new JLabel(((Infrastructure) currentBuilding).getOccupied()+ "");
+                JLabel cleanlinessTextLabel = new JLabel("Cleanliness: ");
+                JLabel cleanlinessNumberLabel = new JLabel(((Toilet) currentBuilding).getCleanliness()+ "");
+                
+                statsPanel.add(capacityTextLabel);
+                statsPanel.add(capacityNumberLabel);
+                statsPanel.add(occupiedTextLabel);
+                statsPanel.add(occupiedNumberLabel);
+                statsPanel.add(cleanlinessTextLabel);
+                statsPanel.add(cleanlinessNumberLabel);
+                this.getContentPane().add(statsPanel);
+            }
+            
+            
+            /*upgradeButton = new JButton("Upgrade: costs " + currentBuilding.getUpgradeCost() + "$");
+            upgradeButton.setAlignmentX(CENTER_ALIGNMENT);
+            //Fejlesztés gomb eseménykezelése
+            
+            demolishButton = new JButton("Demolish: returns " + currentBuilding.getBuildingCost()/2 + "$");
+            demolishButton.setAlignmentX(CENTER_ALIGNMENT);
+            //Lebontás gomb eseménykezelése*/
+            
         } else {
             System.err.println(currentBuilding.getName() + "Típusú épület nem létezhet.");
         }
