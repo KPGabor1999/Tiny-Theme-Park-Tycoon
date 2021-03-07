@@ -24,18 +24,19 @@ public class Board extends JPanel {
 
     public Board(Park park) {
         this.park = park;
-        this.park.build(BuildType.TOILET, 2, 5);
         
-        this.park.build(BuildType.PAVEMENT, 5, 0);
-        this.park.build(BuildType.PAVEMENT, 5, 1);
+        this.park.build(BuildType.CAROUSEL, 0, 0);
+        this.park.build(BuildType.BURGERJOINT, 1, 0);
+        this.park.build(BuildType.PAVEMENT, 2, 0);
+        this.park.build(BuildType.TOILET, 3, 0);
+        
+        /*this.park.build(BuildType.PAVEMENT, 5, 1);
         this.park.build(BuildType.PAVEMENT, 5, 2);
         this.park.build(BuildType.PAVEMENT, 5, 3);
         this.park.build(BuildType.PAVEMENT, 5, 4);
         this.park.build(BuildType.PAVEMENT, 5, 5);
         this.park.build(BuildType.PAVEMENT, 4, 5);
-        this.park.build(BuildType.PAVEMENT, 3, 5);
-        
-        this.park.build(BuildType.CAROUSEL, 6, 1);
+        this.park.build(BuildType.PAVEMENT, 3, 5);*/
         
         setBackground(Color.BLACK);
         resizeMap(park.getHeight(), park.getWidth());
