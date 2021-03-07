@@ -21,6 +21,10 @@ public class Tile {
         this.building = null;
     }
     
+    public boolean isEmpty(){
+        return building == null;
+    }
+    
     public Building getBuilding(){
         return building;
     }

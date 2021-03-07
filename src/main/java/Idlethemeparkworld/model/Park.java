@@ -1,7 +1,17 @@
 package Idlethemeparkworld.model;
 
 import Idlethemeparkworld.model.buildable.Building;
-import Idlethemeparkworld.model.buildable.attraction.Attraction;
+import Idlethemeparkworld.model.buildable.attraction.Carousel;
+import Idlethemeparkworld.model.buildable.attraction.FerrisWheel;
+import Idlethemeparkworld.model.buildable.attraction.HauntedHouse;
+import Idlethemeparkworld.model.buildable.attraction.RollerCoaster;
+import Idlethemeparkworld.model.buildable.attraction.SwingingShip;
+import Idlethemeparkworld.model.buildable.food.Hamburger;
+import Idlethemeparkworld.model.buildable.food.HotDog;
+import Idlethemeparkworld.model.buildable.food.IceCream;
+import Idlethemeparkworld.model.buildable.infrastucture.Pavement;
+import Idlethemeparkworld.model.buildable.infrastucture.Toilet;
+import Idlethemeparkworld.model.buildable.infrastucture.TrashCan;
 import java.util.ArrayList;
 
 public class Park {
@@ -47,12 +57,52 @@ public class Park {
         return null;
     }
     
-    //Build type will be an enum
-    public boolean canBuild(BuildType type){
-        return true; 
+    public boolean canBuild(BuildType type, int x, int y){
+        return tiles[y][x].isEmpty(); 
     }
     
-    public void build(){
+    public void build(BuildType type, int x, int y){
+        Building newBuilding = null;
+        //Extremely quick code, will move this gigantic switch inside the enum itself for better encapsulation
+        //Also will be much easier to maintain
+        switch(type){
+            case PAVEMENT:
+                newBuilding = new Pavement();
+                break;
+            case TRASHCAN:
+                newBuilding = new TrashCan();
+                break;
+            case TOILET:
+                newBuilding = new Toilet();
+                break;
+            case HOTDOGSTAND:
+                newBuilding = new HotDog();
+                break;
+            case ICECREAMPARLOR:
+                newBuilding = new IceCream();
+                break;
+            case BURGERJOINT:
+                newBuilding = new Hamburger();
+                break;
+            case CAROUSEL:
+                newBuilding = new Carousel();
+                break;
+            case FERRISWHEEL:
+                newBuilding = new FerrisWheel();
+                break;
+            case SWINGINGSHIP:
+                newBuilding = new SwingingShip();
+                break;
+            case ROLLERCOASTER:
+                newBuilding = new RollerCoaster();
+                break;
+            case HAUNTEDMANSION:
+                newBuilding = new HauntedHouse();
+                break;
+        }
         
+        buildings.add(newBuilding);
+        //We are assuming all buildings are 1x1 for the time being
+        tiles[y][x].setBuilding(true, newBuilding);
     }
 }
