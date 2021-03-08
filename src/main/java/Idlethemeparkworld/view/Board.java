@@ -9,16 +9,19 @@ import Idlethemeparkworld.model.buildable.infrastucture.Infrastructure;
 import Idlethemeparkworld.model.buildable.infrastucture.Pavement;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 
 public class Board extends JPanel {
 
@@ -37,6 +40,10 @@ public class Board extends JPanel {
         this.type = null;
         this.pos = new int[2];
         this.canBuild = new boolean[1];
+        
+        setOpaque(false);
+        setBackground(Color.BLACK);
+        setBorder(new EmptyBorder(0, 0, 0, 0));
         
         this.park.build(BuildType.CAROUSEL, 0, 0);
         this.park.build(BuildType.FERRISWHEEL, 0, 1);
@@ -84,6 +91,7 @@ public class Board extends JPanel {
                     pos[0]=x;
                     pos[1]=y;
                     System.out.println("("+x+","+y+") --- "+type.toString()+" --- "+(canBuild[0]?"Can build":"Can't build"));
+                    repaint();
                 }
             }
 
@@ -98,8 +106,6 @@ public class Board extends JPanel {
                         park.build(type, pos[0], pos[1]);
                         updateMap();
                         System.out.println("can build");
-                        //Add new building
-                        //Update playfield 
                     } else {
                         System.out.println("cannot build");
                     }
@@ -145,9 +151,16 @@ public class Board extends JPanel {
     public void enterBuildMode(BuildType type){
         buildMode = true;
         this.type = type;
+        pos[0]=0;
+        pos[1]=0;    
         Component[] comps = getComponents();
         for (Component component : comps) {
             component.setEnabled(false);
+            //((GridButton)component).setOpaque(false);
+            ((GridButton)component).setBackground(((GridButton)component).getBackground().darker().darker());
+            //((GridButton)component).setContentAreaFilled(false);
+            //((GridButton)component).setBorderPainted(false);
+            repaint();
         }
     }
     
@@ -157,10 +170,51 @@ public class Board extends JPanel {
         Component[] comps = getComponents();
         for (Component component : comps) {
             component.setEnabled(true);
+            //((GridButton)component).setOpaque(true);
+            ((GridButton)component).setBackground(((GridButton)component).getBackground().brighter().brighter());
+            //((GridButton)component).setContentAreaFilled(true);
+            //((GridButton)component).setBorderPainted(true);
         }
     }
     
     @Override
     protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+    }
+    
+   public void drawCenteredString(Graphics2D gr, String text, Rectangle rect, Font font) {
+       FontMetrics metrics = gr.getFontMetrics(font);
+       int x = rect.x + (rect.width - metrics.stringWidth(text)) / 2;
+       int y = rect.y + ((rect.height - metrics.getHeight()) / 2) + metrics.getAscent();
+       gr.setFont(font);
+       gr.drawString(text, x, y);
+   }
+    
+    private void drawGhost(Graphics2D gr){
+        if(canBuild[0]){
+            gr.setColor(new Color(79, 157, 0, 200));
+        } else {
+            gr.setColor(new Color(157, 0, 0, 200));
+        }
+        
+        int sizeX = this.getWidth() / park.getWidth();
+        int sizeY = this.getHeight() / park.getHeight();
+        gr.fillRect(sizeX*pos[0], sizeY*pos[1], sizeX, sizeY);
+        
+        gr.setColor(Color.WHITE);
+        Font font = gr.getFont().deriveFont( 10f );
+        Rectangle rec = new Rectangle(sizeX*pos[0], sizeY*pos[1], sizeX, sizeY);
+        drawCenteredString(gr, type.toString(), rec, font);
+    }
+    
+    @Override
+    protected void paintChildren(Graphics g) {
+        super.paintChildren(g);
+        Graphics2D gr = (Graphics2D) g;
+        if(buildMode){
+            gr.setColor(new Color(0,0,0,100));
+            gr.fillRect(0, 0, this.getWidth(), this.getHeight());
+            drawGhost(gr);
+        }
     }
 }
