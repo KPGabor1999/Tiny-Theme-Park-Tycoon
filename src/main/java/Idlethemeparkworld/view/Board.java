@@ -95,6 +95,8 @@ public class Board extends JPanel {
             public void mouseClicked(MouseEvent e) {
                 if(buildMode){
                     if(canBuild[0]){
+                        park.build(type, pos[0], pos[1]);
+                        updateMap();
                         System.out.println("can build");
                         //Add new building
                         //Update playfield 
