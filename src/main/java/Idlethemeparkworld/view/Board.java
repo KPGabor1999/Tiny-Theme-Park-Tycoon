@@ -28,12 +28,15 @@ public class Board extends JPanel {
     
     private boolean buildMode;
     private BuildType type;
-    private boolean canBuild;
+    private boolean[] canBuild;
+    private int[] pos;
 
     public Board(Park park) {
         this.park = park;
         this.buildMode = false;
         this.type = null;
+        this.pos = new int[2];
+        this.canBuild = new boolean[1];
         
         this.park.build(BuildType.CAROUSEL, 0, 0);
         this.park.build(BuildType.FERRISWHEEL, 0, 1);
@@ -77,8 +80,10 @@ public class Board extends JPanel {
             @Override
             public void mouseEntered(MouseEvent e) {
                 if(buildMode){
-                    canBuild = park.canBuild(type, x, y);
-                    System.out.println("("+x+","+y+") --- "+type.toString()+" --- "+(canBuild?"Can build":"Can't build"));
+                    canBuild[0]=park.canBuild(type, x, y);
+                    pos[0]=x;
+                    pos[1]=y;
+                    System.out.println("("+x+","+y+") --- "+type.toString()+" --- "+(canBuild[0]?"Can build":"Can't build"));
                 }
             }
 
@@ -89,21 +94,14 @@ public class Board extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if(buildMode){
-                    if(canBuild){
+                    if(canBuild[0]){
                         System.out.println("can build");
+                        //Add new building
+                        //Update playfield 
                     } else {
                         System.out.println("cannot build");
                     }
                     exitBuildMode();
-                }
-            }
-        });
-        buttonGrid[y][x].addMouseMotionListener(new MouseAdapter(){
-            @Override
-            public void mouseMoved(MouseEvent e) {
-                if(buildMode){
-                    int x = 0, y = 0;
-                    canBuild = park.canBuild(type, y, x);
                 }
             }
         });
