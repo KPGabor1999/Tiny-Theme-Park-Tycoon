@@ -1,5 +1,17 @@
 package Idlethemeparkworld.model;
 
+import Idlethemeparkworld.model.buildable.attraction.Carousel;
+import Idlethemeparkworld.model.buildable.attraction.FerrisWheel;
+import Idlethemeparkworld.model.buildable.attraction.HauntedMansion;
+import Idlethemeparkworld.model.buildable.attraction.RollerCoaster;
+import Idlethemeparkworld.model.buildable.attraction.SwingingShip;
+import Idlethemeparkworld.model.buildable.food.Hamburger;
+import Idlethemeparkworld.model.buildable.food.HotDog;
+import Idlethemeparkworld.model.buildable.food.IceCream;
+import Idlethemeparkworld.model.buildable.infrastucture.Pavement;
+import Idlethemeparkworld.model.buildable.infrastucture.Toilet;
+import Idlethemeparkworld.model.buildable.infrastucture.TrashCan;
+
 public enum BuildType {
     PAVEMENT(1,1),
     TRASHCAN(1,1),
@@ -20,5 +32,32 @@ public enum BuildType {
         this.length = l;
     }
     
-    
+    public static Class GetClass(BuildType type) {
+        switch (type){
+            case PAVEMENT:
+                return Pavement.class;
+            case TRASHCAN:
+                return TrashCan.class;
+            case TOILET:
+                return Toilet.class;
+            case HOTDOGSTAND:
+                return HotDog.class;
+            case ICECREAMPARLOR:
+                return IceCream.class;
+            case BURGERJOINT:
+                return Hamburger.class;
+            case CAROUSEL:
+                return Carousel.class;
+            case FERRISWHEEL:
+                return FerrisWheel.class;
+            case SWINGINGSHIP:
+                return SwingingShip.class;
+            case ROLLERCOASTER:
+                return RollerCoaster.class;
+            case HAUNTEDMANSION:
+                return HauntedMansion.class;
+            default:
+                return null;
+        }
+    }
 }

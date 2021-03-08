@@ -2,8 +2,8 @@ package Idlethemeparkworld.model.buildable.attraction;
 
 import Idlethemeparkworld.model.BuildType;
 
-public class HauntedHouse extends Attraction {
-    public HauntedHouse(){
+public class HauntedMansion extends Attraction {
+    public HauntedMansion(){
         this.buildingType = BuildType.HAUNTEDMANSION;
         this.name = "Haunted Mansion";
         this.buildingCost = 15000;      //Balance these later.

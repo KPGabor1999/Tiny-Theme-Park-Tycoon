@@ -3,7 +3,7 @@ package Idlethemeparkworld.model;
 import Idlethemeparkworld.model.buildable.Building;
 import Idlethemeparkworld.model.buildable.attraction.Carousel;
 import Idlethemeparkworld.model.buildable.attraction.FerrisWheel;
-import Idlethemeparkworld.model.buildable.attraction.HauntedHouse;
+import Idlethemeparkworld.model.buildable.attraction.HauntedMansion;
 import Idlethemeparkworld.model.buildable.attraction.RollerCoaster;
 import Idlethemeparkworld.model.buildable.attraction.SwingingShip;
 import Idlethemeparkworld.model.buildable.food.Hamburger;
@@ -73,42 +73,11 @@ public class Park {
         Building newBuilding = null;
         //Extremely quick code, will move this gigantic switch inside the enum itself for better encapsulation
         //Also will be much easier to maintain
-        switch(type){
-            case PAVEMENT:
-                newBuilding = new Pavement();
-                break;
-            case TRASHCAN:
-                newBuilding = new TrashCan();
-                break;
-            case TOILET:
-                newBuilding = new Toilet();
-                break;
-            case HOTDOGSTAND:
-                newBuilding = new HotDog();
-                break;
-            case ICECREAMPARLOR:
-                newBuilding = new IceCream();
-                break;
-            case BURGERJOINT:
-                newBuilding = new Hamburger();
-                break;
-            case CAROUSEL:
-                newBuilding = new Carousel();
-                break;
-            case FERRISWHEEL:
-                newBuilding = new FerrisWheel();
-                break;
-            case SWINGINGSHIP:
-                newBuilding = new SwingingShip();
-                break;
-            case ROLLERCOASTER:
-                newBuilding = new RollerCoaster();
-                break;
-            case HAUNTEDMANSION:
-                newBuilding = new HauntedHouse();
-                break;
+        try{
+           newBuilding = (Building) BuildType.GetClass(type).newInstance();
+        } catch (Exception e){
+            
         }
-        
         buildings.add(newBuilding);
         //We are assuming all buildings are 1x1 for the time being
         tiles[y][x].setBuilding(true, newBuilding);
