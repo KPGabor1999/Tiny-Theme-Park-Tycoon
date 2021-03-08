@@ -3,10 +3,6 @@ package Idlethemeparkworld.view;
 import java.awt.Insets;
 import javax.swing.JButton;
 
-/**
- *
- * @author KrazyXL
- */
 public class GridButton extends JButton{
     
     public GridButton(){

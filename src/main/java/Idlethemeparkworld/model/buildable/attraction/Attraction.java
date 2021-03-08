@@ -6,10 +6,10 @@ public abstract class Attraction extends Building {
     protected int fun;
     protected int capacity;
     protected int occupied;
-    protected int runtime;      //seconds?
+    protected int runtime;
     protected int entryFee;
     protected boolean isRunning;
-    protected int condition;    //gets lower after each run
+    protected int condition;
 
     public int getFun() {
         return fun;

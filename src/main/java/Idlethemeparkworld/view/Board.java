@@ -8,11 +8,15 @@ import Idlethemeparkworld.model.buildable.food.FoodStall;
 import Idlethemeparkworld.model.buildable.infrastucture.Infrastructure;
 import Idlethemeparkworld.model.buildable.infrastucture.Pavement;
 import java.awt.Color;
-import java.awt.Dimension;
+import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -21,9 +25,15 @@ public class Board extends JPanel {
     private Park park;
     private GridButton[][] buttonGrid;
     private final int CELL_SIZE = 32;
+    
+    private boolean buildMode;
+    private BuildType type;
+    private boolean canBuild;
 
     public Board(Park park) {
         this.park = park;
+        this.buildMode = false;
+        this.type = null;
         
         this.park.build(BuildType.CAROUSEL, 0, 0);
         this.park.build(BuildType.FERRISWHEEL, 0, 1);
@@ -39,18 +49,8 @@ public class Board extends JPanel {
         this.park.build(BuildType.TOILET, 2, 1);
         this.park.build(BuildType.TRASHCAN, 2, 2);
         
-        setBackground(Color.BLACK);
         resizeMap(park.getHeight(), park.getWidth());
         updateMap();
-    }
-
-    public boolean refresh() {
-        Dimension dim = new Dimension(10 * CELL_SIZE, 10 * CELL_SIZE);
-        setPreferredSize(dim);
-        setMaximumSize(dim);
-        setSize(dim);
-        repaint();
-        return true;
     }
     
     private void resizeMap(int rows, int columns){
@@ -66,11 +66,45 @@ public class Board extends JPanel {
 
     private void addGridButton(int x, int y){
         buttonGrid[y][x] = new GridButton();
-        buttonGrid[y][x].setSize(32, 32);
+        buttonGrid[y][x].setSize(CELL_SIZE, CELL_SIZE);
         buttonGrid[y][x].addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
                 showBuildingOptions(x, y);
+            }
+        });
+        buttonGrid[y][x].addMouseListener(new MouseAdapter(){
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                if(buildMode){
+                    canBuild = park.canBuild(type, x, y);
+                    System.out.println("("+x+","+y+") --- "+type.toString()+" --- "+(canBuild?"Can build":"Can't build"));
+                }
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if(buildMode){
+                    if(canBuild){
+                        System.out.println("can build");
+                    } else {
+                        System.out.println("cannot build");
+                    }
+                    exitBuildMode();
+                }
+            }
+        });
+        buttonGrid[y][x].addMouseMotionListener(new MouseAdapter(){
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                if(buildMode){
+                    int x = 0, y = 0;
+                    canBuild = park.canBuild(type, y, x);
+                }
             }
         });
         add(buttonGrid[y][x]);
@@ -107,7 +141,25 @@ public class Board extends JPanel {
             }
         }
     }
-
+    
+    public void enterBuildMode(BuildType type){
+        buildMode = true;
+        this.type = type;
+        Component[] comps = getComponents();
+        for (Component component : comps) {
+            component.setEnabled(false);
+        }
+    }
+    
+    public void exitBuildMode(){
+        buildMode = false;
+        this.type = null;
+        Component[] comps = getComponents();
+        for (Component component : comps) {
+            component.setEnabled(true);
+        }
+    }
+    
     @Override
     protected void paintComponent(Graphics g) {
     }
