@@ -33,9 +33,11 @@ public class GameManager {
     }
     
     public void startNewGame(){
+        gamePaused = true;
         tickCount = 0;
         initAllComponents();
         //startUpdateCycle();
+        gamePaused = false;
     }
     
     private void initAllComponents(){
