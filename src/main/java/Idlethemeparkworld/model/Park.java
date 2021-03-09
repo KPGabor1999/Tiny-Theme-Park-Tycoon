@@ -1,17 +1,8 @@
 package Idlethemeparkworld.model;
 
 import Idlethemeparkworld.model.buildable.Building;
-import Idlethemeparkworld.model.buildable.attraction.Carousel;
-import Idlethemeparkworld.model.buildable.attraction.FerrisWheel;
-import Idlethemeparkworld.model.buildable.attraction.HauntedMansion;
-import Idlethemeparkworld.model.buildable.attraction.RollerCoaster;
-import Idlethemeparkworld.model.buildable.attraction.SwingingShip;
-import Idlethemeparkworld.model.buildable.food.Hamburger;
-import Idlethemeparkworld.model.buildable.food.HotDog;
-import Idlethemeparkworld.model.buildable.food.IceCream;
+import Idlethemeparkworld.model.buildable.infrastucture.Entrance;
 import Idlethemeparkworld.model.buildable.infrastucture.Pavement;
-import Idlethemeparkworld.model.buildable.infrastucture.Toilet;
-import Idlethemeparkworld.model.buildable.infrastucture.TrashCan;
 import java.util.ArrayList;
 
 public class Park {
@@ -38,21 +29,21 @@ public class Park {
             }
         }
         //2.Spawn in the gate tile
-        build(BuildType.ENTRANCE,0,0);
+        build(BuildType.ENTRANCE, 0, 0, true);
         //3.Spawn in 1 from each for debugging purpose
-        build(BuildType.CAROUSEL, 7, 0);
-        build(BuildType.FERRISWHEEL, 7, 1);
-        build(BuildType.HAUNTEDMANSION, 7, 2);
-        build(BuildType.ROLLERCOASTER, 7, 3);
-        build(BuildType.SWINGINGSHIP, 7, 4);
+        build(BuildType.CAROUSEL, 7, 0, true);
+        build(BuildType.FERRISWHEEL, 7, 1, true);
+        build(BuildType.HAUNTEDMANSION, 7, 2, true);
+        build(BuildType.ROLLERCOASTER, 7, 3, true);
+        build(BuildType.SWINGINGSHIP, 7, 4, true);
         
-        build(BuildType.BURGERJOINT, 8, 0);
-        build(BuildType.HOTDOGSTAND, 8, 1);
-        build(BuildType.ICECREAMPARLOR, 8, 2);
+        build(BuildType.BURGERJOINT, 8, 0, true);
+        build(BuildType.HOTDOGSTAND, 8, 1, true);
+        build(BuildType.ICECREAMPARLOR, 8, 2, true);
         
-        build(BuildType.PAVEMENT, 9, 0);
-        build(BuildType.TOILET, 9, 1);
-        build(BuildType.TRASHCAN, 9, 2);
+        build(BuildType.PAVEMENT, 9, 0, true);
+        build(BuildType.TOILET, 9, 1, true);
+        build(BuildType.TRASHCAN, 9, 2, true);
     }
     
     public int getWidth(){
@@ -81,11 +72,38 @@ public class Park {
     }
     
     public boolean canBuild(BuildType type, int x, int y){
-        return tiles[y][x].isEmpty(); 
+        boolean legal = true;
+        if(tiles[y][x].isEmpty()){
+            ArrayList<Tile> neighbours = getNeighbours(x,y);
+            neighbours.removeIf(n -> !(n.getBuilding() instanceof Pavement || n.getBuilding() instanceof Entrance));
+            return neighbours.size() > 0;
+        } else {
+            return false;
+        }
     }
     
-    public void build(BuildType type, int x, int y){
-        if(canBuild(type,x,y)){
+    private boolean checkLegalCoordinate(int x, int y){
+        return (0 <= x && x < getWidth())
+                && (0 <= y && y < getHeight());
+    }
+    
+    private void addNeighbour(ArrayList<Tile> list, int x, int y){
+        if(checkLegalCoordinate(x,y)){
+            list.add(tiles[y][x]);
+        }
+    }
+    
+    private ArrayList<Tile> getNeighbours(int x, int y){
+        ArrayList<Tile> neighbours = new ArrayList<>();
+        addNeighbour(neighbours, x-1, y);
+        addNeighbour(neighbours, x+1, y);
+        addNeighbour(neighbours, x, y-1);
+        addNeighbour(neighbours, x, y+1);
+        return neighbours;
+    }
+    
+    public void build(BuildType type, int x, int y, boolean force){
+        if(canBuild(type,x,y) || force){
             Building newBuilding = null;
             try{
                newBuilding = (Building) BuildType.GetClass(type).newInstance();

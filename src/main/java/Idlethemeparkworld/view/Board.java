@@ -78,7 +78,7 @@ public class Board extends JPanel {
                     canBuild[0]=park.canBuild(type, x, y);
                     pos[0]=x;
                     pos[1]=y;
-                    System.out.println("("+x+","+y+") --- "+type.toString()+" --- "+(canBuild[0]?"Can build":"Can't build"));
+                    //System.out.println("("+x+","+y+") --- "+type.toString()+" --- "+(canBuild[0]?"Can build":"Can't build"));
                     repaint();
                 }
             }
@@ -94,11 +94,11 @@ public class Board extends JPanel {
                 } else {
                     if(buildMode){
                         if(canBuild[0]){
-                            park.build(type, pos[0], pos[1]);
+                            park.build(type, pos[0], pos[1], false);
                             updateMap();
-                            System.out.println("can build");
+                            //System.out.println("can build");
                         } else {
-                            System.out.println("cannot build");
+                            //System.out.println("cannot build");
                         }
                         exitBuildMode();
                     }
