@@ -7,6 +7,20 @@ public abstract class Infrastructure extends Building {
     protected int occupied;
     protected int duration;
     //protected int rubbish;
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public int getOccupied() {
+        return occupied;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+    
+    
     
     public void upgrade(){
     

@@ -1,6 +1,9 @@
 package Idlethemeparkworld;
 
 import Idlethemeparkworld.misc.Highscores;
+import Idlethemeparkworld.model.BuildType;
+import Idlethemeparkworld.model.Park;
+import Idlethemeparkworld.model.buildable.Building;
 import Idlethemeparkworld.view.HighscoreWindow;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -21,13 +24,19 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.WindowConstants;
 import Idlethemeparkworld.view.AdministrationDialog;
+import Idlethemeparkworld.view.Board;
+import Idlethemeparkworld.view.BuildingOptionsDialog;
+import Idlethemeparkworld.view.GridButton;
 
 public class Main extends JFrame{  
     private final JLabel timeLabel; 
     private final JLabel moneyLabel; 
     private final JLabel visitorCountLabel;
     private final JLabel happinessLabel; 
-    private final JButton[][] buttonGrid;
+    private final JComboBox buildingChooser;
+    private Board board;
+    
+    Park park;
     Highscores highscores;
     
     public Main() throws IOException{
@@ -101,16 +110,16 @@ public class Main extends JFrame{
         
         /*---------------------------------------------------------*/
         
-        JComboBox buildingChooser = new javax.swing.JComboBox<>();
         JButton buildButton = new javax.swing.JButton();
         JButton administrationButton = new javax.swing.JButton();
         JButton slowButton = new javax.swing.JButton();
         JButton pauseButton = new javax.swing.JButton();
         JButton accelerateButton = new javax.swing.JButton();
         
+        buildingChooser = new javax.swing.JComboBox<>();
         buildingChooser.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {
             "Trash can",
-            "Bathrooms",
+            "Toilet",
             "Hot dog stand",
             "Ice cream parlor",
             "Burger joint",
@@ -144,23 +153,23 @@ public class Main extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 setPricesAndEmployees();
             }
-            
+        });
+        
+        buildButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String type = (String)buildingChooser.getSelectedItem();
+                type = type.replaceAll("\\s+","").toUpperCase();
+                board.enterBuildMode(BuildType.valueOf(type));
+            }
         });
         
         add(controlPanel);
         
-        JPanel buildingPanel = new JPanel(new GridLayout(10, 10));              //Játéktábla legenerálása.
-        buttonGrid = new JButton[10][10];
-        for(int row=0; row<buttonGrid.length; row++){
-            for(int column=0; column<buttonGrid[0].length; column++){
-                JButton currentButton = buttonGrid[row][column];
-                currentButton = new JButton("B");
-                currentButton.setSize(32, 32);
-                currentButton.setBackground(Color.green);
-                buildingPanel.add(currentButton);
-            }
-        }
-        add(buildingPanel);
+        park = new Park();
+        
+        board = new Board(park);
+        add(board);
         System.out.println("buttonGrid generation complete!");
         
         setLocationRelativeTo(null);
