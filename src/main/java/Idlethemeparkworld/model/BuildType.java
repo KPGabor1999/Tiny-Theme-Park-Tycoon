@@ -8,6 +8,7 @@ import Idlethemeparkworld.model.buildable.attraction.SwingingShip;
 import Idlethemeparkworld.model.buildable.food.Hamburger;
 import Idlethemeparkworld.model.buildable.food.HotDog;
 import Idlethemeparkworld.model.buildable.food.IceCream;
+import Idlethemeparkworld.model.buildable.infrastucture.Entrance;
 import Idlethemeparkworld.model.buildable.infrastucture.Pavement;
 import Idlethemeparkworld.model.buildable.infrastucture.Toilet;
 import Idlethemeparkworld.model.buildable.infrastucture.TrashCan;
@@ -23,7 +24,8 @@ public enum BuildType {
     FERRISWHEEL(1,1),
     SWINGINGSHIP(1,1),
     ROLLERCOASTER(1,1),
-    HAUNTEDMANSION(1,1);
+    HAUNTEDMANSION(1,1),
+    ENTRANCE(1,1);
     
     private final int width, length;
     
@@ -56,6 +58,8 @@ public enum BuildType {
                 return RollerCoaster.class;
             case HAUNTEDMANSION:
                 return HauntedMansion.class;
+            case ENTRANCE:
+                return Entrance.class;
             default:
                 return null;
         }
