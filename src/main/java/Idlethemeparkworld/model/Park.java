@@ -14,22 +14,21 @@ import Idlethemeparkworld.model.buildable.infrastucture.Toilet;
 import Idlethemeparkworld.model.buildable.infrastucture.TrashCan;
 import java.util.ArrayList;
 
-public class Park {
+public class Park implements Updatable {
     private int funds;
     private Tile[][] tiles;
     private ArrayList<Building> buildings;
     
     public Park(){
-        tiles = new Tile[10][10];
-        initializePark();
+        initializePark(10);
     }
     
     public Park(int size){
-        tiles = new Tile[size][size];
-        initializePark();
+        initializePark(size);
     }
     
-    private void initializePark(){
+    public void initializePark(int size){
+        tiles = new Tile[size][size];
         //1.Make sure all tiles are empty
         this.buildings = new ArrayList<>();
         for(int row=0; row<tiles.length; row++){
@@ -95,5 +94,9 @@ public class Park {
             //We are assuming all buildings are 1x1 for the time being
             tiles[y][x].setBuilding(true, newBuilding);
         }
+    }
+    
+    public void update(){
+        System.out.println("UWU");
     }
 }

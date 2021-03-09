@@ -2,13 +2,11 @@ package Idlethemeparkworld;
 
 import Idlethemeparkworld.misc.Highscores;
 import Idlethemeparkworld.model.BuildType;
-import Idlethemeparkworld.model.Park;
-import Idlethemeparkworld.model.buildable.Building;
+import Idlethemeparkworld.model.GameManager;
 import Idlethemeparkworld.view.HighscoreWindow;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -25,8 +23,6 @@ import javax.swing.JMenuItem;
 import javax.swing.WindowConstants;
 import Idlethemeparkworld.view.AdministrationDialog;
 import Idlethemeparkworld.view.Board;
-import Idlethemeparkworld.view.BuildingOptionsDialog;
-import Idlethemeparkworld.view.GridButton;
 
 public class Main extends JFrame{  
     private final JLabel timeLabel; 
@@ -36,7 +32,7 @@ public class Main extends JFrame{
     private final JComboBox buildingChooser;
     private Board board;
     
-    Park park;
+    GameManager gm;
     Highscores highscores;
     
     public Main() throws IOException{
@@ -166,11 +162,11 @@ public class Main extends JFrame{
         
         add(controlPanel);
         
-        park = new Park();
+        gm = new GameManager();
+        gm.startUpdateCycle();
         
-        board = new Board(park);
+        board = new Board(gm);
         add(board);
-        System.out.println("buttonGrid generation complete!");
         
         setLocationRelativeTo(null);
         //pack();

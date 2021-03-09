@@ -1,6 +1,7 @@
 package Idlethemeparkworld.view;
 
 import Idlethemeparkworld.model.BuildType;
+import Idlethemeparkworld.model.GameManager;
 import Idlethemeparkworld.model.Park;
 import Idlethemeparkworld.model.buildable.Building;
 import Idlethemeparkworld.model.buildable.attraction.Attraction;
@@ -27,6 +28,7 @@ import javax.swing.border.EmptyBorder;
 
 public class Board extends JPanel {
 
+    private GameManager gm;
     private Park park;
     private GridButton[][] buttonGrid;
     private final int CELL_SIZE = 32;
@@ -36,8 +38,9 @@ public class Board extends JPanel {
     private boolean[] canBuild;
     private int[] pos;
 
-    public Board(Park park) {
-        this.park = park;
+    public Board(GameManager gm) {
+        this.gm = gm;
+        this.park = gm.getPark();
         this.buildMode = false;
         this.type = null;
         this.pos = new int[2];
