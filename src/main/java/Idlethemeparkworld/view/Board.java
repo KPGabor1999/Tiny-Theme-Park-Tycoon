@@ -21,6 +21,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 public class Board extends JPanel {
@@ -101,15 +102,19 @@ public class Board extends JPanel {
 
             @Override
             public void mouseClicked(MouseEvent e) {
-                if(buildMode){
-                    if(canBuild[0]){
-                        park.build(type, pos[0], pos[1]);
-                        updateMap();
-                        System.out.println("can build");
-                    } else {
-                        System.out.println("cannot build");
-                    }
+                if(SwingUtilities.isRightMouseButton(e)){
                     exitBuildMode();
+                } else {
+                    if(buildMode){
+                        if(canBuild[0]){
+                            park.build(type, pos[0], pos[1]);
+                            updateMap();
+                            System.out.println("can build");
+                        } else {
+                            System.out.println("cannot build");
+                        }
+                        exitBuildMode();
+                    }
                 }
             }
         });
