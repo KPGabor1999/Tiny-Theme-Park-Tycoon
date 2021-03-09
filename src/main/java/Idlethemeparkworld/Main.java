@@ -35,7 +35,7 @@ public class Main extends JFrame{
     GameManager gm;
     Highscores highscores;
     
-    public Main() throws IOException{
+    public Main() {
         setTitle("Idle Theme Park World");
         setSize(600, 600);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -48,7 +48,7 @@ public class Main extends JFrame{
         JMenuItem menuNewGame = new JMenuItem(new AbstractAction("New game") {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //startNewGame();
+                startNewGame();
             }
         });
         
@@ -163,7 +163,6 @@ public class Main extends JFrame{
         add(controlPanel);
         
         gm = new GameManager();
-        gm.startUpdateCycle();
         
         board = new Board(gm);
         add(board);
@@ -173,14 +172,19 @@ public class Main extends JFrame{
         setVisible(true);
     }
     
+    private void startNewGame(){
+        gm.startNewGame();
+        gm.startUpdateCycle();
+    }
+    
     public void setPricesAndEmployees(){
         AdministrationDialog adminDialog = new AdministrationDialog(this, "Administration");
         adminDialog.setVisible(true);
     }
     
     public static void main(String[] args) {
-        try {
-            new Main();
-        } catch (IOException ex) {}
+        Main m = new Main();
+        
+        m.gm.startUpdateCycle();
     }    
 }

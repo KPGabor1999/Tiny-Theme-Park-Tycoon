@@ -97,6 +97,6 @@ public class Park implements Updatable {
     }
     
     public void update(){
-        System.out.println("UWU");
+        
     }
 }

@@ -22,7 +22,7 @@ public class GameManager {
         this.updateCycleRunning = false;
         this.currentDeltaTime = 0;
         this.gamePaused = false;
-        this.gameSpeed = 2;
+        this.gameSpeed = 1;
         this.dayNightCycle = 0;
         this.park = new Park();
     }
@@ -50,7 +50,7 @@ public class GameManager {
             if(!gamePaused){
                 long now = System.nanoTime();
                 currentDeltaTime = now - lastTick;
-                int tickStep = (int) (currentDeltaTime / GAME_UPDATE_TIME_MS);
+                int tickStep = (int)Math.floor(currentDeltaTime/GAME_UPDATE_TIME_MS);
                 if(tickStep >= 1){
                     update(tickStep);
                     lastTick += tickStep * GAME_UPDATE_TIME_MS;
@@ -70,6 +70,7 @@ public class GameManager {
         updateCount += tickStep * getGameSpeed();
         double actualUpdateCount = Math.floor(updateCount);
         updateCount -= actualUpdateCount;
+        System.out.println(tickStep+"  - "+actualUpdateCount+" - "+updateCount);
         for (int i = 0; i < actualUpdateCount; i++)
         {
             park.update();
