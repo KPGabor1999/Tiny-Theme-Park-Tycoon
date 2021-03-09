@@ -129,18 +129,18 @@ public class Board extends JPanel {
             for (int x = 0; x < park.getWidth(); x++) {
                 GridButton gd = buttonGrid[y][x];
                 if(park.getTile(x, y).isEmpty()){
-                    gd.setBackground(Color.green);
+                    gd.setColor(new Color(49, 215, 0, 255));
                     gd.changeTile("Grass");
                 } else {
                     Building b = park.getTile(x, y).getBuilding();
                     if(b instanceof Pavement){
-                        gd.setBackground(Color.LIGHT_GRAY);
+                        gd.setColor(Color.LIGHT_GRAY);
                     }else if(b instanceof Attraction){
-                        gd.setBackground(Color.RED);
+                        gd.setColor(Color.RED);
                     } else if(b instanceof FoodStall){
-                        gd.setBackground(Color.ORANGE);
+                        gd.setColor(Color.ORANGE);
                     } else if(b instanceof Infrastructure){
-                        gd.setBackground(Color.CYAN);
+                        gd.setColor(Color.CYAN);
                     }
                     gd.changeTile(park.getTile(x, y).getBuilding().getName());
                 }
@@ -157,7 +157,7 @@ public class Board extends JPanel {
         for (Component component : comps) {
             component.setEnabled(false);
             //((GridButton)component).setOpaque(false);
-            ((GridButton)component).setBackground(((GridButton)component).getBackground().darker().darker());
+            ((GridButton)component).darken();
             //((GridButton)component).setContentAreaFilled(false);
             //((GridButton)component).setBorderPainted(false);
             repaint();
@@ -171,7 +171,7 @@ public class Board extends JPanel {
         for (Component component : comps) {
             component.setEnabled(true);
             //((GridButton)component).setOpaque(true);
-            ((GridButton)component).setBackground(((GridButton)component).getBackground().brighter().brighter());
+            ((GridButton)component).resetColor();
             //((GridButton)component).setContentAreaFilled(true);
             //((GridButton)component).setBorderPainted(true);
         }
