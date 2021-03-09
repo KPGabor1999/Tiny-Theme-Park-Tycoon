@@ -31,6 +31,10 @@ public class Park {
         //2.Spawn in the gate tile
         build(BuildType.ENTRANCE, 0, 0, true);
         //3.Spawn in 1 from each for debugging purpose
+        //spawnAllBuildings();
+    }
+    
+    public void spawnAllBuildings(){
         build(BuildType.CAROUSEL, 7, 0, true);
         build(BuildType.FERRISWHEEL, 7, 1, true);
         build(BuildType.HAUNTEDMANSION, 7, 2, true);

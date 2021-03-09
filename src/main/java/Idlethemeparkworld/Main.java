@@ -118,6 +118,7 @@ public class Main extends JFrame{
         
         buildingChooser = new javax.swing.JComboBox<>();
         buildingChooser.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {
+            "Pavement",
             "Trash can",
             "Toilet",
             "Hot dog stand",
@@ -168,7 +169,7 @@ public class Main extends JFrame{
         
         park = new Park();
         
-        board = new Board(park);
+        board = new Board(park, buildButton);
         add(board);
         System.out.println("buttonGrid generation complete!");
         
