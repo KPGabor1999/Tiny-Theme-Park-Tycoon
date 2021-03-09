@@ -1,16 +1,15 @@
 package Idlethemeparkworld.view;
 
-import Idlethemeparkworld.model.buildable.Buildable;
 import Idlethemeparkworld.model.buildable.Building;
 import Idlethemeparkworld.model.buildable.attraction.Attraction;
 import Idlethemeparkworld.model.buildable.food.FoodStall;
+import Idlethemeparkworld.model.buildable.infrastucture.Entrance;
 import Idlethemeparkworld.model.buildable.infrastucture.Infrastructure;
 import Idlethemeparkworld.model.buildable.infrastucture.Pavement;
 import Idlethemeparkworld.model.buildable.infrastucture.Toilet;
 import Idlethemeparkworld.model.buildable.infrastucture.TrashCan;
 import java.awt.Frame;
 import java.awt.GridLayout;
-import java.awt.Toolkit;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -179,7 +178,16 @@ public class BuildingOptionsDialog extends JDialog{
                 statsPanel.add(cleanlinessTextLabel);
                 statsPanel.add(cleanlinessNumberLabel);
                 this.getContentPane().add(statsPanel);
-            }
+            } else if(currentBuilding instanceof Entrance){
+                nameLabel = new JLabel("Entrance");
+                nameLabel.setAlignmentX(CENTER_ALIGNMENT);
+                JLabel descriptionLabel = new JLabel("The entrance... what else can i say");
+                descriptionLabel.setAlignmentX(CENTER_ALIGNMENT);
+            
+                this.getContentPane().add(nameLabel);
+                this.getContentPane().add(descriptionLabel);
+            } 
+            
             
             
             /*upgradeButton = new JButton("Upgrade: costs " + currentBuilding.getUpgradeCost() + "$");

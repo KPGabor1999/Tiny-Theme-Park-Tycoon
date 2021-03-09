@@ -5,6 +5,7 @@ import Idlethemeparkworld.model.Park;
 import Idlethemeparkworld.model.buildable.Building;
 import Idlethemeparkworld.model.buildable.attraction.Attraction;
 import Idlethemeparkworld.model.buildable.food.FoodStall;
+import Idlethemeparkworld.model.buildable.infrastucture.Entrance;
 import Idlethemeparkworld.model.buildable.infrastucture.Infrastructure;
 import Idlethemeparkworld.model.buildable.infrastucture.Pavement;
 import java.awt.Color;
@@ -45,20 +46,6 @@ public class Board extends JPanel {
         setOpaque(false);
         setBackground(Color.BLACK);
         setBorder(new EmptyBorder(0, 0, 0, 0));
-        
-        this.park.build(BuildType.CAROUSEL, 0, 0);
-        this.park.build(BuildType.FERRISWHEEL, 0, 1);
-        this.park.build(BuildType.HAUNTEDMANSION, 0, 2);
-        this.park.build(BuildType.ROLLERCOASTER, 0, 3);
-        this.park.build(BuildType.SWINGINGSHIP, 0, 4);
-        
-        this.park.build(BuildType.BURGERJOINT, 1, 0);
-        this.park.build(BuildType.HOTDOGSTAND, 1, 1);
-        this.park.build(BuildType.ICECREAMPARLOR, 1, 2);
-        
-        this.park.build(BuildType.PAVEMENT, 2, 0);
-        this.park.build(BuildType.TOILET, 2, 1);
-        this.park.build(BuildType.TRASHCAN, 2, 2);
         
         resizeMap(park.getHeight(), park.getWidth());
         updateMap();
@@ -144,6 +131,9 @@ public class Board extends JPanel {
                         gd.setColor(Color.RED);
                     } else if(b instanceof FoodStall){
                         gd.setColor(Color.ORANGE);
+                    } else if(b instanceof Entrance){
+                        gd.setColor(Color.DARK_GRAY);
+                        gd.setForeground(Color.WHITE);
                     } else if(b instanceof Infrastructure){
                         gd.setColor(Color.CYAN);
                     }

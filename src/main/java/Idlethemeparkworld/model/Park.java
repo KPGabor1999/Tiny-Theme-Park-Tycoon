@@ -38,6 +38,21 @@ public class Park {
             }
         }
         //2.Spawn in the gate tile
+        build(BuildType.ENTRANCE,0,0);
+        //3.Spawn in 1 from each for debugging purpose
+        build(BuildType.CAROUSEL, 7, 0);
+        build(BuildType.FERRISWHEEL, 7, 1);
+        build(BuildType.HAUNTEDMANSION, 7, 2);
+        build(BuildType.ROLLERCOASTER, 7, 3);
+        build(BuildType.SWINGINGSHIP, 7, 4);
+        
+        build(BuildType.BURGERJOINT, 8, 0);
+        build(BuildType.HOTDOGSTAND, 8, 1);
+        build(BuildType.ICECREAMPARLOR, 8, 2);
+        
+        build(BuildType.PAVEMENT, 9, 0);
+        build(BuildType.TOILET, 9, 1);
+        build(BuildType.TRASHCAN, 9, 2);
     }
     
     public int getWidth(){
@@ -70,16 +85,15 @@ public class Park {
     }
     
     public void build(BuildType type, int x, int y){
-        Building newBuilding = null;
-        //Extremely quick code, will move this gigantic switch inside the enum itself for better encapsulation
-        //Also will be much easier to maintain
-        try{
-           newBuilding = (Building) BuildType.GetClass(type).newInstance();
-        } catch (Exception e){
-            
+        if(canBuild(type,x,y)){
+            Building newBuilding = null;
+            try{
+               newBuilding = (Building) BuildType.GetClass(type).newInstance();
+            } catch (Exception e){
+            }
+            buildings.add(newBuilding);
+            //We are assuming all buildings are 1x1 for the time being
+            tiles[y][x].setBuilding(true, newBuilding);
         }
-        buildings.add(newBuilding);
-        //We are assuming all buildings are 1x1 for the time being
-        tiles[y][x].setBuilding(true, newBuilding);
     }
 }
