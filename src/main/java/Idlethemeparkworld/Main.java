@@ -14,7 +14,6 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.event.ActionEvent;
-import java.io.IOException;
 import javax.swing.AbstractAction;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -44,11 +43,12 @@ public class Main extends JFrame{
         
         JMenuBar menuBar = new JMenuBar();
         JMenu menuGame = new JMenu("Game");
-
+        
         JMenuItem menuNewGame = new JMenuItem(new AbstractAction("New game") {
             @Override
             public void actionPerformed(ActionEvent e) {
                 startNewGame();
+                board.refresh();
             }
         });
         
@@ -174,7 +174,6 @@ public class Main extends JFrame{
     
     private void startNewGame(){
         gm.startNewGame();
-        gm.startUpdateCycle();
     }
     
     public void setPricesAndEmployees(){

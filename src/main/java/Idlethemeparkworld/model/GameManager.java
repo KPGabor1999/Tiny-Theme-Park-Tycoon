@@ -21,6 +21,7 @@ public class GameManager {
     public GameManager(){
         this.updateCycleRunning = false;
         this.currentDeltaTime = 0;
+        this.tickCount = 0;
         this.gamePaused = false;
         this.gameSpeed = 1;
         this.dayNightCycle = 0;
@@ -32,7 +33,9 @@ public class GameManager {
     }
     
     public void startNewGame(){
+        tickCount = 0;
         initAllComponents();
+        //startUpdateCycle();
     }
     
     private void initAllComponents(){
@@ -70,7 +73,8 @@ public class GameManager {
         updateCount += tickStep * getGameSpeed();
         double actualUpdateCount = Math.floor(updateCount);
         updateCount -= actualUpdateCount;
-        System.out.println(tickStep+"  - "+actualUpdateCount+" - "+updateCount);
+        //System.out.println(tickStep+" - "+actualUpdateCount+" - "+updateCount);
+        System.out.println(tickCount);
         for (int i = 0; i < actualUpdateCount; i++)
         {
             park.update();
