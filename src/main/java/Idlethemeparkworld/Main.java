@@ -126,6 +126,7 @@ public class Main extends JFrame{
         
         buildingChooser = new javax.swing.JComboBox<>();
         buildingChooser.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {
+            "Pavement",
             "Trash can",
             "Toilet",
             "Hot dog stand",
@@ -194,8 +195,9 @@ public class Main extends JFrame{
         });
         
         add(controlPanel);
-        
-        board = new Board(gm);
+
+        board = new Board(gm, buildButton);
+
         add(board);
         
         setLocationRelativeTo(null);
