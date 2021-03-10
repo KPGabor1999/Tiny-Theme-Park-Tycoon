@@ -1,10 +1,13 @@
 package Idlethemeparkworld.model;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class GameManager {
     private static final int GAME_TICKRATE = 24;
     private static final int GAME_UPDATE_TIME_MS = 1000000000 / GAME_TICKRATE;   
     private boolean updateCycleRunning;
-    private double lastTick;
+    private double lastTime;
     private double currentDeltaTime;
     private int tickCount;
     private double updateCount;
@@ -54,21 +57,24 @@ public class GameManager {
     
     public void startUpdateCycle(){
         updateCycleRunning = true;
-        lastTick = System.nanoTime();
+        currentDeltaTime = 0;
+        lastTime = System.nanoTime();
         updateCycle();
     }
     
     private void updateCycle(){
         while(updateCycleRunning){
+            long now = System.nanoTime();
             if(!gamePaused){
-                long now = System.nanoTime();
-                currentDeltaTime = now - lastTick;
+                currentDeltaTime += now - lastTime;
+                lastTime = now;
                 int tickStep = (int)Math.floor(currentDeltaTime/GAME_UPDATE_TIME_MS);
                 if(tickStep >= 1){
                     update(tickStep);
-                    lastTick += tickStep * GAME_UPDATE_TIME_MS;
+                    currentDeltaTime = 0;
                 }
             }
+            
         }
     }
     
@@ -85,8 +91,7 @@ public class GameManager {
         updateCount -= actualUpdateCount;
         //System.out.println(tickStep+" - "+actualUpdateCount+" - "+updateCount);
         //System.out.println(tickCount);
-        for (int i = 0; i < actualUpdateCount; i++)
-        {
+        for (int i = 0; i < actualUpdateCount; i++) {
             park.update();
             time.update();
         }
@@ -113,6 +118,7 @@ public class GameManager {
     }
     
     public void togglePause(){
+        lastTime = System.nanoTime();
         gamePaused = !gamePaused;
     }
     

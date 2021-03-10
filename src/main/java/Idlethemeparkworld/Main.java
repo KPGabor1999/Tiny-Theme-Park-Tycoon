@@ -172,6 +172,14 @@ public class Main extends JFrame{
             }
         });
         
+        pauseButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                gm.togglePause();
+                System.out.println(gm.isPaused());
+            }
+        });
+        
         add(controlPanel);
         
         board = new Board(gm);
