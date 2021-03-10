@@ -22,6 +22,7 @@ import javax.swing.JMenuItem;
 import javax.swing.WindowConstants;
 import Idlethemeparkworld.view.AdministrationDialog;
 import Idlethemeparkworld.view.Board;
+import javax.swing.Timer;
 
 public class Main extends JFrame{  
     private final JLabel timeLabel; 
@@ -35,6 +36,8 @@ public class Main extends JFrame{
     Highscores highscores;
     
     public Main() {
+        gm = new GameManager();
+        
         setTitle("Idle Theme Park World");
         setSize(600, 600);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -104,6 +107,15 @@ public class Main extends JFrame{
         
         add(informationPanel);
         
+        updateTime();
+        Timer timeTimer = new Timer(500, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateTime();
+            }
+        });
+        timeTimer.start();
+        
         /*---------------------------------------------------------*/
         
         JButton buildButton = new javax.swing.JButton();
@@ -162,14 +174,17 @@ public class Main extends JFrame{
         
         add(controlPanel);
         
-        gm = new GameManager();
-        
         board = new Board(gm);
         add(board);
         
         setLocationRelativeTo(null);
         //pack();
         setVisible(true);
+    }
+    
+    private void updateTime(){
+        //System.out.println(gm.getTime().toString());
+        timeLabel.setText(gm.getTime().toString());
     }
     
     private void startNewGame(){

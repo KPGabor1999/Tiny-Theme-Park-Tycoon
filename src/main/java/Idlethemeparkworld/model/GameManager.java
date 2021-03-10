@@ -1,7 +1,7 @@
 package Idlethemeparkworld.model;
 
 public class GameManager {
-    private static final int GAME_TICKRATE = 1;
+    private static final int GAME_TICKRATE = 24;
     private static final int GAME_UPDATE_TIME_MS = 1000000000 / GAME_TICKRATE;   
     private boolean updateCycleRunning;
     private double lastTick;
@@ -17,6 +17,7 @@ public class GameManager {
     private double dayNightCycle;
     
     private Park park;
+    private Time time;
     
     public GameManager(){
         this.updateCycleRunning = false;
@@ -25,11 +26,17 @@ public class GameManager {
         this.gamePaused = false;
         this.gameSpeed = 1;
         this.dayNightCycle = 0;
+        
         this.park = new Park();
+        this.time = new Time();
     }
     
     public Park getPark(){
         return park;
+    }
+    
+    public Time getTime(){
+        return time;
     }
     
     public void startNewGame(){
@@ -42,6 +49,7 @@ public class GameManager {
     
     private void initAllComponents(){
         park.initializePark(10);
+        time.reset();
     }
     
     public void startUpdateCycle(){
@@ -76,10 +84,11 @@ public class GameManager {
         double actualUpdateCount = Math.floor(updateCount);
         updateCount -= actualUpdateCount;
         //System.out.println(tickStep+" - "+actualUpdateCount+" - "+updateCount);
-        System.out.println(tickCount);
+        //System.out.println(tickCount);
         for (int i = 0; i < actualUpdateCount; i++)
         {
             park.update();
+            time.update();
         }
     }
     
