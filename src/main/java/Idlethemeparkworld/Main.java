@@ -2,13 +2,11 @@ package Idlethemeparkworld;
 
 import Idlethemeparkworld.misc.Highscores;
 import Idlethemeparkworld.model.BuildType;
-import Idlethemeparkworld.model.Park;
-import Idlethemeparkworld.model.buildable.Building;
+import Idlethemeparkworld.model.GameManager;
 import Idlethemeparkworld.view.HighscoreWindow;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -16,7 +14,6 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.event.ActionEvent;
-import java.io.IOException;
 import javax.swing.AbstractAction;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -25,8 +22,7 @@ import javax.swing.JMenuItem;
 import javax.swing.WindowConstants;
 import Idlethemeparkworld.view.AdministrationDialog;
 import Idlethemeparkworld.view.Board;
-import Idlethemeparkworld.view.BuildingOptionsDialog;
-import Idlethemeparkworld.view.GridButton;
+import javax.swing.Timer;
 
 public class Main extends JFrame{  
     private final JLabel timeLabel; 
@@ -36,10 +32,12 @@ public class Main extends JFrame{
     private final JComboBox buildingChooser;
     private Board board;
     
-    Park park;
+    GameManager gm;
     Highscores highscores;
     
-    public Main() throws IOException{
+    public Main() {
+        gm = new GameManager();
+        
         setTitle("Idle Theme Park World");
         setSize(600, 600);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -48,11 +46,12 @@ public class Main extends JFrame{
         
         JMenuBar menuBar = new JMenuBar();
         JMenu menuGame = new JMenu("Game");
-
+        
         JMenuItem menuNewGame = new JMenuItem(new AbstractAction("New game") {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //startNewGame();
+                startNewGame();
+                board.refresh();
             }
         });
         
@@ -107,6 +106,15 @@ public class Main extends JFrame{
         informationPanel.add(happinessLabel);
         
         add(informationPanel);
+        
+        updateTime();
+        Timer timeTimer = new Timer(500, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateTime();
+            }
+        });
+        timeTimer.start();
         
         /*---------------------------------------------------------*/
         
@@ -165,17 +173,45 @@ public class Main extends JFrame{
             }
         });
         
+        slowButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                gm.decreaseGameSpeed();
+            }
+        });
+        
+        pauseButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                gm.togglePause();
+            }
+        });
+        
+        accelerateButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                gm.increaseGameSpeed();
+            }
+        });
+        
         add(controlPanel);
-        
-        park = new Park();
-        
-        board = new Board(park, buildButton);
+
+        board = new Board(gm, buildButton);
+
         add(board);
-        System.out.println("buttonGrid generation complete!");
         
         setLocationRelativeTo(null);
         //pack();
         setVisible(true);
+    }
+    
+    private void updateTime(){
+        //System.out.println(gm.getTime().toString());
+        timeLabel.setText(gm.getTime().toString());
+    }
+    
+    private void startNewGame(){
+        gm.startNewGame();
     }
     
     public void setPricesAndEmployees(){
@@ -184,8 +220,8 @@ public class Main extends JFrame{
     }
     
     public static void main(String[] args) {
-        try {
-            new Main();
-        } catch (IOException ex) {}
+        Main m = new Main();
+        
+        m.gm.startUpdateCycle();
     }    
 }

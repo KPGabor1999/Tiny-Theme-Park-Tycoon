@@ -1,6 +1,7 @@
 package Idlethemeparkworld.view;
 
 import Idlethemeparkworld.model.BuildType;
+import Idlethemeparkworld.model.GameManager;
 import Idlethemeparkworld.model.Park;
 import Idlethemeparkworld.model.buildable.Building;
 import Idlethemeparkworld.model.buildable.attraction.Attraction;
@@ -10,6 +11,7 @@ import Idlethemeparkworld.model.buildable.infrastucture.Infrastructure;
 import Idlethemeparkworld.model.buildable.infrastucture.Pavement;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -28,6 +30,7 @@ import javax.swing.border.EmptyBorder;
 
 public class Board extends JPanel {
 
+    private GameManager gm;
     private Park park;
     private GridButton[][] buttonGrid;
     private final int CELL_SIZE = 32;
@@ -39,8 +42,9 @@ public class Board extends JPanel {
     
     private JButton buildButton;
 
-    public Board(Park park, JButton buildButton) {
-        this.park = park;
+    public Board(GameManager gm, JButton buildButton) {
+        this.gm = gm;
+        this.park = gm.getPark();
         this.buildMode = false;
         this.type = null;
         this.pos = new int[2];
@@ -64,6 +68,11 @@ public class Board extends JPanel {
                 addGridButton(x, y);
             }
         }
+    }
+    
+    public void refresh() {
+        updateMap();
+        repaint();
     }
 
     private void addGridButton(int x, int y){
@@ -189,16 +198,16 @@ public class Board extends JPanel {
         gr.fillRect(0, 0, this.getWidth(), this.getHeight());
     }
     
-   public void drawCenteredString(Graphics2D gr, String text, Rectangle rect, Font font) {
-       FontMetrics metrics = gr.getFontMetrics(font);
-       int x = rect.x + (rect.width - metrics.stringWidth(text)) / 2;
-       int y = rect.y + ((rect.height - metrics.getHeight()) / 2) + metrics.getAscent();
-       gr.setFont(font);
-       gr.drawString(text, x, y);
-   }
+    public void drawCenteredString(Graphics2D gr, String text, Rectangle rect, Font font) {
+        FontMetrics metrics = gr.getFontMetrics(font);
+        int x = rect.x + (rect.width - metrics.stringWidth(text)) / 2;
+        int y = rect.y + ((rect.height - metrics.getHeight()) / 2) + metrics.getAscent();
+        gr.setFont(font);
+        gr.drawString(text, x, y);
+    }
     
-    private void drawGhost(Graphics2D gr){
-        if(canBuild[0]){
+    private void drawGhost(Graphics2D gr) {
+        if(canBuild[0]) {
             gr.setColor(new Color(79, 157, 0, 200));
         } else {
             gr.setColor(new Color(157, 0, 0, 200));
@@ -209,7 +218,7 @@ public class Board extends JPanel {
         gr.fillRect(sizeX*pos[0], sizeY*pos[1], sizeX, sizeY);
         
         gr.setColor(Color.WHITE);
-        Font font = gr.getFont().deriveFont( 10f );
+        Font font = gr.getFont().deriveFont(10f);
         Rectangle rec = new Rectangle(sizeX*pos[0], sizeY*pos[1], sizeX, sizeY);
         drawCenteredString(gr, type.toString(), rec, font);
     }
@@ -218,7 +227,7 @@ public class Board extends JPanel {
     protected void paintChildren(Graphics g) {
         super.paintChildren(g);
         Graphics2D gr = (Graphics2D) g;
-        if(buildMode){
+        if(buildMode) {
             gr.setColor(new Color(0,0,0,100));
             gr.fillRect(0, 0, this.getWidth(), this.getHeight());
             drawGhost(gr);
