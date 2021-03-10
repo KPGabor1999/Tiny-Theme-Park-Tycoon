@@ -20,6 +20,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -33,15 +34,18 @@ public class Board extends JPanel {
     
     private boolean buildMode;
     private BuildType type;
-    private boolean[] canBuild;
-    private int[] pos;
+    private final boolean[] canBuild;
+    private final int[] pos;
+    
+    private JButton buildButton;
 
-    public Board(Park park) {
+    public Board(Park park, JButton buildButton) {
         this.park = park;
         this.buildMode = false;
         this.type = null;
         this.pos = new int[2];
         this.canBuild = new boolean[1];
+        this.buildButton = buildButton;
         
         setOpaque(false);
         setBackground(Color.BLACK);
@@ -78,7 +82,7 @@ public class Board extends JPanel {
                     canBuild[0]=park.canBuild(type, x, y);
                     pos[0]=x;
                     pos[1]=y;
-                    System.out.println("("+x+","+y+") --- "+type.toString()+" --- "+(canBuild[0]?"Can build":"Can't build"));
+                    //System.out.println("("+x+","+y+") --- "+type.toString()+" --- "+(canBuild[0]?"Can build":"Can't build"));
                     repaint();
                 }
             }
@@ -94,11 +98,11 @@ public class Board extends JPanel {
                 } else {
                     if(buildMode){
                         if(canBuild[0]){
-                            park.build(type, pos[0], pos[1]);
+                            park.build(type, pos[0], pos[1], false);
                             updateMap();
-                            System.out.println("can build");
+                            //System.out.println("can build");
                         } else {
-                            System.out.println("cannot build");
+                            //System.out.println("cannot build");
                         }
                         exitBuildMode();
                     }
@@ -147,7 +151,8 @@ public class Board extends JPanel {
         buildMode = true;
         this.type = type;
         pos[0]=0;
-        pos[1]=0;    
+        pos[1]=0;
+        canBuild[0]=false;
         Component[] comps = getComponents();
         for (Component component : comps) {
             component.setEnabled(false);
@@ -155,8 +160,9 @@ public class Board extends JPanel {
             ((GridButton)component).darken();
             //((GridButton)component).setContentAreaFilled(false);
             //((GridButton)component).setBorderPainted(false);
-            repaint();
         }
+        buildButton.setEnabled(false);
+        repaint();
     }
     
     public void exitBuildMode(){
@@ -170,11 +176,17 @@ public class Board extends JPanel {
             //((GridButton)component).setContentAreaFilled(true);
             //((GridButton)component).setBorderPainted(true);
         }
+        buildButton.setEnabled(true);
+        repaint();
     }
     
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        
+        Graphics2D gr = (Graphics2D) g;
+        gr.setColor(new Color(0,0,0,255));
+        gr.fillRect(0, 0, this.getWidth(), this.getHeight());
     }
     
    public void drawCenteredString(Graphics2D gr, String text, Rectangle rect, Font font) {
