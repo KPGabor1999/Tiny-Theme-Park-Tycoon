@@ -172,11 +172,24 @@ public class Main extends JFrame{
             }
         });
         
+        slowButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                gm.decreaseGameSpeed();
+            }
+        });
+        
         pauseButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
                 gm.togglePause();
-                System.out.println(gm.isPaused());
+            }
+        });
+        
+        accelerateButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                gm.increaseGameSpeed();
             }
         });
         
