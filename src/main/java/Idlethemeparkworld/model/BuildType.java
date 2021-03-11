@@ -69,4 +69,24 @@ public enum BuildType {
                 return null;
         }
     }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getLength() {
+        return length;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getBuildCost() {
+        return buildCost;
+    }
+
+    public int getUpgradeCost() {
+        return upgradeCost;
+    }
 }
