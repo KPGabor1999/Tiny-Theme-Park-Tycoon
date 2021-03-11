@@ -1,5 +1,6 @@
 package Idlethemeparkworld.view;
 
+import Idlethemeparkworld.Main;
 import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.GameManager;
 import Idlethemeparkworld.model.Park;
@@ -11,7 +12,6 @@ import Idlethemeparkworld.model.buildable.infrastucture.Infrastructure;
 import Idlethemeparkworld.model.buildable.infrastucture.Pavement;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -40,9 +40,10 @@ public class Board extends JPanel {
     private final boolean[] canBuild;
     private final int[] pos;
     
+    private Main main;
     private JButton buildButton;
 
-    public Board(GameManager gm, JButton buildButton) {
+    public Board(GameManager gm, JButton buildButton, Main main) {
         this.gm = gm;
         this.park = gm.getPark();
         this.buildMode = false;
@@ -50,6 +51,7 @@ public class Board extends JPanel {
         this.pos = new int[2];
         this.canBuild = new boolean[1];
         this.buildButton = buildButton;
+        this.main = main;
         
         setOpaque(false);
         setBackground(Color.BLACK);
@@ -111,6 +113,7 @@ public class Board extends JPanel {
                             park.build(type, pos[0], pos[1], false);
                             updateMap();
                             gm.getFinance().pay(type.getBuildCost());
+                            main.updateInfobar();
                             //System.out.println("can build");
                         } else {
                             //System.out.println("cannot build");

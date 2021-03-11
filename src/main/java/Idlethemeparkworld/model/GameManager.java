@@ -58,6 +58,7 @@ public class GameManager {
     private void initAllComponents(){
         park.initializePark(10);
         time.reset();
+        finance.init();
     }
     
     public void startUpdateCycle(){
