@@ -29,11 +29,15 @@ public class Finance {
     }
     
     public Finance(int initialFunds) {
-        this.initialFunds = 0;
+        this.initialFunds = initialFunds;
+        init();
+    }
+    
+    public void init(){
         this.funds = initialFunds;
         
         this.bankLoan = 0;
-        this.bankLoanInterestRate = 0;
+        this.bankLoanInterestRate = 5;
         this.maxBankLoan = 0;
         
         this.currentExpenditure = 0;
@@ -46,10 +50,6 @@ public class Finance {
         this.WeeklyProfitHistory = new int[HISTORY_SIZE];
         this.ParkValueHistory = new int[HISTORY_SIZE];
         this.ExpenditureTable = new int[HISTORY_SIZE];
-    }
-    
-    public void init(){
-        
     }
 
     public boolean canAfford(int cost){
@@ -71,5 +71,38 @@ public class Finance {
        //upkeep depends on size, upgrade level and whether its closed or open
     }
     
+    public void updateDailyProfit(){
+        currentProfit = 10*currentExpenditure;
+        currentExpenditure = 0;
+        
+        //Substract staff salaries
+        //Substract loan costs
+        //Substract upkeep costs
+        //Substract staff salaries
+    }
     
+    public int getInitialFunds(){
+        return initialFunds;
+    }
+    
+    public int getLoan(){
+        return bankLoan;
+    }
+    
+    public int maxLoan(){
+        return maxBankLoan;
+    }
+    
+    public int getFunds(){
+        return funds;
+    }
+    
+    public void resetFunds(){
+        funds = initialFunds;
+    }
+
+    @Override
+    public String toString() {
+        return "Funds: " + funds;
+    }
 }
