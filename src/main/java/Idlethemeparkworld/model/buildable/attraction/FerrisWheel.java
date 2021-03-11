@@ -6,9 +6,6 @@ public class FerrisWheel extends Attraction  {
     
     public FerrisWheel(){
         this.buildingType = BuildType.FERRISWHEEL;
-        this.name = "Ferris Wheel";
-        this.buildingCost = 15000;      //Balance these later.
-        this.upgradeCost = 30000;
         this.upkeepCost = 8;
         this.fun = 30;
         this.capacity = 20;

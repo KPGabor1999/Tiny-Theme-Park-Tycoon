@@ -18,7 +18,7 @@ public enum BuildType {
     TRASHCAN(1,1,"Trash can",1000,0),
     TOILET(1,1,"Toilet",5000,0),
     HOTDOGSTAND(1,1,"Hotdog stand",10000,0),
-    ICECREAMPARLOR(1,1,"Icecream parlor",15000,0),
+    ICECREAMPARLOR(1,1,"Ice cream parlor",15000,0),
     BURGERJOINT(1,1,"Burger joint",25000,0),
     CAROUSEL(1,1,"Carousel",15000,0),
     FERRISWHEEL(1,1,"Ferriswheel",25000,0),

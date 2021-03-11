@@ -150,7 +150,7 @@ public class Board extends JPanel {
                     } else if(b instanceof Infrastructure){
                         gd.setColor(Color.CYAN);
                     }
-                    gd.changeTile(park.getTile(x, y).getBuilding().getName());
+                    gd.changeTile(park.getTile(x, y).getBuilding().getInfo().getName());
                 }
             }
         }
