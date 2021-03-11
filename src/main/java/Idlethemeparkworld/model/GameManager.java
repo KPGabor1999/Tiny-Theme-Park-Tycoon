@@ -1,7 +1,6 @@
 package Idlethemeparkworld.model;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import Idlethemeparkworld.model.administration.Finance;
 
 public class GameManager {
     private static final int GAME_TICKRATE = 24;
@@ -21,6 +20,7 @@ public class GameManager {
     
     private Park park;
     private Time time;
+    private Finance finance;
     
     public GameManager(){
         this.updateCycleRunning = false;
@@ -32,6 +32,7 @@ public class GameManager {
         
         this.park = new Park();
         this.time = new Time();
+        this.finance = new Finance(100000);
     }
     
     public Park getPark(){
@@ -40,6 +41,10 @@ public class GameManager {
     
     public Time getTime(){
         return time;
+    }
+    
+    public Finance getFinance(){
+        return finance;
     }
     
     public void startNewGame(){

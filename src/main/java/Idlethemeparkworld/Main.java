@@ -208,6 +208,7 @@ public class Main extends JFrame{
     private void updateTime(){
         //System.out.println(gm.getTime().toString());
         timeLabel.setText(gm.getTime().toString());
+        moneyLabel.setText(gm.getFinance().toString());
     }
     
     private void startNewGame(){
