@@ -89,6 +89,7 @@ public class Board extends JPanel {
             public void mouseEntered(MouseEvent e) {
                 if(buildMode){
                     canBuild[0]=park.canBuild(type, x, y);
+                    canBuild[0]=canBuild[0]&&gm.getFinance().canAfford(type.getBuildCost());
                     pos[0]=x;
                     pos[1]=y;
                     //System.out.println("("+x+","+y+") --- "+type.toString()+" --- "+(canBuild[0]?"Can build":"Can't build"));
@@ -109,6 +110,7 @@ public class Board extends JPanel {
                         if(canBuild[0]){
                             park.build(type, pos[0], pos[1], false);
                             updateMap();
+                            gm.getFinance().pay(type.getBuildCost());
                             //System.out.println("can build");
                         } else {
                             //System.out.println("cannot build");
