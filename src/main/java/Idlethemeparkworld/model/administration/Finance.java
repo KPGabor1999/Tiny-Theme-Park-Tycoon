@@ -53,7 +53,7 @@ public class Finance {
     }
 
     public boolean canAfford(int cost){
-        return cost<funds;
+        return cost<=funds;
     }
     
     //add expenditure type
