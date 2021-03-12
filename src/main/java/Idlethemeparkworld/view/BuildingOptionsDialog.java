@@ -1,5 +1,6 @@
 package Idlethemeparkworld.view;
 
+import Idlethemeparkworld.model.Park;
 import Idlethemeparkworld.model.buildable.Building;
 import Idlethemeparkworld.model.buildable.attraction.Attraction;
 import Idlethemeparkworld.model.buildable.food.FoodStall;
@@ -8,11 +9,16 @@ import Idlethemeparkworld.model.buildable.infrastucture.Infrastructure;
 import Idlethemeparkworld.model.buildable.infrastucture.Pavement;
 import Idlethemeparkworld.model.buildable.infrastucture.Toilet;
 import Idlethemeparkworld.model.buildable.infrastucture.TrashCan;
+import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.GridLayout;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
@@ -22,6 +28,9 @@ import javax.swing.WindowConstants;
  * @author KrazyXL
  */
 public class BuildingOptionsDialog extends JDialog{
+    private Park park;
+    private Building currentBuilding;
+
     //Itt csak azok legyenek, amik mindegyik épülettípusra vonatkoznak, a többi legyen csak az if feltétel ágakban.
     JPanel statsPanel;
     JLabel nameLabel;
@@ -38,12 +47,16 @@ public class BuildingOptionsDialog extends JDialog{
     JButton upgradeButton;
     JButton demolishButton;
     
-    public BuildingOptionsDialog(Frame owner, Building currentBuilding){
+    //Adjuk át az egész parkot.
+    public BuildingOptionsDialog(Frame owner, Park park, int x, int y){
         super(owner, "Building options");
         
+        this.park = park;
+        this.currentBuilding = park.getTile(x, y).getBuilding();
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         this.setLayout(new BoxLayout(this.getContentPane(), BoxLayout.PAGE_AXIS));
         this.setResizable(false);
+        
         if(currentBuilding == null){
             nameLabel = new JLabel("Grass");
             nameLabel.setAlignmentX(CENTER_ALIGNMENT);
@@ -53,7 +66,7 @@ public class BuildingOptionsDialog extends JDialog{
             this.getContentPane().add(nameLabel);
             this.getContentPane().add(descriptionLabel);
         } else if(currentBuilding instanceof Attraction){
-            nameLabel = new JLabel(currentBuilding.getInfo().getName());
+            nameLabel = new JLabel(currentBuilding.getInfo().getName() + " (Level " + currentBuilding.getCurrentLevel() + ")");
             nameLabel.setAlignmentX(CENTER_ALIGNMENT);
             
             //isRunning
@@ -73,8 +86,18 @@ public class BuildingOptionsDialog extends JDialog{
             JLabel conditionTextLabel = new JLabel("Condition: ");
             JLabel conditionNumberLabel = new JLabel(((Attraction) currentBuilding).getCondition() + "");
             
-            upgradeButton = new JButton("Upgrade: costs " + currentBuilding.getInfo().getUpgradeCost() + "$");
+            upgradeButton = new JButton("Upgrade: costs " + currentBuilding.getUpgradeCost() + "$");
             upgradeButton.setAlignmentX(CENTER_ALIGNMENT);
+            upgradeButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    BuildingOptionsDialog.this.upgrade();
+                }
+            });
+            
+            if(((Attraction)currentBuilding).getCurrentLevel() == ((Attraction)currentBuilding).getMaxLevel()){
+                upgradeButton.setEnabled(false);
+            }
             //Fejlesztés gomb eseménykezelése
             
             demolishButton = new JButton("Demolish: returns " + currentBuilding.getInfo().getBuildCost()/2 + "$");
@@ -212,5 +235,52 @@ public class BuildingOptionsDialog extends JDialog{
             this.getContentPane().add(descriptionLabel);
         }*/
         this.pack();
+    }
+    
+    private void upgrade(){
+        System.out.println("Látom a külsõ osztályt!");
+        int funds = park.getFunds();
+        int upgradeCost = currentBuilding.getUpgradeCost();
+        if(funds <= upgradeCost){
+            JDialog insufficientFundsDialog = new JDialog(this.getOwner(), "Probléma");
+            insufficientFundsDialog.setLayout(new BoxLayout(insufficientFundsDialog.getContentPane(), BoxLayout.Y_AXIS));
+            insufficientFundsDialog.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            insufficientFundsDialog.setSize(200, 60);
+            
+            JLabel errorMessage = new JLabel("Insufficient funds for upgrade.");
+            errorMessage.setAlignmentX(CENTER_ALIGNMENT);
+            
+            insufficientFundsDialog.getContentPane().add(errorMessage);
+            
+            this.pack();
+            
+            int XLocation = (Toolkit.getDefaultToolkit().getScreenSize().width - insufficientFundsDialog.getWidth())/2;
+            int YLocation = (Toolkit.getDefaultToolkit().getScreenSize().height - insufficientFundsDialog.getHeight())/2;
+            insufficientFundsDialog.setLocation(XLocation, YLocation);
+            
+            insufficientFundsDialog.setVisible(true);
+        } else {
+            park.spend(upgradeCost);
+            currentBuilding.upgrade();
+            this.dispose();
+            JDialog upgradeSuccessfulDialog = new JDialog(this.getOwner(), "Siker");
+            upgradeSuccessfulDialog.setLayout(new BoxLayout(upgradeSuccessfulDialog.getContentPane(), BoxLayout.Y_AXIS));
+            upgradeSuccessfulDialog.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            upgradeSuccessfulDialog.setSize(200, 60);
+            
+            JLabel sucessMessage = new JLabel("Building successfully upgraded.");
+            sucessMessage.setAlignmentX(CENTER_ALIGNMENT);
+            
+            upgradeSuccessfulDialog.getContentPane().add(sucessMessage);
+            
+            this.pack();
+            
+            int XLocation = (Toolkit.getDefaultToolkit().getScreenSize().width - upgradeSuccessfulDialog.getWidth())/2;
+            int YLocation = (Toolkit.getDefaultToolkit().getScreenSize().height - upgradeSuccessfulDialog.getHeight())/2;
+            upgradeSuccessfulDialog.setLocation(XLocation, YLocation);
+            
+            upgradeSuccessfulDialog.setVisible(true);
+            //Sikeres fejlesztés üzenet
+        }
     }
 }

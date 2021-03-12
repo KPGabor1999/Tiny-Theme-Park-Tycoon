@@ -9,6 +9,7 @@ public class Park implements Updatable {
     private int funds;
     private Tile[][] tiles;
     private ArrayList<Building> buildings;
+    private boolean gameOver;
     
     public Park(){
         initializePark(10);
@@ -18,7 +19,26 @@ public class Park implements Updatable {
         initializePark(size);
     }
     
+    public int getFunds() {
+        return funds;
+    }
+
+    public Tile[][] getTiles() {
+        return tiles;
+    }
+
+    public void spend(int amount) {
+        funds -= amount;
+        if(funds < 0){
+            gameOver = true;
+        }
+    }
+    
+    
+    
     public void initializePark(int size){
+        funds = 100000;
+        gameOver = false;
         tiles = new Tile[size][size];
         //1.Make sure all tiles are empty
         this.buildings = new ArrayList<>();

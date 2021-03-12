@@ -127,9 +127,8 @@ public class Board extends JPanel {
     }
     
     private void showBuildingOptions(int x, int y){
-        Building currentBuilding = park.getTile(x, y).getBuilding();
         JFrame parentFrame = (JFrame) getRootPane().getParent();
-        BuildingOptionsDialog buildingOptions = new BuildingOptionsDialog(parentFrame, currentBuilding);
+        BuildingOptionsDialog buildingOptions = new BuildingOptionsDialog(parentFrame, park, x, y);
         buildingOptions.setLocationRelativeTo(this);
         buildingOptions.setVisible(true);
     }

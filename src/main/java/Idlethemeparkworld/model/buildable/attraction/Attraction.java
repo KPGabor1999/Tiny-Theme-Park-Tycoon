@@ -39,16 +39,6 @@ public abstract class Attraction extends Building {
         return condition;
     }
     
-    
-    
-    public void upgrade(){
-   
-    }
-    
-    public void interact(){
-        
-    }
-    
     //consider using an observer/event listener
     protected void start(){
         
