@@ -67,7 +67,7 @@ public class Park implements Updatable {
     
     public Building findBuilding(String type){
         for(int i=0; i<buildings.size(); i++){
-            if(buildings.get(i).getName().equals(type)){
+            if(buildings.get(i).getInfo().getName().equals(type)){
                 return buildings.get(i);
             }
         }

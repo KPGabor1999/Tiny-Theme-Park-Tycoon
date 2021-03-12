@@ -8,8 +8,6 @@ public class TrashCan extends Infrastructure {
     
     public TrashCan(){
         this.buildingType = BuildType.TRASHCAN;
-        this.name = "Trash can";
-        this.buildingCost = 1000;
         this.capacity = 30;
         this.filled = 0;
     }

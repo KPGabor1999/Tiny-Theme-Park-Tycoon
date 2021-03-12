@@ -53,7 +53,7 @@ public class BuildingOptionsDialog extends JDialog{
             this.getContentPane().add(nameLabel);
             this.getContentPane().add(descriptionLabel);
         } else if(currentBuilding instanceof Attraction){
-            nameLabel = new JLabel(currentBuilding.getName());
+            nameLabel = new JLabel(currentBuilding.getInfo().getName());
             nameLabel.setAlignmentX(CENTER_ALIGNMENT);
             
             //isRunning
@@ -73,11 +73,11 @@ public class BuildingOptionsDialog extends JDialog{
             JLabel conditionTextLabel = new JLabel("Condition: ");
             JLabel conditionNumberLabel = new JLabel(((Attraction) currentBuilding).getCondition() + "");
             
-            upgradeButton = new JButton("Upgrade: costs " + currentBuilding.getUpgradeCost() + "$");
+            upgradeButton = new JButton("Upgrade: costs " + currentBuilding.getInfo().getUpgradeCost() + "$");
             upgradeButton.setAlignmentX(CENTER_ALIGNMENT);
             //Fejlesztés gomb eseménykezelése
             
-            demolishButton = new JButton("Demolish: returns " + currentBuilding.getBuildingCost()/2 + "$");
+            demolishButton = new JButton("Demolish: returns " + currentBuilding.getInfo().getBuildCost()/2 + "$");
             demolishButton.setAlignmentX(CENTER_ALIGNMENT);
             //Lebontás gomb eseménykezelése
             
@@ -100,7 +100,7 @@ public class BuildingOptionsDialog extends JDialog{
             this.getContentPane().add(upgradeButton);
             this.getContentPane().add(demolishButton);
         } else if(currentBuilding instanceof FoodStall){
-            nameLabel = new JLabel(currentBuilding.getName());
+            nameLabel = new JLabel(currentBuilding.getInfo().getName());
             nameLabel.setAlignmentX(CENTER_ALIGNMENT);
             
             statsPanel = new JPanel(new GridLayout(5, 2));
@@ -115,11 +115,11 @@ public class BuildingOptionsDialog extends JDialog{
             upkeepCostTextLabel = new JLabel("Upkeep cost: ");
             upkeepCostNumberLabel = new JLabel(((FoodStall) currentBuilding).getUpkeepCost()+ "");
             
-            upgradeButton = new JButton("Upgrade: costs " + currentBuilding.getUpgradeCost() + "$");
+            upgradeButton = new JButton("Upgrade: costs " + currentBuilding.getInfo().getUpgradeCost() + "$");
             upgradeButton.setAlignmentX(CENTER_ALIGNMENT);
             //Fejlesztés gomb eseménykezelése
             
-            demolishButton = new JButton("Demolish: returns " + currentBuilding.getBuildingCost()/2 + "$");
+            demolishButton = new JButton("Demolish: returns " + currentBuilding.getInfo().getBuildCost()/2 + "$");
             demolishButton.setAlignmentX(CENTER_ALIGNMENT);
             //Lebontás gomb eseménykezelése
             
@@ -138,7 +138,7 @@ public class BuildingOptionsDialog extends JDialog{
             this.getContentPane().add(upgradeButton);
             this.getContentPane().add(demolishButton);
         } else if(currentBuilding instanceof Infrastructure){
-            nameLabel = new JLabel(currentBuilding.getName());
+            nameLabel = new JLabel(currentBuilding.getInfo().getName());
             nameLabel.setAlignmentX(CENTER_ALIGNMENT);
             
             //Ha járda, description panel.
@@ -199,7 +199,7 @@ public class BuildingOptionsDialog extends JDialog{
             //Lebontás gomb eseménykezelése*/
             
         } else {
-            System.err.println(currentBuilding.getName() + "Típusú épület nem létezhet.");
+            System.err.println(currentBuilding.getInfo().getName() + "Típusú épület nem létezhet.");
         }
         
         /*{

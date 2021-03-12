@@ -7,8 +7,6 @@ public class Toilet extends Infrastructure {
     
     public Toilet(){
         this.buildingType = BuildType.TOILET;
-        this.name = "Toilet";
-        this.buildingCost = 5000;
         this.capacity = 10;
         this.occupied = 0;
         this.cleanliness = 100;

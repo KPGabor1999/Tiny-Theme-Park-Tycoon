@@ -1,5 +1,6 @@
 package Idlethemeparkworld.view;
 
+import Idlethemeparkworld.Main;
 import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.GameManager;
 import Idlethemeparkworld.model.Park;
@@ -11,7 +12,6 @@ import Idlethemeparkworld.model.buildable.infrastucture.Infrastructure;
 import Idlethemeparkworld.model.buildable.infrastucture.Pavement;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -40,9 +40,10 @@ public class Board extends JPanel {
     private final boolean[] canBuild;
     private final int[] pos;
     
+    private Main main;
     private JButton buildButton;
 
-    public Board(GameManager gm, JButton buildButton) {
+    public Board(GameManager gm, JButton buildButton, Main main) {
         this.gm = gm;
         this.park = gm.getPark();
         this.buildMode = false;
@@ -50,6 +51,7 @@ public class Board extends JPanel {
         this.pos = new int[2];
         this.canBuild = new boolean[1];
         this.buildButton = buildButton;
+        this.main = main;
         
         setOpaque(false);
         setBackground(Color.BLACK);
@@ -89,6 +91,7 @@ public class Board extends JPanel {
             public void mouseEntered(MouseEvent e) {
                 if(buildMode){
                     canBuild[0]=park.canBuild(type, x, y);
+                    canBuild[0]=canBuild[0]&&gm.getFinance().canAfford(type.getBuildCost());
                     pos[0]=x;
                     pos[1]=y;
                     //System.out.println("("+x+","+y+") --- "+type.toString()+" --- "+(canBuild[0]?"Can build":"Can't build"));
@@ -109,6 +112,8 @@ public class Board extends JPanel {
                         if(canBuild[0]){
                             park.build(type, pos[0], pos[1], false);
                             updateMap();
+                            gm.getFinance().pay(type.getBuildCost());
+                            main.updateInfobar();
                             //System.out.println("can build");
                         } else {
                             //System.out.println("cannot build");
@@ -150,7 +155,7 @@ public class Board extends JPanel {
                     } else if(b instanceof Infrastructure){
                         gd.setColor(Color.CYAN);
                     }
-                    gd.changeTile(park.getTile(x, y).getBuilding().getName());
+                    gd.changeTile(park.getTile(x, y).getBuilding().getInfo().getName());
                 }
             }
         }

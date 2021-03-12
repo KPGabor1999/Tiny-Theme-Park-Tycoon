@@ -107,11 +107,11 @@ public class Main extends JFrame{
         
         add(informationPanel);
         
-        updateTime();
+        updateInfobar();
         Timer timeTimer = new Timer(500, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                updateTime();
+                updateInfobar();
             }
         });
         timeTimer.start();
@@ -196,7 +196,7 @@ public class Main extends JFrame{
         
         add(controlPanel);
 
-        board = new Board(gm, buildButton);
+        board = new Board(gm, buildButton, this);
 
         add(board);
         
@@ -205,9 +205,10 @@ public class Main extends JFrame{
         setVisible(true);
     }
     
-    private void updateTime(){
+    public void updateInfobar(){
         //System.out.println(gm.getTime().toString());
         timeLabel.setText(gm.getTime().toString());
+        moneyLabel.setText(gm.getFinance().toString());
     }
     
     private void startNewGame(){

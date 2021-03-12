@@ -5,9 +5,6 @@ import Idlethemeparkworld.model.BuildType;
 public class Carousel extends Attraction {
     public Carousel(){
         this.buildingType = BuildType.CAROUSEL;
-        this.name = "Carousel";
-        this.buildingCost = 15000;
-        this.upgradeCost = 30000;
         this.upkeepCost = 8;
         this.fun = 30;
         this.capacity = 20;
