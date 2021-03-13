@@ -4,7 +4,10 @@ import Idlethemeparkworld.model.BuildType;
 
 public class HauntedMansion extends Attraction {
     
-    public HauntedMansion(){
+    public HauntedMansion(int xLocaion, int yLocation){
+        this.xLocation    = xLocation;
+        this.yLocation    = yLocation;
+        this.value        = BuildType.HAUNTEDMANSION.getBuildCost();
         this.currentLevel = 1;
         this.buildingType = BuildType.HAUNTEDMANSION;
         this.upkeepCost   = 1;
@@ -29,6 +32,7 @@ public class HauntedMansion extends Attraction {
         this.entryFee     = 1;
         this.isRunning    = false;
         this.condition    = 100;
+        this.value        += upgradeCost;
         this.upgradeCost  *= 1000000;
     }
     
@@ -43,6 +47,7 @@ public class HauntedMansion extends Attraction {
         this.entryFee     = 1;
         this.isRunning    = false;
         this.condition    = 100;
+        this.value        += upgradeCost;
         this.upgradeCost  = 0;
     }
         

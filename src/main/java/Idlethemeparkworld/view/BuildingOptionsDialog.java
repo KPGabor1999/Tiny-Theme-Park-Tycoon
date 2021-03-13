@@ -1,5 +1,6 @@
 package Idlethemeparkworld.view;
 
+import Idlethemeparkworld.Main;
 import Idlethemeparkworld.model.GameManager;
 import Idlethemeparkworld.model.Park;
 import Idlethemeparkworld.model.buildable.Building;
@@ -29,7 +30,7 @@ import javax.swing.WindowConstants;
  * @author KrazyXL
  */
 public class BuildingOptionsDialog extends JDialog{
-    private GameManager gameManager;
+    private Board board;
     private Building currentBuilding;
 
     //Itt csak azok legyenek, amik mindegyik épülettípusra vonatkoznak, a többi legyen csak az if feltétel ágakban.
@@ -49,11 +50,11 @@ public class BuildingOptionsDialog extends JDialog{
     JButton demolishButton;
     
     //Adjuk át az egész parkot.
-    public BuildingOptionsDialog(Frame owner, GameManager gameManager, int x, int y){
+    public BuildingOptionsDialog(Frame owner, Board board, int x, int y){
         super(owner, "Building options");
         
-        this.gameManager = gameManager;
-        this.currentBuilding = gameManager.getPark().getTile(x, y).getBuilding();
+        this.board = board;
+        this.currentBuilding = board.getGameManager().getPark().getTile(x, y).getBuilding();
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         this.setLayout(new BoxLayout(this.getContentPane(), BoxLayout.PAGE_AXIS));
         this.setResizable(false);
@@ -100,7 +101,7 @@ public class BuildingOptionsDialog extends JDialog{
                 upgradeButton.setEnabled(false);
             }
             
-            demolishButton = new JButton("Demolish: returns " + currentBuilding.getInfo().getBuildCost()/2 + "$");
+            demolishButton = new JButton("Demolish: returns " + currentBuilding.getValue()/2 + "$");
             demolishButton.setAlignmentX(CENTER_ALIGNMENT);
             demolishButton.addActionListener(new ActionListener() {
                 @Override
@@ -158,8 +159,14 @@ public class BuildingOptionsDialog extends JDialog{
             }
             //Fejlesztés gomb eseménykezelése
             
-            demolishButton = new JButton("Demolish: returns " + currentBuilding.getInfo().getBuildCost()/2 + "$");
+            demolishButton = new JButton("Demolish: returns " + currentBuilding.getValue()/2 + "$");
             demolishButton.setAlignmentX(CENTER_ALIGNMENT);
+            demolishButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    BuildingOptionsDialog.this.demolishBuilding();
+                }
+            });
             //Lebontás gomb eseménykezelése
             
             this.getContentPane().add(nameLabel);
@@ -254,7 +261,7 @@ public class BuildingOptionsDialog extends JDialog{
     }
     
     private void upgradeBuilding(){
-        int funds = gameManager.getFinance().getFunds();
+        int funds = board.getGameManager().getFinance().getFunds();
         int upgradeCost = currentBuilding.getUpgradeCost();
         if(funds <= upgradeCost){
             JDialog insufficientFundsDialog = new JDialog(this.getOwner(), "Probléma");
@@ -275,7 +282,7 @@ public class BuildingOptionsDialog extends JDialog{
             
             insufficientFundsDialog.setVisible(true);
         } else {
-            gameManager.getFinance().pay(upgradeCost);
+            board.getGameManager().getFinance().pay(upgradeCost);
             currentBuilding.upgrade();
             this.dispose();
             JDialog upgradeSuccessfulDialog = new JDialog(this.getOwner(), "Siker");
@@ -295,11 +302,14 @@ public class BuildingOptionsDialog extends JDialog{
             upgradeSuccessfulDialog.setLocation(XLocation, YLocation);
             
             upgradeSuccessfulDialog.setVisible(true);
-            //Sikeres fejlesztés üzenet
         }
     }
     
     private void demolishBuilding(){
-        
+        board.getGameManager().getFinance().earn(currentBuilding.getValue()/2);
+            //Az épület addigi teljes értékének(!) a felét adja vissza.
+        board.getGameManager().getPark().demolish(currentBuilding.getxLocation(), currentBuilding.getyLocation());
+        this.dispose();
+        board.refresh();
     }
 }

@@ -4,9 +4,12 @@ import Idlethemeparkworld.model.BuildType;
 
 public class HotDog extends FoodStall {
     
-    public HotDog(){
+    public HotDog(int xLocation, int yLocation){
+        this.xLocation    = xLocation;
+        this.yLocation    = yLocation;
+        this.value        = BuildType.HOTDOGSTAND.getBuildCost();
         this.currentLevel = 1;
-        this.buildingType = BuildType.BURGERJOINT;
+        this.buildingType = BuildType.HOTDOGSTAND;
         this.capacity     = 1;
         this.occupied     = 0;
         this.foodPrice    = 1;        //customers have a preferred pricepoint, if it's higher than that their happiness goes down a bit

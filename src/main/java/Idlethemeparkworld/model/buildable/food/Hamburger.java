@@ -4,7 +4,10 @@ import Idlethemeparkworld.model.BuildType;
 
 public class Hamburger extends FoodStall {
     
-    public Hamburger(){
+    public Hamburger(int xLocation, int yLocation){
+        this.xLocation    = xLocation;
+        this.yLocation    = yLocation;
+        this.value        = BuildType.BURGERJOINT.getBuildCost();
         this.currentLevel = 1;
         this.buildingType = BuildType.BURGERJOINT;
         this.capacity     = 1;
@@ -12,7 +15,7 @@ public class Hamburger extends FoodStall {
         this.foodPrice    = 1;        //customers have a preferred pricepoint, if it's higher than that their happiness goes down a bit
         this.foodQuality  = 1;
         this.upkeepCost   = 1;        //The total of its employees wages in dollars/hour.
-        this.upgradeCost  = 1;
+        this.upgradeCost  = 110;
     }
     
     @Override
@@ -23,7 +26,8 @@ public class Hamburger extends FoodStall {
         this.occupied     = 0;
         this.foodPrice    = 1;        //customers have a preferred pricepoint, if it's higher than that their happiness goes down a bit
         this.foodQuality  += 1;
-        this.upgradeCost  *= 1;
+        this.value        += upgradeCost;
+        this.upgradeCost  *= 10;
         System.out.println(currentLevel);
     }
     
@@ -35,6 +39,7 @@ public class Hamburger extends FoodStall {
         this.occupied     = 0;
         this.foodPrice    = 1;        //customers have a preferred pricepoint, if it's higher than that their happiness goes down a bit
         this.foodQuality  += 1;
+        this.value        += upgradeCost;
         this.upgradeCost  = 1;
     }
 }

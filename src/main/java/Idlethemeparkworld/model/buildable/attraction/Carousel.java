@@ -4,11 +4,10 @@ import Idlethemeparkworld.model.BuildType;
 
 public class Carousel extends Attraction {
     
-    //Az épületeknek ismerniük kéne a saját helyüket, hogy törölni lehessen õket a tábláról.
-    public Carousel(int XLocation, int YLocation){
-        this.XLocation    = XLocation;
-        this.YLocation    = YLocation;
-        System.out.println("Körhinta koordinátái: (" + this.XLocation + ", " + this.YLocation + ")");
+    public Carousel(int xLocation, int yLocation){
+        this.xLocation    = xLocation;
+        this.yLocation    = yLocation;
+        this.value        = BuildType.CAROUSEL.getBuildCost();
         this.currentLevel = 1;
         this.buildingType = BuildType.CAROUSEL;
         this.upkeepCost   = 1;
@@ -33,6 +32,7 @@ public class Carousel extends Attraction {
         this.entryFee     = 1;
         this.isRunning    = false;
         this.condition    = 100;
+        this.value        += upgradeCost;
         this.upgradeCost  *= 100;
     }
     
@@ -47,6 +47,7 @@ public class Carousel extends Attraction {
         this.entryFee     = 1;
         this.isRunning    = false;
         this.condition    = 100;
+        this.value        += upgradeCost;
         this.upgradeCost  = 0;
     }
     

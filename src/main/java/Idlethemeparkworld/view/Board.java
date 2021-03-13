@@ -60,6 +60,48 @@ public class Board extends JPanel {
         resizeMap(park.getHeight(), park.getWidth());
         updateMap();
     }
+
+    public GameManager getGameManager() {
+        return gm;
+    }
+
+    public Park getPark() {
+        return park;
+    }
+
+    public GridButton[][] getButtonGrid() {
+        return buttonGrid;
+    }
+
+    public int getCELL_SIZE() {
+        return CELL_SIZE;
+    }
+
+    public boolean isBuildMode() {
+        return buildMode;
+    }
+
+    public BuildType getType() {
+        return type;
+    }
+
+    public boolean[] getCanBuild() {
+        return canBuild;
+    }
+
+    public int[] getPos() {
+        return pos;
+    }
+
+    public Main getMain() {
+        return main;
+    }
+
+    public JButton getBuildButton() {
+        return buildButton;
+    }
+    
+    
     
     private void resizeMap(int rows, int columns){
         removeAll();
@@ -128,7 +170,7 @@ public class Board extends JPanel {
     
     private void showBuildingOptions(int x, int y){
         JFrame parentFrame = (JFrame) getRootPane().getParent();
-        BuildingOptionsDialog buildingOptions = new BuildingOptionsDialog(parentFrame, gm, x, y);
+        BuildingOptionsDialog buildingOptions = new BuildingOptionsDialog(parentFrame, this, x, y);
         buildingOptions.setLocationRelativeTo(this);
         buildingOptions.setVisible(true);
     }

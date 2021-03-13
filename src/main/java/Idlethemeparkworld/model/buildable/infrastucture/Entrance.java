@@ -4,7 +4,9 @@ import Idlethemeparkworld.model.BuildType;
 
 public class Entrance extends Infrastructure {
     
-    public Entrance(){
+    public Entrance(int xLocation, int yLocation){
+        this.xLocation = xLocation;
+        this.yLocation = yLocation;
         this.buildingType = BuildType.ENTRANCE;
     }
     

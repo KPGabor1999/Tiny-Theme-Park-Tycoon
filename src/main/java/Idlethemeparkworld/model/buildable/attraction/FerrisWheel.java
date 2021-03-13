@@ -4,7 +4,10 @@ import Idlethemeparkworld.model.BuildType;
 
 public class FerrisWheel extends Attraction  {
     
-    public FerrisWheel(){
+    public FerrisWheel(int xLocation, int yLocation){
+        this.xLocation    = xLocation;
+        this.yLocation    = yLocation;
+        this.value        = BuildType.FERRISWHEEL.getBuildCost();
         this.currentLevel = 1;
         this.buildingType = BuildType.FERRISWHEEL;
         this.upkeepCost   = 1;
@@ -29,6 +32,7 @@ public class FerrisWheel extends Attraction  {
         this.entryFee     = 1;
         this.isRunning    = false;
         this.condition    = 100;
+        this.value        += upgradeCost;
         this.upgradeCost  *= 1000000;
     }
     
@@ -43,6 +47,7 @@ public class FerrisWheel extends Attraction  {
         this.entryFee     = 1;
         this.isRunning    = false;
         this.condition    = 100;
+        this.value        += upgradeCost;
         this.upgradeCost  = 0;
     }
         

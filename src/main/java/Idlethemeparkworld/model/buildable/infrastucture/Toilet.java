@@ -5,7 +5,9 @@ import Idlethemeparkworld.model.BuildType;
 public class Toilet extends Infrastructure {
     private int cleanliness;
     
-    public Toilet(){
+    public Toilet(int xLocation, int yLocation){
+        this.xLocation = xLocation;
+        this.yLocation = yLocation;
         this.buildingType = BuildType.TOILET;
         this.capacity = 10;
         this.occupied = 0;
