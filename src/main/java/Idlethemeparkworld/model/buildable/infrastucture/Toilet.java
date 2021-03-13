@@ -12,6 +12,7 @@ public class Toilet extends Infrastructure {
         this.capacity = 10;
         this.occupied = 0;
         this.cleanliness = 100;
+        this.value = BuildType.TOILET.getBuildCost();
     }
 
     public int getCleanliness() {

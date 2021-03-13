@@ -12,6 +12,7 @@ public class TrashCan extends Infrastructure {
         this.buildingType = BuildType.TRASHCAN;
         this.capacity = 30;
         this.filled = 0;
+        this.value = BuildType.TRASHCAN.getBuildCost();
     }
 
     public int getCapacity() {

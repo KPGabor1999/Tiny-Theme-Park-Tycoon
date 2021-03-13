@@ -234,6 +234,17 @@ public class BuildingOptionsDialog extends JDialog{
                 this.getContentPane().add(descriptionLabel);
             } 
             
+            if(!(currentBuilding instanceof Entrance)){
+                demolishButton = new JButton("Demolish: returns " + currentBuilding.getValue()/2 + "$");
+                demolishButton.setAlignmentX(CENTER_ALIGNMENT);
+                demolishButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        BuildingOptionsDialog.this.demolishBuilding();
+                    }
+                });
+                this.getContentPane().add(demolishButton);
+            }
             
             
             /*upgradeButton = new JButton("Upgrade: costs " + currentBuilding.getUpgradeCost() + "$");

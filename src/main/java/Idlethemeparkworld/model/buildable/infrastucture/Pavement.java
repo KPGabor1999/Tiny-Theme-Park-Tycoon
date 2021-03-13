@@ -8,6 +8,7 @@ public class Pavement extends Infrastructure {
         this.xLocation = xLocation;
         this.yLocation = yLocation;
         this.buildingType = BuildType.PAVEMENT;
+        this.value = BuildType.PAVEMENT.getBuildCost();
     }
         
     @Override
