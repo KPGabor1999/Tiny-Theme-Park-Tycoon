@@ -92,17 +92,22 @@ public class BuildingOptionsDialog extends JDialog{
             upgradeButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    BuildingOptionsDialog.this.upgrade();
+                    BuildingOptionsDialog.this.upgradeBuilding();
                 }
             });
             
             if(((Attraction)currentBuilding).getCurrentLevel() == ((Attraction)currentBuilding).getMaxLevel()){
                 upgradeButton.setEnabled(false);
             }
-            //Fejlesztés gomb eseménykezelése
             
             demolishButton = new JButton("Demolish: returns " + currentBuilding.getInfo().getBuildCost()/2 + "$");
             demolishButton.setAlignmentX(CENTER_ALIGNMENT);
+            demolishButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    BuildingOptionsDialog.this.demolishBuilding();
+                }
+            });
             //Lebontás gomb eseménykezelése
             
             this.getContentPane().add(nameLabel);
@@ -144,7 +149,7 @@ public class BuildingOptionsDialog extends JDialog{
             upgradeButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    BuildingOptionsDialog.this.upgrade();
+                    BuildingOptionsDialog.this.upgradeBuilding();
                 }
             });
             
@@ -248,7 +253,7 @@ public class BuildingOptionsDialog extends JDialog{
         this.pack();
     }
     
-    private void upgrade(){
+    private void upgradeBuilding(){
         int funds = gameManager.getFinance().getFunds();
         int upgradeCost = currentBuilding.getUpgradeCost();
         if(funds <= upgradeCost){
@@ -292,5 +297,9 @@ public class BuildingOptionsDialog extends JDialog{
             upgradeSuccessfulDialog.setVisible(true);
             //Sikeres fejlesztés üzenet
         }
+    }
+    
+    private void demolishBuilding(){
+        
     }
 }

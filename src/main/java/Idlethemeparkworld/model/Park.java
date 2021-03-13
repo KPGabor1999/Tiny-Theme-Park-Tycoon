@@ -1,6 +1,7 @@
 package Idlethemeparkworld.model;
 
 import Idlethemeparkworld.model.buildable.Building;
+import Idlethemeparkworld.model.buildable.attraction.Carousel;
 import Idlethemeparkworld.model.buildable.infrastucture.Entrance;
 import Idlethemeparkworld.model.buildable.infrastucture.Pavement;
 import java.util.ArrayList;

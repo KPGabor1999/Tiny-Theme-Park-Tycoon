@@ -1,17 +1,17 @@
 package Idlethemeparkworld.model.buildable;
 
 public abstract class Building extends Buildable{
-    protected int x, y;
+    protected int XLocation, YLocation;
     protected int currentLevel;
     public final int maxLevel = 3;
     protected int upgradeCost;
-    
-    public int getX(){
-        return x;
+
+    public int getXLocation() {
+        return XLocation;
     }
-    
-    public int getY(){
-        return y;
+
+    public int getYLocation() {
+        return YLocation;
     }
 
     public int getCurrentLevel() {

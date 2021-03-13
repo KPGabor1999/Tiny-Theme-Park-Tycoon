@@ -4,7 +4,11 @@ import Idlethemeparkworld.model.BuildType;
 
 public class Carousel extends Attraction {
     
-    public Carousel(){
+    //Az épületeknek ismerniük kéne a saját helyüket, hogy törölni lehessen õket a tábláról.
+    public Carousel(int XLocation, int YLocation){
+        this.XLocation    = XLocation;
+        this.YLocation    = YLocation;
+        System.out.println("Körhinta koordinátái: (" + this.XLocation + ", " + this.YLocation + ")");
         this.currentLevel = 1;
         this.buildingType = BuildType.CAROUSEL;
         this.upkeepCost   = 1;
