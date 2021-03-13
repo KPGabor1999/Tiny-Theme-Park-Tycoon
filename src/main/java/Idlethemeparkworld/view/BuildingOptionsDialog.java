@@ -1,5 +1,6 @@
 package Idlethemeparkworld.view;
 
+import Idlethemeparkworld.model.GameManager;
 import Idlethemeparkworld.model.Park;
 import Idlethemeparkworld.model.buildable.Building;
 import Idlethemeparkworld.model.buildable.attraction.Attraction;
@@ -28,7 +29,7 @@ import javax.swing.WindowConstants;
  * @author KrazyXL
  */
 public class BuildingOptionsDialog extends JDialog{
-    private Park park;
+    private GameManager gameManager;
     private Building currentBuilding;
 
     //Itt csak azok legyenek, amik mindegyik épülettípusra vonatkoznak, a többi legyen csak az if feltétel ágakban.
@@ -48,11 +49,11 @@ public class BuildingOptionsDialog extends JDialog{
     JButton demolishButton;
     
     //Adjuk át az egész parkot.
-    public BuildingOptionsDialog(Frame owner, Park park, int x, int y){
+    public BuildingOptionsDialog(Frame owner, GameManager gameManager, int x, int y){
         super(owner, "Building options");
         
-        this.park = park;
-        this.currentBuilding = park.getTile(x, y).getBuilding();
+        this.gameManager = gameManager;
+        this.currentBuilding = gameManager.getPark().getTile(x, y).getBuilding();
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         this.setLayout(new BoxLayout(this.getContentPane(), BoxLayout.PAGE_AXIS));
         this.setResizable(false);
@@ -123,7 +124,7 @@ public class BuildingOptionsDialog extends JDialog{
             this.getContentPane().add(upgradeButton);
             this.getContentPane().add(demolishButton);
         } else if(currentBuilding instanceof FoodStall){
-            nameLabel = new JLabel(currentBuilding.getInfo().getName());
+            nameLabel = new JLabel(currentBuilding.getInfo().getName() + " (Level " + currentBuilding.getCurrentLevel() + ")");
             nameLabel.setAlignmentX(CENTER_ALIGNMENT);
             
             statsPanel = new JPanel(new GridLayout(5, 2));
@@ -138,8 +139,18 @@ public class BuildingOptionsDialog extends JDialog{
             upkeepCostTextLabel = new JLabel("Upkeep cost: ");
             upkeepCostNumberLabel = new JLabel(((FoodStall) currentBuilding).getUpkeepCost()+ "");
             
-            upgradeButton = new JButton("Upgrade: costs " + currentBuilding.getInfo().getUpgradeCost() + "$");
+            upgradeButton = new JButton("Upgrade: costs " + currentBuilding.getUpgradeCost() + "$");
             upgradeButton.setAlignmentX(CENTER_ALIGNMENT);
+            upgradeButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    BuildingOptionsDialog.this.upgrade();
+                }
+            });
+            
+            if(((FoodStall)currentBuilding).getCurrentLevel() == ((FoodStall)currentBuilding).getMaxLevel()){
+                upgradeButton.setEnabled(false);
+            }
             //Fejlesztés gomb eseménykezelése
             
             demolishButton = new JButton("Demolish: returns " + currentBuilding.getInfo().getBuildCost()/2 + "$");
@@ -238,8 +249,7 @@ public class BuildingOptionsDialog extends JDialog{
     }
     
     private void upgrade(){
-        System.out.println("Látom a külsõ osztályt!");
-        int funds = park.getFunds();
+        int funds = gameManager.getFinance().getFunds();
         int upgradeCost = currentBuilding.getUpgradeCost();
         if(funds <= upgradeCost){
             JDialog insufficientFundsDialog = new JDialog(this.getOwner(), "Probléma");
@@ -260,7 +270,7 @@ public class BuildingOptionsDialog extends JDialog{
             
             insufficientFundsDialog.setVisible(true);
         } else {
-            park.spend(upgradeCost);
+            gameManager.getFinance().pay(upgradeCost);
             currentBuilding.upgrade();
             this.dispose();
             JDialog upgradeSuccessfulDialog = new JDialog(this.getOwner(), "Siker");

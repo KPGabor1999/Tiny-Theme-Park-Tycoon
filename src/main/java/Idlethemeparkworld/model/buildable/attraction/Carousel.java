@@ -29,7 +29,7 @@ public class Carousel extends Attraction {
         this.entryFee     = 1;
         this.isRunning    = false;
         this.condition    = 100;
-        this.upgradeCost  *= 1000000;
+        this.upgradeCost  *= 100;
     }
     
     @Override
@@ -44,5 +44,9 @@ public class Carousel extends Attraction {
         this.isRunning    = false;
         this.condition    = 100;
         this.upgradeCost  = 0;
+    }
+    
+    protected void start(){
+        //TODO
     }
 }

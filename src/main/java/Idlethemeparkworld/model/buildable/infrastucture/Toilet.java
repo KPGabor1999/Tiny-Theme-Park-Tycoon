@@ -15,6 +15,11 @@ public class Toilet extends Infrastructure {
     public int getCleanliness() {
         return cleanliness;
     }
-
+        
+    @Override
+    public void level2Upgrade(){}       //They're not meant to be upgradeable but they could be.
+    
+    @Override
+    public void level3Upgrade(){}
 
 }

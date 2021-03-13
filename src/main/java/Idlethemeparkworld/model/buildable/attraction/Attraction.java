@@ -40,7 +40,5 @@ public abstract class Attraction extends Building {
     }
     
     //consider using an observer/event listener
-    protected void start(){
-        
-    }
+    protected abstract void start();
 }

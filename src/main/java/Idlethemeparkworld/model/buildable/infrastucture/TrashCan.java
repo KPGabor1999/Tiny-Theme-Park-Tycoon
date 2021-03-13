@@ -19,6 +19,11 @@ public class TrashCan extends Infrastructure {
     public int getFilled() {
         return filled;
     }
+
+        
+    @Override
+    public void level2Upgrade(){}       //They're not meant to be upgradeable but they could be.
     
-    
+    @Override
+    public void level3Upgrade(){}
 }

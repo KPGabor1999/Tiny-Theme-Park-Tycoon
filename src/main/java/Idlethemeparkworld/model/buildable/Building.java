@@ -36,7 +36,7 @@ public abstract class Building extends Buildable{
         }
     }
     
-    public void level2Upgrade(){}   //these 3 should be abstract
-    public void level3Upgrade(){}
-    public void interact(){}        //arent't the visitors supposed to have this?
+    public abstract void level2Upgrade();   //these 3 should be abstract
+    public abstract void level3Upgrade();
+    //public abstract void interact();                 //arent't the visitors supposed to have this?
 }

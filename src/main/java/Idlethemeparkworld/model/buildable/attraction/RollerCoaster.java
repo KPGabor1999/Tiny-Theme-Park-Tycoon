@@ -15,6 +15,7 @@ public class RollerCoaster extends Attraction {
         this.entryFee     = 1;
         this.isRunning    = false;
         this.condition    = 100;
+        this.upgradeCost  = 1;
     }
     
     @Override
@@ -43,5 +44,9 @@ public class RollerCoaster extends Attraction {
         this.isRunning    = false;
         this.condition    = 100;
         this.upgradeCost  = 0;
+    }
+        
+    protected void start(){
+        //TODO
     }
 }
