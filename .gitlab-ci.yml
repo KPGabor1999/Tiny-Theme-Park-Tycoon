@@ -2,12 +2,27 @@ image: gradle:alpine
 
 variables:
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+  PACKAGE_REGISTRY_URL: "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/itpw/0.0.1"
 
 before_script:
   - export GRADLE_USER_HOME=`pwd`/.gradle
 
+stages:
+  - build
+  - test
+  - javadoc
+  - upload
+  - release
+  - scheduled-tag
+
 build:
   stage: build
+  rules:
+  - if: '$CI_PIPELINE_SOURCE == "schedule"'
+    when: never
+  - if: $CI_COMMIT_TAG
+    when: never
+  - if: '$CI_COMMIT_BRANCH != "master"'
   script: gradle --build-cache assemble
   cache:
     key: "$CI_COMMIT_REF_NAME"
@@ -15,6 +30,46 @@ build:
     paths:
       - build
       - .gradle
+
+build-weekly:
+  stage: build
+  rules:
+    - if: '$TYPE == "snapshot"'
+      when: never
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+  script:
+    - gradle --build-cache assemble
+    - mv "build/libs/Idle theme park world.jar" .
+    - mv "./Idle theme park world.jar" "./ITPW.jar"
+  artifacts:
+    name: "Build$(date +\"%Y%m%d\")"
+    paths:
+      - ITPW.jar
+    expire_in: 1 week
+
+
+build-master:
+  stage: build
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: never
+    - if: '$CI_COMMIT_BRANCH == "master"'
+    - if: $CI_COMMIT_TAG
+  script: 
+    - gradle --build-cache assemble
+    - mv "build/libs/Idle theme park world.jar" .
+    - mv "./Idle theme park world.jar" "./ITPW.jar"
+  cache:
+    key: "$CI_COMMIT_REF_NAME"
+    policy: push
+    paths:
+      - build
+      - .gradle
+  artifacts:
+    name: 'Build-$CI_COMMIT_REF_NAME'
+    paths:
+      - ITPW.jar
+    expire_in: 1 day
 
 test:
   stage: test
@@ -25,3 +80,39 @@ test:
     paths:
       - build
       - .gradle
+
+javadoc:
+  stage: javadoc
+  rules:
+    - if: '$TYPE == "monthly"'
+      when: never
+    - if: $CI_COMMIT_TAG
+      when: never
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: never
+    - if: '$CI_COMMIT_BRANCH == "master"'
+  script:
+    - cd src/main/java/Idlethemeparkworld
+    - find . -type f -name "*.java" | xargs javadoc -d docs
+    - mv docs ../../../../docs
+  artifacts:
+    name: javadocs
+    paths:
+      - docs/
+    expire_in: 1 week
+
+upload:
+  stage: upload
+  image: curlimages/curl:latest
+  rules:
+    - if: $CI_COMMIT_TAG
+  script:
+    - 'curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file ./ITPW.jar ${PACKAGE_REGISTRY_URL}/ITPW-${CI_COMMIT_TAG}.jar'
+
+release:
+  stage: release
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  rules:
+    - if: $CI_COMMIT_TAG
+  script:
+    - release-cli create --name "$CI_COMMIT_TAG" --tag-name $CI_COMMIT_TAG --assets-link "{\"name\":\"ITPW.jar\",\"url\":\"${PACKAGE_REGISTRY_URL}/ITPW-${CI_COMMIT_TAG}.jar\"}"
