@@ -62,6 +62,11 @@ public class Finance {
         currentExpenditure += cost;
     }
     
+    public void earn(int amount){
+        funds += amount;
+        currentExpenditure += amount;
+    }
+    
     public void paySalary(){
        //Pay out all staff members 
     }

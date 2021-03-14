@@ -35,6 +35,10 @@ public class Main extends JFrame{
     GameManager gm;
     Highscores highscores;
     
+    public Board getBoard(){
+        return board;
+    }
+    
     public Main() {
         gm = new GameManager();
         

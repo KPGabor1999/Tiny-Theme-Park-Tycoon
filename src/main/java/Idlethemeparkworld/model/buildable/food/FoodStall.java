@@ -23,13 +23,4 @@ public abstract class FoodStall extends Building {
     public int getFoodQuality() {
         return foodQuality;
     }
-    
-    
-    public void upgrade(){
-    
-    }
-    
-    public void interact(){
-    
-    }
 }

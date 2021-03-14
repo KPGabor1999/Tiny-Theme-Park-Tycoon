@@ -21,16 +21,7 @@ public abstract class Infrastructure extends Building {
     }
     
     
-    
-    public void upgrade(){
-    
-    }
-    
     public void clean(){
         
-    }
-    
-    public void interact(){
-    
     }
 }
