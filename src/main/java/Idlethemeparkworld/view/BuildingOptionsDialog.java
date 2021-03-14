@@ -25,10 +25,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
-/**
- *
- * @author KrazyXL
- */
 public class BuildingOptionsDialog extends JDialog{
     private Board board;
     private Building currentBuilding;
@@ -157,7 +153,6 @@ public class BuildingOptionsDialog extends JDialog{
             if(((FoodStall)currentBuilding).getCurrentLevel() == ((FoodStall)currentBuilding).getMaxLevel()){
                 upgradeButton.setEnabled(false);
             }
-            //Fejlesztés gomb eseménykezelése
             
             demolishButton = new JButton("Demolish: returns " + currentBuilding.getValue()/2 + "$");
             demolishButton.setAlignmentX(CENTER_ALIGNMENT);
@@ -166,9 +161,7 @@ public class BuildingOptionsDialog extends JDialog{
                 public void actionPerformed(ActionEvent e) {
                     BuildingOptionsDialog.this.demolishBuilding();
                 }
-            });
-            //Lebontás gomb eseménykezelése
-            
+            });            
             this.getContentPane().add(nameLabel);
             statsPanel.add(capacityTextLabel);
             statsPanel.add(capacityNumberLabel);
@@ -189,8 +182,6 @@ public class BuildingOptionsDialog extends JDialog{
             
             //Ha járda, description panel.
             if(currentBuilding instanceof Pavement){
-                nameLabel = new JLabel("Pavement");
-                nameLabel.setAlignmentX(CENTER_ALIGNMENT);
                 JLabel descriptionLabel = new JLabel("Use pavement tiles to connect buildings and help people get around.");
                 descriptionLabel.setAlignmentX(CENTER_ALIGNMENT);
             
@@ -318,7 +309,6 @@ public class BuildingOptionsDialog extends JDialog{
     
     private void demolishBuilding(){
         board.getGameManager().getFinance().earn(currentBuilding.getValue()/2);
-            //Az épület addigi teljes értékének(!) a felét adja vissza.
         board.getGameManager().getPark().demolish(currentBuilding.getxLocation(), currentBuilding.getyLocation());
         this.dispose();
         board.refresh();
