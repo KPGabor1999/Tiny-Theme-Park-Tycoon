@@ -95,3 +95,17 @@ release:
     - if: $CI_COMMIT_TAG
   script:
     - release-cli create --name "$CI_COMMIT_TAG" --tag-name $CI_COMMIT_TAG --assets-link "{\"name\":\"ITPW.jar\",\"url\":\"${PACKAGE_REGISTRY_URL}/ITPW-${CI_COMMIT_TAG}.jar\"}"
+
+scheduled-tag:
+  image:
+    name: alpine/git
+    entrypoint: [""]
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule" && $TYPE == "snapshot"'
+  script:
+    - git config user.email "${GITLAB_USER_EMAIL}"
+    - git config user.name "${GITLAB_USER_NAME}"
+    - git remote add api-origin https://oauth2:${GITLAB_ACCESS_TOKEN}@szofttech.inf.elte.hu/${CI_PROJECT_PATH}
+    - git tag -a "Snapshot$(date +%Y%m)" -m "Auto-Release"
+    - git push api-origin "Snapshot$(date +%Y%m)"
+
