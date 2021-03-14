@@ -30,6 +30,23 @@ build:
       - build
       - .gradle
 
+build-weekly:
+  stage: build
+  rules:
+    - if: '$TYPE == "snapshot"'
+      when: never
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+  script:
+    - gradle --build-cache assemble
+    - mv "build/libs/Idle theme park world.jar" .
+    - mv "./Idle theme park world.jar" "./ITPW.jar"
+  artifacts:
+    name: "Build$(date +\"%Y%m%d\")"
+    paths:
+      - ITPW.jar
+    expire_in: 1 week
+
+
 build-master:
   stage: build
   rules:
@@ -40,7 +57,7 @@ build-master:
   script: 
     - gradle --build-cache assemble
     - mv "build/libs/Idle theme park world.jar" .
-    - mv ""./Idle theme park world.jar" ""./ITPW.jar"
+    - mv "./Idle theme park world.jar" "./ITPW.jar"
   cache:
     key: "$CI_COMMIT_REF_NAME"
     policy: push
@@ -51,7 +68,7 @@ build-master:
     name: 'Build-$CI_COMMIT_REF_NAME'
     paths:
       - ITPW.jar
-    expire_in: 1 week
+    expire_in: 1 day
 
 
 test:
