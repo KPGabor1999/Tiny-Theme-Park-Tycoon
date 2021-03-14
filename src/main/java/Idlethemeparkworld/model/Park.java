@@ -11,6 +11,7 @@ public class Park implements Updatable {
     private int rating;
     private int entranceFee;
     private int parkValue;
+    private int activeParkValue;
     private int[] ratingHistory;
     private int[] valueHistory;
     
@@ -33,6 +34,7 @@ public class Park implements Updatable {
         rating = 0;
         parkValue = 0;
         entranceFee = 100;
+        activeParkValue = 0;
         resetHistories();
         
         tiles = new Tile[size][size];
@@ -163,26 +165,38 @@ public class Park implements Updatable {
         return parkValue;
     }
     
+    public int getActiveValue(){
+        return activeParkValue;
+    }
+    
+    public int getMaxGuest(){
+        return maxGuests;
+    }
+    
     public void update(){
         
     }
     
-    private int calculateParkRating(){
+    private void calculateParkRating(){
         /*
         Start out with a base number
         1. Guest happiness and other status calculations
         2. Attraction ratings
         3. Substract points for environment(littering and toilet higiene)
         */
-        return 0;
     }
     
-    private int calculateValue(){
+    private void calculateValue(){
         /*
         Go through each attraction and evaluate them
         Go through each visitor and evaluate them
+        */ 
+    }
+    
+    private void calculateActiveValue(){
+        /*
+        Go through each ACTIVE attraction and evaluate how much they are actually worth
         */
-        return 0;
     }
     
     private int calculateMaxGuests(){
