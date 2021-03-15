@@ -1,6 +1,12 @@
 package Idlethemeparkworld.model.agent;
 
 public class AgentInnerLogic {
+    public class AgentThough {
+        public AgentThoughts thoughtType;
+        public int subject;
+        public int timeElapsed;
+    }
+    
     public enum AgentThoughts {
         CANTAFFORD,   // "I can't afford"
         LOWCASH,         // "I'm running out of cash!"
@@ -81,5 +87,27 @@ public class AgentInnerLogic {
         BUYING,
         WATCHING,
         REPORTING
+    }
+    
+    public enum AgentActionType {
+        IDLE,
+        WATCH,
+        EAT,
+        SIT,
+        
+        WOW,
+        THROWUP,
+        
+        STAFFANSWER,
+        STAFFCHECK,
+        STAFFREPAIR,
+        STAFFSWEEP,
+        STAFFCLEAN,
+        
+        READMAP,
+        TAKEPHOTO,
+        CLAP,
+
+        NONE
     }
 }
