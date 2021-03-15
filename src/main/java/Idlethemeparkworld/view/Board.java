@@ -53,6 +53,7 @@ public class Board extends JPanel {
         this.buildButton = buildButton;
         this.main = main;
         
+        this.setSize(CELL_SIZE * park.getWidth(), HEIGHT * park.getHeight());
         setOpaque(false);
         setBackground(Color.BLACK);
         setBorder(new EmptyBorder(0, 0, 0, 0));

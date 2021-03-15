@@ -23,7 +23,7 @@ public enum BuildType {
     CAROUSEL(1,1,"Carousel",15000,0),
     FERRISWHEEL(1,1,"Ferriswheel",25000,0),
     SWINGINGSHIP(1,1,"Swinging ship",20000,0),
-    ROLLERCOASTER(1,1,"Roller doaster",35000,0),
+    ROLLERCOASTER(1,1,"Roller coaster",35000,0),
     HAUNTEDMANSION(1,1,"Haunted mansion",20000,0),
     ENTRANCE(1,1,"Entrance",0,0);
     

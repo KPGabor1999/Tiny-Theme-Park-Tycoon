@@ -99,7 +99,7 @@ public class Main extends JFrame{
         happinessLabel.setText("happiness:100%");
         happinessLabel.setForeground(Color.YELLOW);
 
-        JPanel informationPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel informationPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         ((FlowLayout)informationPanel.getLayout()).setHgap(50);
         informationPanel.setMaximumSize( new Dimension(Integer.MAX_VALUE,50));
         
@@ -129,7 +129,7 @@ public class Main extends JFrame{
         JButton accelerateButton = new javax.swing.JButton();
         
         buildingChooser = new javax.swing.JComboBox<>();
-        buildingChooser.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {
+        /*buildingChooser.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {
             "Pavement",
             "Trash can",
             "Toilet",
@@ -140,7 +140,20 @@ public class Main extends JFrame{
             "Ferris Wheel",
             "Swinging Ship",
             "Roller coaster",
-            "Haunted mansion"}));
+            "Haunted mansion"}));*/
+        
+        buildingChooser.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {
+            BuildType.PAVEMENT.getName() + " (" + BuildType.PAVEMENT.getBuildCost() + ")",
+            BuildType.TRASHCAN.getName() + " (" + BuildType.TRASHCAN.getBuildCost() + ")",
+            BuildType.TOILET.getName() + " (" + BuildType.TOILET.getBuildCost() + ")",
+            BuildType.HOTDOGSTAND.getName() + " (" + BuildType.HOTDOGSTAND.getBuildCost() + ")",
+            BuildType.ICECREAMPARLOR.getName() + " (" + BuildType.ICECREAMPARLOR.getBuildCost() + ")",
+            BuildType.BURGERJOINT.getName() + " (" + BuildType.BURGERJOINT.getBuildCost() + ")",
+            BuildType.CAROUSEL.getName() + " (" + BuildType.CAROUSEL.getBuildCost() + ")",
+            BuildType.FERRISWHEEL.getName() + " (" + BuildType.FERRISWHEEL.getBuildCost() + ")",
+            BuildType.SWINGINGSHIP.getName() + " (" + BuildType.SWINGINGSHIP.getBuildCost() + ")",
+            BuildType.ROLLERCOASTER.getName() + " (" + BuildType.ROLLERCOASTER.getBuildCost() + ")",
+            BuildType.HAUNTEDMANSION.getName() + " (" + BuildType.HAUNTEDMANSION.getBuildCost() + ")",}));
         
         buildButton.setText("Build");
         administrationButton.setText("Administration");
@@ -148,8 +161,8 @@ public class Main extends JFrame{
         pauseButton.setText("||");
         accelerateButton.setText(">>");
 
-        JPanel controlPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        ((FlowLayout)controlPanel.getLayout()).setHgap(20);
+        JPanel controlPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        ((FlowLayout)controlPanel.getLayout()).setHgap(10);
         informationPanel.setMaximumSize( new Dimension(Integer.MAX_VALUE,50));
         
         controlPanel.setBackground(Color.darkGray);
@@ -171,7 +184,8 @@ public class Main extends JFrame{
         buildButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                String type = (String)buildingChooser.getSelectedItem();
+                String[] boxItem = ((String)buildingChooser.getSelectedItem()).split("\\(");
+                String type = boxItem[0].trim();
                 type = type.replaceAll("\\s+","").toUpperCase();
                 board.enterBuildMode(BuildType.valueOf(type));
             }

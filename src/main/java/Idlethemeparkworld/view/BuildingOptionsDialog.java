@@ -298,9 +298,9 @@ public class BuildingOptionsDialog extends JDialog{
             
             insufficientFundsDialog.pack();
             
-            int XLocation = (Toolkit.getDefaultToolkit().getScreenSize().width - insufficientFundsDialog.getWidth())/2;
-            int YLocation = (Toolkit.getDefaultToolkit().getScreenSize().height - insufficientFundsDialog.getHeight())/2;
-            insufficientFundsDialog.setLocation(XLocation, YLocation);
+            int xLocation = this.getOwner().getX() + this.getOwner().getWidth()/2 - insufficientFundsDialog.getWidth()/2;
+            int yLocation = this.getOwner().getY() + this.getOwner().getHeight()/2 - insufficientFundsDialog.getHeight()/2;
+            insufficientFundsDialog.setLocation(xLocation, yLocation);
             
             insufficientFundsDialog.setVisible(true);
         } else {
@@ -327,9 +327,9 @@ public class BuildingOptionsDialog extends JDialog{
             
             upgradeSuccessfulDialog.pack();
             
-            int XLocation = (Toolkit.getDefaultToolkit().getScreenSize().width - upgradeSuccessfulDialog.getWidth())/2;
-            int YLocation = (Toolkit.getDefaultToolkit().getScreenSize().height - upgradeSuccessfulDialog.getHeight())/2;
-            upgradeSuccessfulDialog.setLocation(XLocation, YLocation);
+            int xLocation = this.getOwner().getX() + this.getOwner().getWidth()/2 - upgradeSuccessfulDialog.getWidth()/2;
+            int yLocation = this.getOwner().getY() + this.getOwner().getHeight()/2 - upgradeSuccessfulDialog.getHeight()/2;
+            upgradeSuccessfulDialog.setLocation(xLocation, yLocation);
             
             upgradeSuccessfulDialog.setVisible(true);
         }
@@ -366,8 +366,8 @@ public class BuildingOptionsDialog extends JDialog{
         optionsPanel.add(noButton);
         confirmDemolitionDialog.getContentPane().add(optionsPanel);
         confirmDemolitionDialog.pack();
-        int xLocation = (Toolkit.getDefaultToolkit().getScreenSize().width - confirmDemolitionDialog.getWidth())/2;
-        int yLocation = (Toolkit.getDefaultToolkit().getScreenSize().height - confirmDemolitionDialog.getHeight())/2;
+        int xLocation = this.getOwner().getX() + this.getOwner().getWidth()/2 - confirmDemolitionDialog.getWidth()/2;
+        int yLocation = this.getOwner().getY() + this.getOwner().getHeight()/2 - confirmDemolitionDialog.getHeight()/2;
         confirmDemolitionDialog.setLocation(xLocation, yLocation);
         
         confirmDemolitionDialog.setVisible(true);
