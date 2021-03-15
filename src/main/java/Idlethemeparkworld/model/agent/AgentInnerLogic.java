@@ -1,7 +1,7 @@
 package Idlethemeparkworld.model.agent;
 
 public class AgentInnerLogic {
-    public class AgentThough {
+    public class AgentThought {
         public AgentThoughts thoughtType;
         public int subject;
         public int timeElapsed;

@@ -11,7 +11,8 @@ public class AgentTypes{
         OPERATOR,
         SECURITYGUARD,
         MAINTAINER,
-        ENTERTAINER
+        ENTERTAINER,
+        NONE
     }
 }
 
