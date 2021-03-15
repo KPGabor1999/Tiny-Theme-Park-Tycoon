@@ -43,7 +43,10 @@ public class BuildingOptionsDialog extends JDialog{
     JLabel conditionNumberLabel;
     
     JButton upgradeButton;
+    JDialog insufficientFundsDialog;
+    JDialog upgradeSuccessfulDialog;
     JButton demolishButton;
+    JDialog confirmDemolitionDialog;
     
     //Adjuk át az egész parkot.
     public BuildingOptionsDialog(Frame owner, Board board, int x, int y){
@@ -266,17 +269,25 @@ public class BuildingOptionsDialog extends JDialog{
         int funds = board.getGameManager().getFinance().getFunds();
         int upgradeCost = currentBuilding.getUpgradeCost();
         if(funds <= upgradeCost){
-            JDialog insufficientFundsDialog = new JDialog(this.getOwner(), "Probléma");
+            insufficientFundsDialog = new JDialog(this.getOwner(), "Problem");
             insufficientFundsDialog.setLayout(new BoxLayout(insufficientFundsDialog.getContentPane(), BoxLayout.Y_AXIS));
             insufficientFundsDialog.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-            insufficientFundsDialog.setSize(200, 60);
             
             JLabel errorMessage = new JLabel("Insufficient funds for upgrade.");
             errorMessage.setAlignmentX(CENTER_ALIGNMENT);
+            JButton OKButton = new JButton("OK");
+            OKButton.setAlignmentX(CENTER_ALIGNMENT);
+            OKButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    BuildingOptionsDialog.this.insufficientFundsDialog.dispose();
+                }
+            });
             
             insufficientFundsDialog.getContentPane().add(errorMessage);
+            insufficientFundsDialog.getContentPane().add(OKButton);
             
-            this.pack();
+            insufficientFundsDialog.pack();
             
             int XLocation = (Toolkit.getDefaultToolkit().getScreenSize().width - insufficientFundsDialog.getWidth())/2;
             int YLocation = (Toolkit.getDefaultToolkit().getScreenSize().height - insufficientFundsDialog.getHeight())/2;
@@ -287,17 +298,25 @@ public class BuildingOptionsDialog extends JDialog{
             board.getGameManager().getFinance().pay(upgradeCost);
             currentBuilding.upgrade();
             this.dispose();
-            JDialog upgradeSuccessfulDialog = new JDialog(this.getOwner(), "Siker");
+            upgradeSuccessfulDialog = new JDialog(this.getOwner(), "Success");
             upgradeSuccessfulDialog.setLayout(new BoxLayout(upgradeSuccessfulDialog.getContentPane(), BoxLayout.Y_AXIS));
             upgradeSuccessfulDialog.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-            upgradeSuccessfulDialog.setSize(200, 60);
             
             JLabel sucessMessage = new JLabel("Building successfully upgraded.");
             sucessMessage.setAlignmentX(CENTER_ALIGNMENT);
+            JButton OKButton = new JButton("OK");
+            OKButton.setAlignmentX(CENTER_ALIGNMENT);
+            OKButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    BuildingOptionsDialog.this.upgradeSuccessfulDialog.dispose();
+                }
+            });
             
             upgradeSuccessfulDialog.getContentPane().add(sucessMessage);
+            upgradeSuccessfulDialog.getContentPane().add(OKButton);
             
-            this.pack();
+            upgradeSuccessfulDialog.pack();
             
             int XLocation = (Toolkit.getDefaultToolkit().getScreenSize().width - upgradeSuccessfulDialog.getWidth())/2;
             int YLocation = (Toolkit.getDefaultToolkit().getScreenSize().height - upgradeSuccessfulDialog.getHeight())/2;
@@ -308,9 +327,40 @@ public class BuildingOptionsDialog extends JDialog{
     }
     
     private void demolishBuilding(){
-        board.getGameManager().getFinance().earn(currentBuilding.getValue()/2);
-        board.getGameManager().getPark().demolish(currentBuilding.getxLocation(), currentBuilding.getyLocation());
-        this.dispose();
-        board.refresh();
+        confirmDemolitionDialog = new JDialog(this, "Confirm");    //this?
+        confirmDemolitionDialog.setLayout(new BoxLayout(confirmDemolitionDialog.getContentPane(), BoxLayout.Y_AXIS));
+        
+        JLabel confirmDemolitionLabel = new JLabel("Are you sure?");
+        confirmDemolitionLabel.setAlignmentX(CENTER_ALIGNMENT);
+        JPanel optionsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JButton yesButton = new JButton("YES");
+        yesButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                BuildingOptionsDialog.this.confirmDemolitionDialog.dispose();
+                BuildingOptionsDialog.this.dispose();
+                BuildingOptionsDialog.this.board.getGameManager().getFinance().earn(currentBuilding.getValue()/2); //Az épület addigi teljes értékének(!) a felét adja vissza.
+                BuildingOptionsDialog.this.board.getGameManager().getPark().demolish(currentBuilding.getxLocation(), currentBuilding.getyLocation());
+                BuildingOptionsDialog.this.board.refresh();
+            }
+        });
+        JButton noButton = new JButton("NO");
+        noButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                BuildingOptionsDialog.this.confirmDemolitionDialog.dispose();
+            }
+        });
+        
+        confirmDemolitionDialog.getContentPane().add(confirmDemolitionLabel);
+        optionsPanel.add(yesButton);
+        optionsPanel.add(noButton);
+        confirmDemolitionDialog.getContentPane().add(optionsPanel);
+        confirmDemolitionDialog.pack();
+        int xLocation = (Toolkit.getDefaultToolkit().getScreenSize().width - confirmDemolitionDialog.getWidth())/2;
+        int yLocation = (Toolkit.getDefaultToolkit().getScreenSize().height - confirmDemolitionDialog.getHeight())/2;
+        confirmDemolitionDialog.setLocation(xLocation, yLocation);
+        
+        confirmDemolitionDialog.setVisible(true);
     }
 }
