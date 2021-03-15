@@ -16,6 +16,19 @@ import Idlethemeparkworld.model.buildable.infrastucture.TrashCan;
 import java.util.ArrayList;
 
 public class Park implements Updatable {
+    private static final int HISTORY_SIZE = 14;
+    
+    private int rating;
+    private int entranceFee;
+    private int parkValue;
+    private int activeParkValue;
+    private int[] ratingHistory;
+    private int[] valueHistory;
+    
+    private boolean isOpen;
+    
+    private int maxGuests;
+    
     private Tile[][] tiles;
     private ArrayList<Building> buildings;
     
@@ -31,9 +44,13 @@ public class Park implements Updatable {
         return tiles;
     }
     
-    
-    
     public void initializePark(int size){
+        rating = 0;
+        parkValue = 0;
+        entranceFee = 100;
+        activeParkValue = 0;
+        resetHistories();
+        
         tiles = new Tile[size][size];
         //1.Make sure all tiles are empty
         this.buildings = new ArrayList<>();
@@ -219,7 +236,79 @@ public class Park implements Updatable {
         buildings.remove(demolitionIndex);
     }
     
+    public int getEntranceFee(){
+        return entranceFee;
+    }
+    
+    public boolean isOpen(){
+        return isOpen;
+    }
+    
+    public void openPark(){
+        isOpen = true;
+    }
+    
+    public void closePark(){
+        isOpen = false;
+    }
+    
+    //Used for debugging
+    public void setRating(int value){
+        rating = value;
+    }
+    
+    public int getRating(){
+        return rating;
+    }
+    
+    public int getValue(){
+        return parkValue;
+    }
+    
+    public int getActiveValue(){
+        return activeParkValue;
+    }
+    
+    public int getMaxGuest(){
+        return maxGuests;
+    }
+    
     public void update(){
+        
+    }
+    
+    private void calculateParkRating(){
+        /*
+        Start out with a base number
+        1. Guest happiness and other status calculations
+        2. Attraction ratings
+        3. Substract points for environment(littering and toilet higiene)
+        */
+    }
+    
+    private void calculateValue(){
+        /*
+        Go through each attraction and evaluate them
+        Go through each visitor and evaluate them
+        */ 
+    }
+    
+    private void calculateActiveValue(){
+        /*
+        Go through each ACTIVE attraction and evaluate how much they are actually worth
+        */
+    }
+    
+    private int calculateMaxGuests(){
+        return 0;
+    }
+    
+    private void resetHistories(){
+        ratingHistory = new int[HISTORY_SIZE];
+        valueHistory = new int[HISTORY_SIZE];
+    }
+    
+    private void updateHistories(){
         
     }
 }
