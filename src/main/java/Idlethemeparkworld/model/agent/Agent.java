@@ -1,6 +1,7 @@
 package Idlethemeparkworld.model.agent;
 
 import Idlethemeparkworld.model.BuildType;
+import Idlethemeparkworld.model.Park;
 import Idlethemeparkworld.model.Updatable;
 import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentState;
 import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentThought;
