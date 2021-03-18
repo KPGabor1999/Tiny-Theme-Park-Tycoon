@@ -1,5 +1,6 @@
 package Idlethemeparkworld.model;
 
+import Idlethemeparkworld.model.agent.Agent;
 import Idlethemeparkworld.model.agent.Visitor;
 import java.util.ArrayList;
 import java.util.Random;
@@ -52,7 +53,7 @@ public class AgentManager implements Updatable {
     }
     
     public void spawnVisitor(){
-        visitors.add(new Visitor(getRandomName(), getRandomHappiness(), park));
+        visitors.add(new Visitor(getRandomName(), getRandomHappiness(), park, this));
     }
     
     private String getRandomName(){
@@ -87,7 +88,11 @@ public class AgentManager implements Updatable {
         visitorProbability = prob;
     }
     
-    
+    public void removeAgent(Agent agent){
+        if(agent instanceof Visitor){
+            visitors.remove((Visitor)agent);
+        }
+    }
     
     public void spawnUpdate(){
         if(rand.nextInt(1000)<visitorProbability){
@@ -110,3 +115,4 @@ public class AgentManager implements Updatable {
         }
     }
 }
+    

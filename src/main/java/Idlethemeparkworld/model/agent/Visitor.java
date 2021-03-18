@@ -1,12 +1,13 @@
 package Idlethemeparkworld.model.agent;
 
+import Idlethemeparkworld.model.AgentManager;
 import Idlethemeparkworld.model.Park;
 
 public class Visitor extends Agent {
     private int x,y;
     
-    public Visitor(String name, int startingHappiness, Park park){
-        super(name, startingHappiness, park);
+    public Visitor(String name, int startingHappiness, Park park, AgentManager am){
+        super(name, startingHappiness, park, am);
     }
     
     @Override
@@ -16,7 +17,7 @@ public class Visitor extends Agent {
     
     @Override
     protected void performAction(){
-
+       
     }
 
 }

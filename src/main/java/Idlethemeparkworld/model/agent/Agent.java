@@ -1,5 +1,6 @@
 package Idlethemeparkworld.model.agent;
 
+import Idlethemeparkworld.model.AgentManager;
 import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.Park;
 import Idlethemeparkworld.model.Updatable;
@@ -31,33 +32,38 @@ public abstract class Agent implements Updatable {
     private static final int AGENT_MAX_TOILET = 100;
     private static final int AGENT_MAX_NAUSEA = 100;
     
-    private Park park;
+    AgentManager am;
+    Park park;
     
-    private String name;
-    private int x,y;
-    private boolean inPark;
+    String name;
+    int x,y;
+    boolean inPark;
     
-    private AgentState state;
-    private AgentType type;
-    private StaffType staffType;
+    boolean manualMovable;
+    AgentState state;
+    AgentType type;
+    StaffType staffType;
     
-    private int destX, destY;
-    private int patience;
-    private int weight;
+    int destX, destY;
+    int patience;
+    int weight;
     
-    private int energy;
-    private int happiness;
-    private int nausea;
-    private int hunger;
-    private int thirst;
-    private int toilet;
-    private int angriness;
-    
-    private BuildType[] visitHistory;
-    
-    private Building currentBuilding;
+    int energy;
+    int happiness;
+    int nausea;
+    int hunger;
+    int thirst;
+    int toilet;
+    int angriness;
 
-    public Agent(String name, int startingHappiness, Park park) {
+    AgentThought[] thoughts;
+    
+    BuildType[] visitHistory;
+
+    Building currentBuilding;
+
+    public Agent(String name, int startingHappiness, Park park, AgentManager am) {
+        this.am = am;
         this.park = park;
         
         this.name = name;
@@ -78,6 +84,10 @@ public abstract class Agent implements Updatable {
         this.toilet = 100;
         this.angriness = 0;
         
+        this.thoughts = new AgentThought[AGENT_MAX_THOUGHTS];
+        for (int i = 0; i < thoughts.length; i++) {
+            thoughts[i] = new AgentThought();
+        }
         this.visitHistory = new BuildType[AGENT_HISTORY_LENGTH];
         this.currentBuilding = park.getTile(x, y).getBuilding();
     }
@@ -159,13 +169,33 @@ public abstract class Agent implements Updatable {
     }
     
     public void addNewThought(AgentThought thought){
-        
+        if(thoughts.length < AGENT_MAX_THOUGHTS){
+            
+        }
     }
     
     public void setDestination(int x, int y){
         this.destX = x;
         this.destY = y;
     }
+    
+    public void forceLocation(int x, int y){
+        if(manualMovable){
+            this.x = x;
+            this.y = y;
+            updateCurBuilding();
+        }
+    }
+    
+    private void remove(){
+        am.removeAgent(this);
+    }
+    
+    public void updateCurBuilding(){
+        currentBuilding = park.getTile(x, y).getBuilding();
+    }
+    
+    
     
     @Override
     public abstract void update(long tickCount);

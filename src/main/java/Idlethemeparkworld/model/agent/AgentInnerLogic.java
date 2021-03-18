@@ -2,6 +2,12 @@ package Idlethemeparkworld.model.agent;
 
 public class AgentInnerLogic {
     public class AgentThought {
+        public void AgentThought(){
+            this.thoughtType = AgentThoughts.NONE;
+            this.subject = 0;
+            this.timeElapsed = 0;
+        }
+        
         public AgentThoughts thoughtType;
         public int subject;
         public int timeElapsed;
