@@ -30,6 +30,7 @@ public class Main extends JFrame{
     private final JLabel visitorCountLabel;
     private final JLabel happinessLabel; 
     private final JComboBox buildingChooser;
+    private AdministrationDialog adminDialog;
     private Board board;
     
     GameManager gm;
@@ -177,7 +178,8 @@ public class Main extends JFrame{
         administrationButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                setPricesAndEmployees();
+                Main.this.adminDialog = new AdministrationDialog(Main.this, "Administration");
+                //adminDialog.setVisible(true);
             }
         });
         
@@ -231,11 +233,6 @@ public class Main extends JFrame{
     
     private void startNewGame(){
         gm.startNewGame();
-    }
-    
-    public void setPricesAndEmployees(){
-        AdministrationDialog adminDialog = new AdministrationDialog(this, "Administration");
-        adminDialog.setVisible(true);
     }
     
     public static void main(String[] args) {
