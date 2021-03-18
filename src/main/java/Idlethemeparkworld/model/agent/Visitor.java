@@ -2,6 +2,7 @@ package Idlethemeparkworld.model.agent;
 
 import Idlethemeparkworld.model.AgentManager;
 import Idlethemeparkworld.model.Park;
+import Idlethemeparkworld.model.buildable.Building;
 
 public class Visitor extends Agent {
     private int x,y;
@@ -19,5 +20,9 @@ public class Visitor extends Agent {
     protected void performAction(){
        
     }
-
+    
+    //Agent joins the chosen attraction's queue
+    public void joinQueue(Building attraction){
+        
+    }
 }

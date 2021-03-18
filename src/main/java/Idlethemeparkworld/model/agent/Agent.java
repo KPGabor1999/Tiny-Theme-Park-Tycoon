@@ -9,6 +9,8 @@ import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentThought;
 import Idlethemeparkworld.model.agent.AgentTypes.AgentType;
 import Idlethemeparkworld.model.agent.AgentTypes.StaffType;
 import Idlethemeparkworld.model.buildable.Building;
+import java.util.ArrayList;
+import java.util.Random;
 
 public abstract class Agent implements Updatable {
     private static final int AGENT_MAX_THOUGHTS = 5;
@@ -55,6 +57,7 @@ public abstract class Agent implements Updatable {
     int thirst;
     int toilet;
     int angriness;
+    Random randAttraction;
 
     AgentThought[] thoughts;
     
@@ -83,10 +86,17 @@ public abstract class Agent implements Updatable {
         this.thirst = 100;
         this.toilet = 100;
         this.angriness = 0;
+        this.randAttraction = new Random();
         
         this.thoughts = new AgentThought[AGENT_MAX_THOUGHTS];
         this.visitHistory = new BuildType[AGENT_HISTORY_LENGTH];
         this.currentBuilding = park.getTile(x, y).getBuilding();
+    }
+    
+    public void chooseAttraction(ArrayList<Building> buildings){
+        if (!buildings.isEmpty()) {
+            int chosenAttractionID = randAttraction.nextInt(buildings.size());
+        }
     }
 
     public String getName() {

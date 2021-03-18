@@ -39,6 +39,10 @@ public abstract class Attraction extends Building {
         return condition;
     }
     
+    public void increaseOccupied(int num){
+        this.occupied += num;
+    }
+    
     //consider using an observer/event listener
     protected abstract void start();
 }
