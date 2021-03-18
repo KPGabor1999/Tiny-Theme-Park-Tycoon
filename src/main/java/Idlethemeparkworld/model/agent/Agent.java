@@ -12,6 +12,7 @@ import Idlethemeparkworld.model.buildable.Building;
 public abstract class Agent implements Updatable {
     private static final int AGENT_MAX_THOUGHTS = 5;
     private static final int AGENT_THOUGHT_ITEM_NONE = 255;
+    private static final int AGENT_HISTORY_LENGTH = 10;
 
     private static final int AGENT_HUNGER_WARNING_THRESHOLD = 25;
     private static final int AGENT_THIRST_WARNING_THRESHOLD = 25;
@@ -42,6 +43,7 @@ public abstract class Agent implements Updatable {
     
     private int destX, destY;
     private int patience;
+    private int weight;
     
     private int energy;
     private int happiness;
@@ -50,11 +52,35 @@ public abstract class Agent implements Updatable {
     private int thirst;
     private int toilet;
     private int angriness;
-    private int weight;
     
     private BuildType[] visitHistory;
     
     private Building currentBuilding;
+
+    public Agent(String name, int startingHappiness, Park park) {
+        this.park = park;
+        
+        this.name = name;
+        this.x = 0;
+        this.y = this.x;
+        this.inPark = true;
+        
+        this.destX = 0;
+        this.destY = this.destX;
+        this.patience = 50; //DNA
+        this.weight = 60; //DNA
+        
+        this.energy = 100;
+        this.happiness = startingHappiness;
+        this.nausea = 0;
+        this.hunger = 100;
+        this.thirst = 100;
+        this.toilet = 100;
+        this.angriness = 0;
+        
+        this.visitHistory = new BuildType[AGENT_HISTORY_LENGTH];
+        this.currentBuilding = park.getTile(x, y).getBuilding();
+    }
 
     public String getName() {
         return name;
@@ -113,7 +139,7 @@ public abstract class Agent implements Updatable {
     }
     
     public void stateReset(){
-        
+        state = AgentState.IDLE;
     }
     
     public void setPath(){
@@ -137,7 +163,8 @@ public abstract class Agent implements Updatable {
     }
     
     public void setDestination(int x, int y){
-        
+        this.destX = x;
+        this.destY = y;
     }
     
     @Override

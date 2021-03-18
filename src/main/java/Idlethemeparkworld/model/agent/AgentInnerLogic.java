@@ -62,6 +62,7 @@ public class AgentInnerLogic {
     }
     
     public enum AgentState{
+        IDLE,
         WALKING,
         QUEUING,
         ENTERINGBUILDING,
