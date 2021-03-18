@@ -53,6 +53,7 @@ public class Board extends JPanel {
         this.buildButton = buildButton;
         this.main = main;
         
+        this.setSize(CELL_SIZE * park.getWidth(), HEIGHT * park.getHeight());
         setOpaque(false);
         setBackground(Color.BLACK);
         setBorder(new EmptyBorder(0, 0, 0, 0));
@@ -125,9 +126,20 @@ public class Board extends JPanel {
         buttonGrid[y][x].addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                showBuildingOptions(x, y);
+                //showBuildingOptions(x, y);
+                JFrame parentFrame = (JFrame) getRootPane().getParent();
+                BuildingOptionsDialog buildingOptions = new BuildingOptionsDialog(parentFrame, Board.this, x, y);
+                buildingOptions.setLocationRelativeTo(Board.this);
+                //buildingOptions.setVisible(true);
             }
         });
+        /*private void showBuildingOptions(int x, int y){
+            JFrame parentFrame = (JFrame) getRootPane().getParent();
+            BuildingOptionsDialog buildingOptions = new BuildingOptionsDialog(parentFrame, this, x, y);
+            buildingOptions.setLocationRelativeTo(this);
+            buildingOptions.setVisible(true);
+        }*/
+        
         buttonGrid[y][x].addMouseListener(new MouseAdapter(){
             @Override
             public void mouseEntered(MouseEvent e) {
@@ -166,13 +178,6 @@ public class Board extends JPanel {
             }
         });
         add(buttonGrid[y][x]);
-    }
-    
-    private void showBuildingOptions(int x, int y){
-        JFrame parentFrame = (JFrame) getRootPane().getParent();
-        BuildingOptionsDialog buildingOptions = new BuildingOptionsDialog(parentFrame, this, x, y);
-        buildingOptions.setLocationRelativeTo(this);
-        buildingOptions.setVisible(true);
     }
     
     private void updateMap() {
