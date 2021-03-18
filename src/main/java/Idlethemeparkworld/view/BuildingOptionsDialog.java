@@ -8,6 +8,7 @@ import Idlethemeparkworld.model.buildable.attraction.Attraction;
 import Idlethemeparkworld.model.buildable.food.FoodStall;
 import Idlethemeparkworld.model.buildable.infrastucture.Entrance;
 import Idlethemeparkworld.model.buildable.infrastucture.Infrastructure;
+import Idlethemeparkworld.model.buildable.infrastucture.LockedTile;
 import Idlethemeparkworld.model.buildable.infrastucture.Pavement;
 import Idlethemeparkworld.model.buildable.infrastucture.Toilet;
 import Idlethemeparkworld.model.buildable.infrastucture.TrashCan;
@@ -30,23 +31,25 @@ public class BuildingOptionsDialog extends JDialog{
     private Building currentBuilding;
 
     //Itt csak azok legyenek, amik mindegyik épülettípusra vonatkoznak, a többi legyen csak az if feltétel ágakban.
-    JPanel statsPanel;
-    JLabel nameLabel;
-    JLabel capacityTextLabel;
-    JLabel capacityNumberLabel;
-    JLabel occupiedTextLabel;
-    JLabel occupiedNumberLabel;
-    JLabel upkeepCostTextLabel;
-    JLabel upkeepCostNumberLabel;
+    private JPanel statsPanel;
+    private JLabel descriptionLabel;
+    private JLabel nameLabel;
+    private JLabel capacityTextLabel;
+    private JLabel capacityNumberLabel;
+    private JLabel occupiedTextLabel;
+    private JLabel occupiedNumberLabel;
+    private JLabel upkeepCostTextLabel;
+    private JLabel upkeepCostNumberLabel;
     
-    JLabel conditionTextLabel;      //Ez csak az attrakciókhoz kell.
-    JLabel conditionNumberLabel;
+    private JLabel conditionTextLabel;      //Ez csak az attrakciókhoz kell.
+    private JLabel conditionNumberLabel;
     
-    JButton upgradeButton;
-    JDialog insufficientFundsDialog;
-    JDialog upgradeSuccessfulDialog;
-    JButton demolishButton;
-    JDialog confirmDemolitionDialog;
+    private JButton upgradeButton;
+    private JDialog insufficientFundsDialog;
+    private JDialog upgradeSuccessfulDialog;
+    private JButton demolishButton;
+    private JDialog confirmDemolitionDialog;
+    private JButton unlockButton;
     
     //Adjuk át az egész parkot.
     public BuildingOptionsDialog(Frame owner, Board board, int x, int y){
@@ -61,7 +64,7 @@ public class BuildingOptionsDialog extends JDialog{
         if(currentBuilding == null){
             nameLabel = new JLabel("Grass");
             nameLabel.setAlignmentX(CENTER_ALIGNMENT);
-            JLabel descriptionLabel = new JLabel("Free real estate to build buildings on.");
+            descriptionLabel = new JLabel("Free real estate to build buildings on.");
             descriptionLabel.setAlignmentX(CENTER_ALIGNMENT);
             
             this.getContentPane().add(nameLabel);
@@ -226,9 +229,15 @@ public class BuildingOptionsDialog extends JDialog{
             
                 this.getContentPane().add(nameLabel);
                 this.getContentPane().add(descriptionLabel);
-            } 
+            } else if (currentBuilding instanceof LockedTile){
+               descriptionLabel = new JLabel("Unlock to use it as a building ground.");
+               descriptionLabel.setAlignmentX(CENTER_ALIGNMENT);
+               
+               this.getContentPane().add(descriptionLabel);
+               //Felold gomb + eseménykezelés
+            }
             
-            if(!(currentBuilding instanceof Entrance)){
+            if(!(currentBuilding instanceof Entrance) && !(currentBuilding instanceof LockedTile)){
                 demolishButton = new JButton("Demolish: returns " + currentBuilding.getValue()/2 + "$");
                 demolishButton.setAlignmentX(CENTER_ALIGNMENT);
                 demolishButton.addActionListener(new ActionListener() {
@@ -238,6 +247,20 @@ public class BuildingOptionsDialog extends JDialog{
                     }
                 });
                 this.getContentPane().add(demolishButton);
+            } else if(currentBuilding instanceof LockedTile){
+                unlockButton = new JButton("Unlock for " + ((LockedTile)currentBuilding).getUnlockCost() + "$");
+                unlockButton.setAlignmentX(CENTER_ALIGNMENT);
+                unlockButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        //Ablak példányszámának kezelése
+                        BuildingOptionsDialog.this.dispose();
+                        BuildingOptionsDialog.this.board.getGameManager().getPark().demolish(currentBuilding.getxLocation(), currentBuilding.getyLocation());
+                        BuildingOptionsDialog.this.board.refresh();
+                        
+                    }
+                });
+                this.getContentPane().add(unlockButton);
             }
             
             

@@ -30,7 +30,7 @@ public class GameManager {
         this.gameSpeed = 1;
         this.dayNightCycle = 0;
         
-        this.park = new Park();
+        this.park = new Park(10, 15);
         this.time = new Time();
         this.finance = new Finance(100000);
     }
@@ -56,7 +56,7 @@ public class GameManager {
     }
     
     private void initAllComponents(){
-        park.initializePark(10);
+        park.initializePark(10, 15);
         time.reset();
         finance.init();
     }
