@@ -85,9 +85,6 @@ public abstract class Agent implements Updatable {
         this.angriness = 0;
         
         this.thoughts = new AgentThought[AGENT_MAX_THOUGHTS];
-        for (int i = 0; i < thoughts.length; i++) {
-            thoughts[i] = new AgentThought();
-        }
         this.visitHistory = new BuildType[AGENT_HISTORY_LENGTH];
         this.currentBuilding = park.getTile(x, y).getBuilding();
     }
