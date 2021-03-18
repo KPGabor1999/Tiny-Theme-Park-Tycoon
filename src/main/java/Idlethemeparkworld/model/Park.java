@@ -10,6 +10,7 @@ import Idlethemeparkworld.model.buildable.food.Hamburger;
 import Idlethemeparkworld.model.buildable.food.HotDog;
 import Idlethemeparkworld.model.buildable.food.IceCream;
 import Idlethemeparkworld.model.buildable.infrastucture.Entrance;
+import Idlethemeparkworld.model.buildable.infrastucture.LockedTile;
 import Idlethemeparkworld.model.buildable.infrastucture.Pavement;
 import Idlethemeparkworld.model.buildable.infrastucture.Toilet;
 import Idlethemeparkworld.model.buildable.infrastucture.TrashCan;
@@ -39,6 +40,10 @@ public class Park implements Updatable {
     public Park(int size){
         initializePark(size);
     }
+    
+    public Park(int rows, int columns){
+        initializePark(rows, columns);
+    }
 
     public Tile[][] getTiles() {
         return tiles;
@@ -61,6 +66,32 @@ public class Park implements Updatable {
         }
         //2.Spawn in the gate tile
         build(BuildType.ENTRANCE, 0, 0, true);
+        //3.Spawn in 1 from each for debugging purpose
+        //spawnAllBuildings();
+    }
+    
+    public void initializePark(int rows, int columns){
+        rating = 0;
+        parkValue = 0;
+        entranceFee = 100;
+        activeParkValue = 0;
+        resetHistories();
+        
+        tiles = new Tile[rows][columns];
+        //1.Make sure all tiles are empty
+        this.buildings = new ArrayList<>();
+        for(int row=0; row<tiles.length; row++){
+            for(int column=0; column<tiles[0].length; column++){
+                tiles[row][column] = new Tile(column, row);
+            }
+        }
+        //2.Spawn in the gate tile
+        build(BuildType.ENTRANCE, 0, 0, true);
+        for(int row = 0; row <tiles.length; row++){
+            for(int column = tiles[0].length-5; column<tiles[0].length; column++){
+                build(BuildType.LOCKEDTILE, column, row, true);
+            }
+        }
         //3.Spawn in 1 from each for debugging purpose
         //spawnAllBuildings();
     }
@@ -155,6 +186,11 @@ public class Park implements Updatable {
             Building newBuilding;
             switch(type){
                 //Attrakciók:
+                case LOCKEDTILE:
+                    newBuilding = new LockedTile(x, y);
+                    buildings.add(newBuilding);
+                    tiles[y][x].setBuilding(true, newBuilding);
+                    break;
                 case CAROUSEL:
                     newBuilding = new Carousel(x, y);
                     buildings.add(newBuilding);
