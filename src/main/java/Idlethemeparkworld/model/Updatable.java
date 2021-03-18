@@ -1,5 +1,5 @@
 package Idlethemeparkworld.model;
 
 public interface Updatable {
-    public void update();
+    public void update(long tickCount);
 }

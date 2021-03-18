@@ -1,17 +1,24 @@
 package Idlethemeparkworld.model;
 
+import Idlethemeparkworld.model.agent.Visitor;
+import java.util.ArrayList;
 import java.util.Random;
 
-public class AgentManager {
+public class AgentManager implements Updatable {
+    private static final int AGENT_UPDATE_TICK = 12;
+    
     private int visitorProbability;
     private Park park;
     
     private Random rand;
     
+    private ArrayList<Visitor> visitors;
+    
     public AgentManager(Park park){
         this.park = park;
         this.visitorProbability = 0;
         this.rand = new Random();
+        this.visitors = new ArrayList<>();
     }
     
     public void spawnVisitor(){
@@ -49,6 +56,20 @@ public class AgentManager {
     public void spawnUpdate(){
         if(rand.nextInt(250)<visitorProbability){
             spawnVisitor();
+        }
+    }
+    
+    public int getStaffCount(){
+        return 0;
+    }
+    
+    public int getVisitorCount(){
+        return visitors.size();
+    }
+    
+    public void update(long tickCount){
+        for (int i = 0; i < visitors.size(); i++) {
+            visitors.get(i).update(tickCount);
         }
     }
 }

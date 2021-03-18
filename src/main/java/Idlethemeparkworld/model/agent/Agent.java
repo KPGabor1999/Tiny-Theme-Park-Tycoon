@@ -55,6 +55,58 @@ public abstract class Agent implements Updatable {
     private BuildType[] visitHistory;
     
     private Building currentBuilding;
+
+    public String getName() {
+        return name;
+    }
+
+    public boolean isInPark() {
+        return inPark;
+    }
+
+    public AgentType getType() {
+        return type;
+    }
+
+    public StaffType getStaffType() {
+        return staffType;
+    }
+
+    public int getPatience() {
+        return patience;
+    }
+
+    public int getEnergy() {
+        return energy;
+    }
+
+    public int getHappiness() {
+        return happiness;
+    }
+
+    public int getNausea() {
+        return nausea;
+    }
+
+    public int getHunger() {
+        return hunger;
+    }
+
+    public int getThirst() {
+        return thirst;
+    }
+
+    public int getToilet() {
+        return toilet;
+    }
+
+    public int getAngriness() {
+        return angriness;
+    }
+
+    public int getWeight() {
+        return weight;
+    }
     
     public void setState(AgentState newState){
         this.state = newState;
@@ -88,6 +140,7 @@ public abstract class Agent implements Updatable {
         
     }
     
-    public abstract void update();
+    @Override
+    public abstract void update(long tickCount);
     protected abstract void performAction();
 }

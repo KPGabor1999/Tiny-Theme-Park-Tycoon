@@ -8,7 +8,7 @@ public class GameManager {
     private boolean updateCycleRunning;
     private double lastTime;
     private double currentDeltaTime;
-    private int tickCount;
+    private long tickCount;
     private double updateCount;
     
     private boolean gamePaused;
@@ -98,8 +98,8 @@ public class GameManager {
         //System.out.println(tickStep+" - "+actualUpdateCount+" - "+updateCount);
         //System.out.println(tickCount);
         for (int i = 0; i < actualUpdateCount; i++) {
-            park.update();
-            time.update();
+            park.update(tickCount);
+            time.update(tickCount);
         }
     }
     
