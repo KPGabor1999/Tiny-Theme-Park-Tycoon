@@ -178,7 +178,7 @@ public class Main extends JFrame{
         administrationButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                Main.this.adminDialog = new AdministrationDialog(Main.this, "Administration");
+                Main.this.adminDialog = new AdministrationDialog(Main.this, "Administration", board);
                 //adminDialog.setVisible(true);
             }
         });

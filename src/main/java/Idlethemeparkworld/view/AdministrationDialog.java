@@ -8,10 +8,15 @@ import java.awt.event.WindowListener;
 import javax.swing.*;
 import javax.swing.JDialog;
 import static javax.swing.BoxLayout.Y_AXIS;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 public class AdministrationDialog extends JDialog {
+
+    private Board board;
+
     private JLabel pricesLabel;
-    
+
     private JPanel priceSettingsPanel;
     private JLabel ticketPriceLabel;
     private JSlider ticketPriceSlider;
@@ -21,9 +26,11 @@ public class AdministrationDialog extends JDialog {
     private JSlider iceCreamPriceSlider;
     private JLabel hamburgerPriceLabel;
     private JSlider hamburgerPriceSlider;
-    
+    private JLabel fishChipsPriceLabel;
+    private JSlider fishChipsPriceSlider;
+
     private JLabel employeesLabel;
-    
+
     private JPanel employeeSettingsPanel;
     private JLabel janitorNumberLabel;
     private JSlider janitorNumberSlider;
@@ -31,21 +38,23 @@ public class AdministrationDialog extends JDialog {
     private JSlider maintainerNumberSlider;
     private JLabel securityGuardNumberLabel;
     private JSlider securityGuardNumberSlider;
-    
+
     private static int instanceCount;
-    
-    public AdministrationDialog(Frame owner, String title){
+
+    public AdministrationDialog(Frame owner, String title, Board board) {
         super(owner, title);
-        if(instanceCount == 0){
+        if (instanceCount == 0) {
             instanceCount++;
+            this.board = board;
+
             this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-            this.addWindowListener(new WindowAdapter(){
+            this.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosing(WindowEvent e) {
                     AdministrationDialog.this.instanceCount--;
                     AdministrationDialog.this.dispose();
                 }
-                
+
             });
             this.getContentPane().setLayout(new BoxLayout(this.getContentPane(), Y_AXIS));
 
@@ -53,7 +62,7 @@ public class AdministrationDialog extends JDialog {
             pricesLabel.setAlignmentX(CENTER_ALIGNMENT);
             this.getContentPane().add(pricesLabel);
 
-            priceSettingsPanel = new JPanel(new GridLayout(4, 2));
+            priceSettingsPanel = new JPanel(new GridLayout(5, 2));
             ticketPriceLabel = new JLabel("Belépõjegy ára:");
             ticketPriceSlider = new JSlider(0, 30);
             ticketPriceSlider.setMajorTickSpacing(10);
@@ -78,6 +87,12 @@ public class AdministrationDialog extends JDialog {
             hamburgerPriceSlider.setMinorTickSpacing(1);
             hamburgerPriceSlider.setPaintTicks(true);
             hamburgerPriceSlider.setPaintLabels(true);
+            fishChipsPriceLabel = new JLabel("Fish & Chips ára:");
+            fishChipsPriceSlider = new JSlider(0, 30);
+            fishChipsPriceSlider.setMajorTickSpacing(10);
+            fishChipsPriceSlider.setMinorTickSpacing(1);
+            fishChipsPriceSlider.setPaintTicks(true);
+            fishChipsPriceSlider.setPaintLabels(true);
 
             priceSettingsPanel.add(ticketPriceLabel);
             priceSettingsPanel.add(ticketPriceSlider);
@@ -87,6 +102,8 @@ public class AdministrationDialog extends JDialog {
             priceSettingsPanel.add(iceCreamPriceSlider);
             priceSettingsPanel.add(hamburgerPriceLabel);
             priceSettingsPanel.add(hamburgerPriceSlider);
+            priceSettingsPanel.add(fishChipsPriceLabel);
+            priceSettingsPanel.add(fishChipsPriceSlider);
             this.getContentPane().add(priceSettingsPanel);
 
             employeesLabel = new JLabel("Alkalmazottak");
@@ -119,6 +136,55 @@ public class AdministrationDialog extends JDialog {
             employeeSettingsPanel.add(maintainerNumberSlider);
             employeeSettingsPanel.add(securityGuardNumberLabel);
             employeeSettingsPanel.add(securityGuardNumberSlider);
+
+            //Listeners and event handlers for sliders
+            ticketPriceSlider.addChangeListener(new ChangeListener() {
+                public void stateChanged(ChangeEvent evt) {
+                    JSlider slider = (JSlider) evt.getSource();
+                    if (!slider.getValueIsAdjusting()) {
+                        int value = slider.getValue();
+                        board.getPark().setEntranceFee(value);
+                        //System.out.println(value);
+                    }
+                }
+            });
+
+            hotDogPriceSlider.addChangeListener(new ChangeListener() {
+                public void stateChanged(ChangeEvent evt) {
+                    JSlider slider = (JSlider) evt.getSource();
+                    if (!slider.getValueIsAdjusting()) {
+                        int value = slider.getValue();
+                        //Action
+                    }
+                }
+            });
+            iceCreamPriceSlider.addChangeListener(new ChangeListener() {
+                public void stateChanged(ChangeEvent evt) {
+                    JSlider slider = (JSlider) evt.getSource();
+                    if (!slider.getValueIsAdjusting()) {
+                        int value = slider.getValue();
+                        //Action
+                    }
+                }
+            });
+            hamburgerPriceSlider.addChangeListener(new ChangeListener() {
+                public void stateChanged(ChangeEvent evt) {
+                    JSlider slider = (JSlider) evt.getSource();
+                    if (!slider.getValueIsAdjusting()) {
+                        int value = slider.getValue();
+                        //Action
+                    }
+                }
+            });
+            fishChipsPriceSlider.addChangeListener(new ChangeListener() {
+                public void stateChanged(ChangeEvent evt) {
+                    JSlider slider = (JSlider) evt.getSource();
+                    if (!slider.getValueIsAdjusting()) {
+                        int value = slider.getValue();
+                        //Action
+                    }
+                }
+            });
 
             this.getContentPane().add(employeeSettingsPanel);
 
