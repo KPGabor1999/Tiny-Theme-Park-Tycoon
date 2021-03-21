@@ -248,10 +248,13 @@ public class BuildingOptionsDialog extends JDialog{
                 } else if(currentBuilding instanceof Entrance){
                     nameLabel = new JLabel("Entrance");
                     nameLabel.setAlignmentX(CENTER_ALIGNMENT);
-                    JLabel descriptionLabel = new JLabel("The entrance... what else can i say");
+                    JLabel entryFeeLabel = new JLabel(String.valueOf(board.getPark().getEntranceFee()));
+                    entryFeeLabel.setAlignmentX(CENTER_ALIGNMENT);
+                    JLabel descriptionLabel = new JLabel("The entrance... what else can I say");
                     descriptionLabel.setAlignmentX(CENTER_ALIGNMENT);
 
                     this.getContentPane().add(nameLabel);
+                    this.getContentPane().add(entryFeeLabel);
                     this.getContentPane().add(descriptionLabel);
                 } else if (currentBuilding instanceof LockedTile){
                     descriptionLabel = new JLabel("Unlock to use it as a building ground.");

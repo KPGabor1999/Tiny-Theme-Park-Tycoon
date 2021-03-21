@@ -276,6 +276,10 @@ public class Park implements Updatable {
         return entranceFee;
     }
     
+    public void setEntranceFee(int fee){
+        entranceFee = fee;
+    }
+    
     public boolean isOpen(){
         return isOpen;
     }
