@@ -31,8 +31,6 @@ public abstract class Building extends Buildable{
         return upgradeCost;
     }
     
-    
-    
     public void upgrade(){
         switch(currentLevel){
             case 1: level2Upgrade(); break;

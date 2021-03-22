@@ -187,7 +187,7 @@ public class Board extends JPanel {
     }
     
     private void updateMap() {
-        for (int y = 0; y < park.getHeight(); y++) {
+        /*for (int y = 0; y < park.getHeight(); y++) {
             for (int x = 0; x < park.getWidth(); x++) {
                 GridButton gd = buttonGrid[y][x];
                 if(park.getTile(x, y).isEmpty()){
@@ -210,7 +210,7 @@ public class Board extends JPanel {
                     gd.changeTile(park.getTile(x, y).getBuilding().getInfo().getName());
                 }
             }
-        }
+        }*/
     }
     
     public void enterBuildMode(BuildType type){
