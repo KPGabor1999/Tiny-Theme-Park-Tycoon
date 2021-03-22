@@ -9,7 +9,7 @@ public class Time implements Updatable {
         this.ticks = 0;
     }
     
-    public void update(){
+    public void update(long tickCount){
         ticks++;
     }
     

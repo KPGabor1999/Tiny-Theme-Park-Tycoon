@@ -313,7 +313,7 @@ public class Park implements Updatable {
         return maxGuests;
     }
     
-    public void update(){
+    public void update(long tickCount){
         
     }
     
