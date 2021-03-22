@@ -55,7 +55,7 @@ public class Assets {
             }
         }
         
-        private Image getAsset(){
+        public Image getAsset(){
             return asset;
         } 
     }

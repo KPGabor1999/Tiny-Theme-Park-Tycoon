@@ -23,12 +23,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-import javax.swing.border.EmptyBorder;
 
 public class Board extends JPanel {
 
@@ -56,7 +56,7 @@ public class Board extends JPanel {
         this.main = main;
         
         //setOpaque(false);
-        setBackground(new Color(0, 140, 14));
+        setBackground(new Color(0, 140, 14, 255));
         setBorder(BorderFactory.createEmptyBorder(0, -5, 0, -5));
 
         resizeMap(park.getHeight(), park.getWidth());
@@ -127,6 +127,8 @@ public class Board extends JPanel {
     private void addGridButton(int x, int y){
         buttonGrid[y][x] = new GridButton();
         buttonGrid[y][x].setSize(CELL_SIZE, CELL_SIZE);
+        buttonGrid[y][x].setOpaque(false);
+        buttonGrid[y][x].setContentAreaFilled(false);
         buttonGrid[y][x].addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -190,7 +192,7 @@ public class Board extends JPanel {
                 GridButton gd = buttonGrid[y][x];
                 if(park.getTile(x, y).isEmpty()){
                     gd.setColor(new Color(49, 215, 0, 255));
-                    gd.changeTile("Grass");
+                    //gd.changeTile("Grass");
                 } else {
                     Building b = park.getTile(x, y).getBuilding();
                     if(b instanceof Pavement){
@@ -249,8 +251,19 @@ public class Board extends JPanel {
         super.paintComponent(g);
         
         Graphics2D gr = (Graphics2D) g;
-        gr.setColor(new Color(0,0,0,255));
-        gr.fillRect(0, 0, this.getWidth(), this.getHeight());
+        
+        ArrayList<Building> buildings = park.getBuildings();
+        for (int i = 0; i < buildings.size(); i++) {
+            int x = buildings.get(i).getxLocation();
+            int y = buildings.get(i).getyLocation();
+            int h = buildings.get(i).getInfo().getLength();
+            int w = buildings.get(i).getInfo().getWidth();
+            
+           gr.drawImage( buildings.get(i).getInfo().getTexture().getAsset(), x * CELL_SIZE, y * CELL_SIZE, w * CELL_SIZE, h * CELL_SIZE, null);
+        }
+        
+        //gr.setColor(new Color(0,0,0,255));
+        //gr.fillRect(0, 0, this.getWidth(), this.getHeight());
     }
     
     public void drawCenteredString(Graphics2D gr, String text, Rectangle rect, Font font) {
