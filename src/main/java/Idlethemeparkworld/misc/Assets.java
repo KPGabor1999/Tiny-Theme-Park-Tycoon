@@ -23,7 +23,7 @@ public class Assets {
         NONE
         ;
 
-        private static final String ASSETS_FOLDER_PATH = "assets/";
+        private static final String ASSETS_FOLDER_PATH = "resources/";
         private String filename;     
         private Image asset;
 
@@ -39,7 +39,7 @@ public class Assets {
 
         Texture() {
             if(!this.name().equals("NONE")){
-                this.filename = ASSETS_FOLDER_PATH + name().replace("_", "").toLowerCase();
+                this.filename = ASSETS_FOLDER_PATH + name().replace("_", "").toLowerCase() + ".png";
                 load();
             } else {
                 filename = null;
