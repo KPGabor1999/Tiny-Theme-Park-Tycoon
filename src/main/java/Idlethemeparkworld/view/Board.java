@@ -12,6 +12,7 @@ import Idlethemeparkworld.model.buildable.infrastucture.Infrastructure;
 import Idlethemeparkworld.model.buildable.infrastucture.Pavement;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -22,6 +23,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -33,7 +35,7 @@ public class Board extends JPanel {
     private GameManager gm;
     private Park park;
     private GridButton[][] buttonGrid;
-    private final int CELL_SIZE = 32;
+    private final int CELL_SIZE = 64;
     
     private boolean buildMode;
     private BuildType type;
@@ -53,11 +55,10 @@ public class Board extends JPanel {
         this.buildButton = buildButton;
         this.main = main;
         
-        this.setSize(CELL_SIZE * park.getWidth(), HEIGHT * park.getHeight());
-        setOpaque(false);
-        setBackground(Color.BLACK);
-        setBorder(new EmptyBorder(0, 0, 0, 0));
-        
+        //setOpaque(false);
+        setBackground(new Color(0, 140, 14));
+        setBorder(BorderFactory.createEmptyBorder(0, -5, 0, -5));
+
         resizeMap(park.getHeight(), park.getWidth());
         updateMap();
     }
@@ -102,8 +103,6 @@ public class Board extends JPanel {
         return buildButton;
     }
     
-    
-    
     private void resizeMap(int rows, int columns){
         removeAll();
         setLayout(new GridLayout(rows, columns));
@@ -113,6 +112,11 @@ public class Board extends JPanel {
                 addGridButton(x, y);
             }
         }
+        Dimension dim = new Dimension(CELL_SIZE * columns, CELL_SIZE * rows);
+        setPreferredSize(dim);
+        setMaximumSize(dim);
+        setSize(dim);
+        repaint();
     }
     
     public void refresh() {

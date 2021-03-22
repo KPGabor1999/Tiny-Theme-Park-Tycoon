@@ -220,8 +220,9 @@ public class Main extends JFrame{
 
         add(board);
         
+        setResizable(false);
         setLocationRelativeTo(null);
-        //pack();
+        pack();
         setVisible(true);
     }
     

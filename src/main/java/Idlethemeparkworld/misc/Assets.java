@@ -22,16 +22,17 @@ public class Assets {
         TRASHCAN
         ;
 
+        private static final String ASSETS_FOLDER_PATH = "assets/";
         private String filename;     
         private Image asset;
 
         Texture(String path) {
-            this.filename = path;
+            this.filename = ASSETS_FOLDER_PATH + path;
             load();
         }
 
         Texture() {
-            this.filename = name().replace("_", "").toLowerCase();
+            this.filename = ASSETS_FOLDER_PATH + name().replace("_", "").toLowerCase();
             load();
         }
         
