@@ -19,7 +19,8 @@ public class Assets {
         ROLLERCOASTER,
         SWINGINGSHIP,
         TOILET,
-        TRASHCAN
+        TRASHCAN,
+        NONE
         ;
 
         private static final String ASSETS_FOLDER_PATH = "assets/";
@@ -27,13 +28,23 @@ public class Assets {
         private Image asset;
 
         Texture(String path) {
-            this.filename = ASSETS_FOLDER_PATH + path;
-            load();
+            if(!this.name().equals("NONE")){
+                this.filename = path;
+                load();
+            } else {
+                filename = null;
+                asset = null;
+            }
         }
 
         Texture() {
-            this.filename = ASSETS_FOLDER_PATH + name().replace("_", "").toLowerCase();
-            load();
+            if(!this.name().equals("NONE")){
+                this.filename = ASSETS_FOLDER_PATH + name().replace("_", "").toLowerCase();
+                load();
+            } else {
+                filename = null;
+                asset = null;
+            }
         }
         
         private void load(){
