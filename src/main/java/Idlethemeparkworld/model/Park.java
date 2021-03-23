@@ -3,7 +3,6 @@ package Idlethemeparkworld.model;
 import Idlethemeparkworld.model.buildable.Building;
 import Idlethemeparkworld.model.buildable.infrastucture.Entrance;
 import Idlethemeparkworld.model.buildable.infrastucture.Pavement;
-import static com.sun.org.apache.xalan.internal.xsltc.compiler.util.Type.Int;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 
@@ -25,11 +24,11 @@ public class Park implements Updatable {
     private ArrayList<Building> buildings;
     
     public Park(){
-        initializePark(10);
+        initializePark(10, 10);
     }
     
     public Park(int size){
-        initializePark(size);
+        initializePark(size, size);
     }
     
     public Park(int rows, int columns){
@@ -38,27 +37,6 @@ public class Park implements Updatable {
 
     public Tile[][] getTiles() {
         return tiles;
-    }
-    
-    public void initializePark(int size){
-        rating = 0;
-        parkValue = 0;
-        entranceFee = 100;
-        activeParkValue = 0;
-        resetHistories();
-        
-        tiles = new Tile[size][size];
-        //1.Make sure all tiles are empty
-        this.buildings = new ArrayList<>();
-        for(int row=0; row<tiles.length; row++){
-            for(int column=0; column<tiles[0].length; column++){
-                tiles[row][column] = new Tile(column, row);
-            }
-        }
-        //2.Spawn in the gate tile
-        build(BuildType.ENTRANCE, 0, 0, true);
-        //3.Spawn in 1 from each for debugging purpose
-        //spawnAllBuildings();
     }
     
     public void initializePark(int rows, int columns){
@@ -111,7 +89,6 @@ public class Park implements Updatable {
     }
     
     public boolean canBuild(BuildType type, int x, int y){
-        boolean legal = true;
         if(checkEmptyArea(x,y,type.getWidth(),type.getLength())){
             ArrayList<Tile> neighbours = getNeighbours(x,y,type.getLength(),type.getWidth());
             neighbours.removeIf(n -> !(n.getBuilding() instanceof Pavement || n.getBuilding() instanceof Entrance));

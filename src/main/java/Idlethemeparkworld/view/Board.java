@@ -5,20 +5,12 @@ import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.GameManager;
 import Idlethemeparkworld.model.Park;
 import Idlethemeparkworld.model.buildable.Building;
-import Idlethemeparkworld.model.buildable.attraction.Attraction;
-import Idlethemeparkworld.model.buildable.food.FoodStall;
-import Idlethemeparkworld.model.buildable.infrastucture.Entrance;
-import Idlethemeparkworld.model.buildable.infrastucture.Infrastructure;
-import Idlethemeparkworld.model.buildable.infrastucture.Pavement;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
-import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -55,12 +47,10 @@ public class Board extends JPanel {
         this.buildButton = buildButton;
         this.main = main;
         
-        //setOpaque(false);
         setBackground(new Color(0, 140, 14, 255));
         setBorder(BorderFactory.createEmptyBorder(0, -5, 0, -5));
 
         resizeMap(park.getHeight(), park.getWidth());
-        updateMap();
     }
 
     public GameManager getGameManager() {
@@ -120,7 +110,6 @@ public class Board extends JPanel {
     }
     
     public void refresh() {
-        updateMap();
         repaint();
     }
 
@@ -132,19 +121,11 @@ public class Board extends JPanel {
         buttonGrid[y][x].addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                //showBuildingOptions(x, y);
                 JFrame parentFrame = (JFrame) getRootPane().getParent();
                 BuildingOptionsDialog buildingOptions = new BuildingOptionsDialog(parentFrame, Board.this, x, y);
                 buildingOptions.setLocationRelativeTo(Board.this);
-                //buildingOptions.setVisible(true);
             }
         });
-        /*private void showBuildingOptions(int x, int y){
-            JFrame parentFrame = (JFrame) getRootPane().getParent();
-            BuildingOptionsDialog buildingOptions = new BuildingOptionsDialog(parentFrame, this, x, y);
-            buildingOptions.setLocationRelativeTo(this);
-            buildingOptions.setVisible(true);
-        }*/
         
         buttonGrid[y][x].addMouseListener(new MouseAdapter(){
             @Override
@@ -154,7 +135,6 @@ public class Board extends JPanel {
                     canBuild[0]=canBuild[0]&&gm.getFinance().canAfford(type.getBuildCost());
                     pos[0]=x;
                     pos[1]=y;
-                    //System.out.println("("+x+","+y+") --- "+type.toString()+" --- "+(canBuild[0]?"Can build":"Can't build"));
                     repaint();
                 }
             }
@@ -171,7 +151,6 @@ public class Board extends JPanel {
                     if(buildMode){
                         if(canBuild[0]){
                             park.build(type, pos[0], pos[1], false);
-                            updateMap();
                             gm.getFinance().pay(type.getBuildCost());
                             main.updateInfobar();
                             //System.out.println("can build");
@@ -186,33 +165,6 @@ public class Board extends JPanel {
         add(buttonGrid[y][x]);
     }
     
-    private void updateMap() {
-        /*for (int y = 0; y < park.getHeight(); y++) {
-            for (int x = 0; x < park.getWidth(); x++) {
-                GridButton gd = buttonGrid[y][x];
-                if(park.getTile(x, y).isEmpty()){
-                    gd.setColor(new Color(49, 215, 0, 255));
-                    //gd.changeTile("Grass");
-                } else {
-                    Building b = park.getTile(x, y).getBuilding();
-                    if(b instanceof Pavement){
-                        gd.setColor(Color.LIGHT_GRAY);
-                    }else if(b instanceof Attraction){
-                        gd.setColor(Color.RED);
-                    } else if(b instanceof FoodStall){
-                        gd.setColor(Color.ORANGE);
-                    } else if(b instanceof Entrance){
-                        gd.setColor(Color.DARK_GRAY);
-                        gd.setForeground(Color.WHITE);
-                    } else if(b instanceof Infrastructure){
-                        gd.setColor(Color.CYAN);
-                    }
-                    gd.changeTile(park.getTile(x, y).getBuilding().getInfo().getName());
-                }
-            }
-        }*/
-    }
-    
     public void enterBuildMode(BuildType type){
         buildMode = true;
         this.type = type;
@@ -222,10 +174,7 @@ public class Board extends JPanel {
         Component[] comps = getComponents();
         for (Component component : comps) {
             component.setEnabled(false);
-            //((GridButton)component).setOpaque(false);
             ((GridButton)component).darken();
-            //((GridButton)component).setContentAreaFilled(false);
-            //((GridButton)component).setBorderPainted(false);
         }
         buildButton.setEnabled(false);
         repaint();
@@ -237,10 +186,7 @@ public class Board extends JPanel {
         Component[] comps = getComponents();
         for (Component component : comps) {
             component.setEnabled(true);
-            //((GridButton)component).setOpaque(true);
             ((GridButton)component).resetColor();
-            //((GridButton)component).setContentAreaFilled(true);
-            //((GridButton)component).setBorderPainted(true);
         }
         buildButton.setEnabled(true);
         repaint();
@@ -261,14 +207,6 @@ public class Board extends JPanel {
             
             gr.drawImage( buildings.get(i).getInfo().getTexture().getAsset(), x * CELL_SIZE, y * CELL_SIZE, w * CELL_SIZE, h * CELL_SIZE, null);
         }
-    }
-    
-    public void drawCenteredString(Graphics2D gr, String text, Rectangle rect, Font font) {
-        FontMetrics metrics = gr.getFontMetrics(font);
-        int x = rect.x + (rect.width - metrics.stringWidth(text)) / 2;
-        int y = rect.y + ((rect.height - metrics.getHeight()) / 2) + metrics.getAscent();
-        gr.setFont(font);
-        gr.drawString(text, x, y);
     }
     
     private void drawGhost(Graphics2D gr) {
