@@ -1,17 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Idlethemeparkworld.model.buildable.infrastucture;
 
 import Idlethemeparkworld.model.BuildType;
 
-/**
- *
- * @author KrazyXL
- */
-public class LockedTile extends Infrastructure{
+public class LockedTile extends Infrastructure {
     private final int unlockCost;
     
     public LockedTile(int x, int y){

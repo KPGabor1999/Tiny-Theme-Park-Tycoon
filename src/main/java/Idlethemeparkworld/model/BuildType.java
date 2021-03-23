@@ -11,6 +11,7 @@ import Idlethemeparkworld.model.buildable.food.Hamburger;
 import Idlethemeparkworld.model.buildable.food.HotDog;
 import Idlethemeparkworld.model.buildable.food.IceCream;
 import Idlethemeparkworld.model.buildable.infrastucture.Entrance;
+import Idlethemeparkworld.model.buildable.infrastucture.LockedTile;
 import Idlethemeparkworld.model.buildable.infrastucture.Pavement;
 import Idlethemeparkworld.model.buildable.infrastucture.Toilet;
 import Idlethemeparkworld.model.buildable.infrastucture.TrashCan;
@@ -70,6 +71,8 @@ public enum BuildType {
                 return HauntedMansion.class;
             case ENTRANCE:
                 return Entrance.class;
+            case LOCKEDTILE:
+                return LockedTile.class;
             default:
                 return null;
         }

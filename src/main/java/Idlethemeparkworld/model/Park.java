@@ -1,19 +1,10 @@
 package Idlethemeparkworld.model;
 
 import Idlethemeparkworld.model.buildable.Building;
-import Idlethemeparkworld.model.buildable.attraction.Carousel;
-import Idlethemeparkworld.model.buildable.attraction.FerrisWheel;
-import Idlethemeparkworld.model.buildable.attraction.HauntedMansion;
-import Idlethemeparkworld.model.buildable.attraction.RollerCoaster;
-import Idlethemeparkworld.model.buildable.attraction.SwingingShip;
-import Idlethemeparkworld.model.buildable.food.Hamburger;
-import Idlethemeparkworld.model.buildable.food.HotDog;
-import Idlethemeparkworld.model.buildable.food.IceCream;
 import Idlethemeparkworld.model.buildable.infrastucture.Entrance;
-import Idlethemeparkworld.model.buildable.infrastucture.LockedTile;
 import Idlethemeparkworld.model.buildable.infrastucture.Pavement;
-import Idlethemeparkworld.model.buildable.infrastucture.Toilet;
-import Idlethemeparkworld.model.buildable.infrastucture.TrashCan;
+import static com.sun.org.apache.xalan.internal.xsltc.compiler.util.Type.Int;
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 
 public class Park implements Updatable {
@@ -150,8 +141,8 @@ public class Park implements Updatable {
     
     private boolean checkEmptyArea(int x, int y, int width, int height){
         boolean isEmpty = true;
-        for (int i = y; i < height; i++) {
-            for (int j = x; j < width; j++) {
+        for (int i = y; i < y+height; i++) {
+            for (int j = x; j < x+width; j++) {
                 isEmpty = isEmpty && tiles[y][x].isEmpty();
             }
         }
@@ -188,92 +179,28 @@ public class Park implements Updatable {
         return neighbours;
     }
     
-    /*public void build(BuildType type, int x, int y, boolean force){
-        if(canBuild(type,x,y) || force){
-            Building newBuilding = null;
-            try{
-               newBuilding = (Building) BuildType.GetClass(type).newInstance();
-            } catch (Exception e){
+    private void setAreaToBuilding(int x, int y, int height, int width, Building building){
+        for (int i = y; i < y+height; i++) {
+            for (int j = x; j < x+width; j++) {
+                tiles[i][j].setBuilding(building);
             }
-            buildings.add(newBuilding);
-            //We are assuming all buildings are 1x1 for the time being
-            tiles[y][x].setBuilding(true, newBuilding);
         }
-    }*/
+    }
     
     public void build(BuildType type, int x, int y, boolean force){
         if(canBuild(type,x,y) || force){
-            Building newBuilding;
-            switch(type){
-                //Attrakciók:
-                case LOCKEDTILE:
-                    newBuilding = new LockedTile(x, y);
-                    buildings.add(newBuilding);
-                    tiles[y][x].setBuilding(true, newBuilding);
-                    break;
-                case CAROUSEL:
-                    newBuilding = new Carousel(x, y);
-                    buildings.add(newBuilding);
-                    tiles[y][x].setBuilding(true, newBuilding);
-                    break;
-                case FERRISWHEEL:
-                    newBuilding = new FerrisWheel(x, y);
-                    buildings.add(newBuilding);
-                    tiles[y][x].setBuilding(true, newBuilding);
-                    break;
-                case HAUNTEDMANSION:
-                    newBuilding = new HauntedMansion(x, y);
-                    buildings.add(newBuilding);
-                    tiles[y][x].setBuilding(true, newBuilding);
-                    break;
-                case ROLLERCOASTER:
-                    newBuilding = new RollerCoaster(x, y);
-                    buildings.add(newBuilding);
-                    tiles[y][x].setBuilding(true, newBuilding);
-                    break;
-                case SWINGINGSHIP:
-                    newBuilding = new SwingingShip(x, y);
-                    buildings.add(newBuilding);
-                    tiles[y][x].setBuilding(true, newBuilding);
-                    break;
-                //Büfék:
-                case BURGERJOINT:
-                    newBuilding = new Hamburger(x, y);
-                    buildings.add(newBuilding);
-                    tiles[y][x].setBuilding(true, newBuilding);
-                    break;
-                case HOTDOGSTAND:
-                    newBuilding = new HotDog(x, y);
-                    buildings.add(newBuilding);
-                    tiles[y][x].setBuilding(true, newBuilding);
-                    break;
-                case ICECREAMPARLOR:
-                    newBuilding = new IceCream(x, y);
-                    buildings.add(newBuilding);
-                    tiles[y][x].setBuilding(true, newBuilding);
-                    break;
-                //Infrastruktúra:
-                case ENTRANCE:
-                    newBuilding = new Entrance(x, y);
-                    buildings.add(newBuilding);
-                    tiles[y][x].setBuilding(true, newBuilding);
-                    break;
-                case PAVEMENT:
-                    newBuilding = new Pavement(x, y);
-                    buildings.add(newBuilding);
-                    tiles[y][x].setBuilding(true, newBuilding);
-                    break;
-                case TOILET:
-                    newBuilding = new Toilet(x, y);
-                    buildings.add(newBuilding);
-                    tiles[y][x].setBuilding(true, newBuilding);
-                    break;
-                case TRASHCAN:
-                    newBuilding = new TrashCan(x, y);
-                    buildings.add(newBuilding);
-                    tiles[y][x].setBuilding(true, newBuilding);
-                    break;
+            Building newBuilding = null;
+            try{
+                Class buildingClass = BuildType.GetClass(type);
+                Class[] paramType = {int.class, int.class};
+                Constructor cons = buildingClass.getConstructor(paramType);
+                newBuilding = (Building) cons.newInstance(x,y);
+            } catch (Exception e){
+                System.err.println(type.toString());
+                e.printStackTrace();
             }
+            buildings.add(newBuilding);
+            setAreaToBuilding(x,y,type.getLength(),type.getWidth(),newBuilding);
         }
     }
     
