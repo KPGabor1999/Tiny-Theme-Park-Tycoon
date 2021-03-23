@@ -5,7 +5,6 @@ import Idlethemeparkworld.model.Tile;
 import Idlethemeparkworld.model.buildable.Building;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class PathFinding {
@@ -93,24 +92,4 @@ public class PathFinding {
         }
         return neighbours;
     }
-        
-   /* private void carve() {
-        current.setVisited(true);
-
-        List<Cell> neighs = current.getUnvisitedNeighboursList(grid);
-        reachables.addAll(neighs);
-        Collections.shuffle(reachables);
-
-        current = reachables.get(0);
-
-        List<Cell> inNeighs = current.getAllNeighbours(grid);
-        inNeighs.removeIf(c -> !c.isVisited());
-
-        if (!inNeighs.isEmpty()) {
-            Collections.shuffle(inNeighs);
-            current.removeWalls(inNeighs.get(0));
-        }
-
-        reachables.removeIf(c -> c.isVisited());
-    }*/
 }
