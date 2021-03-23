@@ -1,5 +1,6 @@
 package Idlethemeparkworld.model;
 
+import Idlethemeparkworld.misc.pathfinding.PathFinding;
 import Idlethemeparkworld.model.buildable.Building;
 import Idlethemeparkworld.model.buildable.infrastucture.Entrance;
 import Idlethemeparkworld.model.buildable.infrastucture.Pavement;
@@ -22,6 +23,8 @@ public class Park implements Updatable {
     
     private Tile[][] tiles;
     private ArrayList<Building> buildings;
+    
+    private PathFinding pf;
     
     public Park(){
         initializePark(10, 10);
@@ -47,6 +50,7 @@ public class Park implements Updatable {
         resetHistories();
         
         tiles = new Tile[rows][columns];
+        pf = new PathFinding(tiles);
         //1.Make sure all tiles are empty
         this.buildings = new ArrayList<>();
         for(int row=0; row<tiles.length; row++){
