@@ -29,7 +29,7 @@ public enum BuildType {
     ROLLERCOASTER(3,2,"Roller coaster",35000,0,Assets.Texture.ROLLERCOASTER),
     HAUNTEDMANSION(3,3,"Haunted mansion",20000,0,Assets.Texture.HAUNTEDMANSION),
     ENTRANCE(1,1,"Entrance",0,0,Assets.Texture.GATE),
-    LOCKEDTILE(1,1,"Locked",10000,0,Assets.Texture.NONE);
+    LOCKEDTILE(1,1,"Locked",10000,0,Assets.Texture.LOCKED);
     
     private final int width, length;
     private final String name;
