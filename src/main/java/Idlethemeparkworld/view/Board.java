@@ -259,11 +259,8 @@ public class Board extends JPanel {
             int h = buildings.get(i).getInfo().getLength();
             int w = buildings.get(i).getInfo().getWidth();
             
-           gr.drawImage( buildings.get(i).getInfo().getTexture().getAsset(), x * CELL_SIZE, y * CELL_SIZE, w * CELL_SIZE, h * CELL_SIZE, null);
+            gr.drawImage( buildings.get(i).getInfo().getTexture().getAsset(), x * CELL_SIZE, y * CELL_SIZE, w * CELL_SIZE, h * CELL_SIZE, null);
         }
-        
-        //gr.setColor(new Color(0,0,0,255));
-        //gr.fillRect(0, 0, this.getWidth(), this.getHeight());
     }
     
     public void drawCenteredString(Graphics2D gr, String text, Rectangle rect, Font font) {
@@ -276,19 +273,18 @@ public class Board extends JPanel {
     
     private void drawGhost(Graphics2D gr) {
         if(canBuild[0]) {
-            gr.setColor(new Color(79, 157, 0, 200));
+            gr.setColor(new Color(79, 157, 0, 100));
         } else {
-            gr.setColor(new Color(157, 0, 0, 200));
+            gr.setColor(new Color(157, 0, 0, 100));
         }
         
-        int sizeX = this.getWidth() / park.getWidth();
-        int sizeY = this.getHeight() / park.getHeight();
-        gr.fillRect(sizeX*pos[0], sizeY*pos[1], sizeX, sizeY);
-        
-        gr.setColor(Color.WHITE);
-        Font font = gr.getFont().deriveFont(10f);
-        Rectangle rec = new Rectangle(sizeX*pos[0], sizeY*pos[1], sizeX, sizeY);
-        drawCenteredString(gr, type.toString(), rec, font);
+        int x = pos[0];
+        int y = pos[1];
+        int h = type.getLength();
+        int w = type.getWidth();
+
+        gr.drawImage(type.getTexture().getAsset(), x * CELL_SIZE, y * CELL_SIZE, w * CELL_SIZE, h * CELL_SIZE, null);
+        gr.fillRect(x * CELL_SIZE, y * CELL_SIZE, w * CELL_SIZE, h * CELL_SIZE);
     }
     
     @Override

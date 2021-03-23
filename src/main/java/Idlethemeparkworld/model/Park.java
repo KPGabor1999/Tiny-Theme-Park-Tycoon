@@ -83,24 +83,6 @@ public class Park implements Updatable {
                 build(BuildType.LOCKEDTILE, column, row, true);
             }
         }
-        //3.Spawn in 1 from each for debugging purpose
-        //spawnAllBuildings();
-    }
-    
-    public void spawnAllBuildings(){
-        build(BuildType.CAROUSEL, 7, 0, true);
-        build(BuildType.FERRISWHEEL, 7, 1, true);
-        build(BuildType.HAUNTEDMANSION, 7, 2, true);
-        build(BuildType.ROLLERCOASTER, 7, 3, true);
-        build(BuildType.SWINGINGSHIP, 7, 4, true);
-        
-        build(BuildType.BURGERJOINT, 8, 0, true);
-        build(BuildType.HOTDOGSTAND, 8, 1, true);
-        build(BuildType.ICECREAMPARLOR, 8, 2, true);
-        
-        build(BuildType.PAVEMENT, 9, 0, true);
-        build(BuildType.TOILET, 9, 1, true);
-        build(BuildType.TRASHCAN, 9, 2, true);
     }
     
     public int getWidth(){
@@ -143,7 +125,7 @@ public class Park implements Updatable {
         boolean isEmpty = true;
         for (int i = y; i < y+height; i++) {
             for (int j = x; j < x+width; j++) {
-                isEmpty = isEmpty && tiles[y][x].isEmpty();
+                isEmpty = isEmpty && tiles[i][j].isEmpty();
             }
         }
         return isEmpty;
@@ -174,8 +156,8 @@ public class Park implements Updatable {
         ArrayList<Tile> neighbours = new ArrayList<>();
         addNeighbourRange(neighbours, x, y-1, width, true); //top neighbours
         addNeighbourRange(neighbours, x-1, y, height, false); //left neighbours
-        addNeighbourRange(neighbours, x, y+1, width, true); //right neighbours
-        addNeighbourRange(neighbours, x+1, y, height, false); //bottom neighbours
+        addNeighbourRange(neighbours, x, y+height, width, true); //bottom neighbours
+        addNeighbourRange(neighbours, x+width, y, height, false); //right neighbours
         return neighbours;
     }
     
