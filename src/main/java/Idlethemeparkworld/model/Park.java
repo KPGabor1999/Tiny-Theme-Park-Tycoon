@@ -139,13 +139,23 @@ public class Park implements Updatable {
     
     public boolean canBuild(BuildType type, int x, int y){
         boolean legal = true;
-        if(tiles[y][x].isEmpty()){
-            ArrayList<Tile> neighbours = getNeighbours(x,y);
+        if(checkEmptyArea(x,y,type.getWidth(),type.getLength())){
+            ArrayList<Tile> neighbours = getNeighbours(x,y,type.getLength(),type.getWidth());
             neighbours.removeIf(n -> !(n.getBuilding() instanceof Pavement || n.getBuilding() instanceof Entrance));
             return neighbours.size() > 0;
         } else {
             return false;
         }
+    }
+    
+    private boolean checkEmptyArea(int x, int y, int width, int height){
+        boolean isEmpty = true;
+        for (int i = y; i < height; i++) {
+            for (int j = x; j < width; j++) {
+                isEmpty = isEmpty && tiles[y][x].isEmpty();
+            }
+        }
+        return isEmpty;
     }
     
     private boolean checkLegalCoordinate(int x, int y){
@@ -159,12 +169,22 @@ public class Park implements Updatable {
         }
     }
     
-    private ArrayList<Tile> getNeighbours(int x, int y){
+    private void addNeighbourRange(ArrayList<Tile> list, int startX, int startY, int range, boolean isHorizontal){
+        for (int i = 0; i < range; i++) {
+            if(isHorizontal){
+                addNeighbour(list, startX+i, startY);
+            } else {
+                addNeighbour(list, startX, startY+i);
+            }
+        }
+    }
+    
+    private ArrayList<Tile> getNeighbours(int x, int y, int height, int width){
         ArrayList<Tile> neighbours = new ArrayList<>();
-        addNeighbour(neighbours, x-1, y);
-        addNeighbour(neighbours, x+1, y);
-        addNeighbour(neighbours, x, y-1);
-        addNeighbour(neighbours, x, y+1);
+        addNeighbourRange(neighbours, x, y-1, width, true); //top neighbours
+        addNeighbourRange(neighbours, x-1, y, height, false); //left neighbours
+        addNeighbourRange(neighbours, x, y+1, width, true); //right neighbours
+        addNeighbourRange(neighbours, x+1, y, height, false); //bottom neighbours
         return neighbours;
     }
     
