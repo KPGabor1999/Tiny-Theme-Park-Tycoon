@@ -29,6 +29,7 @@ public class PathFinding {
         reachables.add(tiles[0][0]);
         while(!reachables.isEmpty()){
             current = reachables.remove(0);
+            current.setVisited(true);
             reachables.addAll(getUnvisitedNeighbourPavementList(current.getX(), current.getY()));
             result.add(current.getBuilding());
             
@@ -51,13 +52,13 @@ public class PathFinding {
     }
     
     private boolean checkCellExists(int x, int y) {
-        return 0 < x &&  x < tiles.length-1 && 0 < y &&  y < tiles.length-1;
+        return 0<=x && x<tiles.length && 0<=y && y<tiles.length;
     }
     
     private ArrayList<Tile> getUnvisitedNeighbourPavementList(int x, int y) {
         ArrayList<Tile> neighbours = getAllNeighbours(x, y);
 
-        neighbours.removeIf(t -> t.isVisited() || t.getBuilding().getInfo() != BuildType.PAVEMENT);
+        neighbours.removeIf(t -> t.isVisited() || t.getBuilding() == null || t.getBuilding().getInfo() != BuildType.PAVEMENT);
         
         return neighbours;
     }
@@ -66,10 +67,12 @@ public class PathFinding {
         ArrayList<Tile> neighbours = getAllNeighbours(x, y);
         ArrayList<Building> neighbourBuildings = new ArrayList<>();
         for (Tile t : neighbours) {
-            neighbourBuildings.add(t.getBuilding());
+            if(t.getBuilding() != null && !t.isVisited()){
+                neighbourBuildings.add(t.getBuilding());
+            }
         }
                 
-        neighbours.removeIf(t -> t.isVisited() || t.getBuilding() != null || t.getBuilding().getInfo() == BuildType.PAVEMENT);
+        neighbourBuildings.removeIf(b -> b.getInfo() == BuildType.LOCKEDTILE);
         
         return neighbourBuildings;
     }

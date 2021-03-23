@@ -6,6 +6,8 @@ import Idlethemeparkworld.model.buildable.infrastucture.Entrance;
 import Idlethemeparkworld.model.buildable.infrastucture.Pavement;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Park implements Updatable {
     private static final int HISTORY_SIZE = 14;
@@ -25,6 +27,7 @@ public class Park implements Updatable {
     private ArrayList<Building> buildings;
     
     private PathFinding pf;
+    private Set<Building> reachable;
     
     public Park(){
         initializePark(10, 10);
@@ -51,6 +54,7 @@ public class Park implements Updatable {
         
         tiles = new Tile[rows][columns];
         pf = new PathFinding(tiles);
+        reachable = new HashSet<>();
         //1.Make sure all tiles are empty
         this.buildings = new ArrayList<>();
         for(int row=0; row<tiles.length; row++){
@@ -159,11 +163,13 @@ public class Park implements Updatable {
                 Constructor cons = buildingClass.getConstructor(paramType);
                 newBuilding = (Building) cons.newInstance(x,y);
             } catch (Exception e){
-                System.err.println(type.toString());
                 e.printStackTrace();
             }
             buildings.add(newBuilding);
             setAreaToBuilding(x,y,type.getLength(),type.getWidth(),newBuilding);
+            pf.updateTiles(tiles);
+            reachable = pf.getReachableBuildings();
+            System.out.println(reachable.size());
         }
     }
     
