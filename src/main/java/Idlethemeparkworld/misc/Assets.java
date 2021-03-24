@@ -20,7 +20,10 @@ public class Assets {
         SWINGINGSHIP,
         TOILET,
         TRASHCAN,
+        
         LOCKED,
+        NOPATH,
+        
         NONE;
 
         private static final String ASSETS_FOLDER_PATH = "resources/";

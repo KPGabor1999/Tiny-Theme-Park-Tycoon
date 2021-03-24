@@ -2,6 +2,7 @@ package Idlethemeparkworld.model;
 
 import Idlethemeparkworld.misc.pathfinding.PathFinding;
 import Idlethemeparkworld.model.buildable.Building;
+import Idlethemeparkworld.model.buildable.BuildingStatus;
 import Idlethemeparkworld.model.buildable.infrastucture.Entrance;
 import Idlethemeparkworld.model.buildable.infrastucture.Pavement;
 import java.lang.reflect.Constructor;
@@ -167,9 +168,20 @@ public class Park implements Updatable {
             }
             buildings.add(newBuilding);
             setAreaToBuilding(x,y,type.getLength(),type.getWidth(),newBuilding);
-            pf.updateTiles(tiles);
-            reachable = pf.getReachableBuildings();
-            System.out.println(reachable.size());
+            updateBuildings();
+        }
+    }
+    
+    private void updateBuildings(){
+        pf.updateTiles(tiles);
+        reachable = pf.getReachableBuildings();
+        
+        for (int i = 0; i < buildings.size(); i++) {
+            if(buildings.get(i).getInfo() != BuildType.LOCKEDTILE){
+                if(!reachable.contains(buildings.get(i))){
+                    buildings.get(i).setStatus(BuildingStatus.FLOATING);
+                }
+            }
         }
     }
     

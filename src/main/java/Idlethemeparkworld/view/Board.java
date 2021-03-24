@@ -1,10 +1,12 @@
 package Idlethemeparkworld.view;
 
 import Idlethemeparkworld.Main;
+import Idlethemeparkworld.misc.Assets;
 import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.GameManager;
 import Idlethemeparkworld.model.Park;
 import Idlethemeparkworld.model.buildable.Building;
+import Idlethemeparkworld.model.buildable.BuildingStatus;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -206,6 +208,9 @@ public class Board extends JPanel {
             int w = buildings.get(i).getInfo().getWidth();
             
             gr.drawImage( buildings.get(i).getInfo().getTexture().getAsset(), x * CELL_SIZE, y * CELL_SIZE, w * CELL_SIZE, h * CELL_SIZE, null);
+            if(buildings.get(i).getStatus() == BuildingStatus.FLOATING){
+                gr.drawImage(Assets.Texture.NOPATH.getAsset(), x*CELL_SIZE+w*CELL_SIZE/2-15, y*CELL_SIZE+h*CELL_SIZE/2-15, 30, 30, null);
+            }
         }
     }
     
