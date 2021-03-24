@@ -9,6 +9,7 @@ import Idlethemeparkworld.model.buildable.infrastucture.LockedTile;
 import Idlethemeparkworld.model.buildable.infrastucture.Pavement;
 import Idlethemeparkworld.model.buildable.infrastucture.Toilet;
 import Idlethemeparkworld.model.buildable.infrastucture.TrashCan;
+import Idlethemeparkworld.view.popups.Notification;
 import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.GridLayout;
@@ -280,61 +281,13 @@ public class BuildingOptionsDialog extends JDialog{
         int funds = board.getGameManager().getFinance().getFunds();
         int upgradeCost = currentBuilding.getUpgradeCost();
         if(funds <= upgradeCost){
-            insufficientFundsDialog = new JDialog(this.getOwner(), "Problem");
-            insufficientFundsDialog.setLayout(new BoxLayout(insufficientFundsDialog.getContentPane(), BoxLayout.Y_AXIS));
-            insufficientFundsDialog.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-            
-            JLabel errorMessage = new JLabel("Insufficient funds for upgrade.");
-            errorMessage.setAlignmentX(CENTER_ALIGNMENT);
-            JButton OKButton = new JButton("OK");
-            OKButton.setAlignmentX(CENTER_ALIGNMENT);
-            OKButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    BuildingOptionsDialog.this.insufficientFundsDialog.dispose();
-                }
-            });
-            
-            insufficientFundsDialog.getContentPane().add(errorMessage);
-            insufficientFundsDialog.getContentPane().add(OKButton);
-            
-            insufficientFundsDialog.pack();
-            
-            int xLocation = this.getOwner().getX() + this.getOwner().getWidth()/2 - insufficientFundsDialog.getWidth()/2;
-            int yLocation = this.getOwner().getY() + this.getOwner().getHeight()/2 - insufficientFundsDialog.getHeight()/2;
-            insufficientFundsDialog.setLocation(xLocation, yLocation);
-            
-            insufficientFundsDialog.setVisible(true);
+            new Notification(this.getOwner(), "Problem", "Insufficient funds for upgrade.");
         } else {
             board.getGameManager().getFinance().pay(upgradeCost);
             currentBuilding.upgrade();
             instanceCount--;
             this.dispose();
-            upgradeSuccessfulDialog = new JDialog(this.getOwner(), "Success");
-            upgradeSuccessfulDialog.setLayout(new BoxLayout(upgradeSuccessfulDialog.getContentPane(), BoxLayout.Y_AXIS));
-            upgradeSuccessfulDialog.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-            
-            JLabel sucessMessage = new JLabel("Building successfully upgraded.");
-            sucessMessage.setAlignmentX(CENTER_ALIGNMENT);
-            JButton OKButton = new JButton("OK");
-            OKButton.setAlignmentX(CENTER_ALIGNMENT);
-            OKButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    BuildingOptionsDialog.this.upgradeSuccessfulDialog.dispose();
-                }
-            });
-            
-            upgradeSuccessfulDialog.getContentPane().add(sucessMessage);
-            upgradeSuccessfulDialog.getContentPane().add(OKButton);
-            
-            upgradeSuccessfulDialog.pack();
-            
-            int xLocation = this.getOwner().getX() + this.getOwner().getWidth()/2 - upgradeSuccessfulDialog.getWidth()/2;
-            int yLocation = this.getOwner().getY() + this.getOwner().getHeight()/2 - upgradeSuccessfulDialog.getHeight()/2;
-            upgradeSuccessfulDialog.setLocation(xLocation, yLocation);
-            
-            upgradeSuccessfulDialog.setVisible(true);
+            new Notification(this.getOwner(), "Success", "Building successfully upgraded.");
         }
     }
     
