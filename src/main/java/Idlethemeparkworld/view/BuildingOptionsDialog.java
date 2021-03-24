@@ -248,7 +248,7 @@ public class BuildingOptionsDialog extends JDialog{
                 } else if(currentBuilding instanceof Entrance){
                     nameLabel = new JLabel("Entrance");
                     nameLabel.setAlignmentX(CENTER_ALIGNMENT);
-                    JLabel entryFeeLabel = new JLabel(String.valueOf(board.getPark().getEntranceFee()));
+                    JLabel entryFeeLabel = new JLabel(String.valueOf(board.getGameManager().getEntranceFee()));
                     entryFeeLabel.setAlignmentX(CENTER_ALIGNMENT);
                     JLabel descriptionLabel = new JLabel("The entrance... what else can I say");
                     descriptionLabel.setAlignmentX(CENTER_ALIGNMENT);

@@ -61,7 +61,7 @@ public class AdministrationDialog extends JDialog {
             pricesLabel = new JLabel("Árak");
             pricesLabel.setAlignmentX(CENTER_ALIGNMENT);
             this.getContentPane().add(pricesLabel);
-
+            //Belépõ
             priceSettingsPanel = new JPanel(new GridLayout(5, 2));
             ticketPriceLabel = new JLabel("Belépõjegy ára:");
             ticketPriceSlider = new JSlider(0, 30);
@@ -69,30 +69,39 @@ public class AdministrationDialog extends JDialog {
             ticketPriceSlider.setMinorTickSpacing(1);
             ticketPriceSlider.setPaintTicks(true);
             ticketPriceSlider.setPaintLabels(true);
+            ticketPriceSlider.setValue(board.getGameManager().getEntranceFee());
+            //Hotdog
             hotDogPriceLabel = new JLabel("Hot dogok ára:");
             hotDogPriceSlider = new JSlider(0, 30);
             hotDogPriceSlider.setMajorTickSpacing(10);
             hotDogPriceSlider.setMinorTickSpacing(1);
             hotDogPriceSlider.setPaintTicks(true);
             hotDogPriceSlider.setPaintLabels(true);
+            hotDogPriceSlider.setValue(board.getGameManager().getHotdogPrice());
+            //Jégkrémes
             iceCreamPriceLabel = new JLabel("Fagyi ára:");
             iceCreamPriceSlider = new JSlider(0, 30);
             iceCreamPriceSlider.setMajorTickSpacing(10);
             iceCreamPriceSlider.setMinorTickSpacing(1);
             iceCreamPriceSlider.setPaintTicks(true);
             iceCreamPriceSlider.setPaintLabels(true);
+            iceCreamPriceSlider.setValue(board.getGameManager().getIcecreamPrice());
+            //Hamburgeres
             hamburgerPriceLabel = new JLabel("Hamburger ára:");
             hamburgerPriceSlider = new JSlider(0, 30);
             hamburgerPriceSlider.setMajorTickSpacing(10);
             hamburgerPriceSlider.setMinorTickSpacing(1);
             hamburgerPriceSlider.setPaintTicks(true);
             hamburgerPriceSlider.setPaintLabels(true);
+            hamburgerPriceSlider.setValue(board.getGameManager().getHamburgerPrice());
+            //Fish & Chips
             fishChipsPriceLabel = new JLabel("Fish & Chips ára:");
             fishChipsPriceSlider = new JSlider(0, 30);
             fishChipsPriceSlider.setMajorTickSpacing(10);
             fishChipsPriceSlider.setMinorTickSpacing(1);
             fishChipsPriceSlider.setPaintTicks(true);
             fishChipsPriceSlider.setPaintLabels(true);
+            fishChipsPriceSlider.setValue(board.getGameManager().getFishChipsPrice());
 
             priceSettingsPanel.add(ticketPriceLabel);
             priceSettingsPanel.add(ticketPriceSlider);
@@ -143,8 +152,7 @@ public class AdministrationDialog extends JDialog {
                     JSlider slider = (JSlider) evt.getSource();
                     if (!slider.getValueIsAdjusting()) {
                         int value = slider.getValue();
-                        board.getPark().setEntranceFee(value);
-                        //System.out.println(value);
+                        board.getGameManager().setEntranceFee(value);
                     }
                 }
             });
@@ -155,6 +163,7 @@ public class AdministrationDialog extends JDialog {
                     if (!slider.getValueIsAdjusting()) {
                         int value = slider.getValue();
                         //Action
+                        board.getGameManager().setHotdogPrice(value);
                     }
                 }
             });
@@ -164,6 +173,7 @@ public class AdministrationDialog extends JDialog {
                     if (!slider.getValueIsAdjusting()) {
                         int value = slider.getValue();
                         //Action
+                        board.getGameManager().setIcecreamPrice(value);
                     }
                 }
             });
@@ -173,6 +183,7 @@ public class AdministrationDialog extends JDialog {
                     if (!slider.getValueIsAdjusting()) {
                         int value = slider.getValue();
                         //Action
+                        board.getGameManager().setHamburgerPrice(value);
                     }
                 }
             });
@@ -182,6 +193,7 @@ public class AdministrationDialog extends JDialog {
                     if (!slider.getValueIsAdjusting()) {
                         int value = slider.getValue();
                         //Action
+                        board.getGameManager().setFishChipsPrice(value);
                     }
                 }
             });
