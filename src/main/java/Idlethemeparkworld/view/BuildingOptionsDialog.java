@@ -16,12 +16,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import javafx.util.Pair;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.WindowConstants;
 
 public class BuildingOptionsDialog extends JDialog{
     private Board board;
@@ -59,7 +60,7 @@ public class BuildingOptionsDialog extends JDialog{
             instanceCount++;
             this.board = board;
             this.currentBuilding = board.getGameManager().getPark().getTile(x, y).getBuilding();
-            setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+            //setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             this.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosing(WindowEvent e) {
@@ -84,21 +85,13 @@ public class BuildingOptionsDialog extends JDialog{
                 nameLabel.setAlignmentX(CENTER_ALIGNMENT);
 
                 //isRunning
-                statsPanel = new JPanel(new GridLayout(7, 2));
-                JLabel funTextLabel = new JLabel("Fun: ");
-                JLabel funNumberLabel = new JLabel("");
-                capacityTextLabel = new JLabel("Capacity: ");
-                capacityNumberLabel = new JLabel("");
-                occupiedTextLabel = new JLabel("Occupied: ");
-                occupiedNumberLabel = new JLabel("");
-                JLabel runTimeTextLabel = new JLabel("Runtime: ");
-                JLabel runTimeNumberLabel = new JLabel("");
-                JLabel entryFeeTextLabel = new JLabel("Entry fee: ");
-                JLabel entryFeeNumberLabel = new JLabel(((Attraction) currentBuilding).getEntryFee() + "");
-                upkeepCostTextLabel = new JLabel("Upkeep cost: ");
-                upkeepCostNumberLabel = new JLabel(((Attraction) currentBuilding).getUpkeepCost() + "");
-                conditionTextLabel = new JLabel("Condition: ");
-                conditionNumberLabel = new JLabel(((Attraction) currentBuilding).getCondition() + "");
+                ArrayList<JLabel> infoLabels = new ArrayList<>();
+                ArrayList<Pair<String, String>> info = currentBuilding.getAllData();
+                statsPanel = new JPanel(new GridLayout(info.size(), 2));
+                for(Pair<String, String> p : info){
+                    statsPanel.add(new JLabel(p.getKey()));
+                    statsPanel.add(new JLabel(p.getValue()));
+                }
 
                 upgradeButton = new JButton("Upgrade: costs " + currentBuilding.getUpgradeCost() + "$");
                 upgradeButton.setAlignmentX(CENTER_ALIGNMENT);
@@ -124,20 +117,6 @@ public class BuildingOptionsDialog extends JDialog{
                 //Lebonts gomb esemnykezelse
 
                 this.getContentPane().add(nameLabel);
-                statsPanel.add(funTextLabel);
-                statsPanel.add(funNumberLabel);
-                statsPanel.add(capacityTextLabel);
-                statsPanel.add(capacityNumberLabel);
-                statsPanel.add(occupiedTextLabel);
-                statsPanel.add(occupiedNumberLabel);
-                statsPanel.add(runTimeTextLabel);
-                statsPanel.add(runTimeNumberLabel);
-                statsPanel.add(entryFeeTextLabel);
-                statsPanel.add(entryFeeNumberLabel);
-                statsPanel.add(upkeepCostTextLabel);
-                statsPanel.add(upkeepCostNumberLabel);
-                statsPanel.add(conditionTextLabel);
-                statsPanel.add(conditionNumberLabel);
                 this.getContentPane().add(statsPanel);
                 this.getContentPane().add(upgradeButton);
                 this.getContentPane().add(demolishButton);
