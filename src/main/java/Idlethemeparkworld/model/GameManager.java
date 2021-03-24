@@ -157,11 +157,11 @@ public class GameManager {
     }
 
     public void resetGameSpeed() {
-        gameSpeed = 2;
+        gameSpeed = 1;
     }
 
     public void increaseGameSpeed() {
-        if (gameSpeed < GAME_SPEEDS.length) {
+        if (gameSpeed < GAME_SPEEDS.length - 1) {
             gameSpeed++;
         }
     }
