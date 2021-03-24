@@ -46,6 +46,7 @@ public class Main extends JFrame{
         setTitle("Idle Theme Park World");
         setSize(600, 600);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        //setUndecorated(true);
         //URL url = MainWindow.class.getClassLoader().getResource("assets/icon.png");
         //setIconImage(Toolkit.getDefaultToolkit().getImage(url));
         
@@ -220,8 +221,9 @@ public class Main extends JFrame{
 
         add(board);
         
+        setResizable(false);
         setLocationRelativeTo(null);
-        //pack();
+        pack();
         setVisible(true);
     }
     

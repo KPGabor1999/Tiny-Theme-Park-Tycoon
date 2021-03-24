@@ -1,20 +1,14 @@
 package Idlethemeparkworld.model;
 
+import Idlethemeparkworld.misc.pathfinding.PathFinding;
 import Idlethemeparkworld.model.buildable.Building;
-import Idlethemeparkworld.model.buildable.attraction.Carousel;
-import Idlethemeparkworld.model.buildable.attraction.FerrisWheel;
-import Idlethemeparkworld.model.buildable.attraction.HauntedMansion;
-import Idlethemeparkworld.model.buildable.attraction.RollerCoaster;
-import Idlethemeparkworld.model.buildable.attraction.SwingingShip;
-import Idlethemeparkworld.model.buildable.food.Hamburger;
-import Idlethemeparkworld.model.buildable.food.HotDog;
-import Idlethemeparkworld.model.buildable.food.IceCream;
+import Idlethemeparkworld.model.buildable.BuildingStatus;
 import Idlethemeparkworld.model.buildable.infrastucture.Entrance;
-import Idlethemeparkworld.model.buildable.infrastucture.LockedTile;
 import Idlethemeparkworld.model.buildable.infrastucture.Pavement;
-import Idlethemeparkworld.model.buildable.infrastucture.Toilet;
-import Idlethemeparkworld.model.buildable.infrastucture.TrashCan;
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Park implements Updatable {
     private static final int HISTORY_SIZE = 14;
@@ -33,12 +27,15 @@ public class Park implements Updatable {
     private Tile[][] tiles;
     private ArrayList<Building> buildings;
     
+    private PathFinding pf;
+    private Set<Building> reachable;
+    
     public Park(){
-        initializePark(10);
+        initializePark(10, 10);
     }
     
     public Park(int size){
-        initializePark(size);
+        initializePark(size, size);
     }
     
     public Park(int rows, int columns){
@@ -49,27 +46,6 @@ public class Park implements Updatable {
         return tiles;
     }
     
-    public void initializePark(int size){
-        rating = 0;
-        parkValue = 0;
-        entranceFee = 100;
-        activeParkValue = 0;
-        resetHistories();
-        
-        tiles = new Tile[size][size];
-        //1.Make sure all tiles are empty
-        this.buildings = new ArrayList<>();
-        for(int row=0; row<tiles.length; row++){
-            for(int column=0; column<tiles[0].length; column++){
-                tiles[row][column] = new Tile(column, row);
-            }
-        }
-        //2.Spawn in the gate tile
-        build(BuildType.ENTRANCE, 0, 0, true);
-        //3.Spawn in 1 from each for debugging purpose
-        //spawnAllBuildings();
-    }
-    
     public void initializePark(int rows, int columns){
         rating = 0;
         parkValue = 0;
@@ -78,6 +54,8 @@ public class Park implements Updatable {
         resetHistories();
         
         tiles = new Tile[rows][columns];
+        pf = new PathFinding(tiles);
+        reachable = new HashSet<>();
         //1.Make sure all tiles are empty
         this.buildings = new ArrayList<>();
         for(int row=0; row<tiles.length; row++){
@@ -92,24 +70,6 @@ public class Park implements Updatable {
                 build(BuildType.LOCKEDTILE, column, row, true);
             }
         }
-        //3.Spawn in 1 from each for debugging purpose
-        //spawnAllBuildings();
-    }
-    
-    public void spawnAllBuildings(){
-        build(BuildType.CAROUSEL, 7, 0, true);
-        build(BuildType.FERRISWHEEL, 7, 1, true);
-        build(BuildType.HAUNTEDMANSION, 7, 2, true);
-        build(BuildType.ROLLERCOASTER, 7, 3, true);
-        build(BuildType.SWINGINGSHIP, 7, 4, true);
-        
-        build(BuildType.BURGERJOINT, 8, 0, true);
-        build(BuildType.HOTDOGSTAND, 8, 1, true);
-        build(BuildType.ICECREAMPARLOR, 8, 2, true);
-        
-        build(BuildType.PAVEMENT, 9, 0, true);
-        build(BuildType.TOILET, 9, 1, true);
-        build(BuildType.TRASHCAN, 9, 2, true);
     }
     
     public int getWidth(){
@@ -138,14 +98,23 @@ public class Park implements Updatable {
     }
     
     public boolean canBuild(BuildType type, int x, int y){
-        boolean legal = true;
-        if(tiles[y][x].isEmpty()){
-            ArrayList<Tile> neighbours = getNeighbours(x,y);
+        if(checkEmptyArea(x,y,type.getWidth(),type.getLength())){
+            ArrayList<Tile> neighbours = getNeighbours(x,y,type.getLength(),type.getWidth());
             neighbours.removeIf(n -> !(n.getBuilding() instanceof Pavement || n.getBuilding() instanceof Entrance));
             return neighbours.size() > 0;
         } else {
             return false;
         }
+    }
+    
+    private boolean checkEmptyArea(int x, int y, int width, int height){
+        boolean isEmpty = true;
+        for (int i = y; i < y+height; i++) {
+            for (int j = x; j < x+width; j++) {
+                isEmpty = isEmpty && tiles[i][j].isEmpty();
+            }
+        }
+        return isEmpty;
     }
     
     private boolean checkLegalCoordinate(int x, int y){
@@ -159,100 +128,61 @@ public class Park implements Updatable {
         }
     }
     
-    private ArrayList<Tile> getNeighbours(int x, int y){
+    private void addNeighbourRange(ArrayList<Tile> list, int startX, int startY, int range, boolean isHorizontal){
+        for (int i = 0; i < range; i++) {
+            if(isHorizontal){
+                addNeighbour(list, startX+i, startY);
+            } else {
+                addNeighbour(list, startX, startY+i);
+            }
+        }
+    }
+    
+    private ArrayList<Tile> getNeighbours(int x, int y, int height, int width){
         ArrayList<Tile> neighbours = new ArrayList<>();
-        addNeighbour(neighbours, x-1, y);
-        addNeighbour(neighbours, x+1, y);
-        addNeighbour(neighbours, x, y-1);
-        addNeighbour(neighbours, x, y+1);
+        addNeighbourRange(neighbours, x, y-1, width, true); //top neighbours
+        addNeighbourRange(neighbours, x-1, y, height, false); //left neighbours
+        addNeighbourRange(neighbours, x, y+height, width, true); //bottom neighbours
+        addNeighbourRange(neighbours, x+width, y, height, false); //right neighbours
         return neighbours;
     }
     
-    /*public void build(BuildType type, int x, int y, boolean force){
-        if(canBuild(type,x,y) || force){
-            Building newBuilding = null;
-            try{
-               newBuilding = (Building) BuildType.GetClass(type).newInstance();
-            } catch (Exception e){
+    private void setAreaToBuilding(int x, int y, int height, int width, Building building){
+        for (int i = y; i < y+height; i++) {
+            for (int j = x; j < x+width; j++) {
+                tiles[i][j].setBuilding(building);
             }
-            buildings.add(newBuilding);
-            //We are assuming all buildings are 1x1 for the time being
-            tiles[y][x].setBuilding(true, newBuilding);
         }
-    }*/
+    }
     
     public void build(BuildType type, int x, int y, boolean force){
         if(canBuild(type,x,y) || force){
-            Building newBuilding;
-            switch(type){
-                //Attrakciók:
-                case LOCKEDTILE:
-                    newBuilding = new LockedTile(x, y);
-                    buildings.add(newBuilding);
-                    tiles[y][x].setBuilding(true, newBuilding);
-                    break;
-                case CAROUSEL:
-                    newBuilding = new Carousel(x, y);
-                    buildings.add(newBuilding);
-                    tiles[y][x].setBuilding(true, newBuilding);
-                    break;
-                case FERRISWHEEL:
-                    newBuilding = new FerrisWheel(x, y);
-                    buildings.add(newBuilding);
-                    tiles[y][x].setBuilding(true, newBuilding);
-                    break;
-                case HAUNTEDMANSION:
-                    newBuilding = new HauntedMansion(x, y);
-                    buildings.add(newBuilding);
-                    tiles[y][x].setBuilding(true, newBuilding);
-                    break;
-                case ROLLERCOASTER:
-                    newBuilding = new RollerCoaster(x, y);
-                    buildings.add(newBuilding);
-                    tiles[y][x].setBuilding(true, newBuilding);
-                    break;
-                case SWINGINGSHIP:
-                    newBuilding = new SwingingShip(x, y);
-                    buildings.add(newBuilding);
-                    tiles[y][x].setBuilding(true, newBuilding);
-                    break;
-                //Büfék:
-                case BURGERJOINT:
-                    newBuilding = new Hamburger(x, y);
-                    buildings.add(newBuilding);
-                    tiles[y][x].setBuilding(true, newBuilding);
-                    break;
-                case HOTDOGSTAND:
-                    newBuilding = new HotDog(x, y);
-                    buildings.add(newBuilding);
-                    tiles[y][x].setBuilding(true, newBuilding);
-                    break;
-                case ICECREAMPARLOR:
-                    newBuilding = new IceCream(x, y);
-                    buildings.add(newBuilding);
-                    tiles[y][x].setBuilding(true, newBuilding);
-                    break;
-                //Infrastruktúra:
-                case ENTRANCE:
-                    newBuilding = new Entrance(x, y);
-                    buildings.add(newBuilding);
-                    tiles[y][x].setBuilding(true, newBuilding);
-                    break;
-                case PAVEMENT:
-                    newBuilding = new Pavement(x, y);
-                    buildings.add(newBuilding);
-                    tiles[y][x].setBuilding(true, newBuilding);
-                    break;
-                case TOILET:
-                    newBuilding = new Toilet(x, y);
-                    buildings.add(newBuilding);
-                    tiles[y][x].setBuilding(true, newBuilding);
-                    break;
-                case TRASHCAN:
-                    newBuilding = new TrashCan(x, y);
-                    buildings.add(newBuilding);
-                    tiles[y][x].setBuilding(true, newBuilding);
-                    break;
+            Building newBuilding = null;
+            try{
+                Class buildingClass = BuildType.GetClass(type);
+                Class[] paramType = {int.class, int.class};
+                Constructor cons = buildingClass.getConstructor(paramType);
+                newBuilding = (Building) cons.newInstance(x,y);
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+            buildings.add(newBuilding);
+            setAreaToBuilding(x,y,type.getLength(),type.getWidth(),newBuilding);
+            updateBuildings();
+        }
+    }
+    
+    private void updateBuildings(){
+        pf.updateTiles(tiles);
+        reachable = pf.getReachableBuildings();
+        
+        for (int i = 0; i < buildings.size(); i++) {
+            if(buildings.get(i).getInfo() != BuildType.LOCKEDTILE){
+                if(!reachable.contains(buildings.get(i))){
+                    buildings.get(i).setStatus(BuildingStatus.FLOATING);
+                } else if( buildings.get(i).getStatus() == BuildingStatus.FLOATING){
+                    buildings.get(i).setStatus(BuildingStatus.INACTIVE);
+                }
             }
         }
     }
@@ -270,6 +200,7 @@ public class Park implements Updatable {
         }
         
         buildings.remove(demolitionIndex);
+        updateBuildings();
     }
     
     public int getEntranceFee(){
