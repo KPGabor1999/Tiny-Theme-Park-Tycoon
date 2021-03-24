@@ -40,14 +40,8 @@ public class BuildingOptionsDialog extends JDialog{
     private JLabel upkeepCostTextLabel;
     private JLabel upkeepCostNumberLabel;
     
-    private JLabel conditionTextLabel;      //Ez csak az attrakcikhoz kell.
-    private JLabel conditionNumberLabel;
-    
     private JButton upgradeButton;
-    private JDialog insufficientFundsDialog;
-    private JDialog upgradeSuccessfulDialog;
     private JButton demolishButton;
-    private JDialog confirmDemolitionDialog;
 
     private JButton unlockButton;
     
