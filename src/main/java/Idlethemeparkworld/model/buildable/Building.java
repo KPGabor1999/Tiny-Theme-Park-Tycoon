@@ -8,7 +8,7 @@ public abstract class Building extends Buildable{
     protected int x, y;
     protected int value;
     protected int currentLevel;
-    public final int maxLevel = 3;
+    protected int maxLevel = 3;
     protected int upgradeCost;
 
     //for debugging and prototyping
@@ -44,7 +44,9 @@ public abstract class Building extends Buildable{
         return upgradeCost;
     }
     
-   // public abstract boolean canUpgrade();
+    public boolean canUpgrade(){
+        return currentLevel < maxLevel;
+    }
     
     public void upgrade(){
         switch(currentLevel){

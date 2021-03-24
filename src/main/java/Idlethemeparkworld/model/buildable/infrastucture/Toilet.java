@@ -8,6 +8,7 @@ public class Toilet extends Infrastructure {
     private int cleanliness;
     
     public Toilet(int xLocation, int yLocation){
+        this.maxLevel = 1;
         this.x = xLocation;
         this.y = yLocation;
         this.buildingType = BuildType.TOILET;

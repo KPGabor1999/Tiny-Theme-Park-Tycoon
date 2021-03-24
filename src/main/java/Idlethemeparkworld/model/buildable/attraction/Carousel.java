@@ -11,6 +11,7 @@ public class Carousel extends Attraction {
         this.buildingType = BuildType.CAROUSEL;
         this.value        = buildingType.getBuildCost();
         this.currentLevel = 1;
+        this.upgradeCost  = 1;
         
         this.upkeepCost   = 1;
         this.fun          = 1;

@@ -5,6 +5,7 @@ import Idlethemeparkworld.model.BuildType;
 public class Entrance extends Infrastructure {
     
     public Entrance(int xLocation, int yLocation){
+        this.maxLevel = 1;
         this.x = xLocation;
         this.y = yLocation;
         this.buildingType = BuildType.ENTRANCE;

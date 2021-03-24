@@ -17,29 +17,30 @@ import Idlethemeparkworld.model.buildable.infrastucture.Toilet;
 import Idlethemeparkworld.model.buildable.infrastucture.TrashCan;
 
 public enum BuildType {
-    PAVEMENT(1,1,"Pavement",1000,Assets.Texture.PAVEMENT),
-    TRASHCAN(1,1,"Trash can",1000,Assets.Texture.TRASHCAN),
-    TOILET(1,1,"Toilet",5000,Assets.Texture.TOILET),
-    HOTDOGSTAND(2,1,"Hotdog stand",10000,Assets.Texture.HOTDOGSTAND),
-    ICECREAMPARLOR(2,1,"Ice cream parlor",15000,Assets.Texture.ICECREAMPARLOR),
-    BURGERJOINT(2,1,"Burger joint",25000,Assets.Texture.BURGERJOINT),
-    CAROUSEL(2,2,"Carousel",15000,Assets.Texture.CAROUSEL),
-    FERRISWHEEL(3,3,"Ferriswheel",25000,Assets.Texture.FERRISWHEEL),
-    SWINGINGSHIP(3,3,"Swinging ship",20000,Assets.Texture.SWINGINGSHIP),
-    ROLLERCOASTER(3,2,"Roller coaster",35000,Assets.Texture.ROLLERCOASTER),
-    HAUNTEDMANSION(3,3,"Haunted mansion",20000,Assets.Texture.HAUNTEDMANSION),
-    ENTRANCE(1,1,"Entrance",0,Assets.Texture.GATE),
-    LOCKEDTILE(1,1,"Locked",10000,Assets.Texture.LOCKED);
+    PAVEMENT(1,1,"Pavement","Use pavement tiles to connect buildings and help people get around.",1000,Assets.Texture.PAVEMENT),
+    TRASHCAN(1,1,"Trash can","",1000,Assets.Texture.TRASHCAN),
+    TOILET(1,1,"Toilet","",5000,Assets.Texture.TOILET),
+    HOTDOGSTAND(2,1,"Hotdog stand","",10000,Assets.Texture.HOTDOGSTAND),
+    ICECREAMPARLOR(2,1,"Ice cream parlor","",15000,Assets.Texture.ICECREAMPARLOR),
+    BURGERJOINT(2,1,"Burger joint","",25000,Assets.Texture.BURGERJOINT),
+    CAROUSEL(2,2,"Carousel","",15000,Assets.Texture.CAROUSEL),
+    FERRISWHEEL(3,3,"Ferriswheel","",25000,Assets.Texture.FERRISWHEEL),
+    SWINGINGSHIP(3,3,"Swinging ship","",20000,Assets.Texture.SWINGINGSHIP),
+    ROLLERCOASTER(3,2,"Roller coaster","",35000,Assets.Texture.ROLLERCOASTER),
+    HAUNTEDMANSION(3,3,"Haunted mansion","",20000,Assets.Texture.HAUNTEDMANSION),
+    ENTRANCE(1,1,"Entrance","",0,Assets.Texture.GATE),
+    LOCKEDTILE(1,1,"Locked","Unlock to use it as a building ground.",10000,Assets.Texture.LOCKED);
     
     private final int width, length;
-    private final String name;
+    private final String name, description;
     private final int buildCost;
     private final Texture tex;
     
-    BuildType(int w, int l, String name, int bc, Texture tex){
+    BuildType(int w, int l, String name, String description, int bc, Texture tex){
         this.width = w;
         this.length = l;
         this.name = name;
+        this.description = description;
         this.buildCost = bc;
         this.tex = tex;
     }
@@ -87,6 +88,10 @@ public enum BuildType {
 
     public String getName() {
         return name;
+    }
+    
+    public String getDescription() {
+        return description;
     }
 
     public int getBuildCost() {
