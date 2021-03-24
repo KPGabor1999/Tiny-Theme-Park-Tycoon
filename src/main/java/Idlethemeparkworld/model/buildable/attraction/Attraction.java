@@ -73,9 +73,9 @@ public abstract class Attraction extends Building {
         this.occupied += num;
     }
     
-    public boolean canUpgrade(){
-        return currentLevel < upgrades.size();
-    }
+    //public boolean canUpgrade(){
+    //    return currentLevel < upgrades.size();
+    //}
     
     protected void innerUpgrade(){
         stats.upgrade(upgrades.get(currentLevel-1));

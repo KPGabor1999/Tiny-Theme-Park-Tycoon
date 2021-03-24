@@ -1,14 +1,8 @@
 package Idlethemeparkworld.view;
 
 import Idlethemeparkworld.model.buildable.Building;
-import Idlethemeparkworld.model.buildable.attraction.Attraction;
-import Idlethemeparkworld.model.buildable.food.FoodStall;
 import Idlethemeparkworld.model.buildable.infrastucture.Entrance;
-import Idlethemeparkworld.model.buildable.infrastucture.Infrastructure;
 import Idlethemeparkworld.model.buildable.infrastucture.LockedTile;
-import Idlethemeparkworld.model.buildable.infrastucture.Pavement;
-import Idlethemeparkworld.model.buildable.infrastucture.Toilet;
-import Idlethemeparkworld.model.buildable.infrastucture.TrashCan;
 import Idlethemeparkworld.view.popups.Confirm;
 import Idlethemeparkworld.view.popups.Notification;
 import java.awt.Frame;
@@ -47,6 +41,7 @@ public class BuildingOptionsDialog extends JDialog{
             });
             this.setLayout(new BoxLayout(this.getContentPane(), BoxLayout.PAGE_AXIS));
             this.setResizable(false);
+            
             JLabel nameLabel;
             if(currentBuilding.getMaxLevel() != 0){
                 nameLabel = new JLabel(currentBuilding.getInfo().getName() + " (Level " + currentBuilding.getCurrentLevel() + ")");
@@ -70,16 +65,18 @@ public class BuildingOptionsDialog extends JDialog{
             }
             this.getContentPane().add(statsPanel);
             
-            JButton upgradeButton = new JButton("Upgrade: costs " + currentBuilding.getUpgradeCost() + "$");
-            upgradeButton.setAlignmentX(CENTER_ALIGNMENT);
-            upgradeButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    BuildingOptionsDialog.this.upgradeBuilding();
-                }
-            });
-            upgradeButton.setEnabled(currentBuilding.canUpgrade());
-            this.getContentPane().add(upgradeButton);
+            if(currentBuilding.getMaxLevel() != 0){
+                JButton upgradeButton = new JButton("Upgrade: costs " + currentBuilding.getUpgradeCost() + "$");
+                upgradeButton.setAlignmentX(CENTER_ALIGNMENT);
+                upgradeButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        BuildingOptionsDialog.this.upgradeBuilding();
+                    }
+                });
+                upgradeButton.setEnabled(currentBuilding.canUpgrade());
+                this.getContentPane().add(upgradeButton);
+            }
 
             if(!(currentBuilding instanceof Entrance) && !(currentBuilding instanceof LockedTile)){
                 JButton demolishButton = new JButton("Demolish: returns " + currentBuilding.getValue()/2 + "$");
@@ -101,7 +98,6 @@ public class BuildingOptionsDialog extends JDialog{
                         BuildingOptionsDialog.this.dispose();
                         BuildingOptionsDialog.this.board.getGameManager().getPark().demolish(currentBuilding.getX(), currentBuilding.getY());
                         BuildingOptionsDialog.this.board.refresh();
-
                     }
                 });
                 this.getContentPane().add(unlockButton);
