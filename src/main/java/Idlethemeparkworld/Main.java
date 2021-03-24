@@ -53,7 +53,7 @@ public class Main extends JFrame {
 
     public Main() {
         createFont();
-        setFont(new FontUIResource(new Font("Retro Gaming", Font.PLAIN, 13)));
+        setFont(new FontUIResource(new Font("Retro Gaming", Font.PLAIN, 14)));
 
         gm = new GameManager();
         //setUndecorated(true);
@@ -109,9 +109,9 @@ public class Main extends JFrame {
         timeLabel.setForeground(Color.cyan);
         moneyLabel.setText("money:1000");
         moneyLabel.setForeground(Color.GREEN);
-        visitorCountLabel.setText("visitor:20");
+        visitorCountLabel.setText("Visitors: 20");
         visitorCountLabel.setForeground(Color.RED);
-        happinessLabel.setText("happiness:100%");
+        happinessLabel.setText("Happiness: 100%");
         happinessLabel.setForeground(Color.YELLOW);
 
         JPanel informationPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
