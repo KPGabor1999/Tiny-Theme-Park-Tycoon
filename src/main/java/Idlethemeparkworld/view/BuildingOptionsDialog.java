@@ -9,8 +9,8 @@ import Idlethemeparkworld.model.buildable.infrastucture.LockedTile;
 import Idlethemeparkworld.model.buildable.infrastucture.Pavement;
 import Idlethemeparkworld.model.buildable.infrastucture.Toilet;
 import Idlethemeparkworld.model.buildable.infrastucture.TrashCan;
+import Idlethemeparkworld.view.popups.Confirm;
 import Idlethemeparkworld.view.popups.Notification;
-import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -292,17 +292,9 @@ public class BuildingOptionsDialog extends JDialog{
     }
     
     private void demolishBuilding(){
-        confirmDemolitionDialog = new JDialog(this, "Confirm");    //this?
-        confirmDemolitionDialog.setLayout(new BoxLayout(confirmDemolitionDialog.getContentPane(), BoxLayout.Y_AXIS));
-        
-        JLabel confirmDemolitionLabel = new JLabel("Are you sure?");
-        confirmDemolitionLabel.setAlignmentX(CENTER_ALIGNMENT);
-        JPanel optionsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        JButton yesButton = new JButton("YES");
-        yesButton.addActionListener(new ActionListener() {
+        new Confirm(this.getOwner(), new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                BuildingOptionsDialog.this.confirmDemolitionDialog.dispose();
                 BuildingOptionsDialog.this.instanceCount--;
                 BuildingOptionsDialog.this.dispose();
                 BuildingOptionsDialog.this.board.getGameManager().getFinance().earn(currentBuilding.getValue()/2); //Az plet addigi teljes rtknek(!) a felt adja vissza.
@@ -310,23 +302,5 @@ public class BuildingOptionsDialog extends JDialog{
                 BuildingOptionsDialog.this.board.refresh();
             }
         });
-        JButton noButton = new JButton("NO");
-        noButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                BuildingOptionsDialog.this.confirmDemolitionDialog.dispose();
-            }
-        });
-        
-        confirmDemolitionDialog.getContentPane().add(confirmDemolitionLabel);
-        optionsPanel.add(yesButton);
-        optionsPanel.add(noButton);
-        confirmDemolitionDialog.getContentPane().add(optionsPanel);
-        confirmDemolitionDialog.pack();
-        int xLocation = this.getOwner().getX() + this.getOwner().getWidth()/2 - confirmDemolitionDialog.getWidth()/2;
-        int yLocation = this.getOwner().getY() + this.getOwner().getHeight()/2 - confirmDemolitionDialog.getHeight()/2;
-        confirmDemolitionDialog.setLocation(xLocation, yLocation);
-        
-        confirmDemolitionDialog.setVisible(true);
     }
 }
