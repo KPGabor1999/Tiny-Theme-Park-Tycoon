@@ -7,8 +7,8 @@ public class TrashCan extends Infrastructure {
     private int filled;
     
     public TrashCan(int xLocation, int yLocation){
-        this.xLocation = xLocation;
-        this.yLocation = yLocation;
+        this.x = xLocation;
+        this.y = yLocation;
         this.buildingType = BuildType.TRASHCAN;
         this.capacity = 30;
         this.filled = 0;

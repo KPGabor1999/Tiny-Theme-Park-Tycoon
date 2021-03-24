@@ -5,8 +5,8 @@ import Idlethemeparkworld.model.BuildType;
 public class IceCream extends FoodStall {
     
     public IceCream(int xLocation, int yLocation){
-        this.xLocation    = xLocation;
-        this.yLocation    = yLocation;
+        this.x    = xLocation;
+        this.y    = yLocation;
         this.value        = BuildType.ICECREAMPARLOR.getBuildCost();
         this.currentLevel = 1;
         this.buildingType = BuildType.ICECREAMPARLOR;

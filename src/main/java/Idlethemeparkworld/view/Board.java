@@ -202,8 +202,8 @@ public class Board extends JPanel {
         
         ArrayList<Building> buildings = park.getBuildings();
         for (int i = 0; i < buildings.size(); i++) {
-            int x = buildings.get(i).getxLocation();
-            int y = buildings.get(i).getyLocation();
+            int x = buildings.get(i).getX();
+            int y = buildings.get(i).getY();
             int h = buildings.get(i).getInfo().getLength();
             int w = buildings.get(i).getInfo().getWidth();
             

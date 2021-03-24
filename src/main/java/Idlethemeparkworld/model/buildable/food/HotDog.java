@@ -5,8 +5,8 @@ import Idlethemeparkworld.model.BuildType;
 public class HotDog extends FoodStall {
     
     public HotDog(int xLocation, int yLocation){
-        this.xLocation    = xLocation;
-        this.yLocation    = yLocation;
+        this.x    = xLocation;
+        this.y    = yLocation;
         this.value        = BuildType.HOTDOGSTAND.getBuildCost();
         this.currentLevel = 1;
         this.buildingType = BuildType.HOTDOGSTAND;

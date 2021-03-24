@@ -1,8 +1,11 @@
 package Idlethemeparkworld.model.buildable;
 
+import java.util.ArrayList;
+import javafx.util.Pair;
+
 public abstract class Building extends Buildable{
     protected BuildingStatus status;
-    protected int xLocation, yLocation;
+    protected int x, y;
     protected int value;
     protected int currentLevel;
     public final int maxLevel = 3;
@@ -17,12 +20,12 @@ public abstract class Building extends Buildable{
         return status;
     }
     
-    public int getxLocation() {
-        return xLocation;
+    public int getX() {
+        return x;
     }
 
-    public int getyLocation() {
-        return yLocation;
+    public int getY() {
+        return y;
     }
 
     public int getValue() {
@@ -41,23 +44,28 @@ public abstract class Building extends Buildable{
         return upgradeCost;
     }
     
+   // public abstract boolean canUpgrade();
+    
     public void upgrade(){
         switch(currentLevel){
             case 1: level2Upgrade(); break;
             case 2: level3Upgrade(); break;
-            default: //Upgrade button disabled
+            default: break;
         }
     }
+
+    //protected abstract void innerUpgrade();
     
     public abstract void level2Upgrade();   //these 3 should be abstract
     public abstract void level3Upgrade();
-    //public abstract void interact();                 //arent't the visitors supposed to have this?
+    
+    public abstract ArrayList<Pair<String, String>> getAllData();
 
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 37 * hash + this.xLocation;
-        hash = 37 * hash + this.yLocation;
+        hash = 37 * hash + this.x;
+        hash = 37 * hash + this.y;
         return hash;
     }
 

@@ -6,8 +6,8 @@ public class LockedTile extends Infrastructure {
     private final int unlockCost;
     
     public LockedTile(int x, int y){
-        this.xLocation = x;
-        this.yLocation = y;
+        this.x = x;
+        this.y = y;
         this.buildingType = BuildType.LOCKEDTILE;
         this.unlockCost = BuildType.LOCKEDTILE.getBuildCost();
     }
