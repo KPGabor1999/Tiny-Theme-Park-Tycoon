@@ -180,6 +180,8 @@ public class Park implements Updatable {
             if(buildings.get(i).getInfo() != BuildType.LOCKEDTILE){
                 if(!reachable.contains(buildings.get(i))){
                     buildings.get(i).setStatus(BuildingStatus.FLOATING);
+                } else if( buildings.get(i).getStatus() == BuildingStatus.FLOATING){
+                    buildings.get(i).setStatus(BuildingStatus.INACTIVE);
                 }
             }
         }
@@ -198,6 +200,7 @@ public class Park implements Updatable {
         }
         
         buildings.remove(demolitionIndex);
+        updateBuildings();
     }
     
     public int getEntranceFee(){

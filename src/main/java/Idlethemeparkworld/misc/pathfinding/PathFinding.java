@@ -51,7 +51,7 @@ public class PathFinding {
     }
     
     private boolean checkCellExists(int x, int y) {
-        return 0<=x && x<tiles.length && 0<=y && y<tiles.length;
+        return 0<=x && x<tiles[0].length && 0<=y && y<tiles.length;
     }
     
     private ArrayList<Tile> getUnvisitedNeighbourPavementList(int x, int y) {
