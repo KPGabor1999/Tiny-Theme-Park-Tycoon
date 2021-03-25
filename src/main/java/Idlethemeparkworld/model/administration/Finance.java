@@ -108,6 +108,6 @@ public class Finance {
 
     @Override
     public String toString() {
-        return "Funds: " + funds;
+        return "Funds: " + funds + " $";
     }
 }

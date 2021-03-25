@@ -14,7 +14,6 @@ public class Park implements Updatable {
     private static final int HISTORY_SIZE = 14;
     
     private int rating;
-    private int entranceFee;
     private int parkValue;
     private int activeParkValue;
     private int[] ratingHistory;
@@ -49,7 +48,6 @@ public class Park implements Updatable {
     public void initializePark(int rows, int columns){
         rating = 0;
         parkValue = 0;
-        entranceFee = 100;
         activeParkValue = 0;
         resetHistories();
         
@@ -201,14 +199,6 @@ public class Park implements Updatable {
         
         buildings.remove(demolitionIndex);
         updateBuildings();
-    }
-    
-    public int getEntranceFee(){
-        return entranceFee;
-    }
-    
-    public void setEntranceFee(int fee){
-        entranceFee = fee;
     }
     
     public boolean isOpen(){

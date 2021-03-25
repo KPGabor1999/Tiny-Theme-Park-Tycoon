@@ -40,12 +40,14 @@ public class AgentManager implements Updatable {
     
     private int visitorProbability;
     private Park park;
+    private GameManager gm;
     
     private Random rand;
     
     private ArrayList<Visitor> visitors;
     
-    public AgentManager(Park park){
+    public AgentManager(Park park, GameManager gm){
+        this.gm = gm;
         this.park = park;
         this.visitorProbability = 0;
         this.rand = new Random();
@@ -80,7 +82,7 @@ public class AgentManager implements Updatable {
             }
         }
         
-        int entFee = park.getEntranceFee();
+        int entFee = gm.getEntranceFee();
         if(entFee > park.getActiveValue()){
             prob *= 0.4;
         }
