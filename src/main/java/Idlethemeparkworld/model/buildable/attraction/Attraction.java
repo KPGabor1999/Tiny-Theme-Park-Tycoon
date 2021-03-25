@@ -1,11 +1,16 @@
 package Idlethemeparkworld.model.buildable.attraction;
 
 import Idlethemeparkworld.misc.utils.Range;
+import Idlethemeparkworld.model.GameManager;
+import Idlethemeparkworld.model.Time;
+import Idlethemeparkworld.model.Updatable;
+import Idlethemeparkworld.model.agent.Visitor;
 import Idlethemeparkworld.model.buildable.Building;
+import Idlethemeparkworld.model.buildable.BuildingStatus;
 import java.util.ArrayList;
 import javafx.util.Pair;
 
-public abstract class Attraction extends Building {
+public abstract class Attraction extends Building implements Updatable {
     public enum AttractionType{
         GENTLE,
         THRILL
@@ -19,8 +24,6 @@ public abstract class Attraction extends Building {
         
         public int maxCapacity;
         public int runtime;
-        
-
         
         public AttractionStats(){
             this(new int[] {0,0,0,0,0,0,0,0,0,0});
@@ -50,18 +53,24 @@ public abstract class Attraction extends Building {
     protected static ArrayList<AttractionStats> upgrades;
     protected AttractionStats stats;
     
+    protected GameManager gm;
+    
     protected int fun;
     protected int capacity;
     protected int occupied;
     protected int runtime;
     protected int entryFee;
-    protected int condition;
+    protected double condition;
+    
+    protected int statusTimer;
 
+    protected ArrayList<Visitor> queue;
+    
     public int getOccupied() {
         return occupied;
     }
 
-    public int getCondition() {
+    public double getCondition() {
         return condition;
     }
     
@@ -89,10 +98,78 @@ public abstract class Attraction extends Building {
         res.add(new Pair<>("Runtime: ", Integer.toString(runtime)));
         res.add(new Pair<>("Entry fee: ", Integer.toString(entryFee)));
         res.add(new Pair<>("Upkeep cost: ", Integer.toString(upkeepCost)));
-        res.add(new Pair<>("Condition: ", Integer.toString(condition)));
+        res.add(new Pair<>("Condition: ", String.format("%.2f", condition)));
         return res;
     }
     
     //consider using an observer/event listener
-    protected abstract void start();
+    protected void start(){
+        status=BuildingStatus.RUNNING;
+        statusTimer = 0;
+        int profit = 0;
+        for (int i = 0; i < queue.size(); i++) {
+            if(true/*queue.get(i).hasMoney(entryFee)*/){
+                /*queue.get(i).pay(entryFee)*/
+                profit += entryFee;
+            }
+        }
+        gm.getFinance().earn(profit);
+    }
+    
+    protected void finish(){
+        Range r = new Range((int)Math.floor(fun*condition/100),fun);
+        int rideEvent = r.getNextRandom();
+        for (int i = 0; i < queue.size(); i++) {
+            //queue.get(i).sendRideEvent(rideEvent);
+        }
+        resetQueue();
+        status=BuildingStatus.OPEN;
+    }
+    
+    public void joinQueue(Visitor v){
+        if(status == BuildingStatus.OPEN){
+            queue.add(v);
+            occupied++;
+            if(occupied == capacity){
+                start();
+            }
+        }
+    }
+    
+    private void resetQueue(){
+        queue.clear();
+        occupied=0;
+    }
+    
+    public void leaveQueue(Visitor v){
+        queue.remove(v);
+        occupied--;
+    }
+    
+    public void update(long tickCount){
+        statusTimer++;
+        switch(status){
+            case RUNNING:
+                if(statusTimer >= Time.convMinuteToTick(fun)){
+                    finish();
+                }
+                break;
+            case OPEN:
+                break;
+            case CLOSED:
+                break;
+            case INACTIVE:
+                break;
+            case FLOATING:
+                if(condition<=0){
+                    status = BuildingStatus.DECAYED;
+                }
+                break;
+            default:
+                break;
+        }
+        if(tickCount%24==0){
+            //updateCondition();
+        }
+    }
 }

@@ -5,5 +5,6 @@ public enum BuildingStatus {
     OPEN,
     CLOSED,
     INACTIVE,
-    FLOATING
+    FLOATING,
+    DECAYED
 }
