@@ -5,8 +5,8 @@ import Idlethemeparkworld.model.BuildType;
 public class Hamburger extends FoodStall {
     
     public Hamburger(int xLocation, int yLocation){
-        this.xLocation    = xLocation;
-        this.yLocation    = yLocation;
+        this.x    = xLocation;
+        this.y    = yLocation;
         this.value        = BuildType.BURGERJOINT.getBuildCost();
         this.currentLevel = 1;
         this.buildingType = BuildType.BURGERJOINT;

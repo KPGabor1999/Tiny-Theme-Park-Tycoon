@@ -36,6 +36,10 @@ public class Time implements Updatable {
     public void reset(){
         ticks=0;
     }
+    
+    public static int convMinuteToTick(int min){
+        return min*MINUTE_DURATION;
+    }
 
     @Override
     public String toString() {

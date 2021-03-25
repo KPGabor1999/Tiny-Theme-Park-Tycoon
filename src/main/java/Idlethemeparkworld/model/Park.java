@@ -190,8 +190,8 @@ public class Park implements Updatable {
         
         int demolitionIndex = 0;    
         for(int i=0; i<buildings.size(); i++){
-            if(buildings.get(i).getxLocation() == x &&
-               buildings.get(i).getyLocation() == y){
+            if(buildings.get(i).getX() == x &&
+               buildings.get(i).getY() == y){
                 demolitionIndex = i;
                 break;
             }

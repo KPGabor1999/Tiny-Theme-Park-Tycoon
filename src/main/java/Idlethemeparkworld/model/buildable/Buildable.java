@@ -18,6 +18,4 @@ public abstract class Buildable {
     public boolean isUnderConstruction() {
         return underConstruction;
     }
-    
-    public abstract void upgrade();
 }

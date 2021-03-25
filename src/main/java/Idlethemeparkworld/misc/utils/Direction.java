@@ -1,4 +1,4 @@
-package Idlethemeparkworld.misc;
+package Idlethemeparkworld.misc.utils;
 
 public enum Direction {
     DOWN(0, 1), LEFT(-1, 0), UP(0, -1), RIGHT(1, 0);

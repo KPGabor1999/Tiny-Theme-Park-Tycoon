@@ -5,8 +5,8 @@ import Idlethemeparkworld.model.BuildType;
 public class SwingingShip extends Attraction  {
     
     public SwingingShip(int xLocation, int yLocation){
-        this.xLocation    = xLocation;
-        this.yLocation    = yLocation;
+        this.x    = xLocation;
+        this.y    = yLocation;
         this.value        = BuildType.SWINGINGSHIP.getBuildCost();
         this.currentLevel = 1;
         this.buildingType = BuildType.SWINGINGSHIP;
@@ -16,7 +16,6 @@ public class SwingingShip extends Attraction  {
         this.occupied     = 0;
         this.runtime      = 1;
         this.entryFee     = 1;
-        this.isRunning    = false;
         this.condition    = 100;
         this.upgradeCost  = 1;
     }
@@ -30,7 +29,6 @@ public class SwingingShip extends Attraction  {
         this.occupied     = 0;
         this.runtime      = 1;
         this.entryFee     = 1;
-        this.isRunning    = false;
         this.condition    = 100;
         this.value        += upgradeCost;
         this.upgradeCost  *= 1000000;
@@ -45,7 +43,6 @@ public class SwingingShip extends Attraction  {
         this.occupied     = 0;
         this.runtime      = 1;
         this.entryFee     = 1;
-        this.isRunning    = false;
         this.condition    = 100;
         this.value        += upgradeCost;
         this.upgradeCost  = 0;

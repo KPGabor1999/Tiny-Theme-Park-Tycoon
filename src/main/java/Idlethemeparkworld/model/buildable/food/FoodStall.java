@@ -1,6 +1,8 @@
 package Idlethemeparkworld.model.buildable.food;
 
 import Idlethemeparkworld.model.buildable.Building;
+import java.util.ArrayList;
+import Idlethemeparkworld.misc.utils.Pair;
 
 public abstract class FoodStall extends Building {
     protected int capacity;
@@ -22,5 +24,14 @@ public abstract class FoodStall extends Building {
 
     public int getFoodQuality() {
         return foodQuality;
+    }
+    
+    public ArrayList<Pair<String, String>> getAllData(){
+        ArrayList<Pair<String, String>> res = new ArrayList<>();
+        res.add(new Pair<>("Capacity: ", occupied + "/" + capacity));
+        res.add(new Pair<>("Food price: ", Integer.toString(foodPrice)));
+        res.add(new Pair<>("Food quality: ", Integer.toString(foodQuality)));
+        res.add(new Pair<>("Upkeep cost: ", Integer.toString(upkeepCost)));
+        return res;
     }
 }

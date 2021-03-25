@@ -1,4 +1,4 @@
-package Idlethemeparkworld.misc;
+package Idlethemeparkworld.misc.utils;
 
 public class Position {
 

@@ -123,9 +123,11 @@ public class Board extends JPanel {
         buttonGrid[y][x].addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                JFrame parentFrame = (JFrame) getRootPane().getParent();
-                BuildingOptionsDialog buildingOptions = new BuildingOptionsDialog(parentFrame, Board.this, x, y);
-                buildingOptions.setLocationRelativeTo(Board.this);
+                if(park.getTile(x, y).getBuilding() != null){
+                    JFrame parentFrame = (JFrame) getRootPane().getParent();
+                    BuildingOptionsDialog buildingOptions = new BuildingOptionsDialog(parentFrame, Board.this, x, y);
+                    buildingOptions.setLocationRelativeTo(Board.this);
+                }
             }
         });
         
@@ -202,8 +204,8 @@ public class Board extends JPanel {
         
         ArrayList<Building> buildings = park.getBuildings();
         for (int i = 0; i < buildings.size(); i++) {
-            int x = buildings.get(i).getxLocation();
-            int y = buildings.get(i).getyLocation();
+            int x = buildings.get(i).getX();
+            int y = buildings.get(i).getY();
             int h = buildings.get(i).getInfo().getLength();
             int w = buildings.get(i).getInfo().getWidth();
             

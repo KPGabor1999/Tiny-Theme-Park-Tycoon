@@ -5,8 +5,10 @@ import Idlethemeparkworld.model.BuildType;
 public class Pavement extends Infrastructure {
     
     public Pavement(int xLocation, int yLocation){
-        this.xLocation = xLocation;
-        this.yLocation = yLocation;
+        this.maxLevel = 0;
+        this.currentLevel = 1;
+        this.x = xLocation;
+        this.y = yLocation;
         this.buildingType = BuildType.PAVEMENT;
         this.value = BuildType.PAVEMENT.getBuildCost();
     }

@@ -6,8 +6,10 @@ public class LockedTile extends Infrastructure {
     private final int unlockCost;
     
     public LockedTile(int x, int y){
-        this.xLocation = x;
-        this.yLocation = y;
+        this.maxLevel = 0;
+        this.currentLevel = 1;
+        this.x = x;
+        this.y = y;
         this.buildingType = BuildType.LOCKEDTILE;
         this.unlockCost = BuildType.LOCKEDTILE.getBuildCost();
     }
@@ -18,13 +20,9 @@ public class LockedTile extends Infrastructure {
     
 
     @Override
-    public void level2Upgrade() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    public void level2Upgrade() {}
 
     @Override
-    public void level3Upgrade() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    public void level3Upgrade() {}
     
 }
