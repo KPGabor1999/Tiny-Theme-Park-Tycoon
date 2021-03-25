@@ -58,8 +58,8 @@ public abstract class Agent implements Updatable {
     int toilet;
     int angriness;
     Random randAttraction;
-
-    AgentThought[] thoughts;
+    
+    ArrayList<AgentThought> thoughts;
     
     BuildType[] visitHistory;
 
@@ -88,7 +88,9 @@ public abstract class Agent implements Updatable {
         this.angriness = 0;
         this.randAttraction = new Random();
         
-        this.thoughts = new AgentThought[AGENT_MAX_THOUGHTS];
+        
+        
+        this.thoughts = new ArrayList<>();
         this.visitHistory = new BuildType[AGENT_HISTORY_LENGTH];
         this.currentBuilding = park.getTile(x, y).getBuilding();
     }
@@ -159,6 +161,7 @@ public abstract class Agent implements Updatable {
         state = AgentState.IDLE;
     }
     
+    //For now no pathfinding needed
     public void setPath(){
         
     }
@@ -167,18 +170,11 @@ public abstract class Agent implements Updatable {
         
     }
     
-    public void joinQueue(){
-        
-    }
-    
-    public void exitQueue(){
-        
-    }
-    
     public void addNewThought(AgentThought thought){
-        if(thoughts.length < AGENT_MAX_THOUGHTS){
-            
+        if(thoughts.size() == AGENT_MAX_THOUGHTS){
+            thoughts.remove(0);
         }
+        thoughts.add(thought);
     }
     
     public void setDestination(int x, int y){
@@ -201,8 +197,6 @@ public abstract class Agent implements Updatable {
     public void updateCurBuilding(){
         currentBuilding = park.getTile(x, y).getBuilding();
     }
-    
-    
     
     @Override
     public abstract void update(long tickCount);
