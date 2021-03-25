@@ -7,8 +7,8 @@ import Idlethemeparkworld.model.Updatable;
 import Idlethemeparkworld.model.agent.Visitor;
 import Idlethemeparkworld.model.buildable.Building;
 import Idlethemeparkworld.model.buildable.BuildingStatus;
+import Idlethemeparkworld.misc.utils.Pair;
 import java.util.ArrayList;
-import javafx.util.Pair;
 
 public abstract class Attraction extends Building implements Updatable {
     public enum AttractionType{

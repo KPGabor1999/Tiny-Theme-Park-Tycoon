@@ -1,7 +1,7 @@
 package Idlethemeparkworld.model.buildable;
 
 import java.util.ArrayList;
-import javafx.util.Pair;
+import Idlethemeparkworld.misc.utils.Pair;
 
 public abstract class Building extends Buildable{
     protected BuildingStatus status;

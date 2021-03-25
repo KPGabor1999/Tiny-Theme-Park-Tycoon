@@ -2,7 +2,7 @@ package Idlethemeparkworld.model.buildable.food;
 
 import Idlethemeparkworld.model.buildable.Building;
 import java.util.ArrayList;
-import javafx.util.Pair;
+import Idlethemeparkworld.misc.utils.Pair;
 
 public abstract class FoodStall extends Building {
     protected int capacity;

@@ -2,7 +2,7 @@ package Idlethemeparkworld.model.buildable.infrastucture;
 
 import Idlethemeparkworld.model.BuildType;
 import java.util.ArrayList;
-import javafx.util.Pair;
+import Idlethemeparkworld.misc.utils.Pair;
 
 public class TrashCan extends Infrastructure {
     private int capacity;

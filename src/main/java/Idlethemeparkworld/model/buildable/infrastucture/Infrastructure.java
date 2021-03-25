@@ -2,7 +2,7 @@ package Idlethemeparkworld.model.buildable.infrastucture;
 
 import Idlethemeparkworld.model.buildable.Building;
 import java.util.ArrayList;
-import javafx.util.Pair;
+import Idlethemeparkworld.misc.utils.Pair;
 
 public abstract class Infrastructure extends Building {
     protected int capacity;
