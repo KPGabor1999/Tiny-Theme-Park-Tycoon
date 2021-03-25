@@ -85,16 +85,8 @@ public class Visitor extends Agent {
                 break;
             case RIDE:
                 break;
-            case WOW:
-                break;
             case THROWUP:
                 this.setState(AgentState.IDLE);
-                break;
-            case READMAP:
-                break;
-            case TAKEPHOTO:
-                break;
-            case CLAP:
                 break;
             case NONE:
                 break;
