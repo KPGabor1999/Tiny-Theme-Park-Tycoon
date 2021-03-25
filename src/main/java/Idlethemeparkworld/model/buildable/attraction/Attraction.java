@@ -146,6 +146,23 @@ public abstract class Attraction extends Building implements Updatable {
         occupied--;
     }
     
+    private void updateCondition(){
+        switch(status){
+            case RUNNING:
+                condition-=0.04; break;
+            case OPEN:
+                condition-=0.02; break;
+            case CLOSED:
+                condition-=0.04; break;
+            case INACTIVE:
+                condition-=0.1; break;
+            case FLOATING:
+                condition-=0.25; break;
+            default:
+                break;
+        }
+    }
+    
     public void update(long tickCount){
         statusTimer++;
         switch(status){
@@ -169,7 +186,7 @@ public abstract class Attraction extends Building implements Updatable {
                 break;
         }
         if(tickCount%24==0){
-            //updateCondition();
+            updateCondition();
         }
     }
 }
