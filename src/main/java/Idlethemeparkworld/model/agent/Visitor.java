@@ -2,10 +2,14 @@ package Idlethemeparkworld.model.agent;
 
 import Idlethemeparkworld.model.AgentManager;
 import Idlethemeparkworld.model.Park;
+import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentAction;
+import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentState;
 import Idlethemeparkworld.model.buildable.Building;
 
 public class Visitor extends Agent {
-    private int x,y;
+    private int cash;
+    private int cashSpent;
+    private int entryTime;
     
     public Visitor(String name, int startingHappiness, Park park, AgentManager am){
         super(name, startingHappiness, park, am);
@@ -13,12 +17,43 @@ public class Visitor extends Agent {
     
     @Override
     public void update(long tickCount){
-        
+        if(tickCount % 24 == 0){
+            performAction(actionQueue.poll());
+        }
     }
     
-    @Override
-    protected void performAction(){
-       
+    protected void performAction(AgentAction action){
+        switch (action.getAction()){
+            case EAT:
+                break;
+            case SIT:
+                break;
+            case ENTER:
+                this.setState(AgentState.ENTERINGBUILDING);
+                moveTo(destX, destY);
+                break;
+            case EXIT:
+                this.setState(AgentState.LEAVINGBUILDING);
+                moveTo(destX, destY);
+                break;
+            case RIDE:
+                break;
+            case WOW:
+                break;
+            case THROWUP:
+                this.setState(AgentState.IDLE);
+                break;
+            case READMAP:
+                break;
+            case TAKEPHOTO:
+                break;
+            case CLAP:
+                break;
+            case NONE:
+                break;
+            default:
+                this.setState(AgentState.IDLE);
+        }
     }
     
     //Agent joins the chosen attraction's queue

@@ -1,20 +1,23 @@
 package Idlethemeparkworld.model.agent;
 
+import Idlethemeparkworld.misc.utils.Direction;
+import Idlethemeparkworld.misc.utils.Position;
 import Idlethemeparkworld.model.AgentManager;
 import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.Park;
 import Idlethemeparkworld.model.Updatable;
+import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentAction;
 import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentState;
 import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentThought;
 import Idlethemeparkworld.model.agent.AgentTypes.AgentType;
 import Idlethemeparkworld.model.agent.AgentTypes.StaffType;
 import Idlethemeparkworld.model.buildable.Building;
 import java.util.ArrayList;
+import java.util.PriorityQueue;
 import java.util.Random;
 
 public abstract class Agent implements Updatable {
     private static final int AGENT_MAX_THOUGHTS = 5;
-    private static final int AGENT_THOUGHT_ITEM_NONE = 255;
     private static final int AGENT_HISTORY_LENGTH = 10;
 
     private static final int AGENT_HUNGER_WARNING_THRESHOLD = 25;
@@ -39,16 +42,15 @@ public abstract class Agent implements Updatable {
     
     String name;
     int x,y;
+    Direction dir;
     boolean inPark;
     
     boolean manualMovable;
-    AgentState state;
     AgentType type;
     StaffType staffType;
     
     int destX, destY;
     int patience;
-    int weight;
     
     int energy;
     int happiness;
@@ -60,6 +62,9 @@ public abstract class Agent implements Updatable {
     Random randAttraction;
     
     ArrayList<AgentThought> thoughts;
+    AgentState state;
+    AgentAction current;
+    PriorityQueue<AgentAction> actionQueue;
     
     BuildType[] visitHistory;
 
@@ -77,7 +82,6 @@ public abstract class Agent implements Updatable {
         this.destX = 0;
         this.destY = this.destX;
         this.patience = 50; //DNA
-        this.weight = 60; //DNA
         
         this.energy = 100;
         this.happiness = startingHappiness;
@@ -88,9 +92,10 @@ public abstract class Agent implements Updatable {
         this.angriness = 0;
         this.randAttraction = new Random();
         
-        
-        
         this.thoughts = new ArrayList<>();
+        this.state = AgentState.ENTERINGPARK;
+        this.actionQueue = new PriorityQueue<>();
+        
         this.visitHistory = new BuildType[AGENT_HISTORY_LENGTH];
         this.currentBuilding = park.getTile(x, y).getBuilding();
     }
@@ -148,10 +153,6 @@ public abstract class Agent implements Updatable {
     public int getAngriness() {
         return angriness;
     }
-
-    public int getWeight() {
-        return weight;
-    }
     
     public void setState(AgentState newState){
         this.state = newState;
@@ -169,6 +170,21 @@ public abstract class Agent implements Updatable {
     public void stepNext(){
         
     }
+    
+    public void moveForward(){
+        moveTo(x+dir.x, y+dir.y);
+    }
+    
+    public void moveTo(Position p){
+        moveTo(p.x, p.y);
+    }
+    
+    public void moveTo(int x, int y){
+        x+=dir.x;
+        y+=dir.y;
+        currentBuilding = park.getTile(x, y).getBuilding();
+    }
+    
     
     public void addNewThought(AgentThought thought){
         if(thoughts.size() == AGENT_MAX_THOUGHTS){
@@ -200,5 +216,4 @@ public abstract class Agent implements Updatable {
     
     @Override
     public abstract void update(long tickCount);
-    protected abstract void performAction();
 }

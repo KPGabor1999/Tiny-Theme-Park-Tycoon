@@ -1,15 +1,17 @@
 package Idlethemeparkworld.model.agent;
 
+import Idlethemeparkworld.model.buildable.Building;
+
 public class AgentInnerLogic {
     public class AgentThought {
         public void AgentThought(){
             this.thoughtType = AgentThoughts.NONE;
-            this.subject = 0;
+            this.subject = null;
             this.timeElapsed = 0;
         }
         
         public AgentThoughts thoughtType;
-        public int subject;
+        public Building subject;
         public int timeElapsed;
     }
     
@@ -59,10 +61,9 @@ public class AgentInnerLogic {
 
         WOW, // "Wow!"
         SUSPICIOUS,     // "I have the strangest feeling someone is watching me"
-        HELP,               // "Help! Put me down!"
         
-        NEWRIDE,
-        NICERIDE,            // "Wow! A new ride being built!"
+        NEWRIDE,  // "Wow! A new ride being built!"
+        NICERIDE,          
 
         NONE;
     }
@@ -92,15 +93,34 @@ public class AgentInnerLogic {
         LEAVINGPARK,
 
         BUYING,
-        WATCHING,
         REPORTING
     }
     
+    public class AgentAction{
+        private AgentActionType action;
+        private int creationTime;
+
+        public AgentAction(AgentActionType action, int creationTime) {
+            this.action = action;
+            this.creationTime = creationTime;
+        }
+
+        public AgentActionType getAction() {
+            return action;
+        }
+
+        public int getCreationTime() {
+            return creationTime;
+        }
+    }
+    
     public enum AgentActionType {
-        IDLE,
-        WATCH,
         EAT,
         SIT,
+        WANDER,
+        ENTER,
+        EXIT,
+        RIDE,
         
         WOW,
         THROWUP,

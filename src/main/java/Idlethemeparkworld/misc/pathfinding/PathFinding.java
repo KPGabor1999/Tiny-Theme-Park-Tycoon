@@ -54,6 +54,14 @@ public class PathFinding {
         return 0<=x && x<tiles[0].length && 0<=y && y<tiles.length;
     }
     
+    public ArrayList<Tile> getNeighbourPavementList(int x, int y) {
+        ArrayList<Tile> neighbours = getAllNeighbours(x, y);
+
+        neighbours.removeIf(t -> t.getBuilding() == null || t.getBuilding().getInfo() != BuildType.PAVEMENT);
+        
+        return neighbours;
+    }
+    
     private ArrayList<Tile> getUnvisitedNeighbourPavementList(int x, int y) {
         ArrayList<Tile> neighbours = getAllNeighbours(x, y);
 
