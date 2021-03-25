@@ -1,6 +1,8 @@
 package Idlethemeparkworld.model.agent;
 
+import Idlethemeparkworld.misc.utils.Direction;
 import Idlethemeparkworld.model.AgentManager;
+import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.Park;
 import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentAction;
 import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentState;
@@ -22,11 +24,20 @@ public class Visitor extends Agent {
         }
     }
     
+    
+    
     protected void performAction(AgentAction action){
         switch (action.getAction()){
             case EAT:
                 break;
             case SIT:
+                break;
+            case WANDER:
+                do{
+                    dir = Direction.randomDirection();
+                } while(park.getTile(x+dir.x, y+dir.y).getBuilding().getInfo() != BuildType.PAVEMENT);
+                moveForward();
+                
                 break;
             case ENTER:
                 this.setState(AgentState.ENTERINGBUILDING);

@@ -59,7 +59,7 @@ public abstract class Agent implements Updatable {
     int thirst;
     int toilet;
     int angriness;
-    Random randAttraction;
+    Random rand;
     
     ArrayList<AgentThought> thoughts;
     AgentState state;
@@ -90,7 +90,7 @@ public abstract class Agent implements Updatable {
         this.thirst = 100;
         this.toilet = 100;
         this.angriness = 0;
-        this.randAttraction = new Random();
+        this.rand = new Random();
         
         this.thoughts = new ArrayList<>();
         this.state = AgentState.ENTERINGPARK;
@@ -102,7 +102,7 @@ public abstract class Agent implements Updatable {
     
     public void chooseAttraction(ArrayList<Building> buildings){
         if (!buildings.isEmpty()) {
-            int chosenAttractionID = randAttraction.nextInt(buildings.size());
+            int chosenAttractionID = rand.nextInt(buildings.size());
         }
     }
 
