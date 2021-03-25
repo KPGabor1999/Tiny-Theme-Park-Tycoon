@@ -26,6 +26,10 @@ public abstract class FoodStall extends Building {
         return foodQuality;
     }
     
+    public void setFoodPrice(int number){
+        this.foodPrice = number;
+    }
+    
     public ArrayList<Pair<String, String>> getAllData(){
         ArrayList<Pair<String, String>> res = new ArrayList<>();
         res.add(new Pair<>("Capacity: ", occupied + "/" + capacity));

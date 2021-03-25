@@ -58,12 +58,12 @@ public class AdministrationDialog extends JDialog {
             });
             this.getContentPane().setLayout(new BoxLayout(this.getContentPane(), Y_AXIS));
 
-            pricesLabel = new JLabel("Árak");
+            pricesLabel = new JLabel("Prices");
             pricesLabel.setAlignmentX(CENTER_ALIGNMENT);
             this.getContentPane().add(pricesLabel);
             //Belépõ
             priceSettingsPanel = new JPanel(new GridLayout(5, 2));
-            ticketPriceLabel = new JLabel("Belépõjegy ára:");
+            ticketPriceLabel = new JLabel("Entry fee:");
             ticketPriceSlider = new JSlider(0, 30);
             ticketPriceSlider.setMajorTickSpacing(10);
             ticketPriceSlider.setMinorTickSpacing(1);
@@ -71,7 +71,7 @@ public class AdministrationDialog extends JDialog {
             ticketPriceSlider.setPaintLabels(true);
             ticketPriceSlider.setValue(board.getGameManager().getEntranceFee());
             //Hotdog
-            hotDogPriceLabel = new JLabel("Hot dogok ára:");
+            hotDogPriceLabel = new JLabel("Hot dog prices:");
             hotDogPriceSlider = new JSlider(0, 30);
             hotDogPriceSlider.setMajorTickSpacing(10);
             hotDogPriceSlider.setMinorTickSpacing(1);
@@ -79,7 +79,7 @@ public class AdministrationDialog extends JDialog {
             hotDogPriceSlider.setPaintLabels(true);
             hotDogPriceSlider.setValue(board.getGameManager().getHotdogPrice());
             //Jégkrémes
-            iceCreamPriceLabel = new JLabel("Fagyi ára:");
+            iceCreamPriceLabel = new JLabel("Ice cream prices:");
             iceCreamPriceSlider = new JSlider(0, 30);
             iceCreamPriceSlider.setMajorTickSpacing(10);
             iceCreamPriceSlider.setMinorTickSpacing(1);
@@ -87,7 +87,7 @@ public class AdministrationDialog extends JDialog {
             iceCreamPriceSlider.setPaintLabels(true);
             iceCreamPriceSlider.setValue(board.getGameManager().getIcecreamPrice());
             //Hamburgeres
-            hamburgerPriceLabel = new JLabel("Hamburger ára:");
+            hamburgerPriceLabel = new JLabel("Hamburger prices:");
             hamburgerPriceSlider = new JSlider(0, 30);
             hamburgerPriceSlider.setMajorTickSpacing(10);
             hamburgerPriceSlider.setMinorTickSpacing(1);
@@ -95,7 +95,7 @@ public class AdministrationDialog extends JDialog {
             hamburgerPriceSlider.setPaintLabels(true);
             hamburgerPriceSlider.setValue(board.getGameManager().getHamburgerPrice());
             //Fish & Chips
-            fishChipsPriceLabel = new JLabel("Fish & Chips ára:");
+            fishChipsPriceLabel = new JLabel("Fish & Chips prices:");
             fishChipsPriceSlider = new JSlider(0, 30);
             fishChipsPriceSlider.setMajorTickSpacing(10);
             fishChipsPriceSlider.setMinorTickSpacing(1);
@@ -115,24 +115,24 @@ public class AdministrationDialog extends JDialog {
             priceSettingsPanel.add(fishChipsPriceSlider);
             this.getContentPane().add(priceSettingsPanel);
 
-            employeesLabel = new JLabel("Alkalmazottak");
+            employeesLabel = new JLabel("Employees");
             employeesLabel.setAlignmentX(CENTER_ALIGNMENT);
             this.getContentPane().add(employeesLabel);
 
             employeeSettingsPanel = new JPanel(new GridLayout(3, 2));
-            janitorNumberLabel = new JLabel("Takarítók száma:");
+            janitorNumberLabel = new JLabel("Number of cleaners:");
             janitorNumberSlider = new JSlider(0, 10);
             janitorNumberSlider.setMajorTickSpacing(10);
             janitorNumberSlider.setMinorTickSpacing(1);
             janitorNumberSlider.setPaintTicks(true);
             janitorNumberSlider.setPaintLabels(true);
-            maintainerNumberLabel = new JLabel("Karbantartók száma:");
+            maintainerNumberLabel = new JLabel("Number of repairmen:");
             maintainerNumberSlider = new JSlider(0, 10);
             maintainerNumberSlider.setMajorTickSpacing(10);
             maintainerNumberSlider.setMinorTickSpacing(1);
             maintainerNumberSlider.setPaintTicks(true);
             maintainerNumberSlider.setPaintLabels(true);
-            securityGuardNumberLabel = new JLabel("Biztonsági õrök száma:");
+            securityGuardNumberLabel = new JLabel("Number of security guards:");
             securityGuardNumberSlider = new JSlider(0, 10);
             securityGuardNumberSlider.setMajorTickSpacing(10);
             securityGuardNumberSlider.setMinorTickSpacing(1);
@@ -153,6 +153,7 @@ public class AdministrationDialog extends JDialog {
                     if (!slider.getValueIsAdjusting()) {
                         int value = slider.getValue();
                         board.getGameManager().setEntranceFee(value);
+                        board.getGameManager().updateFoodPrices();
                     }
                 }
             });
@@ -164,6 +165,7 @@ public class AdministrationDialog extends JDialog {
                         int value = slider.getValue();
                         //Action
                         board.getGameManager().setHotdogPrice(value);
+                        board.getGameManager().updateFoodPrices();
                     }
                 }
             });
@@ -174,6 +176,7 @@ public class AdministrationDialog extends JDialog {
                         int value = slider.getValue();
                         //Action
                         board.getGameManager().setIcecreamPrice(value);
+                        board.getGameManager().updateFoodPrices();
                     }
                 }
             });
@@ -184,6 +187,7 @@ public class AdministrationDialog extends JDialog {
                         int value = slider.getValue();
                         //Action
                         board.getGameManager().setHamburgerPrice(value);
+                        board.getGameManager().updateFoodPrices();
                     }
                 }
             });

@@ -28,7 +28,6 @@ import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.plaf.FontUIResource;
@@ -100,14 +99,13 @@ public class Main extends JFrame {
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
         /*---------------------------------------------------------*/
+        
         timeLabel = new JLabel("time");
         moneyLabel = new JLabel("money");
         visitorCountLabel = new JLabel("visitor");
         happinessLabel = new JLabel("happiness");
 
-        timeLabel.setText("time:0");
         timeLabel.setForeground(Color.cyan);
-        moneyLabel.setText("money:1000");
         moneyLabel.setForeground(Color.GREEN);
         visitorCountLabel.setText("Visitors: 20");
         visitorCountLabel.setForeground(Color.RED);

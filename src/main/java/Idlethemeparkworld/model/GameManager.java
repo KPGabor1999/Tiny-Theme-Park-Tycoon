@@ -133,8 +133,12 @@ public class GameManager {
                     currentDeltaTime = 0;
                 }
             }
-
+            
         }
+    }
+    
+    public void updateFoodPrices(){
+        park.updateFoodPrices(this.hotdogPrice, this.icecreamPrice, this.hamburgerPrice, this.fishChipsPrice);
     }
 
     public void stopUpdateCycle() {
