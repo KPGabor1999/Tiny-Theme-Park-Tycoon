@@ -13,6 +13,8 @@ public class Visitor extends Agent {
     private int cashSpent;
     private int entryTime;
     
+    private int timeInQueue;
+    
     public Visitor(String name, int startingHappiness, Park park, AgentManager am){
         super(name, startingHappiness, park, am);
     }
@@ -24,8 +26,42 @@ public class Visitor extends Agent {
         }
     }
     
-    
-    
+    protected void updateState(){
+        switch(state){
+            case IDLE:
+                energy += 0.05;
+                nausea -= 0.1;
+                break;
+            case ENTERINGPARK:
+            case LEAVINGPARK:
+                break;
+            case WALKING:
+                energy -= 0.05;
+                thirst-=0.01;
+                break;
+            case QUEUING:
+                if(timeInQueue>2500){
+                    happiness-=0.01;
+                }
+                break;
+            case ONRIDE:
+                energy -= 0.02;
+                break;
+            case SITTING:
+                energy += 0.1;
+                hunger -= 0.02;
+                nausea -= 0.5;
+                break;
+            case BUYING:
+                break;
+            default:
+                throw new AssertionError(state.name());
+        }
+        hunger-=0.02;
+        thirst-=0.02;
+        toilet-=0.01;
+    }
+        
     protected void performAction(AgentAction action){
         switch (action.getAction()){
             case EAT:
