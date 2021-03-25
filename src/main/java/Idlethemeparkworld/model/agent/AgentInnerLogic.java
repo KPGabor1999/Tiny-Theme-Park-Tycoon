@@ -61,9 +61,6 @@ public class AgentInnerLogic {
 
         WOW, // "Wow!"
         SUSPICIOUS,     // "I have the strangest feeling someone is watching me"
-        
-        NEWRIDE,  // "Wow! A new ride being built!"
-        NICERIDE,          
 
         NONE;
     }
@@ -75,6 +72,7 @@ public class AgentInnerLogic {
         ENTERINGBUILDING,
         ONRIDE,
         LEAVINGBUILDING,
+        BUYING,
         
         HELPING,
         SITTING,
@@ -90,10 +88,7 @@ public class AgentInnerLogic {
         STEALING,
         
         ENTERINGPARK,
-        LEAVINGPARK,
-
-        BUYING,
-        REPORTING
+        LEAVINGPARK
     }
     
     public class AgentAction{
@@ -121,8 +116,6 @@ public class AgentInnerLogic {
         ENTER,
         EXIT,
         RIDE,
-        
-        WOW,
         THROWUP,
         
         STAFFANSWER,
@@ -131,9 +124,9 @@ public class AgentInnerLogic {
         STAFFSWEEP,
         STAFFCLEAN,
         
-        READMAP,
-        TAKEPHOTO,
-        CLAP,
+        //READMAP,
+        //TAKEPHOTO,
+        //CLAP,
 
         NONE
     }
