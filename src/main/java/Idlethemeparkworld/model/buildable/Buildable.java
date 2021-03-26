@@ -4,7 +4,7 @@ import Idlethemeparkworld.model.BuildType;
 
 public abstract class Buildable {
     protected BuildType buildingType; 
-    protected int upkeepCost;
+    protected int upkeepCost;               //The "operator's" hourly wage.
     protected boolean underConstruction;
 
     public BuildType getInfo() {

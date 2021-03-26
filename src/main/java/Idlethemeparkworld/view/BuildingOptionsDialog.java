@@ -96,6 +96,7 @@ public class BuildingOptionsDialog extends JDialog{
                     public void actionPerformed(ActionEvent e) {
                         BuildingOptionsDialog.this.instanceCount--;
                         BuildingOptionsDialog.this.dispose();
+                        BuildingOptionsDialog.this.board.getGameManager().getFinance().pay(((LockedTile)currentBuilding).getUnlockCost());      //Ezt a sort még commitolni kéne.
                         BuildingOptionsDialog.this.board.getGameManager().getPark().demolish(currentBuilding.getX(), currentBuilding.getY());
                         BuildingOptionsDialog.this.board.refresh();
                     }

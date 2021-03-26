@@ -11,13 +11,13 @@ public class Carousel extends Attraction {
         this.buildingType = BuildType.CAROUSEL;
         this.value        = buildingType.getBuildCost();
         this.currentLevel = 1;
-        this.upgradeCost  = 1;
+        this.upgradeCost  = this.value*2;
         
-        this.upkeepCost   = 1;
-        this.fun          = 1;
-        this.capacity     = 1;
-        this.runtime      = 1;
-        this.entryFee     = 1;
+        this.upkeepCost   = 11;
+        this.fun          = 5;
+        this.capacity     = 10;
+        this.runtime      = 3;
+        this.entryFee     = 8;
         
         this.status = BuildingStatus.OPEN;
         this.stats = new AttractionStats(new int[] {10,20, 0,0, 0,0, 0,0, 35,5});
@@ -30,26 +30,18 @@ public class Carousel extends Attraction {
     @Override
     public void level2Upgrade(){
         this.currentLevel += 1;
-        this.upkeepCost   += 1;
-        this.fun          += 1;
-        this.capacity     += 1;
-        this.occupied     = 0;
-        this.runtime      = 1;
-        this.entryFee     = 1;
-        this.condition    = 100;
+        this.fun          *= 1.5;
+        this.capacity     += 5;
+        this.condition    =  100;
         this.value        += upgradeCost;
-        this.upgradeCost  *= 100;
+        this.upgradeCost  *= 2;
     }
     
     @Override
     public void level3Upgrade(){
         this.currentLevel += 1;
-        this.upkeepCost   += 1;
-        this.fun          += 1;
-        this.capacity     += 1;
-        this.occupied     = 0;
-        this.runtime      = 1;
-        this.entryFee     = 1;
+        this.fun          *= 1.5;
+        this.capacity     += 5;
         this.condition    = 100;
         this.value        += upgradeCost;
         this.upgradeCost  = 0;

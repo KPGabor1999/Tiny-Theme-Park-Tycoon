@@ -8,7 +8,7 @@ public abstract class FoodStall extends Building {
     protected int capacity;
     protected int occupied;
     protected int foodPrice;        //This is what you adjust in the Administration menu.
-    protected int foodQuality;      //food quality lvl 5 = 1.5x happiness
+    protected int foodQuality;      //food quality = happiness bonus
 
     public int getCapacity() {
         return capacity;

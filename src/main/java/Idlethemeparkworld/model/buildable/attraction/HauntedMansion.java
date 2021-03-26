@@ -10,39 +10,31 @@ public class HauntedMansion extends Attraction {
         this.value        = BuildType.HAUNTEDMANSION.getBuildCost();
         this.currentLevel = 1;
         this.buildingType = BuildType.HAUNTEDMANSION;
-        this.upkeepCost   = 1;
-        this.fun          = 1;
-        this.capacity     = 1;
+        this.upkeepCost   = 6 * 12;     //több beöltözött színész
+        this.fun          = 20;
+        this.capacity     = 10;
         this.occupied     = 0;
-        this.runtime      = 1;
-        this.entryFee     = 1;
+        this.runtime      = 15;
+        this.entryFee     = 32;
         this.condition    = 100;
-        this.upgradeCost  = 1;
+        this.upgradeCost  = this.value*2;
     }
     
     @Override
     public void level2Upgrade(){
         this.currentLevel += 1;
-        this.upkeepCost   += 1;
-        this.fun          += 1;
-        this.capacity     += 1;
-        this.occupied     = 0;
-        this.runtime      = 1;
-        this.entryFee     = 1;
-        this.condition    = 100;
+        this.fun          *= 1.5;
+        this.capacity     += 5;
+        this.condition    =  100;
         this.value        += upgradeCost;
-        this.upgradeCost  *= 1000000;
+        this.upgradeCost  *= 2;
     }
     
     @Override
     public void level3Upgrade(){
         this.currentLevel += 1;
-        this.upkeepCost   += 1;
-        this.fun          += 1;
-        this.capacity     += 1;
-        this.occupied     = 0;
-        this.runtime      = 1;
-        this.entryFee     = 1;
+        this.fun          *= 1.5;
+        this.capacity     += 5;
         this.condition    = 100;
         this.value        += upgradeCost;
         this.upgradeCost  = 0;
