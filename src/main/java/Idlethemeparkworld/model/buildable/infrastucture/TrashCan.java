@@ -45,12 +45,15 @@ public class TrashCan extends Infrastructure {
     
     //Visitor just finished eating and wants to throw out the paper.
     
-    public boolean isFull(){
-        return filled < capacity;
+    public void use(){
+        if(!this.isFull()){
+            filled++;       //thrown in one piece of garbage
+        }
+        //Else they start looking for another trash can.
     }
     
-    public void use(){
-        filled++;       //thrown in one piece of garbage
+    public boolean isFull(){
+        return filled < capacity;
     }
     
     //Visitor has no garbage with them now and starts looking for the next activity.
