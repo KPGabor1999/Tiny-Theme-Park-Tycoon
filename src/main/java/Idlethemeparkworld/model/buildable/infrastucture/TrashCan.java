@@ -39,4 +39,23 @@ public class TrashCan extends Infrastructure {
     
     @Override
     public void level3Upgrade(){}
+    
+    
+    //Methods for managing visitors:
+    
+    //Visitor just finished eating and wants to throw out the paper.
+    
+    public boolean isFull(){
+        return filled < capacity;
+    }
+    
+    public void use(){
+        filled++;       //thrown in one piece of garbage
+    }
+    
+    //Visitor has no garbage with them now and starts looking for the next activity.
+    
+    public void empty(){    //This is the janitor's job.
+        filled = 0;
+    }
 }

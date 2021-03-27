@@ -53,8 +53,6 @@ public abstract class Attraction extends Building implements Updatable {
     protected static ArrayList<AttractionStats> upgrades;
     protected AttractionStats stats;
     
-    protected GameManager gm;
-    
     protected int fun;              //How much does a ride increase a visitor's happiness level?
     protected int capacity;         //How many visitors can ride at once?
     protected int occupied;         //How many visitors are currently on the ride?

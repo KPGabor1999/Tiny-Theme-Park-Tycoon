@@ -2,8 +2,10 @@ package Idlethemeparkworld.model.buildable;
 
 import java.util.ArrayList;
 import Idlethemeparkworld.misc.utils.Pair;
+import Idlethemeparkworld.model.GameManager;
 
 public abstract class Building extends Buildable{
+    protected GameManager gm;           //All Building should know.
     protected BuildingStatus status;
     protected int x, y;
     protected int value;
