@@ -23,11 +23,11 @@ public enum BuildType {
     HOTDOGSTAND(2,1,"Hotdog stand","",10000,Assets.Texture.HOTDOGSTAND),
     ICECREAMPARLOR(2,1,"Ice cream parlor","",15000,Assets.Texture.ICECREAMPARLOR),
     BURGERJOINT(2,1,"Burger joint","",25000,Assets.Texture.BURGERJOINT),
-    CAROUSEL(2,2,"Carousel","",15000,Assets.Texture.CAROUSEL),
-    FERRISWHEEL(3,3,"Ferriswheel","",25000,Assets.Texture.FERRISWHEEL),
-    SWINGINGSHIP(3,3,"Swinging ship","",20000,Assets.Texture.SWINGINGSHIP),
-    ROLLERCOASTER(3,2,"Roller coaster","",35000,Assets.Texture.ROLLERCOASTER),
-    HAUNTEDMANSION(3,3,"Haunted mansion","",20000,Assets.Texture.HAUNTEDMANSION),
+    CAROUSEL(2,2,"Carousel","",16000,Assets.Texture.CAROUSEL),
+    FERRISWHEEL(3,3,"Ferriswheel","",36000,Assets.Texture.FERRISWHEEL),
+    SWINGINGSHIP(3,3,"Swinging ship","",30000,Assets.Texture.SWINGINGSHIP),
+    ROLLERCOASTER(3,2,"Roller coaster","",48000,Assets.Texture.ROLLERCOASTER),
+    HAUNTEDMANSION(3,3,"Haunted mansion","",64000,Assets.Texture.HAUNTEDMANSION),
     ENTRANCE(1,1,"Entrance","",0,Assets.Texture.GATE),
     LOCKEDTILE(1,1,"Locked","Unlock to use it as a building ground.",10000,Assets.Texture.LOCKED);
     

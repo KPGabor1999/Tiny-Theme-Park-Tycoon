@@ -10,36 +10,31 @@ public class IceCream extends FoodStall {
         this.value        = BuildType.ICECREAMPARLOR.getBuildCost();
         this.currentLevel = 1;
         this.buildingType = BuildType.ICECREAMPARLOR;
-        this.capacity     = 1;
+        this.capacity     = 2;
         this.occupied     = 0;
-        this.foodPrice    = 1;        //customers have a preferred pricepoint, if it's higher than that their happiness goes down a bit
-        this.foodQuality  = 1;
-        this.upkeepCost   = 1;        //The total of its employees wages in dollars/hour.
-        this.upgradeCost  = 1;
+        this.foodPrice    = 5;        //customers have a preferred pricepoint, if it's higher than that their happiness goes down a bit
+        this.foodQuality  = 5;
+        this.upkeepCost   = 2 * 10;        //The total of its employees wages in dollars/hour.
+        this.upgradeCost  = this.value*2;
     }
     
     @Override
     public void level2Upgrade(){
         this.currentLevel += 1;
-        this.upkeepCost   += 1;
         this.capacity     += 1;
         this.occupied     = 0;
-        this.foodPrice    = 1;        //customers have a preferred pricepoint, if it's higher than that their happiness goes down a bit
-        this.foodQuality  += 1;
-        this.value        += upgradeCost;
-        this.upgradeCost  *= 1;
-        System.out.println(currentLevel);
+        this.foodQuality  *= 1.5;
+        this.upkeepCost   += 10;
+        this.upgradeCost  *= 2;
     }
     
     @Override
     public void level3Upgrade(){
         this.currentLevel += 1;
-        this.upkeepCost   += 1;
         this.capacity     += 1;
         this.occupied     = 0;
-        this.foodPrice    = 1;        //customers have a preferred pricepoint, if it's higher than that their happiness goes down a bit
-        this.foodQuality  += 1;
-        this.value        += upgradeCost;
-        this.upgradeCost  = 1;
+        this.foodQuality  *= 1.5;
+        this.upkeepCost   += 10;
+        this.upgradeCost  = 0;
     }
 }

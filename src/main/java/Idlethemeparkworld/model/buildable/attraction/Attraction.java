@@ -55,12 +55,12 @@ public abstract class Attraction extends Building implements Updatable {
     
     protected GameManager gm;
     
-    protected int fun;
-    protected int capacity;
-    protected int occupied;
-    protected int runtime;
-    protected int entryFee;
-    protected double condition;
+    protected int fun;              //How much does a ride increase a visitor's happiness level?
+    protected int capacity;         //How many visitors can ride at once?
+    protected int occupied;         //How many visitors are currently on the ride?
+    protected int runtime;          //How long (seconds) does a ride take? -> Number of minutes in the real world. -> Align to gameplay ticks.
+    protected int entryFee;         //How much does it cost to ride the attraction?
+    protected double condition;     //The attraction's "HP".
     
     protected int statusTimer;
 
