@@ -1,12 +1,14 @@
 package Idlethemeparkworld.model.buildable.attraction;
 
 import Idlethemeparkworld.model.BuildType;
+import Idlethemeparkworld.model.GameManager;
 
 public class FerrisWheel extends Attraction {
     
-    public FerrisWheel(int xLocation, int yLocation){
-        this.x    = xLocation;
-        this.y    = yLocation;
+    public FerrisWheel(int x, int y, GameManager gm) {
+        super(gm);
+        this.x    = x;
+        this.y    = y;
         this.value        = BuildType.FERRISWHEEL.getBuildCost();
         this.currentLevel = 1;
         this.buildingType = BuildType.FERRISWHEEL;

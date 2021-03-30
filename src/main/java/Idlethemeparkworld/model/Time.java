@@ -37,8 +37,8 @@ public class Time implements Updatable {
         ticks=0;
     }
     
-    public static int convMinuteToTick(int min){
-        return min*MINUTE_DURATION;
+    public static int convMinuteToTick(double min){
+        return (int) Math.round(min*MINUTE_DURATION);
     }
 
     @Override

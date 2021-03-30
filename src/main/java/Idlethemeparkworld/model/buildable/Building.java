@@ -5,14 +5,21 @@ import Idlethemeparkworld.misc.utils.Pair;
 import Idlethemeparkworld.model.GameManager;
 
 public abstract class Building extends Buildable{
-    protected GameManager gm;           //All Building should know.
+    protected GameManager gm;
     protected BuildingStatus status;
     protected int x, y;
     protected int value;
     protected int currentLevel;
     protected int maxLevel = 3;
     protected int upgradeCost;
+    protected double condition;
 
+    public Building(GameManager gm) {
+        this.gm = gm;
+        this.status = BuildingStatus.OPEN;
+        this.currentLevel = 1;
+    }
+    
     //for debugging and prototyping
     public void setStatus(BuildingStatus status){
         this.status = status;
@@ -51,16 +58,17 @@ public abstract class Building extends Buildable{
     }
     
     public void upgrade(){
-        switch(currentLevel){
-            case 1: level2Upgrade(); break;
-            case 2: level3Upgrade(); break;
-            default: break;
+        if(canUpgrade()){
+            switch(currentLevel){
+                case 1: level2Upgrade(); break;
+                case 2: level3Upgrade(); break;
+                default: break;
+            }
+            currentLevel++;
         }
     }
-
-    //protected abstract void innerUpgrade();
     
-    public abstract void level2Upgrade();   //these 3 should be abstract
+    public abstract void level2Upgrade();
     public abstract void level3Upgrade();
     
     public abstract ArrayList<Pair<String, String>> getAllData();
@@ -87,6 +95,4 @@ public abstract class Building extends Buildable{
         final Building other = (Building) obj;
         return true;
     }
-    
-    
 }

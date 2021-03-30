@@ -58,11 +58,14 @@ public abstract class Attraction extends Building implements Updatable {
     protected int occupied;         //How many visitors are currently on the ride?
     protected int runtime;          //How long (seconds) does a ride take? -> Number of minutes in the real world. -> Align to gameplay ticks.
     protected int entryFee;         //How much does it cost to ride the attraction?
-    protected double condition;     //The attraction's "HP".
     
     protected int statusTimer;
 
     protected ArrayList<Visitor> queue;
+
+    public Attraction(GameManager gm) {
+        super(gm);
+    }
     
     public int getOccupied() {
         return occupied;

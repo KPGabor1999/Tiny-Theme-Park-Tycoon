@@ -1,38 +1,36 @@
 package Idlethemeparkworld.model.buildable.food;
 
 import Idlethemeparkworld.model.BuildType;
+import Idlethemeparkworld.model.GameManager;
+import Idlethemeparkworld.model.Time;
 import java.util.ArrayList;
 
 public class Hamburger extends FoodStall {
-    
-    public Hamburger(int xLocation, int yLocation){
-        this.x    = xLocation;
-        this.y    = yLocation;
+    public Hamburger(int x, int y, GameManager gm){
+        super(gm);
+        this.x    = x;
+        this.y    = y;
         this.value        = BuildType.BURGERJOINT.getBuildCost();
-        this.currentLevel = 1;
         this.buildingType = BuildType.BURGERJOINT;
-        this.waitingLine  = new ArrayList<>();
-        this.capacity     = 1;
-        this.foodPrice    = 15;        //customers have a preferred pricepoint, if it's higher than that their happiness goes down a bit
-        this.foodQuality  = 15;
-        this.upkeepCost   = 3*10;        //The total of its employees wages in dollars/hour.
+        this.serviceTime  = Time.convMinuteToTick(1);
+        this.foodPrice    = 15;
+        this.foodQuality.setRange(10, 15);
+        this.upkeepCost   = 30;
         this.upgradeCost  = this.value*2;
     }
     
     @Override
     public void level2Upgrade(){
-        this.currentLevel += 1;
-        this.capacity++;
-        this.foodQuality  *= 1.5;
+        this.serviceTime  += Time.convMinuteToTick(0.3);
+        this.foodQuality.add(5, 5);
         this.upkeepCost   += 10;
         this.upgradeCost  *= 2;
     }
     
     @Override
     public void level3Upgrade(){
-        this.currentLevel += 1;
-        this.capacity++;
-        this.foodQuality  *= 1.5;
+        this.serviceTime  += Time.convMinuteToTick(0.3);
+        this.foodQuality.add(5, 5);
         this.upkeepCost   += 10;
         this.upgradeCost  = 0;
     }

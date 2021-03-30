@@ -3,16 +3,26 @@ package Idlethemeparkworld.model.buildable.food;
 import Idlethemeparkworld.model.buildable.Building;
 import java.util.ArrayList;
 import Idlethemeparkworld.misc.utils.Pair;
+import Idlethemeparkworld.misc.utils.Range;
+import Idlethemeparkworld.model.GameManager;
 import Idlethemeparkworld.model.agent.Visitor;
+import Idlethemeparkworld.model.buildable.BuildingStatus;
+import java.util.PriorityQueue;
 
 public abstract class FoodStall extends Building {
-    protected ArrayList<Visitor> waitingLine;     //customers are waiting to be served
-    protected int capacity;         //How many customers can be served at a time
+    protected PriorityQueue<Visitor> queue;     //customers are waiting to be served
+    protected int serviceTime;
+    protected int serviceTimer;
     protected int foodPrice;        //This is what you adjust in the Administration menu.
-    protected int foodQuality;      //food quality = happiness bonus
+    protected Range foodQuality;      //food quality = happiness bonus
 
-    public int getFoodQuality() {
-        return foodQuality;
+    protected FoodStall(GameManager gm) {
+        super(gm);
+        this.queue = new PriorityQueue<>();
+        this.serviceTime = 0;
+        this.serviceTimer = 0;
+        this.foodPrice = 0;
+        this.foodQuality = new Range(45,55);
     }
     
     public void setFoodPrice(int number){
@@ -22,41 +32,77 @@ public abstract class FoodStall extends Building {
     public ArrayList<Pair<String, String>> getAllData(){
         ArrayList<Pair<String, String>> res = new ArrayList<>();
         res.add(new Pair<>("Food price: ", Integer.toString(foodPrice)));
-        res.add(new Pair<>("Food quality: ", Integer.toString(foodQuality)));
+        res.add(new Pair<>("Food quality: ", "("+foodQuality.getLow()+"-"+foodQuality.getHigh()+")"));
         res.add(new Pair<>("Upkeep cost: ", Integer.toString(upkeepCost)));
         return res;
     }
     
     //Methods for managing visitors:
     
-    public void joinLine(Visitor visitor){
-        waitingLine.add(visitor);
-        //Visitor starts waiting.
-        //If they don't get served in time, they leave the line disappointed.
+    public void joinQueue(Visitor visitor){
+        queue.add(visitor);
     }
     
-    public void serveCustomers(){   //Serve multiple customers at once.
-        if(waitingLine.size() >= capacity){
-            for(int nextInLine = 1; nextInLine <= capacity; nextInLine++){
-                serveCustomer();
-            }
+    public boolean isFirstInQueue(Visitor visitor){
+        return queue.peek().equals(visitor);
+    }
+    
+    public void leaveQueue(Visitor visitor){
+        queue.remove(visitor);
+    }
+    
+    /*
+    public List<Food> getMenu() {
+        return Collections.unmodifiableList(menu);
+    }
+    */
+    
+    public boolean canService(){
+        return serviceTimer <= 0;
+    }
+    
+    public int buyFood(Visitor visitor){
+        if(canService()){
+            //visitor.pay(foodPrice);
+            gm.getFinance().earn(foodPrice);
+
+            leaveQueue(visitor);
+            serviceTimer = serviceTime;
+            return foodQuality.getNextRandom(); 
         } else {
-            for(int nextInLine = 1; nextInLine <= waitingLine.size(); nextInLine++){
-                serveCustomer();
-            }
+            return 0;
         }
     }
     
-    public void serveCustomer(){
-        //Serves the first customer in line
-        gm.getFinance().earn(foodPrice);   //sells them food 
-        waitingLine.remove(0);             //removes them from the line
-        //Visitor eats food, becomes happier and less hungry.
-        //Then the visitor looks for a nearby trashcan. If the don't find one, they just drop it on the floor.
+    public void repair(int amount){
+        condition+=amount;
     }
     
-    public void leaveLine(Visitor visitor){
-        waitingLine.remove(visitor);
-        //Visitor gets disappointed and their happiness drops.
+    private void updateCondition(){
+        switch(status){
+            case OPEN:
+                condition-=0.02; break;
+            case CLOSED:
+                condition-=0.04; break;
+            case INACTIVE:
+                condition-=0.1; break;
+            case FLOATING:
+                condition-=0.25; 
+                if(condition<=0){
+                    status = BuildingStatus.DECAYED;
+                }
+                break;
+            default:
+                break;
+        }
+    }
+    
+    public void update(long tickCount){
+        if(!canService()){
+            serviceTimer--;
+        }
+        if(tickCount%24==0){
+            updateCondition();
+        }
     }
 }

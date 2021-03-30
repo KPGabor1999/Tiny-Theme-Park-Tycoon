@@ -1,12 +1,14 @@
 package Idlethemeparkworld.model.buildable.attraction;
 
 import Idlethemeparkworld.model.BuildType;
+import Idlethemeparkworld.model.GameManager;
 
 public class HauntedMansion extends Attraction {
     
-    public HauntedMansion(int xLocation, int yLocation){
-        this.x    = xLocation;
-        this.y    = yLocation;
+    public HauntedMansion(int x, int y, GameManager gm) {
+        super(gm);
+        this.x    = x;
+        this.y    = y;
         this.value        = BuildType.HAUNTEDMANSION.getBuildCost();
         this.currentLevel = 1;
         this.buildingType = BuildType.HAUNTEDMANSION;
