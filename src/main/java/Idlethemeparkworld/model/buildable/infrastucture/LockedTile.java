@@ -18,7 +18,6 @@ public class LockedTile extends Infrastructure {
     public int getUnlockCost() {
         return unlockCost;
     }
-    
 
     @Override
     public void level2Upgrade() {}

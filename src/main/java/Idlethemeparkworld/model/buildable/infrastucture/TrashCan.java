@@ -3,16 +3,18 @@ package Idlethemeparkworld.model.buildable.infrastucture;
 import Idlethemeparkworld.model.BuildType;
 import java.util.ArrayList;
 import Idlethemeparkworld.misc.utils.Pair;
+import Idlethemeparkworld.model.GameManager;
 
 public class TrashCan extends Infrastructure {
     private int capacity;
     private int filled;
     
-    public TrashCan(int xLocation, int yLocation){
+    public TrashCan(int x, int y, GameManager gm) {
+        super(gm);
         this.maxLevel = 0;
         this.currentLevel = 1;
-        this.x = xLocation;
-        this.y = yLocation;
+        this.x = x;
+        this.y = y;
         this.buildingType = BuildType.TRASHCAN;
         this.capacity = 30;
         this.filled = 0;

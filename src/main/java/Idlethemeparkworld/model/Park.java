@@ -12,9 +12,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Park implements Updatable {
-
     private static final int HISTORY_SIZE = 14;
-
+    
     private int rating;
     private int parkValue;
     private int activeParkValue;
@@ -32,22 +31,22 @@ public class Park implements Updatable {
     private Set<Building> reachable;
 
     public Park() {
-        initializePark(10, 10);
+        initializePark(10, 10, null);
     }
 
-    public Park(int size) {
-        initializePark(size, size);
+    public Park(int size, GameManager gm) {
+        initializePark(size, size, gm);
     }
 
-    public Park(int rows, int columns) {
-        initializePark(rows, columns);
+    public Park(int rows, int columns, GameManager gm) {
+        initializePark(rows, columns, gm);
     }
 
     public Tile[][] getTiles() {
         return tiles;
     }
 
-    public void initializePark(int rows, int columns) {
+    public void initializePark(int rows, int columns, GameManager gm) {
         rating = 0;
         parkValue = 0;
         activeParkValue = 0;
@@ -64,10 +63,10 @@ public class Park implements Updatable {
             }
         }
         //2.Spawn in the gate tile
-        build(BuildType.ENTRANCE, 0, 0, true);
+        build(BuildType.ENTRANCE, 0, 0, true, gm);
         for (int row = 0; row < tiles.length; row++) {
             for (int column = tiles[0].length - 5; column < tiles[0].length; column++) {
-                build(BuildType.LOCKEDTILE, column, row, true);
+                build(BuildType.LOCKEDTILE, column, row, true, gm);
             }
         }
     }
@@ -155,14 +154,14 @@ public class Park implements Updatable {
         }
     }
 
-    public void build(BuildType type, int x, int y, boolean force) {
+    public void build(BuildType type, int x, int y, boolean force, GameManager gm) {
         if (canBuild(type, x, y) || force) {
             Building newBuilding = null;
             try {
                 Class buildingClass = BuildType.GetClass(type);
-                Class[] paramType = {int.class, int.class};
+                Class[] paramType = {int.class, int.class, GameManager.class};
                 Constructor cons = buildingClass.getConstructor(paramType);
-                newBuilding = (Building) cons.newInstance(x, y);
+                newBuilding = (Building) cons.newInstance(x, y, gm);
             } catch (Exception e) {
                 e.printStackTrace();
             }

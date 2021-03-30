@@ -154,7 +154,7 @@ public class Board extends JPanel {
                 } else {
                     if(buildMode){
                         if(canBuild[0]){
-                            park.build(type, pos[0], pos[1], false);
+                            park.build(type, pos[0], pos[1], false, gm);
                             gm.getFinance().pay(type.getBuildCost());
                             main.updateInfobar();
                             //System.out.println("can build");

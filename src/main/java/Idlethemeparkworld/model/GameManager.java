@@ -43,7 +43,7 @@ public class GameManager {
         this.hamburgerPrice = 15;
         this.fishChipsPrice = 15;
 
-        this.park = new Park(10, 15);
+        this.park = new Park(10, 15, this);
         this.time = new Time();
         this.finance = new Finance(100000);
     }
@@ -109,7 +109,7 @@ public class GameManager {
     }
 
     private void initAllComponents() {
-        park.initializePark(10, 15);
+        park.initializePark(10, 15, this);
         time.reset();
         finance.init();
     }

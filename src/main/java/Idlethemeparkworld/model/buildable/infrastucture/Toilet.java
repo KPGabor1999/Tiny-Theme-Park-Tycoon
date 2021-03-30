@@ -3,6 +3,7 @@ package Idlethemeparkworld.model.buildable.infrastucture;
 import Idlethemeparkworld.model.BuildType;
 import java.util.ArrayList;
 import Idlethemeparkworld.misc.utils.Pair;
+import Idlethemeparkworld.model.GameManager;
 import Idlethemeparkworld.model.agent.Visitor;
 
 public class Toilet extends Infrastructure {
@@ -10,11 +11,12 @@ public class Toilet extends Infrastructure {
     protected int capacity;                       //how many stalls does it have
     private int cleanliness;
     
-    public Toilet(int xLocation, int yLocation){
+    public Toilet(int x, int y, GameManager gm) {
+        super(gm);
         this.maxLevel = 0;
         this.currentLevel = 1;
-        this.x = xLocation;
-        this.y = yLocation;
+        this.x = x;
+        this.y = y;
         this.buildingType = BuildType.TOILET;
         this.waitingLine = new ArrayList<>();
         this.capacity = 10;
