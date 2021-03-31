@@ -8,7 +8,6 @@ public class Pavement extends Infrastructure {
     public Pavement(int x, int y, GameManager gm) {
         super(gm);
         this.maxLevel = 0;
-        this.currentLevel = 1;
         this.x = x;
         this.y = y;
         this.buildingType = BuildType.PAVEMENT;

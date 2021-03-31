@@ -5,20 +5,22 @@ import java.util.ArrayList;
 import Idlethemeparkworld.misc.utils.Pair;
 import Idlethemeparkworld.model.GameManager;
 import Idlethemeparkworld.model.agent.Visitor;
+import java.util.PriorityQueue;
 
 public class Toilet extends Infrastructure {
-    protected ArrayList<Visitor> waitingLine;     //visitors wait in line
-    protected int capacity;                       //how many stalls does it have
+    protected PriorityQueue<Visitor> waitingLine;
+    protected int occupied;
+    protected int capacity;
     private int cleanliness;
     
     public Toilet(int x, int y, GameManager gm) {
         super(gm);
         this.maxLevel = 0;
-        this.currentLevel = 1;
         this.x = x;
         this.y = y;
         this.buildingType = BuildType.TOILET;
-        this.waitingLine = new ArrayList<>();
+        this.waitingLine = new PriorityQueue<>();
+        this.occupied = 0;
         this.capacity = 10;
         this.cleanliness = 100;
         this.value = BuildType.TOILET.getBuildCost();
@@ -46,39 +48,34 @@ public class Toilet extends Infrastructure {
         
     public void joinLine(Visitor visitor){
         waitingLine.add(visitor);
-        //Visitor starts waiting.
     }
     
-    public void letVisitorsIn(){   //Multiple people can use it at a time.
-        if(waitingLine.size() >= capacity){
-            for(int nextInLine = 1; nextInLine <= capacity; nextInLine++){
-                letVisitorIn();
-            }
-        } else {
-            for(int nextInLine = 1; nextInLine <= waitingLine.size(); nextInLine++){
-                letVisitorIn();
-            }
-        }
-    }
-    
-    public void letVisitorIn(){
-        waitingLine.remove(0);  //Visitor gets in.
-        //Visitor uses the toilet (takes time)
-        decreaseHygiene();
-        //Now the visitor is happier and their toilet stat becomes 100. They go looking for the next activity.
-    }
-    
-    public void decreaseHygiene(){
-        cleanliness--;
+    public boolean isFirstInQueue(Visitor visitor){
+        return waitingLine.peek().equals(visitor);
     }
     
     public void leaveLine(Visitor visitor){
         waitingLine.remove(visitor);
-        //If they can't use the bathroom in time, they quit the line and go home.
     }
     
-    public void clean(){        //This is the janitor's job.
+    public boolean isThereEmptyStool(){
+        return occupied<capacity;
+    }
+    
+    public void enter(Visitor visitor){
+        waitingLine.poll();
+        occupied++;
+    }
+    
+    public void exit(){
+        occupied--;
+    }
+    
+    public void decreaseHygiene(int amount){
+        cleanliness-=amount;
+    }
+    
+    public void clean(){
         this.cleanliness = 100;
     }
-
 }

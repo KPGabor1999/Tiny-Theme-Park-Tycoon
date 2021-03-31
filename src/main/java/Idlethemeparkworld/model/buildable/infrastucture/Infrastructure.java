@@ -9,7 +9,7 @@ public abstract class Infrastructure extends Building {
     protected int capacity;
     protected int occupied;
     protected int duration;
-    //protected int rubbish;
+    protected int rubbish;
 
     public Infrastructure(GameManager gm) {
         super(gm);
@@ -27,8 +27,16 @@ public abstract class Infrastructure extends Building {
         return duration;
     }
     
+    public int checkLittering(){
+        return rubbish;
+    }
+    
+    public void litter(int amount){
+        rubbish += amount;
+    }
+    
     public void clean(){
-        
+        rubbish = 0;
     }
     
     public ArrayList<Pair<String, String>> getAllData(){
