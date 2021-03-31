@@ -5,16 +5,18 @@ import java.util.ArrayList;
 import Idlethemeparkworld.misc.utils.Pair;
 import Idlethemeparkworld.misc.utils.Range;
 import Idlethemeparkworld.model.GameManager;
+import Idlethemeparkworld.model.Time;
 import Idlethemeparkworld.model.agent.Visitor;
 import Idlethemeparkworld.model.buildable.BuildingStatus;
 import java.util.PriorityQueue;
 
 public abstract class FoodStall extends Building {
-    protected PriorityQueue<Visitor> queue;     //customers are waiting to be served
+    protected PriorityQueue<Visitor> queue;
     protected int serviceTime;
     protected int serviceTimer;
-    protected int foodPrice;        //This is what you adjust in the Administration menu.
-    protected Range foodQuality;      //food quality = happiness bonus
+    protected int foodPrice;
+    protected Range foodQuality;
+    protected int upkeepTimer;
 
     protected FoodStall(GameManager gm) {
         super(gm);
@@ -23,6 +25,7 @@ public abstract class FoodStall extends Building {
         this.serviceTimer = 0;
         this.foodPrice = 0;
         this.foodQuality = new Range(45,55);
+        this.upkeepTimer = 0;
     }
     
     public void setFoodPrice(int number){
@@ -63,6 +66,7 @@ public abstract class FoodStall extends Building {
     
     public int buyFood(Visitor visitor){
         if(canService()){
+            //if(visitor.canPay(foodprice){
             //visitor.pay(foodPrice);
             gm.getFinance().earn(foodPrice);
 
@@ -103,6 +107,11 @@ public abstract class FoodStall extends Building {
         }
         if(tickCount%24==0){
             updateCondition();
+            upkeepTimer++;
+            if(upkeepTimer >= Time.convMinuteToTick(60)/24){
+                gm.getFinance().pay(upkeepCost);
+                upkeepTimer = 0;
+            }
         }
     }
 }

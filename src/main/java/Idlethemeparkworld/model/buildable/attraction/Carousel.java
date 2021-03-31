@@ -1,11 +1,13 @@
 package Idlethemeparkworld.model.buildable.attraction;
 
 import Idlethemeparkworld.model.BuildType;
+import Idlethemeparkworld.model.GameManager;
 import Idlethemeparkworld.model.buildable.BuildingStatus;
 
 public class Carousel extends Attraction {
     
-    public Carousel(int x, int y){
+    public Carousel(int x, int y, GameManager gm) {
+        super(gm);
         this.x    = x;
         this.y    = y;
         this.buildingType = BuildType.CAROUSEL;
@@ -45,9 +47,5 @@ public class Carousel extends Attraction {
         this.condition    = 100;
         this.value        += upgradeCost;
         this.upgradeCost  = 0;
-    }
-    
-    protected void start(){
-        //TODO
     }
 }

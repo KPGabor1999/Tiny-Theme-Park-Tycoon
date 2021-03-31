@@ -65,6 +65,7 @@ public abstract class Building extends Buildable{
                 default: break;
             }
             currentLevel++;
+            value += upgradeCost;
         }
     }
     

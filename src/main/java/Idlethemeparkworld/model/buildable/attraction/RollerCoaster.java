@@ -1,12 +1,14 @@
 package Idlethemeparkworld.model.buildable.attraction;
 
 import Idlethemeparkworld.model.BuildType;
+import Idlethemeparkworld.model.GameManager;
 
 public class RollerCoaster extends Attraction {
     
-    public RollerCoaster(int xLocation, int yLocation){
-        this.x    = xLocation;
-        this.y    = yLocation;
+    public RollerCoaster(int x, int y, GameManager gm) {
+        super(gm);
+        this.x    = x;
+        this.y    = y;
         this.value        = BuildType.ROLLERCOASTER.getBuildCost();
         this.currentLevel = 1;
         this.buildingType = BuildType.ROLLERCOASTER;

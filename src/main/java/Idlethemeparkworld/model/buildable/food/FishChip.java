@@ -21,23 +21,18 @@ public class FishChip extends FoodStall {
     
     @Override
     public void level2Upgrade(){
-        this.currentLevel += 1;
         this.upkeepCost   += 1;
         this.serviceTime  += Time.convMinuteToTick(0.3);
         this.foodPrice    = 1;        //customers have a preferred pricepoint, if it's higher than that their happiness goes down a bit
         this.foodQuality.add(5, 5);
-        this.value        += upgradeCost;
         this.upgradeCost  *= 10;
     }
     
     @Override
     public void level3Upgrade(){
-        this.currentLevel += 1;
         this.upkeepCost   += 1;
         this.serviceTime  += 1;
         this.foodPrice    = 1;        //customers have a preferred pricepoint, if it's higher than that their happiness goes down a bit
         this.foodQuality.add(5, 5);
-        this.value        += upgradeCost;
     }
-    
 }

@@ -1,5 +1,7 @@
 package Idlethemeparkworld.model.buildable;
 
+import Idlethemeparkworld.model.GameManager;
+
 public class PipeSystem extends Buildable {
     private int capacity;
     private int load;
@@ -17,10 +19,6 @@ public class PipeSystem extends Buildable {
     }
     
     public void addTemporaryLoad(int amount, int duration){
-        
-    }
-    
-    public void build(){
         
     }
     
