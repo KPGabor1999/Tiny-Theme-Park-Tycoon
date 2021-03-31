@@ -5,6 +5,10 @@ import Idlethemeparkworld.model.GameManager;
 public class PipeSystem extends Buildable {
     private int capacity;
     private int load;
+
+    public PipeSystem(GameManager gm) {
+        super(gm);
+    }
     
     public void canFlush(){
         

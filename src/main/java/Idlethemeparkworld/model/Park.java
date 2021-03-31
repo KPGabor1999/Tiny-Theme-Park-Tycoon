@@ -258,8 +258,9 @@ public class Park implements Updatable {
         return maxGuests;
     }
 
+    @Override
     public void update(long tickCount) {
-
+        buildings.forEach(b -> b.update(tickCount));
     }
 
     private void calculateParkRating() {

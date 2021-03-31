@@ -5,7 +5,6 @@ import Idlethemeparkworld.misc.utils.Pair;
 import Idlethemeparkworld.model.GameManager;
 
 public abstract class Building extends Buildable{
-    protected GameManager gm;
     protected BuildingStatus status;
     protected int x, y;
     protected int value;
@@ -15,8 +14,9 @@ public abstract class Building extends Buildable{
     protected double condition;
 
     public Building(GameManager gm) {
-        this.gm = gm;
+        super(gm);
         this.status = BuildingStatus.OPEN;
+        this.maxLevel     = 3;
         this.currentLevel = 1;
         this.condition = 100;
     }

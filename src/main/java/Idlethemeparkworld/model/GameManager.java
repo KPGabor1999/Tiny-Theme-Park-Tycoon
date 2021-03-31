@@ -145,15 +145,12 @@ public class GameManager {
         updateCycleRunning = false;
     }
 
-    // Might need to separate ingame ticks and reallife ticks depending on what we plan to do
     private void update(int tickStep) {
         tickCount += tickStep;
 
         updateCount += tickStep * getGameSpeed();
         double actualUpdateCount = Math.floor(updateCount);
         updateCount -= actualUpdateCount;
-        //System.out.println(tickStep+" - "+actualUpdateCount+" - "+updateCount);
-        //System.out.println(tickCount);
         for (int i = 0; i < actualUpdateCount; i++) {
             park.update(tickCount);
             time.update(tickCount);
