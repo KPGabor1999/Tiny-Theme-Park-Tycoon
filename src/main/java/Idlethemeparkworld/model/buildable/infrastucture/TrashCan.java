@@ -12,7 +12,6 @@ public class TrashCan extends Infrastructure {
     public TrashCan(int x, int y, GameManager gm) {
         super(gm);
         this.maxLevel = 0;
-        this.currentLevel = 1;
         this.x = x;
         this.y = y;
         this.buildingType = BuildType.TRASHCAN;
@@ -49,18 +48,15 @@ public class TrashCan extends Infrastructure {
     
     public void use(){
         if(!this.isFull()){
-            filled++;       //thrown in one piece of garbage
+            filled++;
         }
-        //Else they start looking for another trash can.
     }
     
     public boolean isFull(){
         return filled < capacity;
     }
-    
-    //Visitor has no garbage with them now and starts looking for the next activity.
-    
-    public void empty(){    //This is the janitor's job.
+        
+    public void empty(){
         filled = 0;
     }
 }
