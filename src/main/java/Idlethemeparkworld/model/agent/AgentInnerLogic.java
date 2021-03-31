@@ -41,9 +41,7 @@ public class AgentInnerLogic {
         TOOMUCHLITTER,       // "The litter here is really bad"
         CLEAN,       // "This park is very clean and tidy"
         
-        CANTEXIT,    // "I can't find the exit"
         GETOUT,          // "I want to get off X"
-        NOTSAFE,         // "I'm not going on X - it isn't safe"
         CROWDED,         // "It's too crowded here"
         VANDALISM,       // "The vandalism here is really bad"
         //Scenery,         // "Great scenery!"
@@ -60,7 +58,6 @@ public class AgentInnerLogic {
         HOTDOG,
 
         WOW, // "Wow!"
-        SUSPICIOUS,     // "I have the strangest feeling someone is watching me"
 
         NONE;
     }
@@ -68,24 +65,16 @@ public class AgentInnerLogic {
     public enum AgentState{
         IDLE,
         WALKING,
+        WANDERING,
         QUEUING,
         ENTERINGBUILDING,
         ONRIDE,
         LEAVINGBUILDING,
         BUYING,
-        
-        HELPING,
         SITTING,
-        SWEEPING,
+        
         FIXING,
         CLEANING,
-        
-        PATROLLING,
-        PURSUING,
-        INVESTIGATING,
-        
-        HIDING,
-        STEALING,
         
         ENTERINGPARK,
         LEAVINGPARK
@@ -117,11 +106,8 @@ public class AgentInnerLogic {
         EXIT,
         RIDE,
         THROWUP,
-        
-        STAFFANSWER,
-        STAFFCHECK,
+
         STAFFREPAIR,
-        STAFFSWEEP,
         STAFFCLEAN,
         
         //READMAP,

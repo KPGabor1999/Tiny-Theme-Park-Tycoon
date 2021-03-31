@@ -7,11 +7,14 @@ import Idlethemeparkworld.model.Park;
 import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentAction;
 import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentState;
 import Idlethemeparkworld.model.buildable.Building;
+import Idlethemeparkworld.model.buildable.food.FoodStall;
+import java.util.ArrayList;
 
 public class Visitor extends Agent {
     private int cash;
     private int cashSpent;
     private int entryTime;
+    private AgentAction currentAction;
     
     private int timeInQueue;
     
@@ -34,7 +37,6 @@ public class Visitor extends Agent {
                 break;
             case ENTERINGPARK:
             case LEAVINGPARK:
-                break;
             case WALKING:
                 energy -= 0.05;
                 thirst-=0.01;
@@ -62,9 +64,10 @@ public class Visitor extends Agent {
         toilet-=0.01;
     }
         
-    protected void performAction(AgentAction action){
-        switch (action.getAction()){
+    protected void performAction(){
+        switch (currentAction.getAction()){
             case EAT:
+                
                 break;
             case SIT:
                 break;
@@ -95,7 +98,50 @@ public class Visitor extends Agent {
         }
     }
     
-    //Agent joins the chosen attraction's queue
+    private void eatCycle(){
+        switch(state){
+            case IDLE:
+                state = AgentState.WANDERING;
+                break;
+            case WANDERING:
+                ArrayList<Building> bs = park.getNonPavementNeighbours(x, y);
+                bs.removeIf(b -> !(b instanceof FoodStall));
+                if(bs.size() > 0){
+                    for (int i = 0; i < bs.size(); i++) {
+                        if(rand.nextBoolean()){
+                            setDestination(bs.get(i).getX(),bs.get(i).getY());
+                            moveTo(bs.get(i).getX(),bs.get(i).getY());
+                            ((FoodStall)bs.get(i)).joinQueue(this);
+                            state = AgentState.QUEUING;
+                            break;
+                        }
+                    }
+                } else {
+                    
+                }
+            case ENTERINGPARK:
+            case LEAVINGPARK:
+            case WALKING:
+                energy -= 0.05;
+                thirst-=0.01;
+                break;
+            case QUEUING:
+                if(timeInQueue>2500){
+                    happiness-=0.01;
+                }
+                break;
+            case SITTING:
+                energy += 0.1;
+                hunger -= 0.02;
+                nausea -= 0.5;
+                break;
+            case BUYING:
+                break;
+            default:
+                throw new AssertionError(state.name());
+        }
+    }
+    
     public void joinQueue(Building attraction){
         
     }
