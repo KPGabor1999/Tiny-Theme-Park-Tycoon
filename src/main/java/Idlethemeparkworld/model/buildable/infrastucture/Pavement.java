@@ -13,10 +13,4 @@ public class Pavement extends Infrastructure {
         this.buildingType = BuildType.PAVEMENT;
         this.value = BuildType.PAVEMENT.getBuildCost();
     }
-        
-    @Override
-    public void level2Upgrade(){}       //They're not meant to be upgradeable but they could be.
-    
-    @Override
-    public void level3Upgrade(){}
 }

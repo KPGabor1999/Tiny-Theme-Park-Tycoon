@@ -21,16 +21,19 @@ public class RollerCoaster extends Attraction {
     }
     
     @Override
-    public void level2Upgrade(){
-        this.fun          *= 1.5;
-        this.capacity     += 4;
-        this.runtime      -=1;
-        this.upgradeCost  *= 2;
-    }
-    
-    @Override
-    public void level3Upgrade(){
-        this.fun          *= 1.5;
-        this.capacity     += 4;
+    public void innerUpgrade(){
+        switch(currentLevel){
+            case 1: 
+                this.fun          *= 1.5;
+                this.capacity     += 4;
+                this.runtime      -= 1;
+                this.upgradeCost  *= 2;
+                break;
+            case 2:
+                this.fun          *= 1.5;
+                this.capacity     += 4;
+                break;
+            default: break;
+        }
     }
 }

@@ -60,18 +60,13 @@ public abstract class Building extends Buildable{
     
     public void upgrade(){
         if(canUpgrade()){
-            switch(currentLevel){
-                case 1: level2Upgrade(); break;
-                case 2: level3Upgrade(); break;
-                default: break;
-            }
+            innerUpgrade();
             currentLevel++;
             value += upgradeCost;
         }
     }
     
-    public abstract void level2Upgrade();
-    public abstract void level3Upgrade();
+    protected void innerUpgrade(){}
     
     public abstract ArrayList<Pair<String, String>> getAllData();
 

@@ -12,10 +12,4 @@ public class Entrance extends Infrastructure {
         this.y = y;
         this.buildingType = BuildType.ENTRANCE;
     }
-    
-    @Override
-    public void level2Upgrade(){}       //They're not meant to be upgradeable but they could be.
-    
-    @Override
-    public void level3Upgrade(){}
 }

@@ -35,14 +35,7 @@ public class Toilet extends Infrastructure {
         res.add(new Pair<>("Capacity: ", occupied + "/" + capacity));
         res.add(new Pair<>("Cleanliness: ", Integer.toString(cleanliness)));
         return res;
-    }   
-        
-    @Override
-    public void level2Upgrade(){}       //They're not meant to be upgradeable but they could be.
-    
-    @Override
-    public void level3Upgrade(){}
-    
+    }
     
     //Methods for managing visitors:
         

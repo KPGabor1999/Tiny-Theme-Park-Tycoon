@@ -35,16 +35,7 @@ public class TrashCan extends Infrastructure {
         return res;
     }    
     
-    @Override
-    public void level2Upgrade(){}       //They're not meant to be upgradeable but they could be.
-    
-    @Override
-    public void level3Upgrade(){}
-    
-    
     //Methods for managing visitors:
-    
-    //Visitor just finished eating and wants to throw out the paper.
     
     public void use(){
         if(!this.isFull()){

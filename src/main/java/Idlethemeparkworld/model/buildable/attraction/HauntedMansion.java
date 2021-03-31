@@ -20,15 +20,18 @@ public class HauntedMansion extends Attraction {
     }
     
     @Override
-    public void level2Upgrade(){
-        this.fun          *= 1.5;
-        this.capacity     += 5;
-        this.upgradeCost  *= 2;
-    }
-    
-    @Override
-    public void level3Upgrade(){
-        this.fun          *= 1.5;
-        this.capacity     += 5;
+    public void innerUpgrade(){
+        switch(currentLevel){
+            case 1: 
+                this.fun          *= 1.5;
+                this.capacity     += 5;
+                this.upgradeCost  *= 2;
+                break;
+            case 2:
+                this.fun          *= 1.5;
+                this.capacity     += 5;
+                break;
+            default: break;
+        }
     }
 }
