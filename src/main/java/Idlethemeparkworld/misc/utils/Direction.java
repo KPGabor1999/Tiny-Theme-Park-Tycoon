@@ -1,5 +1,10 @@
 package Idlethemeparkworld.misc.utils;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+
 public enum Direction {
     DOWN(0, 1), LEFT(-1, 0), UP(0, -1), RIGHT(1, 0);
 
@@ -20,5 +25,14 @@ public enum Direction {
 
     public Direction turnOpposite() {
         return Direction.values()[((ordinal() + 2) + 4) % 4];
+    }
+    
+    private static final List<Direction> VALUES =
+    Collections.unmodifiableList(Arrays.asList(values()));
+    private static final int SIZE = VALUES.size();
+    private static final Random RANDOM = new Random();
+
+    public static Direction randomDirection()  {
+      return VALUES.get(RANDOM.nextInt(SIZE));
     }
 }
