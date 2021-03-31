@@ -10,7 +10,7 @@ public abstract class Building extends Buildable{
     protected int x, y;
     protected int value;
     protected int currentLevel;
-    protected int maxLevel = 3;
+    protected int maxLevel;
     protected int upgradeCost;
     protected double condition;
 
@@ -18,6 +18,7 @@ public abstract class Building extends Buildable{
         this.gm = gm;
         this.status = BuildingStatus.OPEN;
         this.currentLevel = 1;
+        this.condition = 100;
     }
     
     //for debugging and prototyping
@@ -94,6 +95,12 @@ public abstract class Building extends Buildable{
             return false;
         }
         final Building other = (Building) obj;
+        if (this.x != other.x) {
+            return false;
+        }
+        if (this.y != other.y) {
+            return false;
+        }
         return true;
     }
 }

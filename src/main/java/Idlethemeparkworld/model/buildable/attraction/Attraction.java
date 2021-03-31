@@ -53,11 +53,11 @@ public abstract class Attraction extends Building implements Updatable {
     protected static ArrayList<AttractionStats> upgrades;
     protected AttractionStats stats;
     
-    protected int fun;              //How much does a ride increase a visitor's happiness level?
-    protected int capacity;         //How many visitors can ride at once?
-    protected int occupied;         //How many visitors are currently on the ride?
-    protected int runtime;          //How long (seconds) does a ride take? -> Number of minutes in the real world. -> Align to gameplay ticks.
-    protected int entryFee;         //How much does it cost to ride the attraction?
+    protected int fun;
+    protected int capacity;
+    protected int occupied;
+    protected int runtime;
+    protected int entryFee;
     
     protected int statusTimer;
 
@@ -65,6 +65,7 @@ public abstract class Attraction extends Building implements Updatable {
 
     public Attraction(GameManager gm) {
         super(gm);
+        this.occupied = 0;
     }
     
     public int getOccupied() {
@@ -77,10 +78,6 @@ public abstract class Attraction extends Building implements Updatable {
     
     public int getEntryFee(){
         return entryFee;
-    }
-    
-    public void increaseOccupied(int num){
-        this.occupied += num;
     }
     
     //public boolean canUpgrade(){
@@ -103,15 +100,16 @@ public abstract class Attraction extends Building implements Updatable {
         return res;
     }
     
-    //consider using an observer/event listener
     protected void start(){
         status=BuildingStatus.RUNNING;
         statusTimer = 0;
         int profit = 0;
         for (int i = 0; i < queue.size(); i++) {
-            if(true/*queue.get(i).hasMoney(entryFee)*/){
+            if(true/*queue.get(i).canPay(entryFee)*/){
                 /*queue.get(i).pay(entryFee)*/
                 profit += entryFee;
+            } else {
+                //queue.get(i).sendRideEvent(rideEvent);
             }
         }
         gm.getFinance().earn(profit);

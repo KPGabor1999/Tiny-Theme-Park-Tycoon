@@ -10,7 +10,6 @@ public class SwingingShip extends Attraction  {
         this.x    = x;
         this.y    = y;
         this.value        = BuildType.SWINGINGSHIP.getBuildCost();
-        this.currentLevel = 1;
         this.buildingType = BuildType.SWINGINGSHIP;
         this.upkeepCost   = 12;
         this.fun          = 9;
@@ -18,31 +17,19 @@ public class SwingingShip extends Attraction  {
         this.occupied     = 0;
         this.runtime      = 3;
         this.entryFee     = 18;
-        this.condition    = 100;
         this.upgradeCost  = this.value*2;
     }
     
     @Override
     public void level2Upgrade(){
-        this.currentLevel += 1;
         this.fun          *= 1.5;
         this.capacity     += 5;
-        this.condition    =  100;
-        this.value        += upgradeCost;
         this.upgradeCost  *= 2;
     }
     
     @Override
     public void level3Upgrade(){
-        this.currentLevel += 1;
         this.fun          *= 1.5;
         this.capacity     += 5;
-        this.condition    = 100;
-        this.value        += upgradeCost;
-        this.upgradeCost  = 0;
-    }
-        
-    protected void start(){
-        //TODO
     }
 }
