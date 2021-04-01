@@ -154,21 +154,15 @@ public abstract class Agent implements Updatable {
         
     }
     
-    public void moveForward(){
-        moveTo(x+dir.x, y+dir.y);
-    }
-    
     public void moveTo(Position p){
         moveTo(p.x, p.y);
     }
     
     public void moveTo(int x, int y){
-        x=dir.x;
-        y=dir.y;
+        this.x=x;
+        this.y=y;
         currentBuilding = park.getTile(x, y).getBuilding();
     }
-    
-    public void addNewThought(AgentThought thought){}
     
     public void setDestination(int x, int y){
         this.destX = x;

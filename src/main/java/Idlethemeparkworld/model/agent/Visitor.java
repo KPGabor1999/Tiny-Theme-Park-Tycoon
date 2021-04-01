@@ -31,11 +31,12 @@ public class Visitor extends Agent {
         super(name, startingHappiness, park, am);
         this.cash = rand.nextInt(1000)+1000;
         this.cashSpent = 0;
-        this.currentAction = null;
+        this.currentAction = new AgentAction(AgentActionType.ENTERPARK,null);
         this.lastEnter = null;
         this.item = null;
         this.statusMaxTimer = 0;
         this.statusTimer = 0;
+        this.state = AgentState.ENTERINGPARK;
     }
     
     @Override
@@ -177,10 +178,11 @@ public class Visitor extends Agent {
         switch(state){
             case IDLE:
                 energy += 0.05;
-                nausea -= 0.1;
+                //nausea -= 0.1;
                 break;
             case ENTERINGPARK:
             case LEAVINGPARK:
+            case WANDERING:
             case WALKING:
                 energy -= 0.05;
                 thirst-=0.01;
@@ -196,12 +198,12 @@ public class Visitor extends Agent {
             case SITTING:
                 energy += 0.1;
                 hunger -= 0.02;
-                nausea -= 0.5;
+                //nausea -= 0.5;
                 break;
             case BUYING:
                 break;
             default:
-                throw new AssertionError(state.name());
+                break;
         }
         hunger-=0.02;
         thirst-=0.02;
@@ -211,6 +213,9 @@ public class Visitor extends Agent {
     private void performAction(){
         if(currentAction != null){
             switch (currentAction.getAction()){
+                case ENTERPARK:
+                    enterCycle();
+                    break;
                 case EAT:
                     eatCycle();
                     break;
@@ -242,8 +247,10 @@ public class Visitor extends Agent {
     
     private void moveToRandomNeighbourPavement(){
         ArrayList<Building> paves = park.getPavementNeighbours(x, y);
-        int nextIndex = rand.nextInt(paves.size());
-        moveTo(paves.get(nextIndex).getX(),paves.get(nextIndex).getY());
+        if(paves.size() > 0){
+            int nextIndex = rand.nextInt(paves.size());
+            moveTo(paves.get(nextIndex).getX(),paves.get(nextIndex).getY());
+        }
     }
     
     private void normalizeStatuses(){
@@ -276,6 +283,12 @@ public class Visitor extends Agent {
             default:
                 break;
         }
+    }
+    
+    private void enterCycle(){
+        Entrance entrance = (Entrance) currentBuilding;
+        entrance.enterPark(this);
+        resetAction();
     }
     
     private void attractionCycle(){
