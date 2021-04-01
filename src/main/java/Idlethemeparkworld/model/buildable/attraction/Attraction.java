@@ -84,10 +84,10 @@ public abstract class Attraction extends Building implements Updatable {
     //    return currentLevel < upgrades.size();
     //}
     
-    protected void innerUpgrade(){
-        stats.upgrade(upgrades.get(currentLevel-1));
-        currentLevel++;
-    }
+    //protected void innerUpgrade(){
+    //    stats.upgrade(upgrades.get(currentLevel-1));
+    //    currentLevel++;
+    //}
     
     public ArrayList<Pair<String, String>> getAllData(){
         ArrayList<Pair<String, String>> res = new ArrayList<>();

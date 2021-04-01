@@ -7,6 +7,7 @@ import Idlethemeparkworld.model.Time;
 import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentAction;
 import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentState;
 import Idlethemeparkworld.model.buildable.Building;
+import Idlethemeparkworld.model.buildable.attraction.Attraction;
 import Idlethemeparkworld.model.buildable.food.FoodItem;
 import Idlethemeparkworld.model.buildable.food.FoodStall;
 import Idlethemeparkworld.model.buildable.infrastucture.Entrance;
@@ -91,7 +92,7 @@ public class Visitor extends Agent {
                 leaveParkCycle();
                 break;
             case RIDE:
-                //TODO
+                attractionCycle();
                 break;
             case THROWUP:
                 //TODO
@@ -118,15 +119,58 @@ public class Visitor extends Agent {
     private void leaveParkCycle(){
         switch(state){
             case IDLE:
-                state = AgentState.WANDERING;
+                state = AgentState.LEAVINGPARK;
                 break;
-            case WANDERING:
+            case LEAVINGPARK:
                 moveToRandomNeighbourPavement();
                 if(currentBuilding instanceof Entrance){
                     //leaves a new review for the entire park based on final happiness
                     //enter data into history
                     am.removeAgent(this);
                 }
+                break;
+            default:
+                break;
+        }
+    }
+    
+    private void attractionCycle(){
+        Attraction attr;
+        switch(state){
+            case IDLE:
+                state = AgentState.WANDERING;
+                break;
+            case WANDERING:
+                ArrayList<Building> bs = park.getNonPavementNeighbours(x, y);
+                bs.removeIf(b -> !(b instanceof Attraction));
+                if(bs.size() > 0){
+                    for (int i = 0; i < bs.size(); i++) {
+                        if(rand.nextBoolean()){
+                            lastEnter = new Position(x, y);
+                            setDestination(bs.get(i).getX(),bs.get(i).getY());
+                            moveTo(bs.get(i).getX(),bs.get(i).getY());
+                            ((Attraction)currentBuilding).joinQueue(this);
+                            state = AgentState.QUEUING;
+                            statusTimer = 0;
+                            break;
+                        }
+                    }
+                    if(state != AgentState.QUEUING){
+                        moveToRandomNeighbourPavement();
+                    }
+                } else {
+                    moveToRandomNeighbourPavement();
+                }
+                break;
+            case QUEUING:
+                attr = ((Attraction)currentBuilding);
+                if(statusTimer>this.patience){
+                    attr.leaveQueue(this);
+                    this.happiness -= 5;
+                    state = AgentState.IDLE;
+                }
+                break;
+            case ONRIDE:
                 break;
             default:
                 break;
@@ -281,5 +325,15 @@ public class Visitor extends Agent {
     public void pay(int amount){
         cash -= amount;
         cashSpent += amount;
+    }
+    
+    public void setOnRide(){
+        state = AgentState.ONRIDE;
+    }
+    
+    public void sendRideEvent(int rideEvent){
+        happiness += rideEvent;
+        moveTo(lastEnter.x, lastEnter.y);
+        state = AgentState.IDLE;
     }
 }

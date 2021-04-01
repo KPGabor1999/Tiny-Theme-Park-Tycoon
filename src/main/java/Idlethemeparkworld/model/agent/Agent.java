@@ -5,6 +5,7 @@ import Idlethemeparkworld.misc.utils.Position;
 import Idlethemeparkworld.model.AgentManager;
 import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.Park;
+import Idlethemeparkworld.model.Time;
 import Idlethemeparkworld.model.Updatable;
 import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentAction;
 import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentState;
@@ -77,11 +78,11 @@ public abstract class Agent implements Updatable {
         this.name = name;
         this.x = 0;
         this.y = this.x;
-        this.inPark = true;
+        this.inPark = true;  //In case we want to do pooling
         
         this.destX = 0;
         this.destY = this.destX;
-        this.patience = 50; //DNA
+        this.patience = Time.convMinuteToTick(20);
         
         this.energy = 100;
         this.happiness = startingHappiness;
@@ -180,8 +181,8 @@ public abstract class Agent implements Updatable {
     }
     
     public void moveTo(int x, int y){
-        x+=dir.x;
-        y+=dir.y;
+        x=dir.x;
+        y=dir.y;
         currentBuilding = park.getTile(x, y).getBuilding();
     }
     
