@@ -41,6 +41,8 @@ public abstract class Building extends Buildable{
     public int getValue() {
         return value;
     }
+    
+    public abstract int getRecommendedMax();
 
     public int getCurrentLevel() {
         return currentLevel;

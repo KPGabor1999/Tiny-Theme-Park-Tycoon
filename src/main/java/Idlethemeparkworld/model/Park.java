@@ -3,6 +3,7 @@ package Idlethemeparkworld.model;
 import Idlethemeparkworld.misc.pathfinding.PathFinding;
 import Idlethemeparkworld.model.buildable.Building;
 import Idlethemeparkworld.model.buildable.BuildingStatus;
+import Idlethemeparkworld.model.buildable.attraction.Attraction;
 import Idlethemeparkworld.model.buildable.food.FoodStall;
 import Idlethemeparkworld.model.buildable.infrastucture.Entrance;
 import Idlethemeparkworld.model.buildable.infrastucture.Pavement;
@@ -296,13 +297,26 @@ public class Park implements Updatable {
     }
 
     private void calculateActiveValue() {
-        /*
-        Go through each ACTIVE attraction and evaluate how much they are actually worth
-         */
+        activeParkValue = 0;
+        for (int i = 0; i < buildings.size(); i++) {
+            switch(buildings.get(i).getStatus()){
+                case RUNNING:
+                case OPEN:
+                case CLOSED:
+                    activeParkValue += buildings.get(i).getValue();
+                    break;
+                default:
+                    break;    
+            }
+        }
     }
 
     private int calculateMaxGuests() {
-        return 0;
+        int count = 5;
+        for (int i = 0; i < buildings.size(); i++) {
+            count += buildings.get(i).getRecommendedMax();
+        }
+        return count;
     }
 
     private void resetHistories() {

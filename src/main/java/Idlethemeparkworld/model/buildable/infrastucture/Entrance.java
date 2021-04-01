@@ -13,6 +13,10 @@ public class Entrance extends Infrastructure {
         this.buildingType = BuildType.ENTRANCE;
     }
     
+    public int getRecommendedMax(){
+        return 5;
+    }
+    
     public void enterPark(Visitor visitor){
         if(visitor.canPay(value)){
             visitor.pay(gm.getEntranceFee());

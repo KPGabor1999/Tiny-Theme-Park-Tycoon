@@ -14,6 +14,10 @@ public class LockedTile extends Infrastructure {
         this.buildingType = BuildType.LOCKEDTILE;
         this.unlockCost = BuildType.LOCKEDTILE.getBuildCost();
     }
+    
+    public int getRecommendedMax(){
+        return 0;
+    }
 
     public int getUnlockCost() {
         return unlockCost;

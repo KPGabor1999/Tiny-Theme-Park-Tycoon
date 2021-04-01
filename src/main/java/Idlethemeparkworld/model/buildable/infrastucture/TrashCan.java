@@ -50,4 +50,9 @@ public class TrashCan extends Infrastructure {
     public void empty(){
         filled = 0;
     }
+    
+    @Override
+    public int getRecommendedMax(){
+        return 5;
+    }
 }

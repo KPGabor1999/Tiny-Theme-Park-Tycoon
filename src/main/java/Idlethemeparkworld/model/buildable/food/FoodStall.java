@@ -30,6 +30,11 @@ public abstract class FoodStall extends Building {
         this.servingSize = new Range(2,5);
     }
     
+    @Override
+    public int getRecommendedMax(){
+        return 10/serviceTime;
+    }
+    
     public void setFoodPrice(int number){
         this.foodPrice = number;
     }
@@ -68,12 +73,13 @@ public abstract class FoodStall extends Building {
     
     public FoodItem buyFood(Visitor visitor){
         if(canService()){
-            if(visitor.canPay(foodPrice)){  //tbh theres no need for this check since we can trust visitors to only attempt buying things they can but oh well whatevs
+            if(visitor.canPay(foodPrice)){
                 visitor.pay(foodPrice);
                 gm.getFinance().earn(foodPrice);
 
                 leaveQueue(visitor);
                 serviceTimer = serviceTime;
+                System.out.println("Food bought");
                 return new FoodItem(foodQuality.getNextRandom(),drinkQuality.getNextRandom(),servingSize.getNextRandom());
             } else {
                 return new FoodItem();

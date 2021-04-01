@@ -81,6 +81,11 @@ public abstract class Attraction extends Building implements Updatable {
         return entryFee;
     }
     
+    @Override
+    public int getRecommendedMax(){
+        return capacity*2;
+    }
+    
     //protected void innerUpgrade(){
     //    stats.upgrade(upgrades.get(currentLevel-1));
     //    currentLevel++;
@@ -110,6 +115,7 @@ public abstract class Attraction extends Building implements Updatable {
             }
         }
         gm.getFinance().earn(profit);
+        System.out.println("Attraction started");
     }
     
     protected void finish(){
