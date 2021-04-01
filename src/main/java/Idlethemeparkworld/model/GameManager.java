@@ -163,12 +163,14 @@ public class GameManager {
     }
 
     private void update(int tickStep) {
-        tickCount += tickStep;
+        
 
         updateCount += tickStep * getGameSpeed();
         double actualUpdateCount = Math.floor(updateCount);
         updateCount -= actualUpdateCount;
+        //System.out.println(actualUpdateCount);
         for (int i = 0; i < actualUpdateCount; i++) {
+            tickCount++;
             park.update(tickCount);
             time.update(tickCount);
             am.update(tickCount);
@@ -183,7 +185,7 @@ public class GameManager {
         if (gameSpeed < GAME_SPEEDS.length - 1) {
             gameSpeed++;
         }
-    }
+    } 
 
     public void decreaseGameSpeed() {
         if (0 < gameSpeed) {

@@ -307,7 +307,6 @@ public class Visitor extends Agent {
     }
     
     private void kill(){
-        System.out.println("ORAORAORAORA");
         am.removeAgent(this);
     }
     
