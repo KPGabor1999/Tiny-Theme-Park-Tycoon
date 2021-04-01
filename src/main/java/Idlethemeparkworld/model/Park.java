@@ -5,23 +5,26 @@ import Idlethemeparkworld.model.buildable.Building;
 import Idlethemeparkworld.model.buildable.BuildingStatus;
 import Idlethemeparkworld.model.buildable.food.FoodStall;
 import Idlethemeparkworld.model.buildable.infrastucture.Entrance;
+import Idlethemeparkworld.model.buildable.infrastucture.Infrastructure;
 import Idlethemeparkworld.model.buildable.infrastucture.Pavement;
+import Idlethemeparkworld.model.buildable.infrastucture.Toilet;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
 public class Park implements Updatable {
-
     private static final int HISTORY_SIZE = 14;
-
-    private int rating;
+    
+    private GameManager gm;
+    
+    private double rating;
     private int parkValue;
     private int activeParkValue;
     private int[] ratingHistory;
     private int[] valueHistory;
 
-    private boolean isOpen;
+    //private boolean isOpen;
 
     private int maxGuests;
 
@@ -32,25 +35,27 @@ public class Park implements Updatable {
     private Set<Building> reachable;
 
     public Park() {
-        initializePark(10, 10);
+        initializePark(10, 10, null);
     }
 
-    public Park(int size) {
-        initializePark(size, size);
+    public Park(int size, GameManager gm) {
+        initializePark(size, size, gm);
     }
 
-    public Park(int rows, int columns) {
-        initializePark(rows, columns);
+    public Park(int rows, int columns, GameManager gm) {
+        initializePark(rows, columns, gm);
     }
 
     public Tile[][] getTiles() {
         return tiles;
     }
 
-    public void initializePark(int rows, int columns) {
+    public void initializePark(int rows, int columns, GameManager gm) {
+        this.gm = gm;
         rating = 0;
         parkValue = 0;
         activeParkValue = 0;
+        maxGuests = 0;
         resetHistories();
 
         tiles = new Tile[rows][columns];
@@ -137,8 +142,24 @@ public class Park implements Updatable {
             }
         }
     }
-
-    private ArrayList<Tile> getNeighbours(int x, int y, int height, int width) {
+    
+    public ArrayList<Building> getPavementNeighbours(int x, int y){
+        ArrayList<Building> res = new ArrayList<>();
+        ArrayList<Tile> neighbours = getNeighbours(x,y,1,1);
+        neighbours.removeIf(n -> !(n.getBuilding() instanceof Pavement || n.getBuilding() instanceof Entrance));
+        neighbours.forEach(n -> res.add(n.getBuilding()));
+        return res;
+    }
+    
+    public ArrayList<Building> getNonPavementNeighbours(int x, int y){
+        ArrayList<Building> res = new ArrayList<>();
+        ArrayList<Tile> neighbours = getNeighbours(x,y,1,1);
+        neighbours.removeIf(n -> (n.getBuilding() instanceof Pavement || n.getBuilding() instanceof Entrance));
+        neighbours.forEach(n -> res.add(n.getBuilding()));
+        return res;
+    }
+    
+    private ArrayList<Tile> getNeighbours(int x, int y, int height, int width){
         ArrayList<Tile> neighbours = new ArrayList<>();
         addNeighbourRange(neighbours, x, y - 1, width, true); //top neighbours
         addNeighbourRange(neighbours, x - 1, y, height, false); //left neighbours
@@ -160,9 +181,9 @@ public class Park implements Updatable {
             Building newBuilding = null;
             try {
                 Class buildingClass = BuildType.GetClass(type);
-                Class[] paramType = {int.class, int.class};
+                Class[] paramType = {int.class, int.class, GameManager.class};
                 Constructor cons = buildingClass.getConstructor(paramType);
-                newBuilding = (Building) cons.newInstance(x, y);
+                newBuilding = (Building) cons.newInstance(x, y, gm);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -226,7 +247,7 @@ public class Park implements Updatable {
         updateBuildings();
     }
 
-    public boolean isOpen() {
+    /*public boolean isOpen() {
         return isOpen;
     }
 
@@ -236,57 +257,88 @@ public class Park implements Updatable {
 
     public void closePark() {
         isOpen = false;
-    }
+    }*/
 
     //Used for debugging
     public void setRating(int value) {
         rating = value;
     }
 
-    public int getRating() {
+    public double getRating() {
+        calculateParkRating();
         return rating;
     }
 
     public int getValue() {
+        calculateValue();
         return parkValue;
     }
 
     public int getActiveValue() {
+        calculateActiveValue();
         return activeParkValue;
     }
 
     public int getMaxGuest() {
+        calculateMaxGuests();
         return maxGuests;
     }
 
+    @Override
     public void update(long tickCount) {
-
+        buildings.forEach(b -> b.update(tickCount));
     }
 
     private void calculateParkRating() {
-        /*
-        Start out with a base number
-        1. Guest happiness and other status calculations
-        2. Attraction ratings
-        3. Substract points for environment(littering and toilet higiene)
-         */
+        rating = 9;
+        double sum = 0;
+        double negative = 0;
+        for (int i = 0; i < buildings.size(); i++) {
+            //sum += buildings.get(i).getRating();
+            if(buildings.get(i) instanceof Toilet){
+                negative += ((Toilet)buildings.get(i)).getCleanliness();
+            } else if(buildings.get(i) instanceof Infrastructure){
+                negative += ((Infrastructure)buildings.get(i)).checkLittering();
+            } 
+        }
+        //rating = sum/buildings.size();
+        rating = (rating + gm.getAgentManager().getVisitorHappinessRating()) / 2;
+        rating -= 3;
+        rating += Math.min(gm.getAgentManager().getVisitorCount()/200.0, 3.0);
+        negative *= 0.05;
+        negative = Math.min(negative, 2);
+        rating -= negative;
+        rating = Math.min(rating, 10);
     }
 
     private void calculateValue() {
-        /*
-        Go through each attraction and evaluate them
-        Go through each visitor and evaluate them
-         */
+        parkValue = 0;
+        for (int i = 0; i < buildings.size(); i++) {
+            parkValue += buildings.get(i).getValue();
+        }
+        parkValue += gm.getAgentManager().getVisitorValue();
     }
 
     private void calculateActiveValue() {
-        /*
-        Go through each ACTIVE attraction and evaluate how much they are actually worth
-         */
+        activeParkValue = 0;
+        for (int i = 0; i < buildings.size(); i++) {
+            switch(buildings.get(i).getStatus()){
+                case RUNNING:
+                case OPEN:
+                case CLOSED:
+                    activeParkValue += buildings.get(i).getValue();
+                    break;
+                default:
+                    break;    
+            }
+        }
     }
 
-    private int calculateMaxGuests() {
-        return 0;
+    private void calculateMaxGuests() {
+        maxGuests = 0;
+        for (int i = 0; i < buildings.size(); i++) {
+            maxGuests += buildings.get(i).getRecommendedMax();
+        }
     }
 
     private void resetHistories() {

@@ -1,27 +1,15 @@
 package Idlethemeparkworld.model.agent;
 
+import Idlethemeparkworld.model.buildable.Building;
+import java.util.Objects;
+
 public class AgentInnerLogic {
-    public class AgentThought {
-        public void AgentThought(){
-            this.thoughtType = AgentThoughts.NONE;
-            this.subject = 0;
-            this.timeElapsed = 0;
-        }
-        
-        public AgentThoughts thoughtType;
-        public int subject;
-        public int timeElapsed;
-    }
-    
     public enum AgentThoughts {
         CANTAFFORD,   // "I can't afford"
-        LOWCASH,         // "I'm running out of cash!"
+        LOWMONEY,         // "I'm running out of cash!"
         NOMONEY,       // "I've spent all my money"
-        SICK,             // "I feel sick"
-        EXTREMELYSICK,         // "I feel very sick"
+        //SICK,             // "I feel sick"
         WANTTHRILL,    // "I want to go on something more thrilling than X"
-        TOOINTENSE,          // "X looks too intense for me"
-        NOTFINISHED,   // "I haven't finished my X yet"
         BADVALUE,         // "I'm not paying that much to go on X"
         GOODVALUE,           // "X is really good value"
         
@@ -39,81 +27,62 @@ public class AgentInnerLogic {
         TOOMUCHLITTER,       // "The litter here is really bad"
         CLEAN,       // "This park is very clean and tidy"
         
-        CANTEXIT,    // "I can't find the exit"
-        GETOUT,          // "I want to get off X"
-        NOTSAFE,         // "I'm not going on X - it isn't safe"
         CROWDED,         // "It's too crowded here"
-        VANDALISM,       // "The vandalism here is really bad"
         //Scenery,         // "Great scenery!"
         
         MAP,
         
-        DRINK,
+        /*DRINK,
         BURGER,
         CHIPS,
         ICECREAM,
         SHAVEDICE,
         SANDWICH,
         FISHCHIP,
-        HOTDOG,
+        HOTDOG,*/
 
         WOW, // "Wow!"
-        SUSPICIOUS,     // "I have the strangest feeling someone is watching me"
-        HELP,               // "Help! Put me down!"
-        
-        NEWRIDE,
-        NICERIDE,            // "Wow! A new ride being built!"
 
         NONE;
     }
     
-    public enum AgentState{
+    public enum AgentState {
         IDLE,
         WALKING,
+        WANDERING,
         QUEUING,
-        ENTERINGBUILDING,
         ONRIDE,
-        LEAVINGBUILDING,
-        
-        HELPING,
+        BUYING,
+        EATING,
         SITTING,
-        SWEEPING,
+        SHITTING,
+        
+        FLOATING,
+        
         FIXING,
         CLEANING,
         
-        PATROLLING,
-        PURSUING,
-        INVESTIGATING,
-        
-        HIDING,
-        STEALING,
-        
         ENTERINGPARK,
-        LEAVINGPARK,
-
-        BUYING,
-        WATCHING,
-        REPORTING
+        LEAVINGPARK
     }
     
     public enum AgentActionType {
-        IDLE,
-        WATCH,
         EAT,
         SIT,
-        
-        WOW,
+        WANDER,
+        RIDE,
+        TOILET,
         THROWUP,
+
+        ENTERPARK,
+        LEAVEPARK,
         
-        STAFFANSWER,
-        STAFFCHECK,
         STAFFREPAIR,
-        STAFFSWEEP,
         STAFFCLEAN,
         
-        READMAP,
-        TAKEPHOTO,
-        CLAP,
+        //READMAP,
+        //TAKEPHOTO,
+        //CLAP,
 
         NONE
     }

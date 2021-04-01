@@ -38,13 +38,14 @@ public class AgentManager implements Updatable {
     };
     private static final int AGENT_UPDATE_TICK = 12;
     
-    private int visitorProbability;
+    private double visitorProbability;
     private Park park;
     private GameManager gm;
     
     private Random rand;
     
     private ArrayList<Visitor> visitors;
+    private Visitor highlighted;
     
     public AgentManager(Park park, GameManager gm){
         this.gm = gm;
@@ -52,6 +53,12 @@ public class AgentManager implements Updatable {
         this.visitorProbability = 0;
         this.rand = new Random();
         this.visitors = new ArrayList<>();
+        spawnVisitor();
+        highlighted = visitors.get(0);
+    }
+    
+    public Visitor getHighlightedVisitor(){
+        return highlighted;
     }
     
     public void spawnVisitor(){
@@ -66,14 +73,27 @@ public class AgentManager implements Updatable {
         return rand.nextInt(50)+35;
     }
     
-    //Might need to make these penalties more gradual rather than the current threshold based one
+    public double getVisitorHappinessRating(){
+        double res = 0;
+        for (int i = 0; i < visitors.size(); i++) {
+            res += visitors.get(i).getHappiness();
+        }
+        return res/visitors.size()/10;
+    }
+    
+    public int getVisitorValue(){
+        int res = 0;
+        for (int i = 0; i < visitors.size(); i++) {
+            res += visitors.get(i).getCashSpent();
+        }
+        return res;
+    }
+    
     public void updateVisitorProbability(){
-        int prob = 50;
+        double prob = park.getRating()*5;
         
-        int rating = park.getRating();
-        prob += rating > 100 ? 100 : rating;
-        
-        int visitorCount = 0;
+        int visitorCount = visitors.size();
+        //System.out.println(visitorCount + " - " + park.getMaxGuest());
         if(visitorCount > park.getMaxGuest()){
             if(visitorCount > park.getMaxGuest()*1.2){
                 prob = 0;
@@ -83,11 +103,12 @@ public class AgentManager implements Updatable {
         }
         
         int entFee = gm.getEntranceFee();
-        if(entFee > park.getActiveValue()){
+        if(entFee > park.getActiveValue()/10000){
             prob *= 0.4;
         }
         
         visitorProbability = prob;
+        //System.out.println(visitorProbability);
     }
     
     public void removeAgent(Agent agent){
@@ -96,8 +117,8 @@ public class AgentManager implements Updatable {
         }
     }
     
-    public void spawnUpdate(){
-        if(rand.nextInt(1000)<visitorProbability){
+    private void spawnUpdate(){ 
+        if(rand.nextInt(100)<visitorProbability){
             spawnVisitor();
         }
     }
@@ -110,10 +131,20 @@ public class AgentManager implements Updatable {
         return visitors.size();
     }
     
+    public ArrayList<Visitor> getVisitors(){
+        return visitors;
+    }
+    
+    @Override
     public void update(long tickCount){
+        //System.out.println(tickCount);
         spawnUpdate();
         for (int i = 0; i < visitors.size(); i++) {
             visitors.get(i).update(tickCount);
+        }
+        if(tickCount%24==0){
+            updateVisitorProbability();
+            gm.getBoard().repaint();
         }
     }
 }

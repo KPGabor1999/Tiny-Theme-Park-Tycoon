@@ -3,37 +3,77 @@ package Idlethemeparkworld.model.buildable.infrastucture;
 import Idlethemeparkworld.model.BuildType;
 import java.util.ArrayList;
 import Idlethemeparkworld.misc.utils.Pair;
+import Idlethemeparkworld.model.GameManager;
+import Idlethemeparkworld.model.agent.Visitor;
+import java.util.LinkedList;
 
 public class Toilet extends Infrastructure {
-    private int cleanliness;
+    protected LinkedList<Visitor> waitingLine;
+    protected int occupied;
+    protected int capacity;
+    private double cleanliness;
     
-    public Toilet(int xLocation, int yLocation){
+    public Toilet(int x, int y, GameManager gm) {
+        super(gm);
         this.maxLevel = 0;
-        this.currentLevel = 1;
-        this.x = xLocation;
-        this.y = yLocation;
+        this.x = x;
+        this.y = y;
         this.buildingType = BuildType.TOILET;
-        this.capacity = 10;
+        this.waitingLine = new LinkedList<>();
         this.occupied = 0;
+        this.capacity = 10;
         this.cleanliness = 100;
         this.value = BuildType.TOILET.getBuildCost();
     }
+    
+    @Override
+    public int getRecommendedMax(){
+        return capacity;
+    }
 
-    public int getCleanliness() {
+    public double getCleanliness() {
         return cleanliness;
     }
     
     public ArrayList<Pair<String, String>> getAllData(){
         ArrayList<Pair<String, String>> res = new ArrayList<>();
         res.add(new Pair<>("Capacity: ", occupied + "/" + capacity));
-        res.add(new Pair<>("Cleanliness: ", Integer.toString(cleanliness)));
+        res.add(new Pair<>("Cleanliness: ", String.format("%.2f", cleanliness)));
         return res;
-    }   
-        
-    @Override
-    public void level2Upgrade(){}       //They're not meant to be upgradeable but they could be.
+    }
     
-    @Override
-    public void level3Upgrade(){}
-
+    //Methods for managing visitors:
+        
+    public void joinLine(Visitor visitor){
+        waitingLine.add(visitor);
+    }
+    
+    public boolean isFirstInQueue(Visitor visitor){
+        return waitingLine.peek().equals(visitor);
+    }
+    
+    public void leaveLine(Visitor visitor){
+        waitingLine.remove(visitor);
+    }
+    
+    public boolean isThereEmptyStool(){
+        return occupied<capacity;
+    }
+    
+    public void enter(Visitor visitor){
+        waitingLine.poll();
+        occupied++;
+    }
+    
+    public void exit(){
+        occupied--;
+    }
+    
+    public void decreaseHygiene(double amount){
+        cleanliness-=amount;
+    }
+    
+    public void clean(){
+        this.cleanliness = 100;
+    }
 }

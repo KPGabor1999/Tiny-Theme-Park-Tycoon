@@ -1,6 +1,7 @@
 package Idlethemeparkworld.model;
 
 import Idlethemeparkworld.model.administration.Finance;
+import Idlethemeparkworld.view.Board;
 
 public class GameManager {
 
@@ -28,6 +29,8 @@ public class GameManager {
     private Park park;
     private Time time;
     private Finance finance;
+    private AgentManager am;
+    private Board board;
 
     public GameManager() {
         this.updateCycleRunning = false;
@@ -43,11 +46,21 @@ public class GameManager {
         this.hamburgerPrice = 15;
         this.fishChipsPrice = 15;
 
-        this.park = new Park(10, 15);
+        this.park = new Park(10, 15, this);
         this.time = new Time();
         this.finance = new Finance(100000);
+        this.am = new AgentManager(park, this);
+        this.board = null;
     }
 
+    public void setBoard(Board board){
+        this.board = board;
+    }
+    
+    public Board getBoard(){
+        return board;
+    }
+    
     public Park getPark() {
         return park;
     }
@@ -58,6 +71,10 @@ public class GameManager {
 
     public Finance getFinance() {
         return finance;
+    }
+    
+    public AgentManager getAgentManager(){
+        return am;
     }
 
     public int getEntranceFee() {
@@ -109,7 +126,7 @@ public class GameManager {
     }
 
     private void initAllComponents() {
-        park.initializePark(10, 15);
+        park.initializePark(10, 15, this);
         time.reset();
         finance.init();
     }
@@ -145,18 +162,18 @@ public class GameManager {
         updateCycleRunning = false;
     }
 
-    // Might need to separate ingame ticks and reallife ticks depending on what we plan to do
     private void update(int tickStep) {
-        tickCount += tickStep;
+        
 
         updateCount += tickStep * getGameSpeed();
         double actualUpdateCount = Math.floor(updateCount);
         updateCount -= actualUpdateCount;
-        //System.out.println(tickStep+" - "+actualUpdateCount+" - "+updateCount);
-        //System.out.println(tickCount);
+        //System.out.println(actualUpdateCount);
         for (int i = 0; i < actualUpdateCount; i++) {
+            tickCount++;
             park.update(tickCount);
             time.update(tickCount);
+            am.update(tickCount);
         }
     }
 
@@ -168,7 +185,7 @@ public class GameManager {
         if (gameSpeed < GAME_SPEEDS.length - 1) {
             gameSpeed++;
         }
-    }
+    } 
 
     public void decreaseGameSpeed() {
         if (0 < gameSpeed) {

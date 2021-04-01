@@ -1,54 +1,46 @@
 package Idlethemeparkworld.model.agent;
 
+import Idlethemeparkworld.misc.utils.Direction;
+import Idlethemeparkworld.misc.utils.Position;
 import Idlethemeparkworld.model.AgentManager;
 import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.Park;
+import Idlethemeparkworld.model.Time;
 import Idlethemeparkworld.model.Updatable;
 import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentState;
-import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentThought;
 import Idlethemeparkworld.model.agent.AgentTypes.AgentType;
 import Idlethemeparkworld.model.agent.AgentTypes.StaffType;
 import Idlethemeparkworld.model.buildable.Building;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.PriorityQueue;
 import java.util.Random;
 
 public abstract class Agent implements Updatable {
-    private static final int AGENT_MAX_THOUGHTS = 5;
-    private static final int AGENT_THOUGHT_ITEM_NONE = 255;
     private static final int AGENT_HISTORY_LENGTH = 10;
 
-    private static final int AGENT_HUNGER_WARNING_THRESHOLD = 25;
-    private static final int AGENT_THIRST_WARNING_THRESHOLD = 25;
-    private static final int AGENT_TOILET_WARNING_THRESHOLD = 28;
-    private static final int AGENT_LITTER_WARNING_THRESHOLD = 23;
-    private static final int AGENT_DISGUST_WARNING_THRESHOLD = 22;
-    private static final int AGENT_VANDALISM_WARNING_THRESHOLD = 15;
-    private static final int AGENT_NOEXIT_WARNING_THRESHOLD = 8;
-    private static final int AGENT_LOST_WARNING_THRESHOLD = 8;
+    protected static final int AGENT_HUNGER_WARNING_THRESHOLD = 35;
+    protected static final int AGENT_THIRST_WARNING_THRESHOLD = 35;
+    protected static final int AGENT_TOILET_WARNING_THRESHOLD = 35;
+    protected static final int AGENT_ENERGY_WARNING_THRESHOLD = 25;
+    protected static final int AGENT_LOST_WARNING_THRESHOLD = 8;
 
-    private static final int AGENT_MAX_HAPPINESS = 100;
-    private static final int AGENT_MIN_ENERGY = 10;
-    private static final int AGENT_MAX_ENERGY = 100;
-    private static final int AGENT_MAX_HUNGER = 100;
-    private static final int AGENT_MAX_THIRST = 100;
-    private static final int AGENT_MAX_TOILET = 100;
-    private static final int AGENT_MAX_NAUSEA = 100;
+    protected static final int AGENT_STATUS_MAXIMUM = 100;
     
     AgentManager am;
     Park park;
     
     String name;
     int x,y;
+    Direction dir;
     boolean inPark;
     
     boolean manualMovable;
-    AgentState state;
     AgentType type;
     StaffType staffType;
     
     int destX, destY;
     int patience;
-    int weight;
     
     int energy;
     int happiness;
@@ -57,9 +49,11 @@ public abstract class Agent implements Updatable {
     int thirst;
     int toilet;
     int angriness;
-    Random randAttraction;
-
-    AgentThought[] thoughts;
+    Random rand;
+    
+    ArrayList<AgentThought> thoughts;
+    AgentState state;
+    LinkedList<AgentAction> actionQueue;
     
     BuildType[] visitHistory;
 
@@ -72,12 +66,11 @@ public abstract class Agent implements Updatable {
         this.name = name;
         this.x = 0;
         this.y = this.x;
-        this.inPark = true;
+        this.inPark = true;  //In case we want to do pooling
         
         this.destX = 0;
         this.destY = this.destX;
-        this.patience = 50; //DNA
-        this.weight = 60; //DNA
+        this.patience = Time.convMinuteToTick(20);
         
         this.energy = 100;
         this.happiness = startingHappiness;
@@ -86,17 +79,14 @@ public abstract class Agent implements Updatable {
         this.thirst = 100;
         this.toilet = 100;
         this.angriness = 0;
-        this.randAttraction = new Random();
+        this.rand = new Random();
         
-        this.thoughts = new AgentThought[AGENT_MAX_THOUGHTS];
+        this.thoughts = new ArrayList<>();
+        this.state = AgentState.ENTERINGPARK;
+        this.actionQueue = new LinkedList<>();
+        
         this.visitHistory = new BuildType[AGENT_HISTORY_LENGTH];
         this.currentBuilding = park.getTile(x, y).getBuilding();
-    }
-    
-    public void chooseAttraction(ArrayList<Building> buildings){
-        if (!buildings.isEmpty()) {
-            int chosenAttractionID = randAttraction.nextInt(buildings.size());
-        }
     }
 
     public String getName() {
@@ -114,7 +104,15 @@ public abstract class Agent implements Updatable {
     public StaffType getStaffType() {
         return staffType;
     }
+    
+    public int getX(){
+        return x;
+    }
 
+    public int getY(){
+        return y;
+    }
+    
     public int getPatience() {
         return patience;
     }
@@ -146,10 +144,6 @@ public abstract class Agent implements Updatable {
     public int getAngriness() {
         return angriness;
     }
-
-    public int getWeight() {
-        return weight;
-    }
     
     public void setState(AgentState newState){
         this.state = newState;
@@ -159,6 +153,7 @@ public abstract class Agent implements Updatable {
         state = AgentState.IDLE;
     }
     
+    //For now no pathfinding needed
     public void setPath(){
         
     }
@@ -167,18 +162,14 @@ public abstract class Agent implements Updatable {
         
     }
     
-    public void joinQueue(){
-        
+    public void moveTo(Position p){
+        moveTo(p.x, p.y);
     }
     
-    public void exitQueue(){
-        
-    }
-    
-    public void addNewThought(AgentThought thought){
-        if(thoughts.length < AGENT_MAX_THOUGHTS){
-            
-        }
+    public void moveTo(int x, int y){
+        this.x=x;
+        this.y=y;
+        currentBuilding = park.getTile(x, y).getBuilding();
     }
     
     public void setDestination(int x, int y){
@@ -202,9 +193,25 @@ public abstract class Agent implements Updatable {
         currentBuilding = park.getTile(x, y).getBuilding();
     }
     
-    
-    
     @Override
     public abstract void update(long tickCount);
-    protected abstract void performAction();
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Agent{name=").append(name);
+        sb.append(", x=").append(x);
+        sb.append(", y=").append(y);
+        sb.append(", destX=").append(destX);
+        sb.append(", destY=").append(destY);
+        sb.append(", energy=").append(energy);
+        sb.append(", happiness=").append(happiness);
+        sb.append(", hunger=").append(hunger);
+        sb.append(", thirst=").append(thirst);
+        sb.append(", toilet=").append(toilet);
+        sb.append(", thoughts=").append(thoughts);
+        sb.append(", state=").append(state);
+        sb.append(", actionQueue=").append(actionQueue);
+        return sb.toString();
+    }
 }

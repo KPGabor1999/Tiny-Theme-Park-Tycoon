@@ -34,4 +34,12 @@ public class Range {
         low+=a;
         high+=b;
     }
+
+    public int getLow() {
+        return low;
+    }
+
+    public int getHigh() {
+        return high;
+    }
 }

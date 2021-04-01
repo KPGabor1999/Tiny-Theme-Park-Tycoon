@@ -3,27 +3,25 @@ package Idlethemeparkworld.model.buildable.infrastucture;
 import Idlethemeparkworld.model.buildable.Building;
 import java.util.ArrayList;
 import Idlethemeparkworld.misc.utils.Pair;
+import Idlethemeparkworld.model.GameManager;
 
 public abstract class Infrastructure extends Building {
-    protected int capacity;
-    protected int occupied;
-    protected int duration;
-    //protected int rubbish;
+    protected int littering;
 
-    public int getCapacity() {
-        return capacity;
+    public Infrastructure(GameManager gm) {
+        super(gm);
     }
-
-    public int getOccupied() {
-        return occupied;
+    
+    public int checkLittering(){
+        return littering;
     }
-
-    public int getDuration() {
-        return duration;
+    
+    public void litter(int amount){
+        littering += amount;
     }
     
     public void clean(){
-        
+        littering = 0;
     }
     
     public ArrayList<Pair<String, String>> getAllData(){
