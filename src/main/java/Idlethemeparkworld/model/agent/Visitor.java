@@ -57,7 +57,7 @@ public class Visitor extends Agent {
             updateCurrentAction();
             performAction();
             normalizeStatuses();
-            System.out.println(toString());
+            //System.out.println(toString());
         }
     }
     

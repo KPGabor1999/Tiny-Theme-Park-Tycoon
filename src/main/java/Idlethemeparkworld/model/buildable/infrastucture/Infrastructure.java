@@ -6,22 +6,22 @@ import Idlethemeparkworld.misc.utils.Pair;
 import Idlethemeparkworld.model.GameManager;
 
 public abstract class Infrastructure extends Building {
-    protected int rubbish;
+    protected int littering;
 
     public Infrastructure(GameManager gm) {
         super(gm);
     }
     
     public int checkLittering(){
-        return rubbish;
+        return littering;
     }
     
     public void litter(int amount){
-        rubbish += amount;
+        littering += amount;
     }
     
     public void clean(){
-        rubbish = 0;
+        littering = 0;
     }
     
     public ArrayList<Pair<String, String>> getAllData(){

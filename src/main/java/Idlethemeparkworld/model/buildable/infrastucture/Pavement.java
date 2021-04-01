@@ -14,6 +14,7 @@ public class Pavement extends Infrastructure {
         this.value = BuildType.PAVEMENT.getBuildCost();
     }
     
+    @Override
     public int getRecommendedMax(){
         return 10;
     }

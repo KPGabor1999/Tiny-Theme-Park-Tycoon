@@ -13,6 +13,7 @@ public class Entrance extends Infrastructure {
         this.buildingType = BuildType.ENTRANCE;
     }
     
+    @Override
     public int getRecommendedMax(){
         return 5;
     }

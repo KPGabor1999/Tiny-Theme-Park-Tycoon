@@ -38,7 +38,7 @@ public class AgentManager implements Updatable {
     };
     private static final int AGENT_UPDATE_TICK = 12;
     
-    private int visitorProbability;
+    private double visitorProbability;
     private Park park;
     private GameManager gm;
     
@@ -73,14 +73,26 @@ public class AgentManager implements Updatable {
         return rand.nextInt(50)+35;
     }
     
-    //Might need to make these penalties more gradual rather than the current threshold based one
+    public double getVisitorHappinessRating(){
+        double res = 0;
+        for (int i = 0; i < visitors.size(); i++) {
+            res += visitors.get(i).getHappiness();
+        }
+        return res/visitors.size()/10;
+    }
+    
+    public int getVisitorValue(){
+        int res = 0;
+        for (int i = 0; i < visitors.size(); i++) {
+            res += visitors.get(i).getCashSpent();
+        }
+        return res;
+    }
+    
     public void updateVisitorProbability(){
-        int prob = 50;
+        double prob = park.getRating();
         
-        int rating = park.getRating();
-        prob += rating > 100 ? 100 : rating;
-        
-        int visitorCount = 0;
+        int visitorCount = visitors.size();
         if(visitorCount > park.getMaxGuest()){
             if(visitorCount > park.getMaxGuest()*1.2){
                 prob = 0;
@@ -90,7 +102,7 @@ public class AgentManager implements Updatable {
         }
         
         int entFee = gm.getEntranceFee();
-        if(entFee > park.getActiveValue()){
+        if(entFee > park.getActiveValue()/10000){
             prob *= 0.4;
         }
         
@@ -104,7 +116,7 @@ public class AgentManager implements Updatable {
     }
     
     private void spawnUpdate(){
-        if(rand.nextInt(1000)<visitorProbability){
+        if(rand.nextInt(100)<visitorProbability){
             spawnVisitor();
         }
     }
@@ -123,11 +135,12 @@ public class AgentManager implements Updatable {
     
     @Override
     public void update(long tickCount){
-        //spawnUpdate();
+        spawnUpdate();
         for (int i = 0; i < visitors.size(); i++) {
             visitors.get(i).update(tickCount);
         }
         if(tickCount%24==0){
+            updateVisitorProbability();
             gm.getBoard().repaint();
         }
     }

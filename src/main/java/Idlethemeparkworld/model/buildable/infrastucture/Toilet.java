@@ -26,6 +26,7 @@ public class Toilet extends Infrastructure {
         this.value = BuildType.TOILET.getBuildCost();
     }
     
+    @Override
     public int getRecommendedMax(){
         return capacity;
     }
