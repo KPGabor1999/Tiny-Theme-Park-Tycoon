@@ -4,8 +4,9 @@ import Idlethemeparkworld.misc.utils.Position;
 import Idlethemeparkworld.model.AgentManager;
 import Idlethemeparkworld.model.Park;
 import Idlethemeparkworld.model.Time;
-import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentAction;
+import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentActionType;
 import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentState;
+import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentThoughts;
 import Idlethemeparkworld.model.buildable.Building;
 import Idlethemeparkworld.model.buildable.attraction.Attraction;
 import Idlethemeparkworld.model.buildable.food.FoodItem;
@@ -18,7 +19,6 @@ import java.util.ArrayList;
 public class Visitor extends Agent {
     private int cash;
     private int cashSpent;
-    private int entryTime;
     private AgentAction currentAction;
     
     private Position lastEnter;
@@ -35,11 +35,128 @@ public class Visitor extends Agent {
     public void update(long tickCount){
         statusTimer++;
         if(tickCount % 24 == 0){
+            generateThoughts(tickCount);
+            updateThought(tickCount);
+            updateState();
             performAction();
+            normalizeStatuses();
         }
     }
     
-    protected void updateState(){
+    private void updateThought(long tickCount){
+        for (int i = 0; i < thoughts.size(); i++) {
+            if(tickCount - thoughts.get(i).timeCreated > Time.convMinuteToTick(5)){
+                thoughts.remove(i);
+            }
+        }
+    }
+    
+    private void thoughtToHappiness(AgentThoughts thoughtType){
+        switch(thoughtType){
+            case CANTAFFORD:
+            case BADVALUE:
+            case LOST:
+            case LONGQUEUE:
+            case HUNGRY:
+            case THIRSTY:
+            case TIRED:
+            case TOOMUCHLITTER:
+            case CROWDED:
+                happiness--;
+                break;
+            case WOW:
+            case GOODVALUE:
+            case FEELINGGREAT:
+            case NOTHUNGRY:
+            case NOTTHIRSTY:
+            case CLEAN:
+                happiness++;
+                break;
+            default: break;
+        }
+    }
+    
+    private void addAction(AgentAction action){
+        if(!actionQueue.contains(action)){
+            actionQueue.add(action);
+        }
+    }
+    
+    private void thoughtToAction(AgentThoughts thoughtType){
+        switch(thoughtType){
+            case NOMONEY:
+                actionQueue.clear();
+                addAction(new AgentAction(AgentActionType.LEAVEPARK,null));
+                break;
+            case WANTTHRILL:
+                addAction(new AgentAction(AgentActionType.RIDE,null));
+                break;
+            case GOHOME:
+                actionQueue.clear();
+                addAction(new AgentAction(AgentActionType.LEAVEPARK,null));
+                break;
+            case TIRED:
+                addAction(new AgentAction(AgentActionType.SIT,null));
+                break;
+            case HUNGRY:
+                addAction(new AgentAction(AgentActionType.EAT,null));
+                break;
+            case THIRSTY:
+                addAction(new AgentAction(AgentActionType.EAT,null));
+                break;
+            case TOILET:
+                addAction(new AgentAction(AgentActionType.TOILET,null));
+                break;
+            case CROWDED:
+                addAction(new AgentAction(AgentActionType.WANDER,null));
+                break;
+            default:
+                break;
+        }
+    }
+        
+    private void insertThought(AgentThoughts thoughtType, Building subject,long tickCount){
+        AgentThought thought = new AgentThought(thoughtType,subject,tickCount);
+        if(!thoughts.contains(thought)){
+            thoughts.add(thought);
+            thoughtToHappiness(thoughtType);
+            thoughtToAction(thoughtType);
+        }
+    }
+    
+    private void statusToThought(int status, int lowerThreshold, long tickCount, AgentThoughts positive, AgentThoughts negative, double leaveHappinessMultiplier){
+        if(status < lowerThreshold){
+            if(status <= 0){
+                happiness *= leaveHappinessMultiplier;
+                insertThought(AgentThoughts.GOHOME,null,tickCount);
+            } else {
+                insertThought(negative,null,tickCount);
+            }
+        } else if(95 < status){
+            insertThought(positive,null,tickCount);
+        }
+    }
+    
+    private void generateThoughts(long tickCount){
+        if(cash < 50){
+            if(cash <= 0){
+                insertThought(AgentThoughts.NOMONEY,null,tickCount);
+            } else {
+                insertThought(AgentThoughts.LOWMONEY,null,tickCount);
+            }
+        }
+        statusToThought(hunger,AGENT_HUNGER_WARNING_THRESHOLD,tickCount,AgentThoughts.NOTHUNGRY, AgentThoughts.HUNGRY, 0.5);
+        statusToThought(thirst,AGENT_THIRST_WARNING_THRESHOLD,tickCount,AgentThoughts.NOTTHIRSTY, AgentThoughts.THIRSTY, 0.6);
+        statusToThought(energy,AGENT_ENERGY_WARNING_THRESHOLD,tickCount,AgentThoughts.FEELINGGREAT, AgentThoughts.TIRED, 0.5);
+        if(toilet < AGENT_TOILET_WARNING_THRESHOLD){
+            insertThought(AgentThoughts.TOILET,null,tickCount);
+        }
+        if(happiness < 75){
+            insertThought(AgentThoughts.WANTTHRILL,null,tickCount);
+        }
+    }
+    
+    private void updateState(){
         switch(state){
             case IDLE:
                 energy += 0.05;
@@ -74,7 +191,7 @@ public class Visitor extends Agent {
         toilet-=0.01;
     }
         
-    protected void performAction(){
+    private void performAction(){
         switch (currentAction.getAction()){
             case EAT:
                 eatCycle();
@@ -108,6 +225,14 @@ public class Visitor extends Agent {
         ArrayList<Building> paves = park.getPavementNeighbours(x, y);
         int nextIndex = rand.nextInt(paves.size());
         moveTo(paves.get(nextIndex).getX(),paves.get(nextIndex).getY());
+    }
+    
+    private void normalizeStatuses(){
+        happiness = Math.min(AGENT_STATUS_MAXIMUM, Math.max(0, happiness));
+        energy = Math.min(AGENT_STATUS_MAXIMUM, Math.max(0, energy));
+        hunger = Math.min(AGENT_STATUS_MAXIMUM, Math.max(0, hunger));
+        thirst = Math.min(AGENT_STATUS_MAXIMUM, Math.max(0, thirst));
+        toilet = Math.min(AGENT_STATUS_MAXIMUM, Math.max(0, toilet));
     }
     
     private void resetAction(){
@@ -335,5 +460,9 @@ public class Visitor extends Agent {
         happiness += rideEvent;
         moveTo(lastEnter.x, lastEnter.y);
         state = AgentState.IDLE;
+    }
+    
+    public int getCashSpent(){
+        return cashSpent;
     }
 }

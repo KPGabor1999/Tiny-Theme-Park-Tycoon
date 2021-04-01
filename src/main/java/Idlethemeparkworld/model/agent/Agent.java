@@ -7,9 +7,7 @@ import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.Park;
 import Idlethemeparkworld.model.Time;
 import Idlethemeparkworld.model.Updatable;
-import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentAction;
 import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentState;
-import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentThought;
 import Idlethemeparkworld.model.agent.AgentTypes.AgentType;
 import Idlethemeparkworld.model.agent.AgentTypes.StaffType;
 import Idlethemeparkworld.model.buildable.Building;
@@ -18,25 +16,15 @@ import java.util.PriorityQueue;
 import java.util.Random;
 
 public abstract class Agent implements Updatable {
-    private static final int AGENT_MAX_THOUGHTS = 5;
     private static final int AGENT_HISTORY_LENGTH = 10;
 
-    private static final int AGENT_HUNGER_WARNING_THRESHOLD = 25;
-    private static final int AGENT_THIRST_WARNING_THRESHOLD = 25;
-    private static final int AGENT_TOILET_WARNING_THRESHOLD = 28;
-    private static final int AGENT_LITTER_WARNING_THRESHOLD = 23;
-    private static final int AGENT_DISGUST_WARNING_THRESHOLD = 22;
-    private static final int AGENT_VANDALISM_WARNING_THRESHOLD = 15;
-    private static final int AGENT_NOEXIT_WARNING_THRESHOLD = 8;
-    private static final int AGENT_LOST_WARNING_THRESHOLD = 8;
+    protected static final int AGENT_HUNGER_WARNING_THRESHOLD = 35;
+    protected static final int AGENT_THIRST_WARNING_THRESHOLD = 35;
+    protected static final int AGENT_TOILET_WARNING_THRESHOLD = 35;
+    protected static final int AGENT_ENERGY_WARNING_THRESHOLD = 25;
+    protected static final int AGENT_LOST_WARNING_THRESHOLD = 8;
 
-    private static final int AGENT_MAX_HAPPINESS = 100;
-    private static final int AGENT_MIN_ENERGY = 10;
-    private static final int AGENT_MAX_ENERGY = 100;
-    private static final int AGENT_MAX_HUNGER = 100;
-    private static final int AGENT_MAX_THIRST = 100;
-    private static final int AGENT_MAX_TOILET = 100;
-    private static final int AGENT_MAX_NAUSEA = 100;
+    protected static final int AGENT_STATUS_MAXIMUM = 100;
     
     AgentManager am;
     Park park;
@@ -99,12 +87,6 @@ public abstract class Agent implements Updatable {
         
         this.visitHistory = new BuildType[AGENT_HISTORY_LENGTH];
         this.currentBuilding = park.getTile(x, y).getBuilding();
-    }
-    
-    public void chooseAttraction(ArrayList<Building> buildings){
-        if (!buildings.isEmpty()) {
-            int chosenAttractionID = rand.nextInt(buildings.size());
-        }
     }
 
     public String getName() {
@@ -186,13 +168,7 @@ public abstract class Agent implements Updatable {
         currentBuilding = park.getTile(x, y).getBuilding();
     }
     
-    
-    public void addNewThought(AgentThought thought){
-        if(thoughts.size() == AGENT_MAX_THOUGHTS){
-            thoughts.remove(0);
-        }
-        thoughts.add(thought);
-    }
+    public void addNewThought(AgentThought thought){}
     
     public void setDestination(int x, int y){
         this.destX = x;

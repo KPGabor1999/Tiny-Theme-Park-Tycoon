@@ -1,27 +1,15 @@
 package Idlethemeparkworld.model.agent;
 
 import Idlethemeparkworld.model.buildable.Building;
+import java.util.Objects;
 
 public class AgentInnerLogic {
-    public class AgentThought {
-        public void AgentThought(){
-            this.thoughtType = AgentThoughts.NONE;
-            this.subject = null;
-            this.timeElapsed = 0;
-        }
-        
-        public AgentThoughts thoughtType;
-        public Building subject;
-        public int timeElapsed;
-    }
-    
     public enum AgentThoughts {
         CANTAFFORD,   // "I can't afford"
-        LOWCASH,         // "I'm running out of cash!"
+        LOWMONEY,         // "I'm running out of cash!"
         NOMONEY,       // "I've spent all my money"
-        SICK,             // "I feel sick"
+        //SICK,             // "I feel sick"
         WANTTHRILL,    // "I want to go on something more thrilling than X"
-        TOOINTENSE,          // "X looks too intense for me"
         BADVALUE,         // "I'm not paying that much to go on X"
         GOODVALUE,           // "X is really good value"
         
@@ -40,19 +28,18 @@ public class AgentInnerLogic {
         CLEAN,       // "This park is very clean and tidy"
         
         CROWDED,         // "It's too crowded here"
-        VANDALISM,       // "The vandalism here is really bad"
         //Scenery,         // "Great scenery!"
         
         MAP,
         
-        DRINK,
+        /*DRINK,
         BURGER,
         CHIPS,
         ICECREAM,
         SHAVEDICE,
         SANDWICH,
         FISHCHIP,
-        HOTDOG,
+        HOTDOG,*/
 
         WOW, // "Wow!"
 
@@ -75,24 +62,6 @@ public class AgentInnerLogic {
         
         ENTERINGPARK,
         LEAVINGPARK
-    }
-    
-    public class AgentAction{
-        private AgentActionType action;
-        private int creationTime;
-
-        public AgentAction(AgentActionType action, int creationTime) {
-            this.action = action;
-            this.creationTime = creationTime;
-        }
-
-        public AgentActionType getAction() {
-            return action;
-        }
-
-        public int getCreationTime() {
-            return creationTime;
-        }
     }
     
     public enum AgentActionType {

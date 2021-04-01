@@ -119,7 +119,7 @@ public abstract class Attraction extends Building implements Updatable {
         Range r = new Range((int)Math.floor(fun*condition/100),fun);
         int rideEvent = r.getNextRandom();
         for (int i = 0; i < queue.size(); i++) {
-            //queue.get(i).sendRideEvent(rideEvent);
+            queue.get(i).sendRideEvent(rideEvent);
         }
         resetQueue();
         status=BuildingStatus.OPEN;
