@@ -11,7 +11,7 @@ public class Toilet extends Infrastructure {
     protected PriorityQueue<Visitor> waitingLine;
     protected int occupied;
     protected int capacity;
-    private int cleanliness;
+    private double cleanliness;
     
     public Toilet(int x, int y, GameManager gm) {
         super(gm);
@@ -26,14 +26,14 @@ public class Toilet extends Infrastructure {
         this.value = BuildType.TOILET.getBuildCost();
     }
 
-    public int getCleanliness() {
+    public double getCleanliness() {
         return cleanliness;
     }
     
     public ArrayList<Pair<String, String>> getAllData(){
         ArrayList<Pair<String, String>> res = new ArrayList<>();
         res.add(new Pair<>("Capacity: ", occupied + "/" + capacity));
-        res.add(new Pair<>("Cleanliness: ", Integer.toString(cleanliness)));
+        res.add(new Pair<>("Cleanliness: ", String.format("%.2f", cleanliness)));
         return res;
     }
     
@@ -64,7 +64,7 @@ public class Toilet extends Infrastructure {
         occupied--;
     }
     
-    public void decreaseHygiene(int amount){
+    public void decreaseHygiene(double amount){
         cleanliness-=amount;
     }
     

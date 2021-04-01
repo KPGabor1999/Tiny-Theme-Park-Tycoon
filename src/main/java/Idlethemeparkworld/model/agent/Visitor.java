@@ -1,9 +1,7 @@
 package Idlethemeparkworld.model.agent;
 
-import Idlethemeparkworld.misc.utils.Direction;
 import Idlethemeparkworld.misc.utils.Position;
 import Idlethemeparkworld.model.AgentManager;
-import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.Park;
 import Idlethemeparkworld.model.Time;
 import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentAction;
@@ -11,7 +9,9 @@ import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentState;
 import Idlethemeparkworld.model.buildable.Building;
 import Idlethemeparkworld.model.buildable.food.FoodItem;
 import Idlethemeparkworld.model.buildable.food.FoodStall;
+import Idlethemeparkworld.model.buildable.infrastucture.Entrance;
 import Idlethemeparkworld.model.buildable.infrastucture.Pavement;
+import Idlethemeparkworld.model.buildable.infrastucture.Toilet;
 import java.util.ArrayList;
 
 public class Visitor extends Agent {
@@ -23,6 +23,7 @@ public class Visitor extends Agent {
     private Position lastEnter;
     private FoodItem item;
     
+    private int statusMaxTimer;
     private int statusTimer;
     
     public Visitor(String name, int startingHappiness, Park park, AgentManager am){
@@ -81,29 +82,24 @@ public class Visitor extends Agent {
                 sitCycle();
                 break;
             case WANDER:
-                do{
-                    dir = Direction.randomDirection();
-                } while(park.getTile(x+dir.x, y+dir.y).getBuilding().getInfo() != BuildType.PAVEMENT);
-                moveForward();
-                
+                moveToRandomNeighbourPavement();
                 break;
-            case ENTER:
-                this.setState(AgentState.ENTERINGBUILDING);
-                moveTo(destX, destY);
+            case TOILET:
+                toiletCycle();
                 break;
-            case EXIT:
-                this.setState(AgentState.LEAVINGBUILDING);
-                moveTo(destX, destY);
+            case LEAVEPARK:
+                leaveParkCycle();
                 break;
             case RIDE:
+                //TODO
                 break;
             case THROWUP:
-                this.setState(AgentState.IDLE);
+                //TODO
                 break;
             case NONE:
                 break;
             default:
-                this.setState(AgentState.IDLE);
+                break;
         }
     }
     
@@ -117,6 +113,76 @@ public class Visitor extends Agent {
         state = AgentState.IDLE;
         item = null;
         currentAction = null;
+    }
+    
+    private void leaveParkCycle(){
+        switch(state){
+            case IDLE:
+                state = AgentState.WANDERING;
+                break;
+            case WANDERING:
+                moveToRandomNeighbourPavement();
+                if(currentBuilding instanceof Entrance){
+                    //leaves a new review for the entire park based on final happiness
+                    //enter data into history
+                    am.removeAgent(this);
+                }
+                break;
+            default:
+                break;
+        }
+    }
+    
+    private void toiletCycle(){
+        Toilet tlt;
+        
+        switch(state){
+            case IDLE:
+                state = AgentState.WANDERING;
+                break;
+            case WANDERING:
+                ArrayList<Building> bs = park.getNonPavementNeighbours(x, y);
+                bs.removeIf(b -> !(b instanceof Toilet));
+                if(bs.size() > 0){
+                    lastEnter = new Position(x, y);
+                    setDestination(bs.get(0).getX(),bs.get(0).getY());
+                    moveTo(bs.get(0).getX(),bs.get(0).getY());
+                    ((Toilet)currentBuilding).joinLine(this);
+                    state = AgentState.QUEUING;
+                    break;
+                } else {
+                    moveToRandomNeighbourPavement();
+                }
+                break;
+            case QUEUING:
+                tlt = ((Toilet)currentBuilding);
+                if(statusTimer>this.patience){
+                    tlt.leaveLine(this);
+                    this.happiness -= 5;
+                    state = AgentState.IDLE;
+                } else {
+                    if(tlt.isFirstInQueue(this)){
+                        if(tlt.isThereEmptyStool()){
+                            tlt.enter(this);
+                            state = AgentState.SHITTING;
+                            statusMaxTimer = Time.convMinuteToTick(rand.nextInt(5)+2);
+                            statusTimer = 0;
+                        }
+                    }
+                }
+                break;
+            case SHITTING:
+                tlt = ((Toilet)currentBuilding);
+                if(statusTimer>statusMaxTimer){
+                    tlt.decreaseHygiene(rand.nextDouble());
+                    tlt.exit();
+                    moveTo(lastEnter.x, lastEnter.y);
+                    resetAction();
+                }
+                break;
+            default:
+                break;
+        }
     }
     
     private void sitCycle(){
@@ -163,6 +229,7 @@ public class Visitor extends Agent {
                             moveTo(bs.get(i).getX(),bs.get(i).getY());
                             ((FoodStall)currentBuilding).joinQueue(this);
                             state = AgentState.QUEUING;
+                            statusTimer = 0;
                             break;
                         }
                     }
@@ -191,6 +258,7 @@ public class Visitor extends Agent {
                     item = stall.buyFood(this);
                     moveTo(lastEnter.x, lastEnter.y);
                     state = AgentState.EATING;
+                    statusTimer = 0;
                 }
                 break;
             case EATING:

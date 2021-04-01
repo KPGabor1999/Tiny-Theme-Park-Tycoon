@@ -59,7 +59,7 @@ public class AgentInnerLogic {
         NONE;
     }
     
-    public enum AgentState{
+    public enum AgentState {
         IDLE,
         WALKING,
         WANDERING,
@@ -70,6 +70,7 @@ public class AgentInnerLogic {
         BUYING,
         EATING,
         SITTING,
+        SHITTING,
         
         FIXING,
         CLEANING,
@@ -100,11 +101,12 @@ public class AgentInnerLogic {
         EAT,
         SIT,
         WANDER,
-        ENTER,
-        EXIT,
         RIDE,
+        TOILET,
         THROWUP,
 
+        LEAVEPARK,
+        
         STAFFREPAIR,
         STAFFCLEAN,
         
