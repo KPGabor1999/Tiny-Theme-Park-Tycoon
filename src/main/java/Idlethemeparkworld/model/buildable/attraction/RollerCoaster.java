@@ -14,7 +14,6 @@ public class RollerCoaster extends Attraction {
         this.upkeepCost   = 13;
         this.fun          = 12;
         this.capacity     = 10;
-        this.occupied     = 0;
         this.runtime      = 2;
         this.entryFee     = 24;
         this.upgradeCost  = this.value*2;

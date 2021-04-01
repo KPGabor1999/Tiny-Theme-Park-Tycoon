@@ -55,24 +55,28 @@ public abstract class Attraction extends Building implements Updatable {
     
     protected int fun;
     protected int capacity;
-    protected int occupied;
     protected int runtime;
     protected int entryFee;
     
     protected int statusTimer;
 
     protected ArrayList<Visitor> queue;
+    protected ArrayList<Visitor> onRide;
 
     public Attraction(GameManager gm) {
         super(gm);
-        this.occupied = 0;
         this.queue=new ArrayList<>();
+        this.onRide=new ArrayList<>();  
     }
     
-    public int getOccupied() {
-        return occupied;
+    public int getQueueLength(){
+        return queue.size();
     }
 
+    public int getCapacity(){
+        return capacity;
+    }
+    
     public double getCondition() {
         return condition;
     }
@@ -86,15 +90,11 @@ public abstract class Attraction extends Building implements Updatable {
         return capacity*2;
     }
     
-    //protected void innerUpgrade(){
-    //    stats.upgrade(upgrades.get(currentLevel-1));
-    //    currentLevel++;
-    //}
-    
     public ArrayList<Pair<String, String>> getAllData(){
         ArrayList<Pair<String, String>> res = new ArrayList<>();
         res.add(new Pair<>("Fun: ", Integer.toString(fun)));
-        res.add(new Pair<>("Capacity: ", occupied + "/" + capacity));
+        res.add(new Pair<>("In queue: ", Integer.toString(queue.size())));
+        res.add(new Pair<>("On ride/capacity: ", onRide.size() + "/" + capacity));
         res.add(new Pair<>("Runtime: ", Integer.toString(runtime)));
         res.add(new Pair<>("Entry fee: ", Integer.toString(entryFee)));
         res.add(new Pair<>("Upkeep cost: ", Integer.toString(upkeepCost)));
@@ -106,12 +106,12 @@ public abstract class Attraction extends Building implements Updatable {
         status=BuildingStatus.RUNNING;
         statusTimer = 0;
         int profit = 0;
-        for (int i = 0; i < queue.size(); i++) {
-            if(queue.get(i).canPay(entryFee)){
-                queue.get(i).pay(entryFee);
+        for (int i = 0; i < onRide.size(); i++) {
+            if(onRide.get(i).canPay(entryFee)){
+                onRide.get(i).pay(entryFee);
                 profit += entryFee;
             } else {
-                queue.get(i).sendRideEvent(0);
+                onRide.get(i).sendRideEvent(0);
             }
         }
         gm.getFinance().earn(profit);
@@ -121,45 +121,41 @@ public abstract class Attraction extends Building implements Updatable {
     protected void finish(){
         Range r = new Range((int)Math.floor(fun*condition/100),fun);
         int rideEvent = r.getNextRandom();
-        for (int i = 0; i < queue.size(); i++) {
-            queue.get(i).sendRideEvent(rideEvent);
+        for (int i = 0; i < onRide.size(); i++) {
+            onRide.get(i).sendRideEvent(rideEvent);
         }
-        resetQueue();
+        onRide.clear();
         status=BuildingStatus.OPEN;
     }
     
-    public void joinQueue(Visitor v){
-        if(status == BuildingStatus.OPEN){
-            queue.add(v);
-            occupied++;
-            if(occupied == capacity){
-                start();
-            }
+    protected void loadVisitors(){
+        while(!queue.isEmpty() && onRide.size()<capacity){
+            Visitor v = queue.remove(0);
+            v.setOnRide();
+            onRide.add(v);
         }
     }
     
-    private void resetQueue(){
-        queue.clear();
-        occupied=0;
+    public void joinQueue(Visitor v){
+        queue.add(v);
     }
     
     public void leaveQueue(Visitor v){
         queue.remove(v);
-        occupied--;
     }
     
     private void updateCondition(){
         switch(status){
             case RUNNING:
-                condition-=0.04; break;
-            case OPEN:
                 condition-=0.02; break;
+            case OPEN:
+                condition-=0.01; break;
             case CLOSED:
-                condition-=0.04; break;
+                condition-=0.02; break;
             case INACTIVE:
-                condition-=0.1; break;
+                condition-=0.04; break;
             case FLOATING:
-                condition-=0.25; break;
+                condition-=0.2; break;
             default:
                 break;
         }
@@ -169,11 +165,15 @@ public abstract class Attraction extends Building implements Updatable {
         statusTimer++;
         switch(status){
             case RUNNING:
-                if(statusTimer >= Time.convMinuteToTick(fun)){
+                if(statusTimer >= Time.convMinuteToTick(runtime)){
                     finish();
                 }
                 break;
             case OPEN:
+                if(queue.size() >= capacity){
+                    loadVisitors();
+                    start();
+                }
                 break;
             case CLOSED:
                 break;

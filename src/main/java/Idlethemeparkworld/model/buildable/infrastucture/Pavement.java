@@ -16,6 +16,6 @@ public class Pavement extends Infrastructure {
     
     @Override
     public int getRecommendedMax(){
-        return 10;
+        return 5;
     }
 }

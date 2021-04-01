@@ -57,7 +57,6 @@ public class Visitor extends Agent {
             updateCurrentAction();
             performAction();
             normalizeStatuses();
-            //System.out.println(toString());
         }
     }
     
@@ -124,27 +123,21 @@ public class Visitor extends Agent {
                 addAction(new AgentAction(AgentActionType.LEAVEPARK,null));
                 break;
             case WANTTHRILL:
-                addAction(new AgentAction(AgentActionType.RIDE,null));
-                break;
+                addAction(new AgentAction(AgentActionType.RIDE,null)); break;
             case GOHOME:
                 actionQueue.clear();
                 addAction(new AgentAction(AgentActionType.LEAVEPARK,null));
                 break;
             case TIRED:
-                addAction(new AgentAction(AgentActionType.SIT,null));
-                break;
+                addAction(new AgentAction(AgentActionType.SIT,null)); break;
             case HUNGRY:
-                addAction(new AgentAction(AgentActionType.EAT,null));
-                break;
+                addAction(new AgentAction(AgentActionType.EAT,null)); break;
             case THIRSTY:
-                addAction(new AgentAction(AgentActionType.EAT,null));
-                break;
+                addAction(new AgentAction(AgentActionType.EAT,null)); break;
             case TOILET:
-                addAction(new AgentAction(AgentActionType.TOILET,null));
-                break;
+                addAction(new AgentAction(AgentActionType.TOILET,null)); break;
             case CROWDED:
-                addAction(new AgentAction(AgentActionType.WANDER,null));
-                break;
+                addAction(new AgentAction(AgentActionType.WANDER,null)); break;
             default:
                 break;
         }
@@ -205,7 +198,8 @@ public class Visitor extends Agent {
             case LEAVINGPARK:
             case WANDERING:
             case WALKING:
-                energy -= 0.05;
+                energy -= 0.03;
+                hunger -= 0.01;
                 thirst-=0.01;
                 break;
             case QUEUING:
@@ -227,7 +221,7 @@ public class Visitor extends Agent {
                 break;
         }
         hunger-=0.02;
-        thirst-=0.02;
+        thirst-=0.01;
         toilet-=0.01;
     }
         
@@ -323,7 +317,8 @@ public class Visitor extends Agent {
                 bs.removeIf(b -> !(b instanceof Attraction));
                 if(bs.size() > 0){
                     for (int i = 0; i < bs.size(); i++) {
-                        if(rand.nextBoolean()){
+                        Attraction at = (Attraction)bs.get(i);
+                        if(rand.nextBoolean() && at.getQueueLength() <= at.getCapacity()){
                             lastEnter = new Position(x, y);
                             setDestination(bs.get(i).getX(),bs.get(i).getY());
                             moveTo(bs.get(i).getX(),bs.get(i).getY());
@@ -344,6 +339,7 @@ public class Visitor extends Agent {
                 attr = ((Attraction)currentBuilding);
                 if(statusTimer>this.patience){
                     attr.leaveQueue(this);
+                    moveTo(lastEnter.x, lastEnter.y);
                     this.happiness -= 5;
                     state = AgentState.IDLE;
                 }
@@ -380,6 +376,7 @@ public class Visitor extends Agent {
                 tlt = ((Toilet)currentBuilding);
                 if(statusTimer>this.patience){
                     tlt.leaveLine(this);
+                    moveTo(lastEnter.x, lastEnter.y);
                     this.happiness -= 5;
                     state = AgentState.IDLE;
                 } else {
@@ -396,6 +393,7 @@ public class Visitor extends Agent {
             case SHITTING:
                 tlt = ((Toilet)currentBuilding);
                 if(statusTimer>statusMaxTimer){
+                    thirst+=30;
                     tlt.decreaseHygiene(rand.nextDouble());
                     tlt.exit();
                     moveTo(lastEnter.x, lastEnter.y);
@@ -466,6 +464,7 @@ public class Visitor extends Agent {
                 stall = ((FoodStall)currentBuilding);
                 if(statusTimer>this.patience){
                     stall.leaveQueue(this);
+                    moveTo(lastEnter.x, lastEnter.y);
                     this.happiness -= 5;
                     state = AgentState.IDLE;
                 } else {
@@ -512,7 +511,7 @@ public class Visitor extends Agent {
     public void sendRideEvent(int rideEvent){
         happiness += rideEvent;
         moveTo(lastEnter.x, lastEnter.y);
-        state = AgentState.IDLE;
+        this.resetAction();
     }
     
     public int getCashSpent(){

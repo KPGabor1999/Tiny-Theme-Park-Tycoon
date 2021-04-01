@@ -30,6 +30,10 @@ public abstract class FoodStall extends Building {
         this.servingSize = new Range(2,5);
     }
     
+    public int getQueueLength(){
+        return queue.size();
+    }
+    
     @Override
     public int getRecommendedMax(){
         return 10/serviceTime;

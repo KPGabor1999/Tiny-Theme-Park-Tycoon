@@ -20,7 +20,6 @@ public class Carousel extends Attraction {
         this.runtime      = 3;
         this.entryFee     = 8;
         
-        this.status = BuildingStatus.OPEN;
         //this.stats = new AttractionStats(new int[] {10,20, 0,0, 0,0, 0,0, 35,5});
     }
     

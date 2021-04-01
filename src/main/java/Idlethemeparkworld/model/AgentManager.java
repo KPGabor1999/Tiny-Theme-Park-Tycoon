@@ -90,9 +90,10 @@ public class AgentManager implements Updatable {
     }
     
     public void updateVisitorProbability(){
-        double prob = park.getRating();
+        double prob = park.getRating()*5;
         
         int visitorCount = visitors.size();
+        //System.out.println(visitorCount + " - " + park.getMaxGuest());
         if(visitorCount > park.getMaxGuest()){
             if(visitorCount > park.getMaxGuest()*1.2){
                 prob = 0;
@@ -107,6 +108,7 @@ public class AgentManager implements Updatable {
         }
         
         visitorProbability = prob;
+        //System.out.println(visitorProbability);
     }
     
     public void removeAgent(Agent agent){
@@ -115,7 +117,7 @@ public class AgentManager implements Updatable {
         }
     }
     
-    private void spawnUpdate(){
+    private void spawnUpdate(){ 
         if(rand.nextInt(100)<visitorProbability){
             spawnVisitor();
         }
