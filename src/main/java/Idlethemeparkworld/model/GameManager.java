@@ -28,6 +28,7 @@ public class GameManager {
     private Park park;
     private Time time;
     private Finance finance;
+    private AgentManager am;
 
     public GameManager() {
         this.updateCycleRunning = false;
@@ -46,6 +47,7 @@ public class GameManager {
         this.park = new Park(10, 15, this);
         this.time = new Time();
         this.finance = new Finance(100000);
+        this.am = new AgentManager(park, this);
     }
 
     public Park getPark() {
@@ -58,6 +60,10 @@ public class GameManager {
 
     public Finance getFinance() {
         return finance;
+    }
+    
+    public AgentManager am(){
+        return am;
     }
 
     public int getEntranceFee() {
@@ -154,6 +160,7 @@ public class GameManager {
         for (int i = 0; i < actualUpdateCount; i++) {
             park.update(tickCount);
             time.update(tickCount);
+            am.update(tickCount);
         }
     }
 
