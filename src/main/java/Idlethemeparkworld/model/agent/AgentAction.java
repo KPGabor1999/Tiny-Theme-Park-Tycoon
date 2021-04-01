@@ -43,6 +43,9 @@ public class AgentAction{
         }
         return true;
     }
-    
-    
+
+    @Override
+    public String toString() {
+        return "AgentAction{" + action + '}';
+    }
 }

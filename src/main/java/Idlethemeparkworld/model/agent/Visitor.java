@@ -29,6 +29,13 @@ public class Visitor extends Agent {
     
     public Visitor(String name, int startingHappiness, Park park, AgentManager am){
         super(name, startingHappiness, park, am);
+        this.cash = rand.nextInt(1000)+1000;
+        this.cashSpent = 0;
+        this.currentAction = null;
+        this.lastEnter = null;
+        this.item = null;
+        this.statusMaxTimer = 0;
+        this.statusTimer = 0;
     }
     
     @Override
@@ -38,9 +45,19 @@ public class Visitor extends Agent {
             generateThoughts(tickCount);
             updateThought(tickCount);
             updateState();
+            updateCurrentAction();
             performAction();
             normalizeStatuses();
+            System.out.println(toString());
         }
+    }
+    
+    private void updateCurrentAction(){
+         if(currentAction == null){
+             if(!actionQueue.isEmpty()){
+                 currentAction = actionQueue.poll();
+             }
+         }
     }
     
     private void updateThought(long tickCount){
@@ -192,32 +209,34 @@ public class Visitor extends Agent {
     }
         
     private void performAction(){
-        switch (currentAction.getAction()){
-            case EAT:
-                eatCycle();
-                break;
-            case SIT:
-                sitCycle();
-                break;
-            case WANDER:
-                moveToRandomNeighbourPavement();
-                break;
-            case TOILET:
-                toiletCycle();
-                break;
-            case LEAVEPARK:
-                leaveParkCycle();
-                break;
-            case RIDE:
-                attractionCycle();
-                break;
-            case THROWUP:
-                //TODO
-                break;
-            case NONE:
-                break;
-            default:
-                break;
+        if(currentAction != null){
+            switch (currentAction.getAction()){
+                case EAT:
+                    eatCycle();
+                    break;
+                case SIT:
+                    sitCycle();
+                    break;
+                case WANDER:
+                    moveToRandomNeighbourPavement();
+                    break;
+                case TOILET:
+                    toiletCycle();
+                    break;
+                case LEAVEPARK:
+                    leaveParkCycle();
+                    break;
+                case RIDE:
+                    attractionCycle();
+                    break;
+                case THROWUP:
+                    //TODO
+                    break;
+                case NONE:
+                    break;
+                default:
+                    break;
+            }
         }
     }
     
@@ -464,5 +483,20 @@ public class Visitor extends Agent {
     
     public int getCashSpent(){
         return cashSpent;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(super.toString());
+        sb.append(", cash=").append(cash);
+        sb.append(", cashSpent=").append(cashSpent);
+        sb.append(", currentAction=").append(currentAction);
+        sb.append(", lastEnter=").append(lastEnter);
+        sb.append(", item=").append(item);
+        sb.append(", statusMaxTimer=").append(statusMaxTimer);
+        sb.append(", statusTimer=").append(statusTimer);
+        sb.append('}');
+        return sb.toString();
     }
 }

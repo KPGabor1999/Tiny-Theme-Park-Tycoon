@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import Idlethemeparkworld.misc.utils.Pair;
 import Idlethemeparkworld.model.GameManager;
 import Idlethemeparkworld.model.agent.Visitor;
-import java.util.PriorityQueue;
+import java.util.LinkedList;
 
 public class Toilet extends Infrastructure {
-    protected PriorityQueue<Visitor> waitingLine;
+    protected LinkedList<Visitor> waitingLine;
     protected int occupied;
     protected int capacity;
     private double cleanliness;
@@ -19,7 +19,7 @@ public class Toilet extends Infrastructure {
         this.x = x;
         this.y = y;
         this.buildingType = BuildType.TOILET;
-        this.waitingLine = new PriorityQueue<>();
+        this.waitingLine = new LinkedList<>();
         this.occupied = 0;
         this.capacity = 10;
         this.cleanliness = 100;

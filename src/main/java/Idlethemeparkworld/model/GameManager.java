@@ -62,7 +62,7 @@ public class GameManager {
         return finance;
     }
     
-    public AgentManager am(){
+    public AgentManager getAgentManager(){
         return am;
     }
 

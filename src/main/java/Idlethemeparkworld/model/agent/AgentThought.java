@@ -44,4 +44,9 @@ public class AgentThought {
         }
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "AgentThought{" + thoughtType + '}';
+    }
 }

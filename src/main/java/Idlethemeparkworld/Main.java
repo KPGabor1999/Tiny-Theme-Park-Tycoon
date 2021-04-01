@@ -241,6 +241,7 @@ public class Main extends JFrame {
         //System.out.println(gm.getTime().toString());
         timeLabel.setText(gm.getTime().toString());
         moneyLabel.setText(gm.getFinance().toString());
+        visitorCountLabel.setText("Visitors: "+gm.getAgentManager().getVisitorCount());
     }
 
     private void startNewGame() {

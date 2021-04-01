@@ -5,13 +5,13 @@ import java.util.ArrayList;
 import Idlethemeparkworld.misc.utils.Pair;
 import Idlethemeparkworld.misc.utils.Range;
 import Idlethemeparkworld.model.GameManager;
-import Idlethemeparkworld.model.Time;
 import Idlethemeparkworld.model.agent.Visitor;
 import Idlethemeparkworld.model.buildable.BuildingStatus;
+import java.util.LinkedList;
 import java.util.PriorityQueue;
 
 public abstract class FoodStall extends Building {
-    protected PriorityQueue<Visitor> queue;
+    protected LinkedList<Visitor> queue;
     protected int serviceTime;
     protected int serviceTimer;
     protected int foodPrice;
@@ -21,7 +21,7 @@ public abstract class FoodStall extends Building {
 
     protected FoodStall(GameManager gm) {
         super(gm);
-        this.queue = new PriorityQueue<>();
+        this.queue = new LinkedList<>();
         this.serviceTime = 0;
         this.serviceTimer = 0;
         this.foodPrice = 0;

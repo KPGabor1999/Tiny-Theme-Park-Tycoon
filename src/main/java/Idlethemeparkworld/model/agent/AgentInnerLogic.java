@@ -72,6 +72,7 @@ public class AgentInnerLogic {
         TOILET,
         THROWUP,
 
+        ENTERPARK,
         LEAVEPARK,
         
         STAFFREPAIR,

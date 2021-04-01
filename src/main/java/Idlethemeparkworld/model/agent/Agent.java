@@ -12,6 +12,7 @@ import Idlethemeparkworld.model.agent.AgentTypes.AgentType;
 import Idlethemeparkworld.model.agent.AgentTypes.StaffType;
 import Idlethemeparkworld.model.buildable.Building;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.PriorityQueue;
 import java.util.Random;
 
@@ -52,8 +53,7 @@ public abstract class Agent implements Updatable {
     
     ArrayList<AgentThought> thoughts;
     AgentState state;
-    AgentAction current;
-    PriorityQueue<AgentAction> actionQueue;
+    LinkedList<AgentAction> actionQueue;
     
     BuildType[] visitHistory;
 
@@ -83,7 +83,7 @@ public abstract class Agent implements Updatable {
         
         this.thoughts = new ArrayList<>();
         this.state = AgentState.ENTERINGPARK;
-        this.actionQueue = new PriorityQueue<>();
+        this.actionQueue = new LinkedList<>();
         
         this.visitHistory = new BuildType[AGENT_HISTORY_LENGTH];
         this.currentBuilding = park.getTile(x, y).getBuilding();
@@ -193,4 +193,23 @@ public abstract class Agent implements Updatable {
     
     @Override
     public abstract void update(long tickCount);
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Agent{name=").append(name);
+        sb.append(", x=").append(x);
+        sb.append(", y=").append(y);
+        sb.append(", destX=").append(destX);
+        sb.append(", destY=").append(destY);
+        sb.append(", energy=").append(energy);
+        sb.append(", happiness=").append(happiness);
+        sb.append(", hunger=").append(hunger);
+        sb.append(", thirst=").append(thirst);
+        sb.append(", toilet=").append(toilet);
+        sb.append(", thoughts=").append(thoughts);
+        sb.append(", state=").append(state);
+        sb.append(", actionQueue=").append(actionQueue);
+        return sb.toString();
+    }
 }
