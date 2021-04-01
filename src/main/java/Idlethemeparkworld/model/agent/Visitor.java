@@ -8,6 +8,7 @@ import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentActionType;
 import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentState;
 import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentThoughts;
 import Idlethemeparkworld.model.buildable.Building;
+import Idlethemeparkworld.model.buildable.BuildingStatus;
 import Idlethemeparkworld.model.buildable.attraction.Attraction;
 import Idlethemeparkworld.model.buildable.food.FoodItem;
 import Idlethemeparkworld.model.buildable.food.FoodStall;
@@ -51,12 +52,17 @@ public class Visitor extends Agent {
     public void update(long tickCount){
         statusTimer++;
         if(tickCount % 24 == 0){
-            generateThoughts(tickCount);
-            updateThought(tickCount);
-            updateState();
-            updateCurrentAction();
-            performAction();
-            normalizeStatuses();
+            checkFloating();
+            if(state != AgentState.FLOATING){
+                generateThoughts(tickCount);
+                updateThought(tickCount);
+                updateState();
+                updateCurrentAction();
+                performAction();
+                normalizeStatuses();
+            } else {
+                updateState();
+            }
         }
     }
     
@@ -67,6 +73,20 @@ public class Visitor extends Agent {
         currentBuilding = park.getTile(x, y).getBuilding();
         xOffset = rand.nextInt(currentBuilding.getInfo().getWidth()*64);
         yOffset = rand.nextInt(currentBuilding.getInfo().getLength()*64);
+    }
+    
+    private void checkFloating(){
+        if(park.getTile(x, y).isEmpty() || park.getTile(x, y).getBuilding().getStatus() == BuildingStatus.FLOATING){
+            if(state != AgentState.FLOATING){
+                resetAction();
+                statusTimer = 0;
+                state = AgentState.FLOATING;
+            }
+        } else {
+            if(state == AgentState.FLOATING){
+                state = AgentState.IDLE;
+            }
+        }
     }
     
     private void updateCurrentAction(){
@@ -152,9 +172,9 @@ public class Visitor extends Agent {
         }
     }
     
-    private boolean statusToThought(int status, int lowerThreshold, long tickCount, AgentThoughts positive, AgentThoughts negative, double leaveHappinessMultiplier){
-        if(status < lowerThreshold){
-            if(status <= 0){
+    private boolean conditionToThought(int condition, int lowerThreshold, long tickCount, AgentThoughts positive, AgentThoughts negative, double leaveHappinessMultiplier){
+        if(condition < lowerThreshold){
+            if(condition <= 0){
                 happiness *= leaveHappinessMultiplier;
                 insertThought(AgentThoughts.GOHOME,null,tickCount);
                 return true;
@@ -162,7 +182,7 @@ public class Visitor extends Agent {
                 insertThought(negative,null,tickCount);
                 return true;
             }
-        } else if(95 < status){
+        } else if(95 < condition){
             insertThought(positive,null,tickCount);
         }
         return false;
@@ -177,9 +197,9 @@ public class Visitor extends Agent {
             }
         }
         boolean anyUrgent = false;
-        anyUrgent = anyUrgent || statusToThought(hunger,AGENT_HUNGER_WARNING_THRESHOLD,tickCount,AgentThoughts.NOTHUNGRY, AgentThoughts.HUNGRY, 0.5);
-        anyUrgent = anyUrgent || statusToThought(thirst,AGENT_THIRST_WARNING_THRESHOLD,tickCount,AgentThoughts.NOTTHIRSTY, AgentThoughts.THIRSTY, 0.6);
-        anyUrgent = anyUrgent || statusToThought(energy,AGENT_ENERGY_WARNING_THRESHOLD,tickCount,AgentThoughts.FEELINGGREAT, AgentThoughts.TIRED, 0.5);
+        anyUrgent = anyUrgent || conditionToThought(hunger,AGENT_HUNGER_WARNING_THRESHOLD,tickCount,AgentThoughts.NOTHUNGRY, AgentThoughts.HUNGRY, 0.5);
+        anyUrgent = anyUrgent || conditionToThought(thirst,AGENT_THIRST_WARNING_THRESHOLD,tickCount,AgentThoughts.NOTTHIRSTY, AgentThoughts.THIRSTY, 0.6);
+        anyUrgent = anyUrgent || conditionToThought(energy,AGENT_ENERGY_WARNING_THRESHOLD,tickCount,AgentThoughts.FEELINGGREAT, AgentThoughts.TIRED, 0.5);
         if(toilet < AGENT_TOILET_WARNING_THRESHOLD){
             insertThought(AgentThoughts.TOILET,null,tickCount);
         }
@@ -203,8 +223,8 @@ public class Visitor extends Agent {
                 thirst-=0.01;
                 break;
             case QUEUING:
-                if(statusTimer>2500){
-                    happiness-=0.01;
+                if(statusTimer>Time.convMinuteToTick(5)){
+                    happiness-=0.5;
                 }
                 break;
             case ONRIDE:
@@ -217,6 +237,10 @@ public class Visitor extends Agent {
                 break;
             case BUYING:
                 break;
+            case FLOATING:
+                if(statusTimer>Time.convMinuteToTick(5)){
+                    kill();
+                }
             default:
                 break;
         }
@@ -282,6 +306,11 @@ public class Visitor extends Agent {
         currentAction = null;
     }
     
+    private void kill(){
+        System.out.println("ORAORAORAORA");
+        am.removeAgent(this);
+    }
+    
     private void leaveParkCycle(){
         switch(state){
             case IDLE:
@@ -318,7 +347,7 @@ public class Visitor extends Agent {
                 if(bs.size() > 0){
                     for (int i = 0; i < bs.size(); i++) {
                         Attraction at = (Attraction)bs.get(i);
-                        if(rand.nextBoolean() && at.getQueueLength() <= at.getCapacity()){
+                        if(rand.nextBoolean() && at.getQueueLength() <= at.getCapacity()*1.5){
                             lastEnter = new Position(x, y);
                             setDestination(bs.get(i).getX(),bs.get(i).getY());
                             moveTo(bs.get(i).getX(),bs.get(i).getY());

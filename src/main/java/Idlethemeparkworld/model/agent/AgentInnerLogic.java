@@ -57,6 +57,8 @@ public class AgentInnerLogic {
         SITTING,
         SHITTING,
         
+        FLOATING,
+        
         FIXING,
         CLEANING,
         
