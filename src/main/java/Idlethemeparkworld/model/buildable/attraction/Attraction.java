@@ -66,6 +66,7 @@ public abstract class Attraction extends Building implements Updatable {
     public Attraction(GameManager gm) {
         super(gm);
         this.occupied = 0;
+        this.queue=new ArrayList<>();
     }
     
     public int getOccupied() {
@@ -79,10 +80,6 @@ public abstract class Attraction extends Building implements Updatable {
     public int getEntryFee(){
         return entryFee;
     }
-    
-    //public boolean canUpgrade(){
-    //    return currentLevel < upgrades.size();
-    //}
     
     //protected void innerUpgrade(){
     //    stats.upgrade(upgrades.get(currentLevel-1));
@@ -105,11 +102,11 @@ public abstract class Attraction extends Building implements Updatable {
         statusTimer = 0;
         int profit = 0;
         for (int i = 0; i < queue.size(); i++) {
-            if(true/*queue.get(i).canPay(entryFee)*/){
-                /*queue.get(i).pay(entryFee)*/
+            if(queue.get(i).canPay(entryFee)){
+                queue.get(i).pay(entryFee);
                 profit += entryFee;
             } else {
-                //queue.get(i).sendRideEvent(rideEvent);
+                queue.get(i).sendRideEvent(0);
             }
         }
         gm.getFinance().earn(profit);

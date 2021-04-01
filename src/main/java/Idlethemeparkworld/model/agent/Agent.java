@@ -104,7 +104,15 @@ public abstract class Agent implements Updatable {
     public StaffType getStaffType() {
         return staffType;
     }
+    
+    public int getX(){
+        return x;
+    }
 
+    public int getY(){
+        return y;
+    }
+    
     public int getPatience() {
         return patience;
     }

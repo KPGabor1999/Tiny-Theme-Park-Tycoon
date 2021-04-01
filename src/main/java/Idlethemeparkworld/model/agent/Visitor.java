@@ -14,6 +14,7 @@ import Idlethemeparkworld.model.buildable.food.FoodStall;
 import Idlethemeparkworld.model.buildable.infrastucture.Entrance;
 import Idlethemeparkworld.model.buildable.infrastucture.Pavement;
 import Idlethemeparkworld.model.buildable.infrastucture.Toilet;
+import java.awt.Color;
 import java.util.ArrayList;
 
 public class Visitor extends Agent {
@@ -27,6 +28,10 @@ public class Visitor extends Agent {
     private int statusMaxTimer;
     private int statusTimer;
     
+    private Color color;
+    private int xOffset;
+    private int yOffset;
+    
     public Visitor(String name, int startingHappiness, Park park, AgentManager am){
         super(name, startingHappiness, park, am);
         this.cash = rand.nextInt(1000)+1000;
@@ -37,6 +42,9 @@ public class Visitor extends Agent {
         this.statusMaxTimer = 0;
         this.statusTimer = 0;
         this.state = AgentState.ENTERINGPARK;
+        this.color = new Color(rand.nextInt(255),rand.nextInt(255),rand.nextInt(255),255);
+        this.xOffset = rand.nextInt(64);
+        this.yOffset = rand.nextInt(64);
     }
     
     @Override
@@ -51,6 +59,15 @@ public class Visitor extends Agent {
             normalizeStatuses();
             System.out.println(toString());
         }
+    }
+    
+    @Override
+    public void moveTo(int x, int y){
+        this.x=x;
+        this.y=y;
+        currentBuilding = park.getTile(x, y).getBuilding();
+        xOffset = rand.nextInt(currentBuilding.getInfo().getWidth()*64);
+        yOffset = rand.nextInt(currentBuilding.getInfo().getLength()*64);
     }
     
     private void updateCurrentAction(){
@@ -142,17 +159,20 @@ public class Visitor extends Agent {
         }
     }
     
-    private void statusToThought(int status, int lowerThreshold, long tickCount, AgentThoughts positive, AgentThoughts negative, double leaveHappinessMultiplier){
+    private boolean statusToThought(int status, int lowerThreshold, long tickCount, AgentThoughts positive, AgentThoughts negative, double leaveHappinessMultiplier){
         if(status < lowerThreshold){
             if(status <= 0){
                 happiness *= leaveHappinessMultiplier;
                 insertThought(AgentThoughts.GOHOME,null,tickCount);
+                return true;
             } else {
                 insertThought(negative,null,tickCount);
+                return true;
             }
         } else if(95 < status){
             insertThought(positive,null,tickCount);
         }
+        return false;
     }
     
     private void generateThoughts(long tickCount){
@@ -163,13 +183,14 @@ public class Visitor extends Agent {
                 insertThought(AgentThoughts.LOWMONEY,null,tickCount);
             }
         }
-        statusToThought(hunger,AGENT_HUNGER_WARNING_THRESHOLD,tickCount,AgentThoughts.NOTHUNGRY, AgentThoughts.HUNGRY, 0.5);
-        statusToThought(thirst,AGENT_THIRST_WARNING_THRESHOLD,tickCount,AgentThoughts.NOTTHIRSTY, AgentThoughts.THIRSTY, 0.6);
-        statusToThought(energy,AGENT_ENERGY_WARNING_THRESHOLD,tickCount,AgentThoughts.FEELINGGREAT, AgentThoughts.TIRED, 0.5);
+        boolean anyUrgent = false;
+        anyUrgent = anyUrgent || statusToThought(hunger,AGENT_HUNGER_WARNING_THRESHOLD,tickCount,AgentThoughts.NOTHUNGRY, AgentThoughts.HUNGRY, 0.5);
+        anyUrgent = anyUrgent || statusToThought(thirst,AGENT_THIRST_WARNING_THRESHOLD,tickCount,AgentThoughts.NOTTHIRSTY, AgentThoughts.THIRSTY, 0.6);
+        anyUrgent = anyUrgent || statusToThought(energy,AGENT_ENERGY_WARNING_THRESHOLD,tickCount,AgentThoughts.FEELINGGREAT, AgentThoughts.TIRED, 0.5);
         if(toilet < AGENT_TOILET_WARNING_THRESHOLD){
             insertThought(AgentThoughts.TOILET,null,tickCount);
         }
-        if(happiness < 75){
+        if(happiness < 75 || !anyUrgent){
             insertThought(AgentThoughts.WANTTHRILL,null,tickCount);
         }
     }
@@ -511,5 +532,17 @@ public class Visitor extends Agent {
         sb.append(", statusTimer=").append(statusTimer);
         sb.append('}');
         return sb.toString();
+    }
+    
+    public Color getColor(){
+        return color;
+    }
+
+    public int getxOffset() {
+        return xOffset;
+    }
+
+    public int getyOffset() {
+        return yOffset;
     }
 }

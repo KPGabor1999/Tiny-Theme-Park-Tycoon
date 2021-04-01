@@ -103,7 +103,7 @@ public class AgentManager implements Updatable {
         }
     }
     
-    public void spawnUpdate(){
+    private void spawnUpdate(){
         if(rand.nextInt(1000)<visitorProbability){
             spawnVisitor();
         }
@@ -117,11 +117,18 @@ public class AgentManager implements Updatable {
         return visitors.size();
     }
     
+    public ArrayList<Visitor> getVisitors(){
+        return visitors;
+    }
+    
     @Override
     public void update(long tickCount){
         //spawnUpdate();
         for (int i = 0; i < visitors.size(); i++) {
             visitors.get(i).update(tickCount);
+        }
+        if(tickCount%24==0){
+            gm.getBoard().repaint();
         }
     }
 }

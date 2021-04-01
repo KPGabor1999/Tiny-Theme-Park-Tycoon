@@ -5,6 +5,7 @@ import Idlethemeparkworld.misc.Assets;
 import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.GameManager;
 import Idlethemeparkworld.model.Park;
+import Idlethemeparkworld.model.agent.Visitor;
 import Idlethemeparkworld.model.buildable.Building;
 import Idlethemeparkworld.model.buildable.BuildingStatus;
 import java.awt.Color;
@@ -18,6 +19,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Random;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -38,9 +40,11 @@ public class Board extends JPanel {
     
     private Main main;
     private JButton buildButton;
+    private Random rand;
 
     public Board(GameManager gm, JButton buildButton, Main main) {
         this.gm = gm;
+        gm.setBoard(this);
         this.park = gm.getPark();
         this.buildMode = false;
         this.type = null;
@@ -48,6 +52,7 @@ public class Board extends JPanel {
         this.canBuild = new boolean[1];
         this.buildButton = buildButton;
         this.main = main;
+        this.rand = new Random();
         
         setBackground(new Color(0, 140, 14, 255));
         setBorder(BorderFactory.createEmptyBorder(0, -5, 0, -5));
@@ -213,6 +218,17 @@ public class Board extends JPanel {
             if(buildings.get(i).getStatus() == BuildingStatus.FLOATING){
                 gr.drawImage(Assets.Texture.NOPATH.getAsset(), x*CELL_SIZE+w*CELL_SIZE/2-15, y*CELL_SIZE+h*CELL_SIZE/2-15, 30, 30, null);
             }
+        }
+        
+        ArrayList<Visitor> visitors = gm.getAgentManager().getVisitors();
+        for (int i = 0; i < visitors.size(); i++) {
+            int x = visitors.get(i).getX();
+            int y = visitors.get(i).getY();
+            int xOffset = visitors.get(i).getxOffset();
+            int yOffset = visitors.get(i).getyOffset();;
+            
+            gr.setColor(visitors.get(i).getColor());
+            gr.drawRect(x*CELL_SIZE+xOffset, y*CELL_SIZE+yOffset, 2, 3);
         }
     }
     

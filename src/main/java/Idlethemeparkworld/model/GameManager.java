@@ -1,6 +1,7 @@
 package Idlethemeparkworld.model;
 
 import Idlethemeparkworld.model.administration.Finance;
+import Idlethemeparkworld.view.Board;
 
 public class GameManager {
 
@@ -29,6 +30,7 @@ public class GameManager {
     private Time time;
     private Finance finance;
     private AgentManager am;
+    private Board board;
 
     public GameManager() {
         this.updateCycleRunning = false;
@@ -48,8 +50,17 @@ public class GameManager {
         this.time = new Time();
         this.finance = new Finance(100000);
         this.am = new AgentManager(park, this);
+        this.board = null;
     }
 
+    public void setBoard(Board board){
+        this.board = board;
+    }
+    
+    public Board getBoard(){
+        return board;
+    }
+    
     public Park getPark() {
         return park;
     }

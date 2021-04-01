@@ -141,18 +141,6 @@ public class Main extends JFrame {
         JButton accelerateButton = new javax.swing.JButton();
 
         buildingChooser = new javax.swing.JComboBox<>();
-        /*buildingChooser.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {
-            "Pavement",
-            "Trash can",
-            "Toilet",
-            "Hot dog stand",
-            "Ice cream parlor",
-            "Burger joint",
-            "Carousel",
-            "Ferris Wheel",
-            "Swinging Ship",
-            "Roller coaster",
-            "Haunted mansion"}));*/
 
         buildingChooser.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{
             BuildType.PAVEMENT.getName() + " (" + BuildType.PAVEMENT.getBuildCost() + ")",
@@ -190,7 +178,6 @@ public class Main extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Main.this.adminDialog = new AdministrationDialog(Main.this, "Administration", board);
-                //adminDialog.setVisible(true);
             }
         });
 
@@ -238,7 +225,6 @@ public class Main extends JFrame {
     }
 
     public void updateInfobar() {
-        //System.out.println(gm.getTime().toString());
         timeLabel.setText(gm.getTime().toString());
         moneyLabel.setText(gm.getFinance().toString());
         visitorCountLabel.setText("Visitors: "+gm.getAgentManager().getVisitorCount());
