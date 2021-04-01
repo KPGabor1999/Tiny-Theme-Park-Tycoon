@@ -20,10 +20,8 @@ public class AgentInnerLogic {
         LOWCASH,         // "I'm running out of cash!"
         NOMONEY,       // "I've spent all my money"
         SICK,             // "I feel sick"
-        EXTREMELYSICK,         // "I feel very sick"
         WANTTHRILL,    // "I want to go on something more thrilling than X"
         TOOINTENSE,          // "X looks too intense for me"
-        NOTFINISHED,   // "I haven't finished my X yet"
         BADVALUE,         // "I'm not paying that much to go on X"
         GOODVALUE,           // "X is really good value"
         
@@ -41,7 +39,6 @@ public class AgentInnerLogic {
         TOOMUCHLITTER,       // "The litter here is really bad"
         CLEAN,       // "This park is very clean and tidy"
         
-        GETOUT,          // "I want to get off X"
         CROWDED,         // "It's too crowded here"
         VANDALISM,       // "The vandalism here is really bad"
         //Scenery,         // "Great scenery!"
@@ -71,6 +68,7 @@ public class AgentInnerLogic {
         ONRIDE,
         LEAVINGBUILDING,
         BUYING,
+        EATING,
         SITTING,
         
         FIXING,

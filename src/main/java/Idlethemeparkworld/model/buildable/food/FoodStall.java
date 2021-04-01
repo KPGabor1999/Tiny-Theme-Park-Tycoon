@@ -16,7 +16,8 @@ public abstract class FoodStall extends Building {
     protected int serviceTimer;
     protected int foodPrice;
     protected Range foodQuality;
-
+    protected Range drinkQuality;
+    protected Range servingSize;
 
     protected FoodStall(GameManager gm) {
         super(gm);
@@ -25,6 +26,8 @@ public abstract class FoodStall extends Building {
         this.serviceTimer = 0;
         this.foodPrice = 0;
         this.foodQuality = new Range(45,55);
+        this.drinkQuality = new Range(45,55);
+        this.servingSize = new Range(2,5);
     }
     
     public void setFoodPrice(int number){
@@ -63,17 +66,20 @@ public abstract class FoodStall extends Building {
         return serviceTimer <= 0;
     }
     
-    public int buyFood(Visitor visitor){
+    public FoodItem buyFood(Visitor visitor){
         if(canService()){
-            //if(visitor.canPay(foodprice){
-            //visitor.pay(foodPrice);
-            gm.getFinance().earn(foodPrice);
+            if(visitor.canPay(foodPrice)){  //tbh theres no need for this check since we can trust visitors to only attempt buying things they can but oh well whatevs
+                visitor.pay(foodPrice);
+                gm.getFinance().earn(foodPrice);
 
-            leaveQueue(visitor);
-            serviceTimer = serviceTime;
-            return foodQuality.getNextRandom(); 
+                leaveQueue(visitor);
+                serviceTimer = serviceTime;
+                return new FoodItem(foodQuality.getNextRandom(),drinkQuality.getNextRandom(),servingSize.getNextRandom());
+            } else {
+                return new FoodItem();
+            }
         } else {
-            return 0;
+            return new FoodItem();
         }
     }
     
