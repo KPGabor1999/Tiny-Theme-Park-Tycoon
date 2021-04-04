@@ -18,8 +18,8 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 
 public class Board extends JPanel {
 
@@ -62,6 +62,7 @@ public class Board extends JPanel {
             }
             @Override
             public void mouseClicked(MouseEvent e) {
+                Position mPos = retrieveCoords(e);
                 if(buildMode){
                     if(canBuild[0]){
                         park.build(type, pos[0], pos[1], false);
@@ -70,7 +71,11 @@ public class Board extends JPanel {
                     }
                     Board.this.exitBuildMode();
                 } else {
-                
+                    if(park.getTile(mPos.x, mPos.y).getBuilding() != null){
+                        JFrame parentFrame = (JFrame) getRootPane().getParent();
+                        BuildingOptionsDialog buildingOptions = new BuildingOptionsDialog(parentFrame, Board.this, mPos.x, mPos.y);
+                        buildingOptions.setLocationRelativeTo(Board.this);
+                    }
                 }
             }
         };
