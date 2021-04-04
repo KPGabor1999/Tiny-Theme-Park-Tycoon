@@ -85,7 +85,7 @@ public class Visitor extends Agent {
                 updateThought(tickCount);
                 updateState();
                 updateCurrentAction();
-                performAction();
+                performAction(tickCount);
                 normalizeStatuses();
             } else {
                 updateState();
@@ -250,7 +250,7 @@ public class Visitor extends Agent {
                 thirst-=0.01;
                 break;
             case QUEUING:
-                if(statusTimer>Time.convMinuteToTick(5)){
+                if(statusTimer>patience){
                     happiness-=0.5;
                 }
                 break;
@@ -276,7 +276,7 @@ public class Visitor extends Agent {
         toilet-=0.01;
     }
         
-    private void performAction(){
+    private void performAction(long tickCount){
         if(currentAction != null){
             switch (currentAction.getAction()){
                 case ENTERPARK:
@@ -332,7 +332,6 @@ public class Visitor extends Agent {
     
     private void resetAction(){
         setState(AgentState.IDLE);
-        item = null;
         currentAction = null;
     }
     
@@ -520,7 +519,7 @@ public class Visitor extends Agent {
                     stall.leaveQueue(this);
                     moveTo(lastEnter.x, lastEnter.y);
                     this.happiness -= 5;
-                    setState(AgentState.IDLE);
+                    resetAction();
                 } else {
                     if(stall.isFirstInQueue(this)){
                         setState(AgentState.BUYING);
@@ -542,6 +541,7 @@ public class Visitor extends Agent {
                     hunger += item.hunger;
                     thirst += item.thirst;
                     resetAction();
+                    currentAction = new AgentAction(AgentActionType.LITTER, null);
                 }
                 break;
             default:
@@ -561,7 +561,7 @@ public class Visitor extends Agent {
                 if(statusTimer>patience){
                     Infrastructure i = (Infrastructure)currentBuilding;
                     happiness-=5;
-                    i.litter(item.consumeTime*0.2);
+                    i.litter(item.consumeTime*0.01);
                     item = null;
                     resetAction();
                 }
@@ -571,7 +571,8 @@ public class Visitor extends Agent {
                     for (int i = 0; i < bs.size(); i++) {
                         tc = ((TrashCan)bs.get(i));
                         if(!tc.isFull()){
-                            tc.use(item.consumeTime*0.1);
+                            System.out.println("FOUND empty BIN ");
+                            tc.use(item.consumeTime*0.005);
                             item = null;
                             resetAction();
                             break;

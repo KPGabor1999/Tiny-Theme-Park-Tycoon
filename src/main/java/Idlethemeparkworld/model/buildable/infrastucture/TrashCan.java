@@ -30,21 +30,24 @@ public class TrashCan extends Infrastructure {
     
     public ArrayList<Pair<String, String>> getAllData(){
         ArrayList<Pair<String, String>> res = new ArrayList<>();
-        res.add(new Pair<>("Capacity: ", Double.toString(capacity)));
-        res.add(new Pair<>("Filled: ", Double.toString(filled)));
+        res.add(new Pair<>("Capacity: ", String.format("%.2f", capacity)));
+        res.add(new Pair<>("Filled: ", String.format("%.2f", filled)));
         return res;
     }    
     
     //Methods for managing visitors:
     
     public void use(double amount){
-        if(!this.isFull()){
+        if(!isFull()){
             filled+=amount;
+            if(isFull()){
+                filled = capacity;
+            }
         }
     }
     
     public boolean isFull(){
-        return filled < capacity;
+        return filled >= capacity;
     }
         
     public void empty(){

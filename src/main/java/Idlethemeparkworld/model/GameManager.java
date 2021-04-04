@@ -203,6 +203,10 @@ public class GameManager {
     public boolean isPaused() {
         return gamePaused;
     }
+    
+    public long getTickCount(){
+        return tickCount;
+    }
 
     //Perhaps game saving/loading and autosaving feature? *wink wink*
     public void saveGame() {
