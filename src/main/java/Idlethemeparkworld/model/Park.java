@@ -61,6 +61,7 @@ public class Park implements Updatable {
         tiles = new Tile[rows][columns];
         pf = new PathFinding(tiles);
         reachable = new HashSet<>();
+        
         //1.Make sure all tiles are empty
         this.buildings = new ArrayList<>();
         for (int row = 0; row < tiles.length; row++) {
@@ -70,9 +71,13 @@ public class Park implements Updatable {
         }
         //2.Spawn in the gate tile
         build(BuildType.ENTRANCE, 0, 0, true);
+        
+        //3. Install locked tiles
         for (int row = 0; row < tiles.length; row++) {
-            for (int column = tiles[0].length - 5; column < tiles[0].length; column++) {
-                build(BuildType.LOCKEDTILE, column, row, true);
+            for (int column = 0; column<tiles[0].length; column++) {
+                if(row > 5 || column >5){
+                    build(BuildType.LOCKEDTILE, column, row, true);
+                }
             }
         }
     }

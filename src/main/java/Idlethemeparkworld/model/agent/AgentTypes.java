@@ -8,10 +8,8 @@ public class AgentTypes{
     }
     
     public enum StaffType {
-        OPERATOR,
-        SECURITYGUARD,
+        JANITOR,
         MAINTAINER,
-        ENTERTAINER,
         NONE
     }
 }

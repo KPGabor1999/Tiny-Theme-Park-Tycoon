@@ -1,6 +1,7 @@
 package Idlethemeparkworld.model;
 
 import Idlethemeparkworld.model.agent.Agent;
+import Idlethemeparkworld.model.agent.Janitor;
 import Idlethemeparkworld.model.agent.Visitor;
 import java.util.ArrayList;
 import java.util.Random;
@@ -45,6 +46,7 @@ public class AgentManager implements Updatable {
     private Random rand;
     
     private ArrayList<Visitor> visitors;
+    private ArrayList<Janitor> janitors;
     private Visitor highlighted;
     
     public AgentManager(Park park, GameManager gm){
@@ -53,6 +55,7 @@ public class AgentManager implements Updatable {
         this.visitorProbability = 0;
         this.rand = new Random();
         this.visitors = new ArrayList<>();
+        this.janitors = new ArrayList<>(5);     //0-5 janitors allowed at a time.
         spawnVisitor();
         highlighted = visitors.get(0);
     }
@@ -135,11 +138,36 @@ public class AgentManager implements Updatable {
         return visitors;
     }
     
+    public void manageJanitors(int newNumberOfJanitors){
+        int currentNumberOfJanitors = janitors.size();
+        
+        if(currentNumberOfJanitors < newNumberOfJanitors){
+        //Annyi új takarítót adunk a listához, amennyit szükséges és minden létrehozást kiírunk a konzolra.
+            int numberOfNewJanitors = newNumberOfJanitors - currentNumberOfJanitors;
+            for(int count = 1; count <= numberOfNewJanitors; count++){
+                janitors.add(new Janitor(getRandomName(), park, this));
+                System.out.println("New janitor hired. Now we've got " + janitors.size() + " janitors.");
+            }
+        }else if (currentNumberOfJanitors > newNumberOfJanitors){
+        //Annyi új takarítót adunk a listából (randomra), amennyit szükséges és minden törlést kiírunk a konzolra.
+            int numberOfJanitorsToFire = currentNumberOfJanitors - newNumberOfJanitors;
+            for(int count = 1; count <= numberOfJanitorsToFire; count++){
+                Random rand = new Random();
+                int index = rand.nextInt(janitors.size());
+                janitors.remove(index);
+                System.out.println("One janitor fired. Now we've got " + janitors.size() + " janitors.");
+            }
+        }
+    }
+    
     @Override
     public void update(long tickCount){
         spawnUpdate();
         for (int i = 0; i < visitors.size(); i++) {
             visitors.get(i).update(tickCount);
+        }
+        for (int i = 0; i < janitors.size(); i++) {
+            janitors.get(i).update(tickCount);
         }
         if(tickCount%24==0){
             updateVisitorProbability();
