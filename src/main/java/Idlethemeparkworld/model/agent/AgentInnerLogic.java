@@ -1,8 +1,5 @@
 package Idlethemeparkworld.model.agent;
 
-import Idlethemeparkworld.model.buildable.Building;
-import java.util.Objects;
-
 public class AgentInnerLogic {
     public enum AgentThoughts {
         CANTAFFORD,   // "I can't afford"
@@ -73,6 +70,7 @@ public class AgentInnerLogic {
         RIDE,
         TOILET,
         THROWUP,
+        LITTER,
 
         ENTERPARK,
         LEAVEPARK,

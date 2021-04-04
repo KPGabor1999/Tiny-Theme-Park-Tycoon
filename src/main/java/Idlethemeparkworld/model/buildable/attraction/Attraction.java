@@ -115,7 +115,6 @@ public abstract class Attraction extends Building implements Updatable {
             }
         }
         gm.getFinance().earn(profit);
-        System.out.println("Attraction started");
     }
     
     protected void finish(){

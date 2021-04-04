@@ -13,15 +13,34 @@ import Idlethemeparkworld.model.buildable.attraction.Attraction;
 import Idlethemeparkworld.model.buildable.food.FoodItem;
 import Idlethemeparkworld.model.buildable.food.FoodStall;
 import Idlethemeparkworld.model.buildable.infrastucture.Entrance;
+import Idlethemeparkworld.model.buildable.infrastucture.Infrastructure;
 import Idlethemeparkworld.model.buildable.infrastucture.Pavement;
 import Idlethemeparkworld.model.buildable.infrastucture.Toilet;
+import Idlethemeparkworld.model.buildable.infrastucture.TrashCan;
 import java.awt.Color;
 import java.util.ArrayList;
 
 public class Visitor extends Agent {
+    protected static final int AGENT_HUNGER_WARNING_THRESHOLD = 35;
+    protected static final int AGENT_THIRST_WARNING_THRESHOLD = 35;
+    protected static final int AGENT_TOILET_WARNING_THRESHOLD = 35;
+    protected static final int AGENT_ENERGY_WARNING_THRESHOLD = 25;
+    protected static final int AGENT_LOST_WARNING_THRESHOLD = 8;
+
+    protected static final int AGENT_STATUS_MAXIMUM = 100;
+    
     private int cash;
     private int cashSpent;
     private AgentAction currentAction;
+    
+    int patience;
+    int energy;
+    int happiness;
+    int nausea;
+    int hunger;
+    int thirst;
+    int toilet;
+    int angriness;
     
     private Position lastEnter;
     private FoodItem item;
@@ -30,26 +49,43 @@ public class Visitor extends Agent {
     private int statusTimer;
     
     private Color color;
+    private Position prevPos;
+    private Position newPos;
     private int xOffset;
     private int yOffset;
+    private int lerpTimer;
+    private boolean isMoving;
     
     public Visitor(String name, int startingHappiness, Park park, AgentManager am){
         super(name, startingHappiness, park, am);
         this.cash = rand.nextInt(1000)+1000;
         this.cashSpent = 0;
         this.currentAction = new AgentAction(AgentActionType.ENTERPARK,null);
+        this.patience = Time.convMinuteToTick(10);
+        this.energy = 100;
+        this.happiness = startingHappiness;
+        this.nausea = 0;
+        this.hunger = 100;
+        this.thirst = 100;
+        this.toilet = 100;
+        this.angriness = 0;
         this.lastEnter = null;
         this.item = null;
         this.statusMaxTimer = 0;
         this.statusTimer = 0;
-        this.state = AgentState.ENTERINGPARK;
+        setState(AgentState.ENTERINGPARK);
         this.color = new Color(rand.nextInt(255),rand.nextInt(255),rand.nextInt(255),255);
         this.xOffset = rand.nextInt(64);
         this.yOffset = rand.nextInt(64);
+        this.prevPos = new Position(xOffset,yOffset);
+        this.newPos = new Position(xOffset,yOffset);
+        this.lerpTimer = 0;
+        this.isMoving = false;
     }
     
     @Override
     public void update(long tickCount){
+        checkMove();
         statusTimer++;
         if(tickCount % 24 == 0){
             checkFloating();
@@ -58,7 +94,7 @@ public class Visitor extends Agent {
                 updateThought(tickCount);
                 updateState();
                 updateCurrentAction();
-                performAction();
+                performAction(tickCount);
                 normalizeStatuses();
             } else {
                 updateState();
@@ -68,11 +104,22 @@ public class Visitor extends Agent {
     
     @Override
     public void moveTo(int x, int y){
+        prevPos = new Position(this.x*64+xOffset,this.y*64+yOffset);
+        lerpTimer = 0;
+        isMoving = true;
         this.x=x;
         this.y=y;
-        currentBuilding = park.getTile(x, y).getBuilding();
+        updateCurBuilding();
         xOffset = rand.nextInt(currentBuilding.getInfo().getWidth()*64);
         yOffset = rand.nextInt(currentBuilding.getInfo().getLength()*64);
+        newPos = new Position(this.x*64+xOffset,this.y*64+yOffset);
+    }
+    
+    private void checkMove(){
+        if(isMoving){
+            lerpTimer++;
+            isMoving=lerpTimer<24;
+        }
     }
     
     private void checkFloating(){
@@ -223,7 +270,7 @@ public class Visitor extends Agent {
                 thirst-=0.01;
                 break;
             case QUEUING:
-                if(statusTimer>Time.convMinuteToTick(5)){
+                if(statusTimer>patience){
                     happiness-=0.5;
                 }
                 break;
@@ -239,7 +286,7 @@ public class Visitor extends Agent {
                 break;
             case FLOATING:
                 if(statusTimer>Time.convMinuteToTick(5)){
-                    kill();
+                    remove();
                 }
             default:
                 break;
@@ -249,7 +296,7 @@ public class Visitor extends Agent {
         toilet-=0.01;
     }
         
-    private void performAction(){
+    private void performAction(long tickCount){
         if(currentAction != null){
             switch (currentAction.getAction()){
                 case ENTERPARK:
@@ -276,6 +323,9 @@ public class Visitor extends Agent {
                 case THROWUP:
                     //TODO
                     break;
+                case LITTER:
+                    litterCycle();
+                    break;
                 case NONE:
                     break;
                 default:
@@ -301,19 +351,14 @@ public class Visitor extends Agent {
     }
     
     private void resetAction(){
-        state = AgentState.IDLE;
-        item = null;
+        setState(AgentState.IDLE);
         currentAction = null;
-    }
-    
-    private void kill(){
-        am.removeAgent(this);
     }
     
     private void leaveParkCycle(){
         switch(state){
             case IDLE:
-                state = AgentState.LEAVINGPARK;
+                setState(AgentState.LEAVINGPARK);
                 break;
             case LEAVINGPARK:
                 moveToRandomNeighbourPavement();
@@ -338,7 +383,7 @@ public class Visitor extends Agent {
         Attraction attr;
         switch(state){
             case IDLE:
-                state = AgentState.WANDERING;
+                setState(AgentState.WANDERING);
                 break;
             case WANDERING:
                 ArrayList<Building> bs = park.getNonPavementNeighbours(x, y);
@@ -348,10 +393,9 @@ public class Visitor extends Agent {
                         Attraction at = (Attraction)bs.get(i);
                         if(rand.nextBoolean() && at.getQueueLength() <= at.getCapacity()*1.5){
                             lastEnter = new Position(x, y);
-                            setDestination(bs.get(i).getX(),bs.get(i).getY());
                             moveTo(bs.get(i).getX(),bs.get(i).getY());
                             ((Attraction)currentBuilding).joinQueue(this);
-                            state = AgentState.QUEUING;
+                            setState(AgentState.QUEUING);
                             statusTimer = 0;
                             break;
                         }
@@ -369,7 +413,7 @@ public class Visitor extends Agent {
                     attr.leaveQueue(this);
                     moveTo(lastEnter.x, lastEnter.y);
                     this.happiness -= 5;
-                    state = AgentState.IDLE;
+                    setState(AgentState.IDLE);
                 }
                 break;
             case ONRIDE:
@@ -384,17 +428,16 @@ public class Visitor extends Agent {
         
         switch(state){
             case IDLE:
-                state = AgentState.WANDERING;
+                setState(AgentState.WANDERING);
                 break;
             case WANDERING:
                 ArrayList<Building> bs = park.getNonPavementNeighbours(x, y);
                 bs.removeIf(b -> !(b instanceof Toilet));
                 if(bs.size() > 0){
                     lastEnter = new Position(x, y);
-                    setDestination(bs.get(0).getX(),bs.get(0).getY());
                     moveTo(bs.get(0).getX(),bs.get(0).getY());
                     ((Toilet)currentBuilding).joinLine(this);
-                    state = AgentState.QUEUING;
+                    setState(AgentState.QUEUING);
                     break;
                 } else {
                     moveToRandomNeighbourPavement();
@@ -406,12 +449,12 @@ public class Visitor extends Agent {
                     tlt.leaveLine(this);
                     moveTo(lastEnter.x, lastEnter.y);
                     this.happiness -= 5;
-                    state = AgentState.IDLE;
+                    setState(AgentState.IDLE);
                 } else {
                     if(tlt.isFirstInQueue(this)){
                         if(tlt.isThereEmptyStool()){
                             tlt.enter(this);
-                            state = AgentState.SHITTING;
+                            setState(AgentState.SHITTING);
                             statusMaxTimer = Time.convMinuteToTick(rand.nextInt(5)+2);
                             statusTimer = 0;
                         }
@@ -437,13 +480,13 @@ public class Visitor extends Agent {
         Pavement pave;
         switch(state){
             case IDLE:
-                state = AgentState.WANDERING;
+                setState(AgentState.WANDERING);
                 break;
             case WANDERING:
                 pave = (Pavement)currentBuilding;
                 if(/*pave.hasFreeSeating()*/true){
                     //pave.sit();
-                    state = AgentState.SITTING;
+                    setState(AgentState.SITTING);
                 } else {
                     moveToRandomNeighbourPavement();
                 }
@@ -464,7 +507,7 @@ public class Visitor extends Agent {
         FoodStall stall;
         switch(state){
             case IDLE:
-                state = AgentState.WANDERING;
+                setState(AgentState.WANDERING);
                 break;
             case WANDERING:
                 ArrayList<Building> bs = park.getNonPavementNeighbours(x, y);
@@ -473,10 +516,9 @@ public class Visitor extends Agent {
                     for (int i = 0; i < bs.size(); i++) {
                         if(rand.nextBoolean()){
                             lastEnter = new Position(x, y);
-                            setDestination(bs.get(i).getX(),bs.get(i).getY());
                             moveTo(bs.get(i).getX(),bs.get(i).getY());
                             ((FoodStall)currentBuilding).joinQueue(this);
-                            state = AgentState.QUEUING;
+                            setState(AgentState.QUEUING);
                             statusTimer = 0;
                             break;
                         }
@@ -490,14 +532,14 @@ public class Visitor extends Agent {
                 break;
             case QUEUING:
                 stall = ((FoodStall)currentBuilding);
-                if(statusTimer>this.patience){
+                if(statusTimer>patience){
                     stall.leaveQueue(this);
                     moveTo(lastEnter.x, lastEnter.y);
                     this.happiness -= 5;
-                    state = AgentState.IDLE;
+                    resetAction();
                 } else {
                     if(stall.isFirstInQueue(this)){
-                        state = AgentState.BUYING;
+                        setState(AgentState.BUYING);
                     }
                 }
                 break;
@@ -506,7 +548,7 @@ public class Visitor extends Agent {
                 if(stall.canService()){
                     item = stall.buyFood(this);
                     moveTo(lastEnter.x, lastEnter.y);
-                    state = AgentState.EATING;
+                    setState(AgentState.EATING);
                     statusTimer = 0;
                 }
                 break;
@@ -516,6 +558,47 @@ public class Visitor extends Agent {
                     hunger += item.hunger;
                     thirst += item.thirst;
                     resetAction();
+                    currentAction = new AgentAction(AgentActionType.LITTER, null);
+                }
+                break;
+            default:
+                break;
+        }
+    }
+    
+    private void litterCycle(){
+        TrashCan tc;
+        switch(state){
+            case IDLE:
+                setState(AgentState.WANDERING);
+                statusTimer = 0;
+                break;
+            case WANDERING:
+                if(statusTimer>patience){
+                    Infrastructure i = (Infrastructure)currentBuilding;
+                    happiness-=5;
+                    i.litter(item.consumeTime*0.01);
+                    item = null;
+                    resetAction();
+                } else {
+                    ArrayList<Building> bs = park.getNonPavementNeighbours(x, y);
+                    bs.removeIf(b -> !(b instanceof TrashCan));
+                    if(bs.size() > 0) {
+                        for (int i = 0; i < bs.size(); i++) {
+                            tc = ((TrashCan)bs.get(i));
+                            if(!tc.isFull()){
+                                tc.use(item.consumeTime*0.01);
+                                item = null;
+                                resetAction();
+                                break;
+                            }
+                        }
+                        if(state != AgentState.IDLE){
+                            moveToRandomNeighbourPavement();
+                        }
+                    } else {
+                        moveToRandomNeighbourPavement();
+                    }
                 }
                 break;
             default:
@@ -533,7 +616,7 @@ public class Visitor extends Agent {
     }
     
     public void setOnRide(){
-        state = AgentState.ONRIDE;
+        setState(AgentState.ONRIDE);
     }
     
     public void sendRideEvent(int rideEvent){
@@ -564,12 +647,41 @@ public class Visitor extends Agent {
     public Color getColor(){
         return color;
     }
-
-    public int getxOffset() {
-        return xOffset;
+    
+    public Position calculateExactPosition(int cellSize){
+        Position res = prevPos.lerp(newPos, lerpTimer/24.0);
+        return res;
+    }
+    
+    public int getPatience() {
+        return patience;
     }
 
-    public int getyOffset() {
-        return yOffset;
+    public int getEnergy() {
+        return energy;
+    }
+
+    public int getHappiness() {
+        return happiness;
+    }
+
+    public int getNausea() {
+        return nausea;
+    }
+
+    public int getHunger() {
+        return hunger;
+    }
+
+    public int getThirst() {
+        return thirst;
+    }
+
+    public int getToilet() {
+        return toilet;
+    }
+
+    public int getAngriness() {
+        return angriness;
     }
 }

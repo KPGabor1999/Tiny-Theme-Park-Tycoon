@@ -83,7 +83,6 @@ public abstract class FoodStall extends Building {
 
                 leaveQueue(visitor);
                 serviceTimer = serviceTime;
-                System.out.println("Food bought");
                 return new FoodItem(foodQuality.getNextRandom(),drinkQuality.getNextRandom(),servingSize.getNextRandom());
             } else {
                 return new FoodItem();

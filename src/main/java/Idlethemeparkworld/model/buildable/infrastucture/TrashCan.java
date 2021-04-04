@@ -6,8 +6,8 @@ import Idlethemeparkworld.misc.utils.Pair;
 import Idlethemeparkworld.model.GameManager;
 
 public class TrashCan extends Infrastructure {
-    private int capacity;
-    private int filled;
+    private double capacity;
+    private double filled;
     
     public TrashCan(int x, int y, GameManager gm) {
         super(gm);
@@ -20,31 +20,34 @@ public class TrashCan extends Infrastructure {
         this.value = BuildType.TRASHCAN.getBuildCost();
     }
 
-    public int getCapacity() {
+    public double getCapacity() {
         return capacity;
     }
 
-    public int getFilled() {
+    public double getFilled() {
         return filled;
     }
     
     public ArrayList<Pair<String, String>> getAllData(){
         ArrayList<Pair<String, String>> res = new ArrayList<>();
-        res.add(new Pair<>("Capacity: ", Integer.toString(capacity)));
-        res.add(new Pair<>("Filled: ", Integer.toString(filled)));
+        res.add(new Pair<>("Capacity: ", String.format("%.2f", capacity)));
+        res.add(new Pair<>("Filled: ", String.format("%.2f", filled)));
         return res;
     }    
     
     //Methods for managing visitors:
     
-    public void use(){
-        if(!this.isFull()){
-            filled++;
+    public void use(double amount){
+        if(!isFull()){
+            filled+=amount;
+            if(isFull()){
+                filled = capacity;
+            }
         }
     }
     
     public boolean isFull(){
-        return filled < capacity;
+        return filled >= capacity;
     }
         
     public void empty(){
