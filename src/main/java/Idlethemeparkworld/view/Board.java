@@ -179,13 +179,10 @@ public class Board extends JPanel {
         
         ArrayList<Visitor> visitors = gm.getAgentManager().getVisitors();
         for (int i = 0; i < visitors.size(); i++) {
-            int x = visitors.get(i).getX();
-            int y = visitors.get(i).getY();
-            int xOffset = visitors.get(i).getxOffset();
-            int yOffset = visitors.get(i).getyOffset();;
+            Position pos = visitors.get(i).calculateExactPosition(CELL_SIZE);
             
             gr.setColor(visitors.get(i).getColor());
-            gr.drawRect(x*CELL_SIZE+xOffset, y*CELL_SIZE+yOffset, 2, 3);
+            gr.drawRect(pos.x, pos.y, 2, 3);
         }
     }
     

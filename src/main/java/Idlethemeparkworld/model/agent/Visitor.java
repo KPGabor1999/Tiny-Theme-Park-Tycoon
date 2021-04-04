@@ -49,8 +49,12 @@ public class Visitor extends Agent {
     private int statusTimer;
     
     private Color color;
+    private Position prevPos;
+    private Position newPos;
     private int xOffset;
     private int yOffset;
+    private int lerpTimer;
+    private boolean isMoving;
     
     public Visitor(String name, int startingHappiness, Park park, AgentManager am){
         super(name, startingHappiness, park, am);
@@ -73,10 +77,15 @@ public class Visitor extends Agent {
         this.color = new Color(rand.nextInt(255),rand.nextInt(255),rand.nextInt(255),255);
         this.xOffset = rand.nextInt(64);
         this.yOffset = rand.nextInt(64);
+        this.prevPos = new Position(xOffset,yOffset);
+        this.newPos = new Position(xOffset,yOffset);
+        this.lerpTimer = 0;
+        this.isMoving = false;
     }
     
     @Override
     public void update(long tickCount){
+        checkMove();
         statusTimer++;
         if(tickCount % 24 == 0){
             checkFloating();
@@ -95,11 +104,22 @@ public class Visitor extends Agent {
     
     @Override
     public void moveTo(int x, int y){
+        prevPos = new Position(this.x*64+xOffset,this.y*64+yOffset);
+        lerpTimer = 0;
+        isMoving = true;
         this.x=x;
         this.y=y;
-        currentBuilding = park.getTile(x, y).getBuilding();
+        updateCurBuilding();
         xOffset = rand.nextInt(currentBuilding.getInfo().getWidth()*64);
         yOffset = rand.nextInt(currentBuilding.getInfo().getLength()*64);
+        newPos = new Position(this.x*64+xOffset,this.y*64+yOffset);
+    }
+    
+    private void checkMove(){
+        if(isMoving){
+            lerpTimer++;
+            isMoving=lerpTimer<24;
+        }
     }
     
     private void checkFloating(){
@@ -373,7 +393,6 @@ public class Visitor extends Agent {
                         Attraction at = (Attraction)bs.get(i);
                         if(rand.nextBoolean() && at.getQueueLength() <= at.getCapacity()*1.5){
                             lastEnter = new Position(x, y);
-                            setDestination(bs.get(i).getX(),bs.get(i).getY());
                             moveTo(bs.get(i).getX(),bs.get(i).getY());
                             ((Attraction)currentBuilding).joinQueue(this);
                             setState(AgentState.QUEUING);
@@ -416,7 +435,6 @@ public class Visitor extends Agent {
                 bs.removeIf(b -> !(b instanceof Toilet));
                 if(bs.size() > 0){
                     lastEnter = new Position(x, y);
-                    setDestination(bs.get(0).getX(),bs.get(0).getY());
                     moveTo(bs.get(0).getX(),bs.get(0).getY());
                     ((Toilet)currentBuilding).joinLine(this);
                     setState(AgentState.QUEUING);
@@ -498,7 +516,6 @@ public class Visitor extends Agent {
                     for (int i = 0; i < bs.size(); i++) {
                         if(rand.nextBoolean()){
                             lastEnter = new Position(x, y);
-                            setDestination(bs.get(i).getX(),bs.get(i).getY());
                             moveTo(bs.get(i).getX(),bs.get(i).getY());
                             ((FoodStall)currentBuilding).joinQueue(this);
                             setState(AgentState.QUEUING);
@@ -553,7 +570,6 @@ public class Visitor extends Agent {
         TrashCan tc;
         switch(state){
             case IDLE:
-                System.out.println("taking out trash: " + item.consumeTime);
                 setState(AgentState.WANDERING);
                 statusTimer = 0;
                 break;
@@ -564,25 +580,25 @@ public class Visitor extends Agent {
                     i.litter(item.consumeTime*0.01);
                     item = null;
                     resetAction();
-                }
-                ArrayList<Building> bs = park.getNonPavementNeighbours(x, y);
-                bs.removeIf(b -> !(b instanceof TrashCan));
-                if(bs.size() > 0) {
-                    for (int i = 0; i < bs.size(); i++) {
-                        tc = ((TrashCan)bs.get(i));
-                        if(!tc.isFull()){
-                            System.out.println("FOUND empty BIN ");
-                            tc.use(item.consumeTime*0.005);
-                            item = null;
-                            resetAction();
-                            break;
+                } else {
+                    ArrayList<Building> bs = park.getNonPavementNeighbours(x, y);
+                    bs.removeIf(b -> !(b instanceof TrashCan));
+                    if(bs.size() > 0) {
+                        for (int i = 0; i < bs.size(); i++) {
+                            tc = ((TrashCan)bs.get(i));
+                            if(!tc.isFull()){
+                                tc.use(item.consumeTime*0.01);
+                                item = null;
+                                resetAction();
+                                break;
+                            }
                         }
-                    }
-                    if(state != AgentState.IDLE){
+                        if(state != AgentState.IDLE){
+                            moveToRandomNeighbourPavement();
+                        }
+                    } else {
                         moveToRandomNeighbourPavement();
                     }
-                } else {
-                    moveToRandomNeighbourPavement();
                 }
                 break;
             default:
@@ -631,13 +647,10 @@ public class Visitor extends Agent {
     public Color getColor(){
         return color;
     }
-
-    public int getxOffset() {
-        return xOffset;
-    }
-
-    public int getyOffset() {
-        return yOffset;
+    
+    public Position calculateExactPosition(int cellSize){
+        Position res = prevPos.lerp(newPos, lerpTimer/24.0);
+        return res;
     }
     
     public int getPatience() {
