@@ -14,6 +14,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -23,6 +25,8 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JViewport;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 public class Board extends JPanel {
@@ -40,7 +44,7 @@ public class Board extends JPanel {
     private final Main main;
     private final JButton buildButton;
 
-    public Board(GameManager gm, JButton buildButton, Main main) {
+   public Board(GameManager gm, JButton buildButton, Main main, JPanel gameArea) {
         this.gm = gm;
         gm.setBoard(this);
         this.park = gm.getPark();
@@ -59,6 +63,7 @@ public class Board extends JPanel {
         timer.start();
         
         MouseAdapter ma = new MouseAdapter(){
+            private Point origin;
             @Override
             public void mouseMoved(MouseEvent e) {
                 if(buildMode){
@@ -78,11 +83,25 @@ public class Board extends JPanel {
                             main.updateInfobar();
                         } 
                     }
+                } else if (origin != null) {
+                    JViewport viewPort = (JViewport) SwingUtilities.getAncestorOfClass(JViewport.class, gameArea);
+                    if (viewPort != null) {
+                        int deltaX = origin.x - e.getX();
+                        int deltaY = origin.y - e.getY();
+
+                        Rectangle view = viewPort.getViewRect();
+                        view.x += deltaX;
+                        view.y += deltaY;
+
+                        gameArea.scrollRectToVisible(view);
+                    }
                 }
+
             }
             
             @Override
             public void mousePressed(MouseEvent e){
+                origin = new Point(e.getPoint());
                 if(buildMode){
                     dragged = false;
                 }

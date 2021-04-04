@@ -1,7 +1,6 @@
 package Idlethemeparkworld;
 
 import Idlethemeparkworld.misc.Highscores;
-import Idlethemeparkworld.misc.ResourceLoader;
 import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.GameManager;
 import Idlethemeparkworld.view.HighscoreWindow;
@@ -26,8 +25,16 @@ import Idlethemeparkworld.view.Board;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
+import java.awt.GridBagLayout;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
+import javax.swing.JScrollPane;
+import javax.swing.JViewport;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.plaf.FontUIResource;
@@ -213,10 +220,56 @@ public class Main extends JFrame {
         });
 
         add(controlPanel);
+        
+        JPanel gameArea = new JPanel();
+        board = new Board(gm, buildButton, this, gameArea);
 
-        board = new Board(gm, buildButton, this);
+        Dimension d = board.getPreferredSize();
+        d.height*=1.5;
+        d.width*=1.5;
+        gameArea.setPreferredSize(d);
+        gameArea.setBackground(new Color(0, 130, 14, 255));
+        gameArea.setLayout(new GridBagLayout());
+        gameArea.add(board);
+        
+        JScrollPane scroller = new JScrollPane(gameArea);
+        scroller.setPreferredSize(new Dimension(600,600));
+        
+        add(scroller);
 
-        add(board);
+        MouseAdapter ma = new MouseAdapter() {
+            private Point origin;
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                origin = new Point(e.getPoint());
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                if (origin != null) {
+                    JViewport viewPort = (JViewport) SwingUtilities.getAncestorOfClass(JViewport.class, gameArea);
+                    if (viewPort != null) {
+                        int deltaX = origin.x - e.getX();
+                        int deltaY = origin.y - e.getY();
+
+                        Rectangle view = viewPort.getViewRect();
+                        view.x += deltaX;
+                        view.y += deltaY;
+
+                        gameArea.scrollRectToVisible(view);
+                    }
+                }
+            }
+        };
+
+        gameArea.addMouseListener(ma);
+        gameArea.addMouseMotionListener(ma);
+
 
         setResizable(false);
         setLocationRelativeTo(null);
