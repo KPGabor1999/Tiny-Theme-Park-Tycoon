@@ -50,16 +50,33 @@ public class Board extends JPanel {
             @Override
             public void mouseMoved(MouseEvent e) {
                 if(buildMode){
-                    Dimension sizes = Board.this.getSize();
-                    int x = Math.floorDiv(e.getX(), sizes.width/park.getWidth());
-                    int y = Math.floorDiv(e.getY(), sizes.height/park.getHeight());
-                    canBuild[0]=park.canBuild(type, x, y);
-                    canBuild[0]=canBuild[0]&&gm.getFinance().canAfford(type.getBuildCost());
-                    pos[0]=x;
-                    pos[1]=y;
-                    repaint();
+                    updateGhost(e);
                 }
             }
+            
+            @Override
+            public void mouseDragged(MouseEvent e){
+                if(buildMode){
+                    updateGhost(e);
+                    if(type == BuildType.PAVEMENT){
+                        if(canBuild[0]){
+                            park.build(type, pos[0], pos[1], false);
+                            gm.getFinance().pay(type.getBuildCost());
+                            main.updateInfobar();
+                        } 
+                    }
+                }
+            }
+            
+            @Override
+            public void mouseReleased(MouseEvent e){
+                if(buildMode){
+                    if(type == BuildType.PAVEMENT){
+                        Board.this.exitBuildMode();
+                    }
+                }
+            }
+            
             @Override
             public void mouseClicked(MouseEvent e) {
                 Position mPos = retrieveCoords(e);
@@ -87,6 +104,15 @@ public class Board extends JPanel {
         setBorder(BorderFactory.createEmptyBorder(0, -5, 0, -5));
 
         resizeMap(park.getHeight(), park.getWidth());
+    }
+    
+    private void updateGhost(MouseEvent e){
+        Position mPos = retrieveCoords(e);
+        canBuild[0]=park.canBuild(type, mPos.x, mPos.y);
+        canBuild[0]=canBuild[0]&&gm.getFinance().canAfford(type.getBuildCost());
+        pos[0]=mPos.x;
+        pos[1]=mPos.y;
+        repaint();
     }
     
     private Position retrieveCoords(MouseEvent e){
