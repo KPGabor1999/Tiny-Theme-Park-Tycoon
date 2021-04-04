@@ -73,6 +73,7 @@ public class AgentInnerLogic {
         RIDE,
         TOILET,
         THROWUP,
+        LITTER,
 
         ENTERPARK,
         LEAVEPARK,
