@@ -2,6 +2,7 @@ package Idlethemeparkworld.view;
 
 import Idlethemeparkworld.Main;
 import Idlethemeparkworld.misc.Assets;
+import Idlethemeparkworld.misc.utils.Position;
 import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.GameManager;
 import Idlethemeparkworld.model.Park;
@@ -9,28 +10,21 @@ import Idlethemeparkworld.model.agent.Visitor;
 import Idlethemeparkworld.model.buildable.Building;
 import Idlethemeparkworld.model.buildable.BuildingStatus;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.Random;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 public class Board extends JPanel {
 
-    private GameManager gm;
+    private final GameManager gm;
     private Park park;
-    private GridButton[][] buttonGrid;
     private final int CELL_SIZE = 64;
     
     private boolean buildMode;
@@ -38,9 +32,8 @@ public class Board extends JPanel {
     private final boolean[] canBuild;
     private final int[] pos;
     
-    private Main main;
-    private JButton buildButton;
-    private Random rand;
+    private final Main main;
+    private final JButton buildButton;
 
     public Board(GameManager gm, JButton buildButton, Main main) {
         this.gm = gm;
@@ -52,12 +45,50 @@ public class Board extends JPanel {
         this.canBuild = new boolean[1];
         this.buildButton = buildButton;
         this.main = main;
-        this.rand = new Random();
+        
+        MouseAdapter ma = new MouseAdapter(){
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                if(buildMode){
+                    Dimension sizes = Board.this.getSize();
+                    int x = Math.floorDiv(e.getX(), sizes.width/park.getWidth());
+                    int y = Math.floorDiv(e.getY(), sizes.height/park.getHeight());
+                    canBuild[0]=park.canBuild(type, x, y);
+                    canBuild[0]=canBuild[0]&&gm.getFinance().canAfford(type.getBuildCost());
+                    pos[0]=x;
+                    pos[1]=y;
+                    repaint();
+                }
+            }
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if(buildMode){
+                    if(canBuild[0]){
+                        park.build(type, pos[0], pos[1], false);
+                        gm.getFinance().pay(type.getBuildCost());
+                        main.updateInfobar();
+                    }
+                    Board.this.exitBuildMode();
+                } else {
+                
+                }
+            }
+        };
+        
+        this.addMouseListener(ma);
+        this.addMouseMotionListener(ma);
         
         setBackground(new Color(0, 140, 14, 255));
         setBorder(BorderFactory.createEmptyBorder(0, -5, 0, -5));
 
         resizeMap(park.getHeight(), park.getWidth());
+    }
+    
+    private Position retrieveCoords(MouseEvent e){
+        Dimension sizes = Board.this.getSize();
+        int x = Math.floorDiv(e.getX(), sizes.width/park.getWidth());
+        int y = Math.floorDiv(e.getY(), sizes.height/park.getHeight());
+        return new Position(x,y);
     }
 
     public GameManager getGameManager() {
@@ -68,11 +99,7 @@ public class Board extends JPanel {
         return park;
     }
 
-    public GridButton[][] getButtonGrid() {
-        return buttonGrid;
-    }
-
-    public int getCELL_SIZE() {
+    public int getCellSize() {
         return CELL_SIZE;
     }
 
@@ -88,10 +115,6 @@ public class Board extends JPanel {
         return canBuild;
     }
 
-    public int[] getPos() {
-        return pos;
-    }
-
     public Main getMain() {
         return main;
     }
@@ -102,13 +125,6 @@ public class Board extends JPanel {
     
     private void resizeMap(int rows, int columns){
         removeAll();
-        setLayout(new GridLayout(rows, columns));
-        buttonGrid = new GridButton[rows][columns];
-        for(int y=0; y<buttonGrid.length; y++){
-            for(int x=0; x<buttonGrid[0].length; x++){
-                addGridButton(x, y);
-            }
-        }
         Dimension dim = new Dimension(CELL_SIZE * columns, CELL_SIZE * rows);
         setPreferredSize(dim);
         setMaximumSize(dim);
@@ -119,60 +135,6 @@ public class Board extends JPanel {
     public void refresh() {
         repaint();
     }
-
-    private void addGridButton(int x, int y){
-        buttonGrid[y][x] = new GridButton();
-        buttonGrid[y][x].setSize(CELL_SIZE, CELL_SIZE);
-        buttonGrid[y][x].setOpaque(false);
-        buttonGrid[y][x].setContentAreaFilled(false);
-        buttonGrid[y][x].addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(park.getTile(x, y).getBuilding() != null){
-                    JFrame parentFrame = (JFrame) getRootPane().getParent();
-                    BuildingOptionsDialog buildingOptions = new BuildingOptionsDialog(parentFrame, Board.this, x, y);
-                    buildingOptions.setLocationRelativeTo(Board.this);
-                }
-            }
-        });
-        
-        buttonGrid[y][x].addMouseListener(new MouseAdapter(){
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                if(buildMode){
-                    canBuild[0]=park.canBuild(type, x, y);
-                    canBuild[0]=canBuild[0]&&gm.getFinance().canAfford(type.getBuildCost());
-                    pos[0]=x;
-                    pos[1]=y;
-                    repaint();
-                }
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-            }
-
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if(SwingUtilities.isRightMouseButton(e)){
-                    exitBuildMode();
-                } else {
-                    if(buildMode){
-                        if(canBuild[0]){
-                            park.build(type, pos[0], pos[1], false);
-                            gm.getFinance().pay(type.getBuildCost());
-                            main.updateInfobar();
-                            //System.out.println("can build");
-                        } else {
-                            //System.out.println("cannot build");
-                        }
-                        exitBuildMode();
-                    }
-                }
-            }
-        });
-        add(buttonGrid[y][x]);
-    }
     
     public void enterBuildMode(BuildType type){
         buildMode = true;
@@ -180,11 +142,6 @@ public class Board extends JPanel {
         pos[0]=0;
         pos[1]=0;
         canBuild[0]=false;
-        Component[] comps = getComponents();
-        for (Component component : comps) {
-            component.setEnabled(false);
-            ((GridButton)component).darken();
-        }
         buildButton.setEnabled(false);
         repaint();
     }
@@ -192,11 +149,6 @@ public class Board extends JPanel {
     public void exitBuildMode(){
         buildMode = false;
         this.type = null;
-        Component[] comps = getComponents();
-        for (Component component : comps) {
-            component.setEnabled(true);
-            ((GridButton)component).resetColor();
-        }
         buildButton.setEnabled(true);
         repaint();
     }

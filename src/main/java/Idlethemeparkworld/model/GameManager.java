@@ -163,8 +163,6 @@ public class GameManager {
     }
 
     private void update(int tickStep) {
-        
-
         updateCount += tickStep * getGameSpeed();
         double actualUpdateCount = Math.floor(updateCount);
         updateCount -= actualUpdateCount;
@@ -172,8 +170,8 @@ public class GameManager {
         for (int i = 0; i < actualUpdateCount; i++) {
             tickCount++;
             park.update(tickCount);
-            time.update(tickCount);
             am.update(tickCount);
+            time.update(tickCount);
         }
     }
 
