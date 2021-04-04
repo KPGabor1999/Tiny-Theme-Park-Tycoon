@@ -11,6 +11,7 @@ import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentState;
 import Idlethemeparkworld.model.agent.AgentTypes.AgentType;
 import Idlethemeparkworld.model.agent.AgentTypes.StaffType;
 import Idlethemeparkworld.model.buildable.Building;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.PriorityQueue;
@@ -58,6 +59,11 @@ public abstract class Agent implements Updatable {
     BuildType[] visitHistory;
 
     Building currentBuilding;
+    
+    //Karakter megjelenítése a táblán:
+    protected Color color;
+    protected int xOffset;
+    protected int yOffset;
 
     public Agent(String name, int startingHappiness, Park park, AgentManager am) {
         this.am = am;
@@ -87,6 +93,10 @@ public abstract class Agent implements Updatable {
         
         this.visitHistory = new BuildType[AGENT_HISTORY_LENGTH];
         this.currentBuilding = park.getTile(x, y).getBuilding();
+        
+        this.color = new Color(rand.nextInt(255),rand.nextInt(255),rand.nextInt(255),255);
+        this.xOffset = rand.nextInt(64);
+        this.yOffset = rand.nextInt(64);
     }
 
     public String getName() {
@@ -170,6 +180,8 @@ public abstract class Agent implements Updatable {
         this.x=x;
         this.y=y;
         currentBuilding = park.getTile(x, y).getBuilding();
+        xOffset = rand.nextInt(currentBuilding.getInfo().getWidth()*64);
+        yOffset = rand.nextInt(currentBuilding.getInfo().getLength()*64);
     }
     
     public void setDestination(int x, int y){
@@ -179,7 +191,7 @@ public abstract class Agent implements Updatable {
     
     public void forceLocation(int x, int y){
         if(manualMovable){
-            this.x = x;
+            this.x = x;     //Nem ezt is a moveTo-val kéne?
             this.y = y;
             updateCurBuilding();
         }

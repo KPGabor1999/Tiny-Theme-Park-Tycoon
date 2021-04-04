@@ -31,10 +31,6 @@ public class Visitor extends Agent {
     private int statusMaxTimer;
     private int statusTimer;
     
-    private Color color;
-    private int xOffset;
-    private int yOffset;
-    
     public Visitor(String name, int startingHappiness, Park park, AgentManager am){
         super(name, startingHappiness, park, am);
         this.cash = rand.nextInt(1000)+1000;
@@ -65,15 +61,6 @@ public class Visitor extends Agent {
                 updateState();
             }
         }
-    }
-    
-    @Override
-    public void moveTo(int x, int y){
-        this.x=x;
-        this.y=y;
-        currentBuilding = park.getTile(x, y).getBuilding();
-        xOffset = rand.nextInt(currentBuilding.getInfo().getWidth()*64);
-        yOffset = rand.nextInt(currentBuilding.getInfo().getLength()*64);
     }
     
     private void checkFloating(){

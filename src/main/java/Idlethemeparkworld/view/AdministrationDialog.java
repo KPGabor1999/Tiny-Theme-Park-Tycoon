@@ -192,6 +192,21 @@ public class AdministrationDialog extends JDialog {
                 }
             });
 
+            
+            janitorNumberSlider.addChangeListener(new ChangeListener(){
+                @Override
+                public void stateChanged(ChangeEvent event) {
+                    //A beállított érték alapján menedzseljük a takarítók listáját.
+                    JSlider slider = (JSlider) event.getSource();
+                    if (!slider.getValueIsAdjusting()) {
+                        int numberOfJanitors = slider.getValue();
+                        //Action
+                        board.getGameManager().getAgentManager().manageJanitors(numberOfJanitors);
+                    }
+                }
+                
+            });
+
             this.getContentPane().add(employeeSettingsPanel);
 
             this.pack();
