@@ -46,7 +46,7 @@ public class GameManager {
         this.hamburgerPrice = 15;
         this.fishChipsPrice = 15;
 
-        this.park = new Park(10, 15, this);
+        this.park = new Park(10, 11, this);
         this.time = new Time();
         this.finance = new Finance(100000);
         this.am = new AgentManager(park, this);
