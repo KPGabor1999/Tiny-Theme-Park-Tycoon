@@ -234,6 +234,8 @@ public class Main extends JFrame {
         
         JScrollPane scroller = new JScrollPane(gameArea);
         scroller.setPreferredSize(new Dimension(600,600));
+        scroller.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+        scroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         
         add(scroller);
 
