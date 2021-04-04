@@ -172,9 +172,6 @@ public class AgentManager implements Updatable {
         if(tickCount%24==0){
             updateVisitorProbability();
         }
-        if(tickCount%2==0){
-            gm.getBoard().repaint();
-        }
     }
 }
     

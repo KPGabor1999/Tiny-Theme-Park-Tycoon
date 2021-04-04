@@ -13,6 +13,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -20,6 +22,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
 public class Board extends JPanel {
 
@@ -29,6 +32,7 @@ public class Board extends JPanel {
     
     private boolean buildMode;
     private BuildType type;
+    private boolean dragged;
     private final boolean[] canBuild;
     private final int[] pos;
     
@@ -45,6 +49,13 @@ public class Board extends JPanel {
         this.canBuild = new boolean[1];
         this.buildButton = buildButton;
         this.main = main;
+        this.dragged = false;
+        Timer timer = new Timer(18, new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+               Board.this.repaint();
+            }    
+        });
+        timer.start();
         
         MouseAdapter ma = new MouseAdapter(){
             @Override
@@ -59,6 +70,7 @@ public class Board extends JPanel {
                 if(buildMode){
                     updateGhost(e);
                     if(type == BuildType.PAVEMENT){
+                        dragged = true;
                         if(canBuild[0]){
                             park.build(type, pos[0], pos[1], false);
                             gm.getFinance().pay(type.getBuildCost());
@@ -69,8 +81,15 @@ public class Board extends JPanel {
             }
             
             @Override
-            public void mouseReleased(MouseEvent e){
+            public void mousePressed(MouseEvent e){
                 if(buildMode){
+                    dragged = false;
+                }
+            }
+            
+            @Override
+            public void mouseReleased(MouseEvent e){
+                if(buildMode && dragged){
                     if(type == BuildType.PAVEMENT){
                         Board.this.exitBuildMode();
                     }
