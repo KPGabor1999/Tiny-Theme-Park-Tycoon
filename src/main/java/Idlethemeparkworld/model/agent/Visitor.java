@@ -7,6 +7,8 @@ import Idlethemeparkworld.model.Time;
 import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentActionType;
 import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentState;
 import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentThoughts;
+import Idlethemeparkworld.model.agent.AgentTypes.AgentType;
+import Idlethemeparkworld.model.agent.AgentTypes.StaffType;
 import Idlethemeparkworld.model.buildable.Building;
 import Idlethemeparkworld.model.buildable.BuildingStatus;
 import Idlethemeparkworld.model.buildable.attraction.Attraction;
@@ -42,7 +44,6 @@ public class Visitor extends Agent {
         this.item = null;
         this.statusMaxTimer = 0;
         this.statusTimer = 0;
-        this.state = AgentState.ENTERINGPARK;
         this.color = new Color(rand.nextInt(255),rand.nextInt(255),rand.nextInt(255),255);
         this.xOffset = rand.nextInt(64);
         this.yOffset = rand.nextInt(64);

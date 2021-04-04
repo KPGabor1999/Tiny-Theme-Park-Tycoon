@@ -36,8 +36,6 @@ public class AdministrationDialog extends JDialog {
     private JSlider janitorNumberSlider;
     private JLabel maintainerNumberLabel;
     private JSlider maintainerNumberSlider;
-    private JLabel securityGuardNumberLabel;
-    private JSlider securityGuardNumberSlider;
 
     private static int instanceCount;
 
@@ -121,30 +119,22 @@ public class AdministrationDialog extends JDialog {
 
             employeeSettingsPanel = new JPanel(new GridLayout(3, 2));
             janitorNumberLabel = new JLabel("Number of cleaners:");
-            janitorNumberSlider = new JSlider(0, 10);
-            janitorNumberSlider.setMajorTickSpacing(10);
-            janitorNumberSlider.setMinorTickSpacing(1);
+            janitorNumberSlider = new JSlider(0, 5);
+            janitorNumberSlider.setValue(0);
+            janitorNumberSlider.setMajorTickSpacing(1);
             janitorNumberSlider.setPaintTicks(true);
             janitorNumberSlider.setPaintLabels(true);
             maintainerNumberLabel = new JLabel("Number of repairmen:");
-            maintainerNumberSlider = new JSlider(0, 10);
-            maintainerNumberSlider.setMajorTickSpacing(10);
-            maintainerNumberSlider.setMinorTickSpacing(1);
+            maintainerNumberSlider = new JSlider(0, 5);
+            maintainerNumberSlider.setValue(0);
+            maintainerNumberSlider.setMajorTickSpacing(1);
             maintainerNumberSlider.setPaintTicks(true);
             maintainerNumberSlider.setPaintLabels(true);
-            securityGuardNumberLabel = new JLabel("Number of security guards:");
-            securityGuardNumberSlider = new JSlider(0, 10);
-            securityGuardNumberSlider.setMajorTickSpacing(10);
-            securityGuardNumberSlider.setMinorTickSpacing(1);
-            securityGuardNumberSlider.setPaintTicks(true);
-            securityGuardNumberSlider.setPaintLabels(true);
 
             employeeSettingsPanel.add(janitorNumberLabel);
             employeeSettingsPanel.add(janitorNumberSlider);
             employeeSettingsPanel.add(maintainerNumberLabel);
             employeeSettingsPanel.add(maintainerNumberSlider);
-            employeeSettingsPanel.add(securityGuardNumberLabel);
-            employeeSettingsPanel.add(securityGuardNumberSlider);
 
             //Listeners and event handlers for sliders
             ticketPriceSlider.addChangeListener(new ChangeListener() {
@@ -206,10 +196,9 @@ public class AdministrationDialog extends JDialog {
 
             this.pack();
 
-            int screenHeight = (int) (Toolkit.getDefaultToolkit().getScreenSize().height - this.getHeight()) / 2;
-            int screenWidth = (int) (Toolkit.getDefaultToolkit().getScreenSize().width - this.getWidth()) / 2;
-            //System.out.println(screenHeight + " " + screenWidth);
-            this.setLocation(screenWidth, screenHeight);
+            int locationY = (int) owner.getLocation().getY() + this.getHeight()/ 2;
+            int locationX = (int) owner.getLocation().getX() + this.getWidth()/ 2;
+            this.setLocation(locationX, locationY);
 
             this.setVisible(true);
         }

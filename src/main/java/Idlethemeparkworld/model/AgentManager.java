@@ -45,6 +45,7 @@ public class AgentManager implements Updatable {
     private Random rand;
     
     private ArrayList<Visitor> visitors;
+    private ArrayList<Visitor> janitors;
     private Visitor highlighted;
     
     public AgentManager(Park park, GameManager gm){
@@ -53,6 +54,7 @@ public class AgentManager implements Updatable {
         this.visitorProbability = 0;
         this.rand = new Random();
         this.visitors = new ArrayList<>();
+        this.janitors = new ArrayList<>(5);     //0-5 janitors allowed at a time.
         spawnVisitor();
         highlighted = visitors.get(0);
     }
@@ -141,6 +143,7 @@ public class AgentManager implements Updatable {
         spawnUpdate();
         for (int i = 0; i < visitors.size(); i++) {
             visitors.get(i).update(tickCount);
+            janitors.get(i).update(tickCount);
         }
         if(tickCount%24==0){
             updateVisitorProbability();
