@@ -48,19 +48,12 @@ public class Visitor extends Agent {
     private int statusMaxTimer;
     private int statusTimer;
     
-    private final Color color;
-    private Position prevPos;
-    private Position newPos;
-    private int xOffset;
-    private int yOffset;
-    private int lerpTimer;
-    private boolean isMoving;
-    
     public Visitor(String name, int startingHappiness, Park park, AgentManager am){
         super(name, startingHappiness, park, am);
         this.cash = rand.nextInt(1000)+1000;
         this.cashSpent = 0;
         this.currentAction = new AgentAction(AgentActionType.ENTERPARK,null);
+        
         this.patience = Time.convMinuteToTick(10);
         this.energy = 100;
         this.happiness = startingHappiness;
@@ -69,23 +62,17 @@ public class Visitor extends Agent {
         this.thirst = 100;
         this.toilet = 100;
         this.angriness = 0;
+        
         this.lastEnter = null;
         this.item = null;
         this.statusMaxTimer = 0;
         this.statusTimer = 0;
         setState(AgentState.ENTERINGPARK);
-        this.color = new Color(rand.nextInt(255),rand.nextInt(255),rand.nextInt(255),255);
-        this.xOffset = rand.nextInt(64);
-        this.yOffset = rand.nextInt(64);
-        this.prevPos = new Position(xOffset,yOffset);
-        this.newPos = new Position(xOffset,yOffset);
-        this.lerpTimer = 0;
-        this.isMoving = false;
     }
     
     @Override
     public void update(long tickCount){
-        checkMove();
+        super.update(tickCount);
         statusTimer++;
         if(tickCount % 24 == 0){
             checkFloating();
@@ -99,26 +86,6 @@ public class Visitor extends Agent {
             } else {
                 updateState();
             }
-        }
-    }
-    
-    @Override
-    public void moveTo(int x, int y){
-        prevPos = new Position(this.x*64+xOffset,this.y*64+yOffset);
-        lerpTimer = 0;
-        isMoving = true;
-        this.x=x;
-        this.y=y;
-        updateCurBuilding();
-        xOffset = rand.nextInt(currentBuilding.getInfo().getWidth()*64);
-        yOffset = rand.nextInt(currentBuilding.getInfo().getLength()*64);
-        newPos = new Position(this.x*64+xOffset,this.y*64+yOffset);
-    }
-    
-    private void checkMove(){
-        if(isMoving){
-            lerpTimer++;
-            isMoving=lerpTimer<24;
         }
     }
     
@@ -464,8 +431,9 @@ public class Visitor extends Agent {
             case SHITTING:
                 tlt = ((Toilet)currentBuilding);
                 if(statusTimer>statusMaxTimer){
+                    toilet=100;
                     thirst+=30;
-                    tlt.decreaseHygiene(rand.nextDouble());
+                    tlt.decreaseHygiene(rand.nextDouble()/2);
                     tlt.exit();
                     moveTo(lastEnter.x, lastEnter.y);
                     resetAction();
@@ -642,15 +610,6 @@ public class Visitor extends Agent {
         sb.append(", statusTimer=").append(statusTimer);
         sb.append('}');
         return sb.toString();
-    }
-    
-    public Color getColor(){
-        return color;
-    }
-    
-    public Position calculateExactPosition(int cellSize){
-        Position res = prevPos.lerp(newPos, lerpTimer/24.0);
-        return res;
     }
     
     public int getPatience() {
