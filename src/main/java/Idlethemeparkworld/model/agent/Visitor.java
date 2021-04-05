@@ -2,13 +2,13 @@ package Idlethemeparkworld.model.agent;
 
 import Idlethemeparkworld.misc.utils.Position;
 import Idlethemeparkworld.model.AgentManager;
+import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.Park;
 import Idlethemeparkworld.model.Time;
 import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentActionType;
 import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentState;
 import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentThoughts;
 import Idlethemeparkworld.model.buildable.Building;
-import Idlethemeparkworld.model.buildable.BuildingStatus;
 import Idlethemeparkworld.model.buildable.attraction.Attraction;
 import Idlethemeparkworld.model.buildable.food.FoodItem;
 import Idlethemeparkworld.model.buildable.food.FoodStall;
@@ -19,6 +19,7 @@ import Idlethemeparkworld.model.buildable.infrastucture.Toilet;
 import Idlethemeparkworld.model.buildable.infrastucture.TrashCan;
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class Visitor extends Agent {
     protected static final int AGENT_HUNGER_WARNING_THRESHOLD = 35;
@@ -31,7 +32,6 @@ public class Visitor extends Agent {
     
     private int cash;
     private int cashSpent;
-    private AgentAction currentAction;
     
     int patience;
     int energy;
@@ -42,6 +42,21 @@ public class Visitor extends Agent {
     int toilet;
     int angriness;
     
+    private Color[] visitorColors = {
+        Color.RED,
+        Color.ORANGE,
+        Color.YELLOW,
+        Color.GREEN,
+        Color.CYAN,
+        Color.BLUE,
+        Color.PINK,
+        Color.MAGENTA
+    };
+    
+    ArrayList<AgentThought> thoughts;
+    LinkedList<AgentAction> actionQueue;
+    
+    BuildType[] visitHistory;
     private Position lastEnter;
     private FoodItem item;
     
@@ -49,20 +64,21 @@ public class Visitor extends Agent {
     private int statusTimer;
     
     public Visitor(String name, int startingHappiness, Park park, AgentManager am){
-        super(name, startingHappiness, park, am);
+        super(name, park, am);
+        int chosenColor = rand.nextInt(visitorColors.length);
+        this.color = visitorColors[chosenColor];
         this.cash = rand.nextInt(1000)+1000;
         this.cashSpent = 0;
         this.currentAction = new AgentAction(AgentActionType.ENTERPARK,null);
         
         this.patience = Time.convMinuteToTick(10);
         this.energy = 100;
-        this.happiness = startingHappiness;
+        this.happiness = 100;
         this.nausea = 0;
         this.hunger = 100;
         this.thirst = 100;
         this.toilet = 100;
         this.angriness = 0;
-        
         this.lastEnter = null;
         this.item = null;
         this.statusMaxTimer = 0;
@@ -89,18 +105,73 @@ public class Visitor extends Agent {
         }
     }
     
-    private void checkFloating(){
-        if(park.getTile(x, y).isEmpty() || park.getTile(x, y).getBuilding().getStatus() == BuildingStatus.FLOATING){
-            if(state != AgentState.FLOATING){
-                resetAction();
-                statusTimer = 0;
-                state = AgentState.FLOATING;
-            }
-        } else {
-            if(state == AgentState.FLOATING){
-                state = AgentState.IDLE;
+    private void generateThoughts(long tickCount){
+        if(cash < 50){
+            if(cash <= 0){
+                insertThought(AgentThoughts.NOMONEY,null,tickCount);
+            } else {
+                insertThought(AgentThoughts.LOWMONEY,null,tickCount);
             }
         }
+        boolean anyUrgent = false;
+        anyUrgent = anyUrgent || conditionToThought(hunger,AGENT_HUNGER_WARNING_THRESHOLD,tickCount,AgentThoughts.NOTHUNGRY, AgentThoughts.HUNGRY, 0.5);
+        anyUrgent = anyUrgent || conditionToThought(thirst,AGENT_THIRST_WARNING_THRESHOLD,tickCount,AgentThoughts.NOTTHIRSTY, AgentThoughts.THIRSTY, 0.6);
+        anyUrgent = anyUrgent || conditionToThought(energy,AGENT_ENERGY_WARNING_THRESHOLD,tickCount,AgentThoughts.FEELINGGREAT, AgentThoughts.TIRED, 0.5);
+        if(toilet < AGENT_TOILET_WARNING_THRESHOLD){
+            insertThought(AgentThoughts.TOILET,null,tickCount);
+        }
+        if(happiness < 75 || !anyUrgent){
+            insertThought(AgentThoughts.WANTTHRILL,null,tickCount);
+        }
+    }
+    
+    private void updateThought(long tickCount){
+        for (int i = 0; i < thoughts.size(); i++) {
+            if(tickCount - thoughts.get(i).timeCreated > Time.convMinuteToTick(5)){
+                thoughts.remove(i);
+            }
+        }
+    }
+    
+    private void updateState(){
+        switch(state){
+            case IDLE:
+                energy += 0.05;
+                //nausea -= 0.1;
+                break;
+            case ENTERINGPARK:
+            case LEAVINGPARK:
+            case WANDERING:
+            case WALKING:
+                energy -= 0.03;
+                hunger -= 0.01;
+                thirst-=0.01;
+                break;
+            case QUEUING:
+                if(statusTimer>patience){
+                    happiness-=0.5;
+                }
+                break;
+            case ONRIDE:
+                energy -= 0.02;
+                break;
+            case SITTING:
+                energy += 0.1;
+                hunger -= 0.02;
+                //nausea -= 0.5;
+                break;
+            case BUYING:
+                break;
+            case FLOATING:
+                if(statusTimer>Time.convMinuteToTick(5)){
+                    remove();
+                }
+            default:
+                break;
+        }
+        hunger-=0.02;
+        thirst-=0.01;
+        toilet-=0.01;
     }
     
     private void updateCurrentAction(){
@@ -111,12 +182,50 @@ public class Visitor extends Agent {
          }
     }
     
-    private void updateThought(long tickCount){
-        for (int i = 0; i < thoughts.size(); i++) {
-            if(tickCount - thoughts.get(i).timeCreated > Time.convMinuteToTick(5)){
-                thoughts.remove(i);
+    private void performAction(long tickCount){
+        if(currentAction != null){
+            switch (currentAction.getAction()){
+                case ENTERPARK:
+                    enterCycle();
+                    break;
+                case EAT:
+                    eatCycle();
+                    break;
+                case SIT:
+                    sitCycle();
+                    break;
+                case WANDER:
+                    moveToRandomNeighbourPavement();
+                    break;
+                case TOILET:
+                    toiletCycle();
+                    break;
+                case LEAVEPARK:
+                    leaveParkCycle();
+                    break;
+                case RIDE:
+                    attractionCycle();
+                    break;
+                case THROWUP:
+                    //TODO
+                    break;
+                case LITTER:
+                    litterCycle();
+                    break;
+                case NONE:
+                    break;
+                default:
+                    break;
             }
         }
+    }
+    
+    private void normalizeStatuses(){
+        happiness = Math.min(AGENT_STATUS_MAXIMUM, Math.max(0, happiness));
+        energy = Math.min(AGENT_STATUS_MAXIMUM, Math.max(0, energy));
+        hunger = Math.min(AGENT_STATUS_MAXIMUM, Math.max(0, hunger));
+        thirst = Math.min(AGENT_STATUS_MAXIMUM, Math.max(0, thirst));
+        toilet = Math.min(AGENT_STATUS_MAXIMUM, Math.max(0, toilet));
     }
     
     private void thoughtToHappiness(AgentThoughts thoughtType){
@@ -202,124 +311,12 @@ public class Visitor extends Agent {
         return false;
     }
     
-    private void generateThoughts(long tickCount){
-        if(cash < 50){
-            if(cash <= 0){
-                insertThought(AgentThoughts.NOMONEY,null,tickCount);
-            } else {
-                insertThought(AgentThoughts.LOWMONEY,null,tickCount);
-            }
-        }
-        boolean anyUrgent = false;
-        anyUrgent = anyUrgent || conditionToThought(hunger,AGENT_HUNGER_WARNING_THRESHOLD,tickCount,AgentThoughts.NOTHUNGRY, AgentThoughts.HUNGRY, 0.5);
-        anyUrgent = anyUrgent || conditionToThought(thirst,AGENT_THIRST_WARNING_THRESHOLD,tickCount,AgentThoughts.NOTTHIRSTY, AgentThoughts.THIRSTY, 0.6);
-        anyUrgent = anyUrgent || conditionToThought(energy,AGENT_ENERGY_WARNING_THRESHOLD,tickCount,AgentThoughts.FEELINGGREAT, AgentThoughts.TIRED, 0.5);
-        if(toilet < AGENT_TOILET_WARNING_THRESHOLD){
-            insertThought(AgentThoughts.TOILET,null,tickCount);
-        }
-        if(happiness < 75 || !anyUrgent){
-            insertThought(AgentThoughts.WANTTHRILL,null,tickCount);
-        }
-    }
-    
-    private void updateState(){
-        switch(state){
-            case IDLE:
-                energy += 0.05;
-                //nausea -= 0.1;
-                break;
-            case ENTERINGPARK:
-            case LEAVINGPARK:
-            case WANDERING:
-            case WALKING:
-                energy -= 0.03;
-                hunger -= 0.01;
-                thirst-=0.01;
-                break;
-            case QUEUING:
-                if(statusTimer>patience){
-                    happiness-=0.5;
-                }
-                break;
-            case ONRIDE:
-                energy -= 0.02;
-                break;
-            case SITTING:
-                energy += 0.1;
-                hunger -= 0.02;
-                //nausea -= 0.5;
-                break;
-            case BUYING:
-                break;
-            case FLOATING:
-                if(statusTimer>Time.convMinuteToTick(5)){
-                    remove();
-                }
-            default:
-                break;
-        }
-        hunger-=0.02;
-        thirst-=0.01;
-        toilet-=0.01;
-    }
-        
-    private void performAction(long tickCount){
-        if(currentAction != null){
-            switch (currentAction.getAction()){
-                case ENTERPARK:
-                    enterCycle();
-                    break;
-                case EAT:
-                    eatCycle();
-                    break;
-                case SIT:
-                    sitCycle();
-                    break;
-                case WANDER:
-                    moveToRandomNeighbourPavement();
-                    break;
-                case TOILET:
-                    toiletCycle();
-                    break;
-                case LEAVEPARK:
-                    leaveParkCycle();
-                    break;
-                case RIDE:
-                    attractionCycle();
-                    break;
-                case THROWUP:
-                    //TODO
-                    break;
-                case LITTER:
-                    litterCycle();
-                    break;
-                case NONE:
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-    
     private void moveToRandomNeighbourPavement(){
         ArrayList<Building> paves = park.getPavementNeighbours(x, y);
         if(paves.size() > 0){
             int nextIndex = rand.nextInt(paves.size());
             moveTo(paves.get(nextIndex).getX(),paves.get(nextIndex).getY());
         }
-    }
-    
-    private void normalizeStatuses(){
-        happiness = Math.min(AGENT_STATUS_MAXIMUM, Math.max(0, happiness));
-        energy = Math.min(AGENT_STATUS_MAXIMUM, Math.max(0, energy));
-        hunger = Math.min(AGENT_STATUS_MAXIMUM, Math.max(0, hunger));
-        thirst = Math.min(AGENT_STATUS_MAXIMUM, Math.max(0, thirst));
-        toilet = Math.min(AGENT_STATUS_MAXIMUM, Math.max(0, toilet));
-    }
-    
-    private void resetAction(){
-        setState(AgentState.IDLE);
-        currentAction = null;
     }
     
     private void leaveParkCycle(){
@@ -603,6 +600,8 @@ public class Visitor extends Agent {
         sb.append(super.toString());
         sb.append(", cash=").append(cash);
         sb.append(", cashSpent=").append(cashSpent);
+        sb.append(", thoughts=").append(thoughts);
+        sb.append(", actionQueue=").append(actionQueue);
         sb.append(", currentAction=").append(currentAction);
         sb.append(", lastEnter=").append(lastEnter);
         sb.append(", item=").append(item);

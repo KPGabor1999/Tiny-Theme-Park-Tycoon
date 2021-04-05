@@ -34,6 +34,12 @@ public class Toilet extends Infrastructure {
     public double getCleanliness() {
         return cleanliness;
     }
+
+    public void setCleanliness(double cleanliness) {
+        this.cleanliness = cleanliness;
+    }
+    
+    
     
     public ArrayList<Pair<String, String>> getAllData(){
         ArrayList<Pair<String, String>> res = new ArrayList<>();

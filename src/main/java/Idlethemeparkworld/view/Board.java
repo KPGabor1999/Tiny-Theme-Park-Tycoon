@@ -257,6 +257,14 @@ public class Board extends JPanel {
             gr.setColor(new Color(30,30,255,255));
             gr.drawOval(position.x, position.y, 6, 6);
         }
+        
+        ArrayList<Janitor> janitors = gm.getAgentManager().getJanitors();
+        for (int i = 0; i < janitors.size(); i++) {
+            Position pos = janitors.get(i).calculateExactPosition(CELL_SIZE);
+            
+            gr.setColor(janitors.get(i).getColor());
+            gr.drawRect(pos.x, pos.y, 2, 3);
+        }
     }
     
     private void drawGhost(Graphics2D gr) {
