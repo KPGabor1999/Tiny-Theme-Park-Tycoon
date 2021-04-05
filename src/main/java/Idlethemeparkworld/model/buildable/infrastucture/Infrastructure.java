@@ -10,6 +10,7 @@ public abstract class Infrastructure extends Building {
 
     public Infrastructure(GameManager gm) {
         super(gm);
+        this.littering = 0;
     }
     
     public double checkLittering(){

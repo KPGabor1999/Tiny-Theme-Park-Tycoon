@@ -35,7 +35,6 @@ public class Visitor extends Agent {
     
     private int cash;
     private int cashSpent;
-    private AgentAction currentAction;
     
     int patience;
     int energy;
@@ -63,9 +62,6 @@ public class Visitor extends Agent {
     BuildType[] visitHistory;
     private Position lastEnter;
     private FoodItem item;
-    
-    private int statusMaxTimer;
-    private int statusTimer;
     
     public Visitor(String name, int startingHappiness, Park park, AgentManager am){
         super(name, park, am);
@@ -138,27 +134,6 @@ public class Visitor extends Agent {
                 normalizeStatuses();            //Visitorspecifikus
             } else {
                 updateState();                  //Janitornak ás karbantartóknak egyszerûbb
-            }
-        }
-    }
-    
-    private void checkMove(){
-        if(isMoving){
-            lerpTimer++;
-            isMoving=lerpTimer<24;
-        }
-    }
-    
-    private void checkFloating(){
-        if(park.getTile(x, y).isEmpty() || park.getTile(x, y).getBuilding().getStatus() == BuildingStatus.FLOATING){
-            if(state != AgentState.FLOATING){
-                resetAction();
-                statusTimer = 0;
-                state = AgentState.FLOATING;
-            }
-        } else {
-            if(state == AgentState.FLOATING){
-                state = AgentState.IDLE;
             }
         }
     }
@@ -375,11 +350,6 @@ public class Visitor extends Agent {
             int nextIndex = rand.nextInt(paves.size());
             moveTo(paves.get(nextIndex).getX(),paves.get(nextIndex).getY());
         }
-    }
-    
-    private void resetAction(){
-        setState(AgentState.IDLE);
-        currentAction = null;
     }
     
     private void leaveParkCycle(){

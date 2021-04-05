@@ -6,6 +6,7 @@ import Idlethemeparkworld.model.buildable.BuildingStatus;
 import Idlethemeparkworld.model.buildable.food.FoodStall;
 import Idlethemeparkworld.model.buildable.infrastucture.Entrance;
 import Idlethemeparkworld.model.buildable.infrastucture.Infrastructure;
+import Idlethemeparkworld.model.buildable.infrastucture.LockedTile;
 import Idlethemeparkworld.model.buildable.infrastucture.Pavement;
 import Idlethemeparkworld.model.buildable.infrastucture.Toilet;
 import java.lang.reflect.Constructor;
@@ -160,6 +161,14 @@ public class Park implements Updatable {
         ArrayList<Building> res = new ArrayList<>();
         ArrayList<Tile> neighbours = getNeighbours(x,y,1,1);
         neighbours.removeIf(n -> (n.getBuilding() instanceof Pavement || n.getBuilding() instanceof Entrance));
+        neighbours.forEach(n -> res.add(n.getBuilding()));
+        return res;
+    }
+    
+    public ArrayList<Building> getWalkableNeighbours(int x, int y){
+        ArrayList<Building> res = new ArrayList<>();
+        ArrayList<Tile> neighbours = getNeighbours(x,y,1,1);
+        neighbours.removeIf(n -> (n.getBuilding() == null || n.getBuilding() instanceof LockedTile));
         neighbours.forEach(n -> res.add(n.getBuilding()));
         return res;
     }

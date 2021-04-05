@@ -9,6 +9,7 @@ import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentState;
 import Idlethemeparkworld.model.agent.AgentTypes.AgentType;
 import Idlethemeparkworld.model.agent.AgentTypes.StaffType;
 import Idlethemeparkworld.model.buildable.Building;
+import Idlethemeparkworld.model.buildable.BuildingStatus;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -32,6 +33,9 @@ public abstract class Agent implements Updatable {
     Random rand;
     
     AgentState state;
+    protected int statusMaxTimer;
+    protected int statusTimer;
+    protected AgentAction currentAction;
     Building currentBuilding;
     
     //Karakter pozíciója a táblán:
@@ -94,6 +98,80 @@ public abstract class Agent implements Updatable {
     public Color getColor(){
         return color;
     }
+
+    public static int getAGENT_HISTORY_LENGTH() {
+        return AGENT_HISTORY_LENGTH;
+    }
+
+    public AgentManager getAm() {
+        return am;
+    }
+
+    public Park getPark() {
+        return park;
+    }
+
+    public boolean isInPark() {
+        return inPark;
+    }
+
+    public int getDestX() {
+        return destX;
+    }
+
+    public int getDestY() {
+        return destY;
+    }
+
+    public Random getRand() {
+        return rand;
+    }
+
+    public AgentState getState() {
+        return state;
+    }
+
+    public int getStatusMaxTimer() {
+        return statusMaxTimer;
+    }
+
+    public int getStatusTimer() {
+        return statusTimer;
+    }
+
+    public AgentAction getCurrentAction() {
+        return currentAction;
+    }
+
+    public Building getCurrentBuilding() {
+        return currentBuilding;
+    }
+
+    public int getxOffset() {
+        return xOffset;
+    }
+
+    public int getyOffset() {
+        return yOffset;
+    }
+
+    public Position getPrevPos() {
+        return prevPos;
+    }
+
+    public Position getNewPos() {
+        return newPos;
+    }
+
+    public int getLerpTimer() {
+        return lerpTimer;
+    }
+
+    public boolean isIsMoving() {
+        return isMoving;
+    }
+    
+    
     
     public Position calculateExactPosition(int cellSize){
         Position res = prevPos.lerp(newPos, lerpTimer/24.0);
@@ -102,6 +180,32 @@ public abstract class Agent implements Updatable {
     
     public void setState(AgentState newState){
         this.state = newState;
+    }
+    
+    protected void checkMove(){
+        if(isMoving){
+            lerpTimer++;
+            isMoving=lerpTimer<24;
+        }
+    }
+    
+    protected void checkFloating(){
+        if(park.getTile(x, y).isEmpty() || park.getTile(x, y).getBuilding().getStatus() == BuildingStatus.FLOATING){
+            if(state != AgentState.FLOATING){
+                resetAction();
+                statusTimer = 0;
+                state = AgentState.FLOATING;
+            }
+        } else {
+            if(state == AgentState.FLOATING){
+                state = AgentState.IDLE;
+            }
+        }
+    }
+    
+    protected void resetAction(){
+        setState(AgentState.IDLE);
+        currentAction = null;
     }
     
     protected void moveTo(Position p){
