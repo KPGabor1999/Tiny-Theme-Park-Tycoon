@@ -11,26 +11,34 @@ import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.general.PieDataset; 
 
 public class PieChart extends JPanel {
-   public PieChart(String title, ArrayList<Pair<String,Double>> data) {
-      JFreeChart chart = ChartFactory.createPieChart(      
-         title, 
-         createDataset(data),   
-         true,             // include legend   
-         true, 
-         false);
-         
-      ChartPanel chartPanel = new ChartPanel( chart );        
-      chartPanel.setPreferredSize(new Dimension( 400 , 400 ) );
-      add(chartPanel);
-   }
-   
-   private static PieDataset createDataset(ArrayList<Pair<String,Double>> data) {
-      DefaultPieDataset dataset = new DefaultPieDataset( );
-      //data.forEach(d -> dataset.setValue(d.getKey(), d.getValue()));
-      dataset.setValue( "IPhone 5s" , new Double( 20 ) );  
-      dataset.setValue( "SamSung Grand" , new Double( 20 ) );   
-      dataset.setValue( "MotoG" , new Double( 40 ) );    
-      dataset.setValue( "Nokia Lumia" , new Double( 10 ) );  
-      return dataset;         
-   }
+    private ChartPanel chartPanel;
+    public PieChart() {
+        JFreeChart chart = ChartFactory.createPieChart(      
+           "", 
+           new DefaultPieDataset(),   
+           true,             // include legend   
+           true, 
+           false);
+
+        chartPanel = new ChartPanel(chart);        
+        chartPanel.setPreferredSize(new Dimension(400, 400));
+        add(chartPanel);
+    }
+
+    private static PieDataset createDataset(ArrayList<Pair<String,Double>> data) {
+        DefaultPieDataset dataset = new DefaultPieDataset( );
+        data.forEach(d -> dataset.setValue(d.getKey(), d.getValue()));
+        return dataset;         
+    }
+
+    public void setData(String title, ArrayList<Pair<String,Double>> data){
+        DefaultPieDataset dataset = new DefaultPieDataset( );
+        data.forEach(d -> dataset.setValue(d.getKey(), d.getValue()));
+        chartPanel.setChart(ChartFactory.createPieChart(      
+           title, 
+           createDataset(data),   
+           true,             // include legend   
+           true, 
+           false));
+    }
 }

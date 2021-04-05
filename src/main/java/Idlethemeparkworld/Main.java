@@ -22,7 +22,7 @@ import javax.swing.WindowConstants;
 import Idlethemeparkworld.view.AdministrationDialog;
 import Idlethemeparkworld.view.Board;
 import Idlethemeparkworld.view.InformationBar;
-import Idlethemeparkworld.view.popups.PieChart;
+import Idlethemeparkworld.view.popups.StatsPanel;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
@@ -90,9 +90,12 @@ public class Main extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFrame frame = new JFrame ("MyPanel");
-                frame.setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
-                frame.getContentPane().add (new PieChart("data", null));
+                frame.setDefaultCloseOperation (JFrame.DISPOSE_ON_CLOSE);
+                frame.getContentPane().add (new StatsPanel(gm));
                 frame.pack();
+                int locationY = (int) getLocation().getY() + frame.getHeight()/ 2;
+                int locationX = (int) getLocation().getX() + frame.getWidth()/ 2;
+                frame.setLocation(locationX, locationY);
                 frame.setVisible (true);
             }
         });
@@ -200,7 +203,7 @@ public class Main extends JFrame {
         add(controlPanel);
         
         JPanel gameArea = new JPanel();
-        board = new Board(gm, buildButton, this, gameArea);
+        board = new Board(gm, this, gameArea);
 
         Dimension d = board.getPreferredSize();
         d.height*=1.5;

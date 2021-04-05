@@ -42,9 +42,8 @@ public class Board extends JPanel {
     private final int[] pos;
     
     private final Main main;
-    private final JButton buildButton;
 
-   public Board(GameManager gm, JButton buildButton, Main main, JPanel gameArea) {
+   public Board(GameManager gm, Main main, JPanel gameArea) {
         this.gm = gm;
         gm.setBoard(this);
         this.park = gm.getPark();
@@ -52,7 +51,6 @@ public class Board extends JPanel {
         this.type = null;
         this.pos = new int[2];
         this.canBuild = new boolean[1];
-        this.buildButton = buildButton;
         this.main = main;
         this.dragged = false;
         Timer timer = new Timer(18, new ActionListener() {
@@ -164,34 +162,6 @@ public class Board extends JPanel {
     public GameManager getGameManager() {
         return gm;
     }
-
-    public Park getPark() {
-        return park;
-    }
-
-    public int getCellSize() {
-        return CELL_SIZE;
-    }
-
-    public boolean isBuildMode() {
-        return buildMode;
-    }
-
-    public BuildType getType() {
-        return type;
-    }
-
-    public boolean[] getCanBuild() {
-        return canBuild;
-    }
-
-    public Main getMain() {
-        return main;
-    }
-
-    public JButton getBuildButton() {
-        return buildButton;
-    }
     
     private void resizeMap(int rows, int columns){
         removeAll();
@@ -207,19 +177,19 @@ public class Board extends JPanel {
     }
     
     public void enterBuildMode(BuildType type){
-        buildMode = true;
-        this.type = type;
-        pos[0]=0;
-        pos[1]=0;
-        canBuild[0]=false;
-        buildButton.setEnabled(false);
-        repaint();
+        if(!buildMode){
+            buildMode = true;
+            this.type = type;
+            pos[0]=0;
+            pos[1]=0;
+            canBuild[0]=false;
+            repaint();
+        }
     }
     
     public void exitBuildMode(){
         buildMode = false;
         this.type = null;
-        buildButton.setEnabled(true);
         repaint();
     }
     
