@@ -25,9 +25,10 @@ public class Janitor extends Agent implements Updatable{
     
     public Janitor(String name, Park park, AgentManager am){
         super(name, park, am);
-        this.type = AgentTypes.AgentType.STAFF;
+        this.type      = AgentTypes.AgentType.STAFF;
         this.staffType = AgentTypes.StaffType.JANITOR;
-        this.color = Color.WHITE;
+        this.color     = Color.WHITE;
+        this.salary    = 8;
     }
 
     public int getSalary() {
