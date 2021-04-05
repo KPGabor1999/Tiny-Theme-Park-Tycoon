@@ -22,6 +22,7 @@ import javax.swing.WindowConstants;
 import Idlethemeparkworld.view.AdministrationDialog;
 import Idlethemeparkworld.view.Board;
 import Idlethemeparkworld.view.InformationBar;
+import Idlethemeparkworld.view.popups.PieChart;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
@@ -84,6 +85,17 @@ public class Main extends JFrame {
                 new HighscoreWindow(highscores.getHighscores(), Main.this);
             }
         });
+        
+        JMenuItem statistics = new JMenuItem(new AbstractAction("Statistics") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFrame frame = new JFrame ("MyPanel");
+                frame.setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
+                frame.getContentPane().add (new PieChart("data", null));
+                frame.pack();
+                frame.setVisible (true);
+            }
+        });
 
         JMenuItem menuGameExit = new JMenuItem(new AbstractAction("Exit") {
             @Override
@@ -94,6 +106,7 @@ public class Main extends JFrame {
 
         menuGame.add(menuNewGame);
         menuGame.add(menuHighScores);
+        menuGame.add(statistics);
         menuGame.addSeparator();
         menuGame.add(menuGameExit);
         menuBar.add(menuGame);
