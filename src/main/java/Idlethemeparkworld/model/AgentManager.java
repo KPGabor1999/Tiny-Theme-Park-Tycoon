@@ -173,7 +173,10 @@ public class AgentManager implements Updatable {
             visitors.get(i).update(tickCount);
         }
         for (int i = 0; i < janitors.size(); i++) {
-            janitors.get(i).update(tickCount);
+            janitors.get(i).update(tickCount);                      //dolgoztatjuk a takarítókat
+            if(gm.getTime().getTotalMinutes() % 60 == 0){           //óránként kifizetjük az órabérüket
+                gm.getFinance().pay(janitors.get(i).getSalary());
+            }
         }
         if(tickCount%24==0){
             updateVisitorProbability();

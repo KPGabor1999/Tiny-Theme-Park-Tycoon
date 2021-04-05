@@ -21,6 +21,7 @@ import java.util.ArrayList;
  * @author KrazyXL
  */
 public class Janitor extends Agent implements Updatable{
+    private int salary;     //dollars per hour
     
     public Janitor(String name, Park park, AgentManager am){
         super(name, park, am);
@@ -29,10 +30,13 @@ public class Janitor extends Agent implements Updatable{
         this.color = Color.WHITE;
     }
 
+    public int getSalary() {
+        return salary;
+    }
+
     @Override
     public void update(long tickCount) {
         //Randomra járkál fel alá, és ha infrastrukturális mezõre lép, kitakarítja.
-        //Minden egész órakor levonjuk az órabérét.
         checkMove();
         statusTimer++;
         if(tickCount % 24 == 0){
@@ -44,6 +48,8 @@ public class Janitor extends Agent implements Updatable{
                 updateState();
             }
         }
+        
+        //Minden egész órakor levonjuk az órabérét. (AgentManager-ben)
     }
     
     private void updateState(){
