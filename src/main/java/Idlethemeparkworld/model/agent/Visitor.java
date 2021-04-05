@@ -84,6 +84,9 @@ public class Visitor extends Agent {
         this.statusMaxTimer = 0;
         this.statusTimer = 0;
         setState(AgentState.ENTERINGPARK);
+        
+        this.thoughts = new ArrayList<>();
+        this.actionQueue = new LinkedList<>();
     }
     
     @Override
