@@ -6,6 +6,7 @@ import Idlethemeparkworld.misc.utils.Position;
 import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.GameManager;
 import Idlethemeparkworld.model.Park;
+import Idlethemeparkworld.model.agent.Janitor;
 import Idlethemeparkworld.model.agent.Visitor;
 import Idlethemeparkworld.model.buildable.Building;
 import Idlethemeparkworld.model.buildable.BuildingStatus;
@@ -208,6 +209,14 @@ public class Board extends JPanel {
             Position pos = visitors.get(i).calculateExactPosition(CELL_SIZE);
             
             gr.setColor(visitors.get(i).getColor());
+            gr.drawRect(pos.x, pos.y, 2, 3);
+        }
+        
+        ArrayList<Janitor> janitors = gm.getAgentManager().getJanitors();
+        for (int i = 0; i < janitors.size(); i++) {
+            Position pos = janitors.get(i).calculateExactPosition(CELL_SIZE);
+            
+            gr.setColor(janitors.get(i).getColor());
             gr.drawRect(pos.x, pos.y, 2, 3);
         }
     }

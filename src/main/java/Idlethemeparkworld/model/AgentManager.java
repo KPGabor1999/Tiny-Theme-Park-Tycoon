@@ -137,6 +137,10 @@ public class AgentManager implements Updatable {
     public ArrayList<Visitor> getVisitors(){
         return visitors;
     }
+
+    public ArrayList<Janitor> getJanitors() {
+        return janitors;
+    }
     
     public void manageJanitors(int newNumberOfJanitors){
         int currentNumberOfJanitors = janitors.size();

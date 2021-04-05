@@ -2,6 +2,7 @@ package Idlethemeparkworld.model.agent;
 
 import Idlethemeparkworld.misc.utils.Position;
 import Idlethemeparkworld.model.AgentManager;
+import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.Park;
 import Idlethemeparkworld.model.Time;
 import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentActionType;
@@ -45,9 +46,21 @@ public class Visitor extends Agent {
     int toilet;
     int angriness;
     
+    private Color[] visitorColors = {
+        Color.RED,
+        Color.ORANGE,
+        Color.YELLOW,
+        Color.GREEN,
+        Color.CYAN,
+        Color.BLUE,
+        Color.PINK,
+        Color.MAGENTA
+    };
+    
     ArrayList<AgentThought> thoughts;
     LinkedList<AgentAction> actionQueue;
     
+    BuildType[] visitHistory;
     private Position lastEnter;
     private FoodItem item;
     
@@ -55,13 +68,15 @@ public class Visitor extends Agent {
     private int statusTimer;
     
     public Visitor(String name, int startingHappiness, Park park, AgentManager am){
-        super(name, startingHappiness, park, am);
+        super(name, park, am);
+        int chosenColor = rand.nextInt(visitorColors.length);
+        this.color = visitorColors[chosenColor];
         this.cash = rand.nextInt(1000)+1000;
         this.cashSpent = 0;
         this.currentAction = new AgentAction(AgentActionType.ENTERPARK,null);
         this.patience = Time.convMinuteToTick(10);
         this.energy = 100;
-        this.happiness = startingHappiness;
+        this.happiness = 100;
         this.nausea = 0;
         this.hunger = 100;
         this.thirst = 100;
@@ -69,19 +84,11 @@ public class Visitor extends Agent {
         this.angriness = 0;
         this.thoughts = new ArrayList<>();
         this.actionQueue = new LinkedList<>();
+        this.visitHistory = new BuildType[AGENT_HISTORY_LENGTH];
         this.lastEnter = null;
         this.item = null;
         this.statusMaxTimer = 0;
         this.statusTimer = 0;
-    }
-    
-    public Color getColor(){
-        return color;
-    }
-    
-    public Position calculateExactPosition(int cellSize){
-        Position res = prevPos.lerp(newPos, lerpTimer/24.0);
-        return res;
     }
     
     public int getPatience() {

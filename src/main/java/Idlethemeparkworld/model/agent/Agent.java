@@ -15,7 +15,7 @@ import java.util.LinkedList;
 import java.util.Random;
 
 public abstract class Agent implements Updatable {
-    private static final int AGENT_HISTORY_LENGTH = 10;
+    protected static final int AGENT_HISTORY_LENGTH = 10;
     
     AgentManager am;
     Park park;
@@ -32,11 +32,9 @@ public abstract class Agent implements Updatable {
     Random rand;
     
     AgentState state;
-    
-    BuildType[] visitHistory;
     Building currentBuilding;
     
-    //Karakter megjelenítése a táblán:
+    //Karakter pozíciója a táblán:
     protected Color color;
     protected int xOffset;
     protected int yOffset;
@@ -47,7 +45,7 @@ public abstract class Agent implements Updatable {
     protected int lerpTimer;
     protected boolean isMoving;
 
-    public Agent(String name, int startingHappiness, Park park, AgentManager am) {
+    public Agent(String name, Park park, AgentManager am) {
         this.am = am;
         this.park = park;
         
@@ -61,10 +59,9 @@ public abstract class Agent implements Updatable {
         
         this.state = AgentState.ENTERINGPARK;
         
-        this.visitHistory = new BuildType[AGENT_HISTORY_LENGTH];
         this.currentBuilding = park.getTile(x, y).getBuilding();
         
-        this.color = new Color(rand.nextInt(255),rand.nextInt(255),rand.nextInt(255),255);
+        //this.color = new Color(rand.nextInt(255),rand.nextInt(255),rand.nextInt(255),255);
         this.xOffset = rand.nextInt(64);
         this.yOffset = rand.nextInt(64);
         
@@ -92,6 +89,15 @@ public abstract class Agent implements Updatable {
 
     public int getY(){
         return y;
+    }
+    
+    public Color getColor(){
+        return color;
+    }
+    
+    public Position calculateExactPosition(int cellSize){
+        Position res = prevPos.lerp(newPos, lerpTimer/24.0);
+        return res;
     }
     
     public void setState(AgentState newState){
