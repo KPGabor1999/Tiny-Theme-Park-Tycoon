@@ -15,6 +15,7 @@ public class StatsPanel extends JPanel {
     private JComboBox statDropdown;
     private JPanel chart;
     private PieChart pieChart;
+    private LineChart lineChart;
     
     public StatsPanel(GameManager gm){
         this.gm = gm;
@@ -30,7 +31,9 @@ public class StatsPanel extends JPanel {
         chart = new JPanel();
         chart.setLayout(new CardLayout());
         pieChart = new PieChart();
+        lineChart = new LineChart();
         chart.add(pieChart, "pie");
+        chart.add(lineChart, "line");
         add(chart);
         
         statDropdown.addActionListener(new ActionListener() {
