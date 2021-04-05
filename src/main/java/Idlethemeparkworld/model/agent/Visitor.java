@@ -21,6 +21,7 @@ import Idlethemeparkworld.model.buildable.infrastucture.Toilet;
 import Idlethemeparkworld.model.buildable.infrastucture.TrashCan;
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class Visitor extends Agent {
     protected static final int AGENT_HUNGER_WARNING_THRESHOLD = 35;
@@ -44,19 +45,14 @@ public class Visitor extends Agent {
     int toilet;
     int angriness;
     
+    ArrayList<AgentThought> thoughts;
+    LinkedList<AgentAction> actionQueue;
+    
     private Position lastEnter;
     private FoodItem item;
     
     private int statusMaxTimer;
     private int statusTimer;
-    
-    private Color color;
-    private Position prevPos;
-    private Position newPos;
-    private int xOffset;
-    private int yOffset;
-    private int lerpTimer;
-    private boolean isMoving;
     
     public Visitor(String name, int startingHappiness, Park park, AgentManager am){
         super(name, startingHappiness, park, am);
@@ -71,50 +67,72 @@ public class Visitor extends Agent {
         this.thirst = 100;
         this.toilet = 100;
         this.angriness = 0;
+        this.thoughts = new ArrayList<>();
+        this.actionQueue = new LinkedList<>();
         this.lastEnter = null;
         this.item = null;
         this.statusMaxTimer = 0;
         this.statusTimer = 0;
-        setState(AgentState.ENTERINGPARK);
-        this.color = new Color(rand.nextInt(255),rand.nextInt(255),rand.nextInt(255),255);
-        this.xOffset = rand.nextInt(64);
-        this.yOffset = rand.nextInt(64);
-        this.prevPos = new Position(xOffset,yOffset);
-        this.newPos = new Position(xOffset,yOffset);
-        this.lerpTimer = 0;
-        this.isMoving = false;
+    }
+    
+    public Color getColor(){
+        return color;
+    }
+    
+    public Position calculateExactPosition(int cellSize){
+        Position res = prevPos.lerp(newPos, lerpTimer/24.0);
+        return res;
+    }
+    
+    public int getPatience() {
+        return patience;
+    }
+
+    public int getEnergy() {
+        return energy;
+    }
+
+    public int getHappiness() {
+        return happiness;
+    }
+
+    public int getNausea() {
+        return nausea;
+    }
+
+    public int getHunger() {
+        return hunger;
+    }
+
+    public int getThirst() {
+        return thirst;
+    }
+
+    public int getToilet() {
+        return toilet;
+    }
+
+    public int getAngriness() {
+        return angriness;
     }
     
     @Override
     public void update(long tickCount){
-        checkMove();
+        checkMove();                            //Általános
         statusTimer++;
         if(tickCount % 24 == 0){
-            checkFloating();
+            checkFloating();                    //Általános
             if(state != AgentState.FLOATING){
-                generateThoughts(tickCount);
-                updateThought(tickCount);
-                updateState();
-                updateCurrentAction();
-                performAction(tickCount);
-                normalizeStatuses();
+                generateThoughts(tickCount);    //Visitorspecifikus
+                updateThought(tickCount);       //Visitorspecifikus
+                updateState();                  //Janitornak ás karbantartóknak egyszerûbb
+                updateCurrentAction();          //Visitorspecifikus
+                performAction(tickCount);       //Visitorspecifikus
+                normalizeStatuses();            //Visitorspecifikus
             } else {
-                updateState();
+                updateState();                  //Janitornak ás karbantartóknak egyszerûbb
             }
         }
-    }
-    
-    @Override
-    public void moveTo(int x, int y){
-        prevPos = new Position(this.x*64+xOffset,this.y*64+yOffset);
-        lerpTimer = 0;
-        isMoving = true;
-        this.x=x;
-        this.y=y;
-        updateCurBuilding();
-        xOffset = rand.nextInt(currentBuilding.getInfo().getWidth()*64);
-        yOffset = rand.nextInt(currentBuilding.getInfo().getLength()*64);
-        newPos = new Position(this.x*64+xOffset,this.y*64+yOffset);
     }
     
     private void checkMove(){
@@ -138,12 +156,24 @@ public class Visitor extends Agent {
         }
     }
     
-    private void updateCurrentAction(){
-         if(currentAction == null){
-             if(!actionQueue.isEmpty()){
-                 currentAction = actionQueue.poll();
-             }
-         }
+    private void generateThoughts(long tickCount){
+        if(cash < 50){
+            if(cash <= 0){
+                insertThought(AgentThoughts.NOMONEY,null,tickCount);
+            } else {
+                insertThought(AgentThoughts.LOWMONEY,null,tickCount);
+            }
+        }
+        boolean anyUrgent = false;
+        anyUrgent = anyUrgent || conditionToThought(hunger,AGENT_HUNGER_WARNING_THRESHOLD,tickCount,AgentThoughts.NOTHUNGRY, AgentThoughts.HUNGRY, 0.5);
+        anyUrgent = anyUrgent || conditionToThought(thirst,AGENT_THIRST_WARNING_THRESHOLD,tickCount,AgentThoughts.NOTTHIRSTY, AgentThoughts.THIRSTY, 0.6);
+        anyUrgent = anyUrgent || conditionToThought(energy,AGENT_ENERGY_WARNING_THRESHOLD,tickCount,AgentThoughts.FEELINGGREAT, AgentThoughts.TIRED, 0.5);
+        if(toilet < AGENT_TOILET_WARNING_THRESHOLD){
+            insertThought(AgentThoughts.TOILET,null,tickCount);
+        }
+        if(happiness < 75 || !anyUrgent){
+            insertThought(AgentThoughts.WANTTHRILL,null,tickCount);
+        }
     }
     
     private void updateThought(long tickCount){
@@ -152,6 +182,101 @@ public class Visitor extends Agent {
                 thoughts.remove(i);
             }
         }
+    }
+    
+    private void updateState(){
+        switch(state){
+            case IDLE:
+                energy += 0.05;
+                //nausea -= 0.1;
+                break;
+            case ENTERINGPARK:
+            case LEAVINGPARK:
+            case WANDERING:
+            case WALKING:
+                energy -= 0.03;
+                hunger -= 0.01;
+                thirst-=0.01;
+                break;
+            case QUEUING:
+                if(statusTimer>patience){
+                    happiness-=0.5;
+                }
+                break;
+            case ONRIDE:
+                energy -= 0.02;
+                break;
+            case SITTING:
+                energy += 0.1;
+                hunger -= 0.02;
+                //nausea -= 0.5;
+                break;
+            case BUYING:
+                break;
+            case FLOATING:
+                if(statusTimer>Time.convMinuteToTick(5)){
+                    remove();
+                }
+            default:
+                break;
+        }
+        hunger-=0.02;
+        thirst-=0.01;
+        toilet-=0.01;
+    }
+    
+    private void updateCurrentAction(){
+         if(currentAction == null){
+             if(!actionQueue.isEmpty()){
+                 currentAction = actionQueue.poll();
+             }
+         }
+    }
+    
+    private void performAction(long tickCount){
+        if(currentAction != null){
+            switch (currentAction.getAction()){
+                case ENTERPARK:
+                    enterCycle();
+                    break;
+                case EAT:
+                    eatCycle();
+                    break;
+                case SIT:
+                    sitCycle();
+                    break;
+                case WANDER:
+                    moveToRandomNeighbourPavement();
+                    break;
+                case TOILET:
+                    toiletCycle();
+                    break;
+                case LEAVEPARK:
+                    leaveParkCycle();
+                    break;
+                case RIDE:
+                    attractionCycle();
+                    break;
+                case THROWUP:
+                    //TODO
+                    break;
+                case LITTER:
+                    litterCycle();
+                    break;
+                case NONE:
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    
+    private void normalizeStatuses(){
+        happiness = Math.min(AGENT_STATUS_MAXIMUM, Math.max(0, happiness));
+        energy = Math.min(AGENT_STATUS_MAXIMUM, Math.max(0, energy));
+        hunger = Math.min(AGENT_STATUS_MAXIMUM, Math.max(0, hunger));
+        thirst = Math.min(AGENT_STATUS_MAXIMUM, Math.max(0, thirst));
+        toilet = Math.min(AGENT_STATUS_MAXIMUM, Math.max(0, toilet));
     }
     
     private void thoughtToHappiness(AgentThoughts thoughtType){
@@ -237,119 +362,12 @@ public class Visitor extends Agent {
         return false;
     }
     
-    private void generateThoughts(long tickCount){
-        if(cash < 50){
-            if(cash <= 0){
-                insertThought(AgentThoughts.NOMONEY,null,tickCount);
-            } else {
-                insertThought(AgentThoughts.LOWMONEY,null,tickCount);
-            }
-        }
-        boolean anyUrgent = false;
-        anyUrgent = anyUrgent || conditionToThought(hunger,AGENT_HUNGER_WARNING_THRESHOLD,tickCount,AgentThoughts.NOTHUNGRY, AgentThoughts.HUNGRY, 0.5);
-        anyUrgent = anyUrgent || conditionToThought(thirst,AGENT_THIRST_WARNING_THRESHOLD,tickCount,AgentThoughts.NOTTHIRSTY, AgentThoughts.THIRSTY, 0.6);
-        anyUrgent = anyUrgent || conditionToThought(energy,AGENT_ENERGY_WARNING_THRESHOLD,tickCount,AgentThoughts.FEELINGGREAT, AgentThoughts.TIRED, 0.5);
-        if(toilet < AGENT_TOILET_WARNING_THRESHOLD){
-            insertThought(AgentThoughts.TOILET,null,tickCount);
-        }
-        if(happiness < 75 || !anyUrgent){
-            insertThought(AgentThoughts.WANTTHRILL,null,tickCount);
-        }
-    }
-    
-    private void updateState(){
-        switch(state){
-            case IDLE:
-                energy += 0.05;
-                //nausea -= 0.1;
-                break;
-            case ENTERINGPARK:
-            case LEAVINGPARK:
-            case WANDERING:
-            case WALKING:
-                energy -= 0.03;
-                hunger -= 0.01;
-                thirst-=0.01;
-                break;
-            case QUEUING:
-                if(statusTimer>patience){
-                    happiness-=0.5;
-                }
-                break;
-            case ONRIDE:
-                energy -= 0.02;
-                break;
-            case SITTING:
-                energy += 0.1;
-                hunger -= 0.02;
-                //nausea -= 0.5;
-                break;
-            case BUYING:
-                break;
-            case FLOATING:
-                if(statusTimer>Time.convMinuteToTick(5)){
-                    remove();
-                }
-            default:
-                break;
-        }
-        hunger-=0.02;
-        thirst-=0.01;
-        toilet-=0.01;
-    }
-        
-    private void performAction(long tickCount){
-        if(currentAction != null){
-            switch (currentAction.getAction()){
-                case ENTERPARK:
-                    enterCycle();
-                    break;
-                case EAT:
-                    eatCycle();
-                    break;
-                case SIT:
-                    sitCycle();
-                    break;
-                case WANDER:
-                    moveToRandomNeighbourPavement();
-                    break;
-                case TOILET:
-                    toiletCycle();
-                    break;
-                case LEAVEPARK:
-                    leaveParkCycle();
-                    break;
-                case RIDE:
-                    attractionCycle();
-                    break;
-                case THROWUP:
-                    //TODO
-                    break;
-                case LITTER:
-                    litterCycle();
-                    break;
-                case NONE:
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-    
     private void moveToRandomNeighbourPavement(){
         ArrayList<Building> paves = park.getPavementNeighbours(x, y);
         if(paves.size() > 0){
             int nextIndex = rand.nextInt(paves.size());
             moveTo(paves.get(nextIndex).getX(),paves.get(nextIndex).getY());
         }
-    }
-    
-    private void normalizeStatuses(){
-        happiness = Math.min(AGENT_STATUS_MAXIMUM, Math.max(0, happiness));
-        energy = Math.min(AGENT_STATUS_MAXIMUM, Math.max(0, energy));
-        hunger = Math.min(AGENT_STATUS_MAXIMUM, Math.max(0, hunger));
-        thirst = Math.min(AGENT_STATUS_MAXIMUM, Math.max(0, thirst));
-        toilet = Math.min(AGENT_STATUS_MAXIMUM, Math.max(0, toilet));
     }
     
     private void resetAction(){
@@ -637,6 +655,8 @@ public class Visitor extends Agent {
         sb.append(super.toString());
         sb.append(", cash=").append(cash);
         sb.append(", cashSpent=").append(cashSpent);
+        sb.append(", thoughts=").append(thoughts);
+        sb.append(", actionQueue=").append(actionQueue);
         sb.append(", currentAction=").append(currentAction);
         sb.append(", lastEnter=").append(lastEnter);
         sb.append(", item=").append(item);
@@ -646,44 +666,4 @@ public class Visitor extends Agent {
         return sb.toString();
     }
     
-    public Color getColor(){
-        return color;
-    }
-    
-    public Position calculateExactPosition(int cellSize){
-        Position res = prevPos.lerp(newPos, lerpTimer/24.0);
-        return res;
-    }
-    
-    public int getPatience() {
-        return patience;
-    }
-
-    public int getEnergy() {
-        return energy;
-    }
-
-    public int getHappiness() {
-        return happiness;
-    }
-
-    public int getNausea() {
-        return nausea;
-    }
-
-    public int getHunger() {
-        return hunger;
-    }
-
-    public int getThirst() {
-        return thirst;
-    }
-
-    public int getToilet() {
-        return toilet;
-    }
-
-    public int getAngriness() {
-        return angriness;
-    }
 }

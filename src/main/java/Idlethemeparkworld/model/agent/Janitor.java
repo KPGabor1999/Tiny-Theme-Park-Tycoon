@@ -19,6 +19,7 @@ public class Janitor extends Agent implements Updatable{
 
     @Override
     public void update(long tickCount) {
+        
         //Randomra járkál fel alá, és ha infrastrukturális mezõre lép, kitakarítja.
         //Minden egész órakor levonjuk az órabérét.
     }

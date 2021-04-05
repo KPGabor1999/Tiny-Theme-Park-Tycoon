@@ -31,18 +31,21 @@ public abstract class Agent implements Updatable {
     
     Random rand;
     
-    ArrayList<AgentThought> thoughts;
     AgentState state;
-    LinkedList<AgentAction> actionQueue;
     
     BuildType[] visitHistory;
-
     Building currentBuilding;
     
     //Karakter megjelenítése a táblán:
     protected Color color;
     protected int xOffset;
     protected int yOffset;
+    
+    //Karakterek mozgatása a táblán:
+    protected Position prevPos;
+    protected Position newPos;
+    protected int lerpTimer;
+    protected boolean isMoving;
 
     public Agent(String name, int startingHappiness, Park park, AgentManager am) {
         this.am = am;
@@ -56,9 +59,7 @@ public abstract class Agent implements Updatable {
         this.destY = this.destX;
         this.rand = new Random();
         
-        this.thoughts = new ArrayList<>();
         this.state = AgentState.ENTERINGPARK;
-        this.actionQueue = new LinkedList<>();
         
         this.visitHistory = new BuildType[AGENT_HISTORY_LENGTH];
         this.currentBuilding = park.getTile(x, y).getBuilding();
@@ -66,6 +67,11 @@ public abstract class Agent implements Updatable {
         this.color = new Color(rand.nextInt(255),rand.nextInt(255),rand.nextInt(255),255);
         this.xOffset = rand.nextInt(64);
         this.yOffset = rand.nextInt(64);
+        
+        this.prevPos = new Position(xOffset,yOffset);
+        this.newPos = new Position(xOffset,yOffset);
+        this.lerpTimer = 0;
+        this.isMoving = false;
     }
 
     public String getName() {
@@ -96,10 +102,16 @@ public abstract class Agent implements Updatable {
         moveTo(p.x, p.y);
     }
     
-    protected void moveTo(int x, int y){
+    public void moveTo(int x, int y){
+        prevPos = new Position(this.x*64+xOffset,this.y*64+yOffset);
+        lerpTimer = 0;
+        isMoving = true;
         this.x=x;
         this.y=y;
         updateCurBuilding();
+        xOffset = rand.nextInt(currentBuilding.getInfo().getWidth()*64);
+        yOffset = rand.nextInt(currentBuilding.getInfo().getLength()*64);
+        newPos = new Position(this.x*64+xOffset,this.y*64+yOffset);
     }
     
     protected void setDestination(int x, int y){
@@ -126,9 +138,7 @@ public abstract class Agent implements Updatable {
         sb.append(", y=").append(y);
         sb.append(", destX=").append(destX);
         sb.append(", destY=").append(destY);
-        sb.append(", thoughts=").append(thoughts);
         sb.append(", state=").append(state);
-        sb.append(", actionQueue=").append(actionQueue);
         return sb.toString();
     }
 }
