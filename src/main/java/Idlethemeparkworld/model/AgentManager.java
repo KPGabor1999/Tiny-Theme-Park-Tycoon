@@ -64,7 +64,7 @@ public class AgentManager implements Updatable {
         return highlighted;
     }
     
-    public void spawnVisitor(){
+    private void spawnVisitor(){
         visitors.add(new Visitor(getRandomName(), getRandomHappiness(), park, this));
     }
     
@@ -92,7 +92,7 @@ public class AgentManager implements Updatable {
         return res;
     }
     
-    public void updateVisitorProbability(){
+    private void updateVisitorProbability(){
         double prob = park.getRating()*5;
         
         int visitorCount = visitors.size();
@@ -117,6 +117,8 @@ public class AgentManager implements Updatable {
     public void removeAgent(Agent agent){
         if(agent instanceof Visitor){
             visitors.remove((Visitor)agent);
+        } else if(agent instanceof Janitor){
+            janitors.remove((Janitor)agent);
         }
     }
     
@@ -126,16 +128,16 @@ public class AgentManager implements Updatable {
         }
     }
     
-    public int getStaffCount(){
-        return 0;
-    }
-    
     public int getVisitorCount(){
         return visitors.size();
     }
     
     public ArrayList<Visitor> getVisitors(){
         return visitors;
+    }
+    
+    public ArrayList<Janitor> getJanitors(){
+        return janitors;
     }
     
     public void manageJanitors(int newNumberOfJanitors){
@@ -152,7 +154,6 @@ public class AgentManager implements Updatable {
         //Annyi új takarítót adunk a listából (randomra), amennyit szükséges és minden törlést kiírunk a konzolra.
             int numberOfJanitorsToFire = currentNumberOfJanitors - newNumberOfJanitors;
             for(int count = 1; count <= numberOfJanitorsToFire; count++){
-                Random rand = new Random();
                 int index = rand.nextInt(janitors.size());
                 janitors.remove(index);
                 System.out.println("One janitor fired. Now we've got " + janitors.size() + " janitors.");
@@ -171,9 +172,6 @@ public class AgentManager implements Updatable {
         }
         if(tickCount%24==0){
             updateVisitorProbability();
-        }
-        if(tickCount%2==0){
-            gm.getBoard().repaint();
         }
     }
 }

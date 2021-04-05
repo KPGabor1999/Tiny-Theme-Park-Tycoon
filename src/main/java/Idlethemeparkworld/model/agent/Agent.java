@@ -39,10 +39,13 @@ public abstract class Agent implements Updatable {
 
     Building currentBuilding;
     
-    //Karakter megjelenítése a táblán:
-    protected Color color;
+    protected final Color color;
+    protected Position prevPos;
+    protected Position newPos;
     protected int xOffset;
     protected int yOffset;
+    protected int lerpTimer;
+    protected boolean isMoving;
 
     public Agent(String name, int startingHappiness, Park park, AgentManager am) {
         this.am = am;
@@ -66,6 +69,10 @@ public abstract class Agent implements Updatable {
         this.color = new Color(rand.nextInt(255),rand.nextInt(255),rand.nextInt(255),255);
         this.xOffset = rand.nextInt(64);
         this.yOffset = rand.nextInt(64);
+        this.prevPos = new Position(xOffset,yOffset);
+        this.newPos = new Position(xOffset,yOffset);
+        this.lerpTimer = 0;
+        this.isMoving = false;
     }
 
     public String getName() {
@@ -88,6 +95,15 @@ public abstract class Agent implements Updatable {
         return y;
     }
     
+    public Color getColor(){
+        return color;
+    }
+    
+    public Position calculateExactPosition(int cellSize){
+        Position res = prevPos.lerp(newPos, lerpTimer/24.0);
+        return res;
+    }
+    
     public void setState(AgentState newState){
         this.state = newState;
     }
@@ -97,9 +113,22 @@ public abstract class Agent implements Updatable {
     }
     
     protected void moveTo(int x, int y){
+        prevPos = new Position(this.x*64+xOffset,this.y*64+yOffset);
+        lerpTimer = 0;
+        isMoving = true;
         this.x=x;
         this.y=y;
         updateCurBuilding();
+        xOffset = rand.nextInt(currentBuilding.getInfo().getWidth()*64);
+        yOffset = rand.nextInt(currentBuilding.getInfo().getLength()*64);
+        newPos = new Position(this.x*64+xOffset,this.y*64+yOffset);
+    }
+    
+    private void checkMove(){
+        if(isMoving){
+            lerpTimer++;
+            isMoving=lerpTimer<24;
+        }
     }
     
     protected void setDestination(int x, int y){
@@ -116,7 +145,9 @@ public abstract class Agent implements Updatable {
     }
     
     @Override
-    public abstract void update(long tickCount);
+    public void update(long tickCount){
+        checkMove();
+    }
 
     @Override
     public String toString() {
