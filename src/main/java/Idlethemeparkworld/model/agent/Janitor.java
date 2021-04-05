@@ -10,6 +10,9 @@ import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentState;
 import Idlethemeparkworld.model.buildable.Building;
 import Idlethemeparkworld.model.buildable.infrastucture.Entrance;
 import Idlethemeparkworld.model.buildable.infrastucture.Infrastructure;
+import Idlethemeparkworld.model.buildable.infrastucture.Pavement;
+import Idlethemeparkworld.model.buildable.infrastucture.Toilet;
+import Idlethemeparkworld.model.buildable.infrastucture.TrashCan;
 import java.awt.Color;
 import java.util.ArrayList;
 
@@ -48,25 +51,37 @@ public class Janitor extends Agent implements Updatable{
             case ENTERINGPARK:
                 setState(AgentState.IDLE);
                 currentAction = new AgentAction(AgentActionType.ENTERPARK, null);
+                //System.out.println("Beleptem a parkba.");
                 break;
             case IDLE:
                 setState(AgentState.WANDERING);
                 currentAction = new AgentAction(AgentActionType.WANDER, null);
+                //System.out.println("Setalni megyek.");
                 break;
             //-------------------------------
             case WANDERING:
                 //Minden körben randomra rálép egy új mezõre és kitakarítja azt.
+                currentAction = new AgentAction(AgentActionType.WANDER, null);
+                //System.out.println("Továbbsetalok.");
+                break;
             case QUEUING:
+                //System.err.println("Én nem kéne, hogy sorban álljak.");
                 //A mosdók takarításakor állhat sorban.
                 //De õ akár a végtelenségig is vár.
                 break;
             case CLEANING:
                 //Kitakarítja az adott mezõt, majd visszaáll Wandering-re.
+                currentAction = new AgentAction(AgentActionType.STAFFCLEAN, null);
+                //System.out.println("Ez a hely takaritast igenyel.");
+                break;
             case FLOATING:
+                //System.err.println("Én nem kéne, hogy lebegjek.");
                 if(statusTimer>Time.convMinuteToTick(5)){
                     remove();
                 }
+                break;
             default:
+                //System.err.println("Miért vagyok " + getState() + " állapotban?");
                 break;
         }
     }
@@ -84,17 +99,21 @@ public class Janitor extends Agent implements Updatable{
                     moveToRandomNeighbourTile();
                     updateCurBuilding();
                     if(currentBuilding instanceof Infrastructure){
-                        clean(currentBuilding);
+                        setState(AgentState.CLEANING);
                     }
                     break;
                 case STAFFCLEAN:
                     //Kitakarítjuk a currentBuilding-et.
                     //Visszaáll Wandering-be.
+                    clean(currentBuilding);
+                    setState(AgentState.WANDERING);
                     break;
                 case TOILET:
+                    //System.err.println("Nekem nem is kéne a vécén ülnöm.");
                     //toiletCycle();
                     break;
                 default:
+                    //System.err.println("Miért csinálom ezt: " + getCurrentAction() + "?");
                     break;
             }
         }
@@ -113,7 +132,21 @@ public class Janitor extends Agent implements Updatable{
     }
     
     private void clean(Building currentBuilding){
-        
+        if(currentBuilding instanceof Entrance){
+            ((Entrance)currentBuilding).setLittering(0);
+            System.out.println("Felszedtem a szemetet a bejáratnál.");
+        } else if(currentBuilding instanceof Pavement){
+            ((Pavement)currentBuilding).setLittering(0);
+            System.out.println("Felszedtem a szemetet egy járdáról.");
+        } else if(currentBuilding instanceof Toilet){
+            ((Toilet)currentBuilding).setLittering(0);
+            ((Toilet)currentBuilding).setCleanliness(100);
+            System.out.println("Kitakarítottam egy mosdót.");
+        } else if(currentBuilding instanceof TrashCan){
+            ((TrashCan)currentBuilding).setLittering(0);
+            ((TrashCan)currentBuilding).setFilled(0);
+            System.out.println("Kiürítettem egy szemetest.");
+        }
     }
     
 }

@@ -27,6 +27,10 @@ public class TrashCan extends Infrastructure {
     public double getFilled() {
         return filled;
     }
+
+    public void setFilled(double filled) {
+        this.filled = filled;
+    }
     
     public ArrayList<Pair<String, String>> getAllData(){
         ArrayList<Pair<String, String>> res = new ArrayList<>();

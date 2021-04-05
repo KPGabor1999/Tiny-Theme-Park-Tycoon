@@ -204,13 +204,13 @@ public class Board extends JPanel {
             }
         }
         
-        /*ArrayList<Visitor> visitors = gm.getAgentManager().getVisitors();
+        ArrayList<Visitor> visitors = gm.getAgentManager().getVisitors();
         for (int i = 0; i < visitors.size(); i++) {
             Position pos = visitors.get(i).calculateExactPosition(CELL_SIZE);
             
             gr.setColor(visitors.get(i).getColor());
             gr.drawRect(pos.x, pos.y, 2, 3);
-        }*/
+        }
         
         ArrayList<Janitor> janitors = gm.getAgentManager().getJanitors();
         for (int i = 0; i < janitors.size(); i++) {

@@ -17,11 +17,15 @@ public abstract class Infrastructure extends Building {
         return littering;
     }
     
-    public void litter(double amount){
+    public void setLittering(double littering) {
+        this.littering = littering;
+    }
+    
+    public void litter(double amount){  //This should only be in the Visitor class
         littering += amount;
     }
     
-    public void clean(){
+    public void clean(){    //This should only be in the Janitor class.
         littering = 0;
     }
     

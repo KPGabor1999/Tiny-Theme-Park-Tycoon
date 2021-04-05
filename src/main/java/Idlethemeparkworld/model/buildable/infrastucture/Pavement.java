@@ -12,6 +12,7 @@ public class Pavement extends Infrastructure {
         this.y = y;
         this.buildingType = BuildType.PAVEMENT;
         this.value = BuildType.PAVEMENT.getBuildCost();
+        this.littering = 0;
     }
     
     @Override
