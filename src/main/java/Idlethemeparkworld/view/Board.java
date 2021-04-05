@@ -80,7 +80,7 @@ public class Board extends JPanel {
                         if(canBuild[0]){
                             park.build(type, pos[0], pos[1], false);
                             gm.getFinance().pay(type.getBuildCost());
-                            main.updateInfobar();
+                            main.getInfoBar().updateInfobar();
                         } 
                     }
                 } else if (origin != null) {
@@ -123,7 +123,7 @@ public class Board extends JPanel {
                     if(canBuild[0]){
                         park.build(type, pos[0], pos[1], false);
                         gm.getFinance().pay(type.getBuildCost());
-                        main.updateInfobar();
+                        main.getInfoBar().updateInfobar();
                     }
                     Board.this.exitBuildMode();
                 } else {
