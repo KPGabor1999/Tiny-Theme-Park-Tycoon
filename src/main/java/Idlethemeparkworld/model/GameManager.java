@@ -179,6 +179,7 @@ public class GameManager {
             park.update(tickCount);
             am.update(tickCount);
             time.update(tickCount);
+            stats.update(tickCount);
         }
     }
 

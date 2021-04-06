@@ -21,7 +21,7 @@ public class PieChart extends JPanel {
            false);
 
         chartPanel = new ChartPanel(chart);        
-        chartPanel.setPreferredSize(new Dimension(400, 400));
+        chartPanel.setPreferredSize(new Dimension(600, 400));
         add(chartPanel);
     }
 

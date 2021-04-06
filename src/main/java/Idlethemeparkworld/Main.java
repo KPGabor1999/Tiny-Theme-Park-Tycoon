@@ -93,9 +93,7 @@ public class Main extends JFrame {
                 frame.setDefaultCloseOperation (JFrame.DISPOSE_ON_CLOSE);
                 frame.getContentPane().add (new StatsPanel(gm));
                 frame.pack();
-                int locationY = (int) getLocation().getY() + frame.getHeight()/ 2;
-                int locationX = (int) getLocation().getX() + frame.getWidth()/ 2;
-                frame.setLocation(locationX, locationY);
+                frame.setLocationRelativeTo(Main.this);
                 frame.setVisible (true);
             }
         });

@@ -23,7 +23,10 @@ public class StatsPanel extends JPanel {
         statDropdown = new JComboBox<>();
 
         statDropdown.setModel(new DefaultComboBoxModel<>(new String[]{
-            "Building types"}));
+            "Building types",
+            "Park rating",
+            "Happiness"
+        }));
         
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         add(statDropdown);
@@ -41,8 +44,15 @@ public class StatsPanel extends JPanel {
                 switch((String)statDropdown.getSelectedItem()){
                     case "Building types":
                         pieChart.setData("Building types", gm.getStats().getBuildType());
-                        CardLayout cl = (CardLayout)(chart.getLayout());
-                        cl.show(chart, "pie");
+                        ((CardLayout)(chart.getLayout())).show(chart, "pie");
+                        break;
+                    case "Park rating":
+                        lineChart.setData("Park rating", "rating", "time", gm.getStats().getRatingHistory());
+                        ((CardLayout)(chart.getLayout())).show(chart, "line");
+                        break;
+                    case "Happiness":
+                        lineChart.setData("Happiness", "happiness", "time", gm.getStats().getHappinessHistory());
+                        ((CardLayout)(chart.getLayout())).show(chart, "line");
                         break;
                     default:
                         break;
