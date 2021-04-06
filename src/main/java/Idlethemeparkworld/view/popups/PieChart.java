@@ -31,14 +31,14 @@ public class PieChart extends JPanel {
         return dataset;         
     }
 
-    public void setData(String title, ArrayList<Pair<String,Double>> data){
+    public void setData(String title, ArrayList<Pair<String,Double>> data, boolean displayLable){
         DefaultPieDataset dataset = new DefaultPieDataset( );
         data.forEach(d -> dataset.setValue(d.getKey(), d.getValue()));
         chartPanel.setChart(ChartFactory.createPieChart(      
            title, 
            createDataset(data),   
            true,             // include legend   
-           true, 
+           displayLable, 
            false));
     }
 }

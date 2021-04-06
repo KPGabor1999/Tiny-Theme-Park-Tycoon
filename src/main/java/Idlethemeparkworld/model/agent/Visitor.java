@@ -213,7 +213,7 @@ public class Visitor extends Agent {
         boolean anyUrgent = false;
         anyUrgent = anyUrgent || conditionToThought(hunger,AGENT_HUNGER_WARNING_THRESHOLD,tickCount,AgentThoughts.NOTHUNGRY, AgentThoughts.HUNGRY, 0.5);
         anyUrgent = anyUrgent || conditionToThought(thirst,AGENT_THIRST_WARNING_THRESHOLD,tickCount,AgentThoughts.NOTTHIRSTY, AgentThoughts.THIRSTY, 0.6);
-        anyUrgent = anyUrgent || conditionToThought(energy,AGENT_ENERGY_WARNING_THRESHOLD,tickCount,AgentThoughts.FEELINGGREAT, AgentThoughts.TIRED, 0.5);
+        anyUrgent = anyUrgent || conditionToThought(energy,AGENT_ENERGY_WARNING_THRESHOLD,tickCount,AgentThoughts.FEELINGGREAT, AgentThoughts.TIRED, 0.1);
         if(toilet < AGENT_TOILET_WARNING_THRESHOLD){
             insertThought(AgentThoughts.TOILET,null,tickCount);
         }
