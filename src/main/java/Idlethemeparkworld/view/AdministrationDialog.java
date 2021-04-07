@@ -136,7 +136,7 @@ public class AdministrationDialog extends JDialog {
             priceSettingsPanel.add(hamburgerPriceLabel);
             int hamburgerCheck = board.getGameManager().getPark().checkFoodPrice(BURGERJOINT);
             if (hamburgerCheck == 0) {
-                hamburgerNotBuilt = new JLabel("Build a Burger Joint");
+                hamburgerNotBuilt = new JLabel("Build a Burger joint");
                 hamburgerNotBuilt.setForeground(Color.RED);
                 priceSettingsPanel.add(hamburgerNotBuilt);
             } else {

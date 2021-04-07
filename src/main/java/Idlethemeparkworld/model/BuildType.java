@@ -21,7 +21,7 @@ public enum BuildType {
     TRASHCAN(1,1,"Trash can","",1000,Assets.Texture.TRASHCAN),
     TOILET(1,1,"Toilet","",5000,Assets.Texture.TOILET),
     ICECREAMPARLOR(2,1,"Ice cream parlor","",10000,Assets.Texture.ICECREAMPARLOR),
-    HOTDOGSTAND(2,1,"Hotdog stand","",15000,Assets.Texture.HOTDOGSTAND),
+    HOTDOGSTAND(2,1,"Hot dog stand","",15000,Assets.Texture.HOTDOGSTAND),
     BURGERJOINT(2,1,"Burger joint","",25000,Assets.Texture.BURGERJOINT),
     CAROUSEL(2,2,"Carousel","",16000,Assets.Texture.CAROUSEL),
     FERRISWHEEL(3,3,"Ferriswheel","",36000,Assets.Texture.FERRISWHEEL),
