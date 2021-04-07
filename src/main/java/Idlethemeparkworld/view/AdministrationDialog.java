@@ -78,7 +78,7 @@ public class AdministrationDialog extends JDialog {
             priceSettingsPanel.add(iceCreamPriceLabel);
             int icecreamCheck = board.getGameManager().getPark().checkFoodPrice(ICECREAMPARLOR);
             if (icecreamCheck == 0) {
-                iceCreamNotBuilt = new JLabel("Build an Ice Cream Parlor");
+                iceCreamNotBuilt = new JLabel("Build an Ice Cream parlor");
                 iceCreamNotBuilt.setForeground(Color.RED);
                 priceSettingsPanel.add(iceCreamNotBuilt);
             } else {
@@ -107,7 +107,7 @@ public class AdministrationDialog extends JDialog {
             priceSettingsPanel.add(hotDogPriceLabel);
             int hotdogCheck = board.getGameManager().getPark().checkFoodPrice(HOTDOGSTAND);
             if (hotdogCheck == 0) {
-                hotDogNotBuilt = new JLabel("Build a Hot Dog Stand");
+                hotDogNotBuilt = new JLabel("Build a Hot Dog stand");
                 hotDogNotBuilt.setForeground(Color.RED);
                 priceSettingsPanel.add(hotDogNotBuilt);
             } else {
