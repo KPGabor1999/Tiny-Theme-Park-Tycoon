@@ -92,14 +92,6 @@ public class AdministrationDialog extends JDialog {
             hamburgerPriceSlider.setPaintTicks(true);
             hamburgerPriceSlider.setPaintLabels(true);
             hamburgerPriceSlider.setValue(board.getGameManager().getHamburgerPrice());
-            //Fish & Chips
-            fishChipsPriceLabel = new JLabel("Fish & Chips prices:");
-            fishChipsPriceSlider = new JSlider(0, 30);
-            fishChipsPriceSlider.setMajorTickSpacing(10);
-            fishChipsPriceSlider.setMinorTickSpacing(1);
-            fishChipsPriceSlider.setPaintTicks(true);
-            fishChipsPriceSlider.setPaintLabels(true);
-            fishChipsPriceSlider.setValue(board.getGameManager().getFishChipsPrice());
 
             priceSettingsPanel.add(ticketPriceLabel);
             priceSettingsPanel.add(ticketPriceSlider);
@@ -109,8 +101,6 @@ public class AdministrationDialog extends JDialog {
             priceSettingsPanel.add(iceCreamPriceSlider);
             priceSettingsPanel.add(hamburgerPriceLabel);
             priceSettingsPanel.add(hamburgerPriceSlider);
-            priceSettingsPanel.add(fishChipsPriceLabel);
-            priceSettingsPanel.add(fishChipsPriceSlider);
             this.getContentPane().add(priceSettingsPanel);
 
             employeesLabel = new JLabel("Employees");
@@ -120,7 +110,7 @@ public class AdministrationDialog extends JDialog {
             employeeSettingsPanel = new JPanel(new GridLayout(3, 2));
             janitorNumberLabel = new JLabel("Number of cleaners:");
             janitorNumberSlider = new JSlider(0, 5);
-            janitorNumberSlider.setValue(0);
+            janitorNumberSlider.setValue(board.getGameManager().getAgentManager().getJanitors().size());
             janitorNumberSlider.setMajorTickSpacing(1);
             janitorNumberSlider.setPaintTicks(true);
             janitorNumberSlider.setPaintLabels(true);
@@ -181,18 +171,7 @@ public class AdministrationDialog extends JDialog {
                     }
                 }
             });
-            fishChipsPriceSlider.addChangeListener(new ChangeListener() {
-                public void stateChanged(ChangeEvent evt) {
-                    JSlider slider = (JSlider) evt.getSource();
-                    if (!slider.getValueIsAdjusting()) {
-                        int value = slider.getValue();
-                        //Action
-                        board.getGameManager().setFishChipsPrice(value);
-                    }
-                }
-            });
-
-            
+      
             janitorNumberSlider.addChangeListener(new ChangeListener(){
                 @Override
                 public void stateChanged(ChangeEvent event) {
