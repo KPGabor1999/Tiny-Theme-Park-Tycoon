@@ -42,6 +42,10 @@ public abstract class FoodStall extends Building {
     public void setFoodPrice(int number){
         this.foodPrice = number;
     }
+
+    public void setCondition(double condition) {
+        this.condition = condition;
+    }
     
     public ArrayList<Pair<String, String>> getAllData(){
         ArrayList<Pair<String, String>> res = new ArrayList<>();
