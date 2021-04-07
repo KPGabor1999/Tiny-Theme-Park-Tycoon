@@ -3,25 +3,28 @@ package Idlethemeparkworld.model.agent;
 import Idlethemeparkworld.model.AgentManager;
 import Idlethemeparkworld.model.Park;
 import Idlethemeparkworld.model.Time;
-import Idlethemeparkworld.model.Updatable;
-import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentActionType;
-import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentState;
 import Idlethemeparkworld.model.buildable.Building;
+import Idlethemeparkworld.model.buildable.attraction.Attraction;
+import Idlethemeparkworld.model.buildable.food.FoodStall;
 import Idlethemeparkworld.model.buildable.infrastucture.Infrastructure;
 import Idlethemeparkworld.model.buildable.infrastucture.Toilet;
 import Idlethemeparkworld.model.buildable.infrastucture.TrashCan;
 import java.awt.Color;
 import java.util.ArrayList;
 
-public class Janitor extends Agent implements Updatable{
-    private int salary;     //dollars per hour
+/**
+ *
+ * @author KrazyXL
+ */
+public class Maintainer extends Agent{
+        private int salary;     //dollars per hour
     
-    public Janitor(String name, Park park, AgentManager am){
+    public Maintainer(String name, Park park, AgentManager am){
         super(name, park, am);
         this.type      = AgentTypes.AgentType.STAFF;
-        this.staffType = AgentTypes.StaffType.JANITOR;
-        this.color     = Color.WHITE;
-        this.salary    = 8;
+        this.staffType = AgentTypes.StaffType.MAINTAINER;
+        this.color     = Color.BLACK;
+        this.salary    = 20;
     }
 
     public int getSalary() {
@@ -30,7 +33,7 @@ public class Janitor extends Agent implements Updatable{
 
     @Override
     public void update(long tickCount) {
-        //Randomra járkál fel alá, és ha infrastrukturális mezõre lép, kitakarítja.
+        //Randomra járkál fel alá, és ha attrakció vagy büfé mezõre lép, kitakarítja.
         checkMove();
         statusTimer++;
         if(tickCount % 24 == 0){
@@ -47,17 +50,17 @@ public class Janitor extends Agent implements Updatable{
     private void updateState(){
         switch(state){
             case ENTERINGPARK:
-                setState(AgentState.IDLE);
+                setState(AgentInnerLogic.AgentState.IDLE);
                 break;
             case IDLE:
-                setState(AgentState.WANDERING);
-                currentAction = new AgentAction(AgentActionType.WANDER, null);
+                setState(AgentInnerLogic.AgentState.WANDERING);
+                currentAction = new AgentAction(AgentInnerLogic.AgentActionType.WANDER, null);
                 break;
             case WANDERING:
-                currentAction = new AgentAction(AgentActionType.WANDER, null);
+                currentAction = new AgentAction(AgentInnerLogic.AgentActionType.WANDER, null);
                 break;
-            case CLEANING:
-                currentAction = new AgentAction(AgentActionType.STAFFCLEAN, null);
+            case FIXING:
+                currentAction = new AgentAction(AgentInnerLogic.AgentActionType.STAFFREPAIR, null);
                 break;
             case FLOATING:
                 if(statusTimer>Time.convMinuteToTick(5)){
@@ -78,15 +81,15 @@ public class Janitor extends Agent implements Updatable{
                     //Ha currentBuilding instanceof Infrastructure, STAFFCLEAN akció
                     moveToRandomNeighbourTile();
                     updateCurBuilding();
-                    if(currentBuilding instanceof Infrastructure){
-                        setState(AgentState.CLEANING);
+                    if(currentBuilding instanceof Attraction || currentBuilding instanceof FoodStall){
+                        setState(AgentInnerLogic.AgentState.FIXING);
                     }
                     break;
-                case STAFFCLEAN:
+                case STAFFREPAIR:
                     //Kitakarítjuk a currentBuilding-et.
                     //Visszaáll Wandering-be.
-                    clean(currentBuilding);
-                    setState(AgentState.WANDERING);
+                    repair(currentBuilding);
+                    setState(AgentInnerLogic.AgentState.WANDERING);
                     break;
                 default:
                     break;
@@ -102,12 +105,13 @@ public class Janitor extends Agent implements Updatable{
         }
     }
     
-    private void clean(Building currentBuilding){
-        ((Infrastructure)currentBuilding).setLittering(0);
-        if(currentBuilding instanceof Toilet){
-            ((Toilet)currentBuilding).setCleanliness(100);
-        } else if(currentBuilding instanceof TrashCan){
-            ((TrashCan)currentBuilding).setFilled(0);
+    private void repair(Building currentBuilding){
+        if(currentBuilding instanceof Attraction){
+            ((Attraction)currentBuilding).setCondition(100);
+            //System.out.println("Megjavítottam egy attrakciot.");
+        } else if(currentBuilding instanceof FoodStall){
+            ((FoodStall)currentBuilding).setCondition(100);
+            //System.out.println("Megjavítottam egy büfet.");
         }
     }
     
