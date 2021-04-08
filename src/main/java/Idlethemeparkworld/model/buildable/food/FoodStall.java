@@ -8,7 +8,6 @@ import Idlethemeparkworld.model.GameManager;
 import Idlethemeparkworld.model.agent.Visitor;
 import Idlethemeparkworld.model.buildable.BuildingStatus;
 import java.util.LinkedList;
-import java.util.PriorityQueue;
 
 public abstract class FoodStall extends Building {
     protected LinkedList<Visitor> queue;
@@ -28,6 +27,10 @@ public abstract class FoodStall extends Building {
         this.foodQuality = new Range(45, 55);
         this.drinkQuality = new Range(45, 55);
         this.servingSize = new Range(2, 5);
+    }
+    
+    public int getFoodPrice(){
+        return foodPrice;
     }
 
     public int getQueueLength() {
