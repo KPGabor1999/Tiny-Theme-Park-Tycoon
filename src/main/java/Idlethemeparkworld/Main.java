@@ -106,7 +106,6 @@ public class Main extends JFrame {
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
         /*---------------------------------------------------------*/
-        
         timeLabel = new JLabel("time");
         moneyLabel = new JLabel("money");
         visitorCountLabel = new JLabel("visitor");
@@ -153,8 +152,8 @@ public class Main extends JFrame {
             BuildType.PAVEMENT.getName() + " (" + BuildType.PAVEMENT.getBuildCost() + ")",
             BuildType.TRASHCAN.getName() + " (" + BuildType.TRASHCAN.getBuildCost() + ")",
             BuildType.TOILET.getName() + " (" + BuildType.TOILET.getBuildCost() + ")",
-            BuildType.HOTDOGSTAND.getName() + " (" + BuildType.HOTDOGSTAND.getBuildCost() + ")",
             BuildType.ICECREAMPARLOR.getName() + " (" + BuildType.ICECREAMPARLOR.getBuildCost() + ")",
+            BuildType.HOTDOGSTAND.getName() + " (" + BuildType.HOTDOGSTAND.getBuildCost() + ")",
             BuildType.BURGERJOINT.getName() + " (" + BuildType.BURGERJOINT.getBuildCost() + ")",
             BuildType.CAROUSEL.getName() + " (" + BuildType.CAROUSEL.getBuildCost() + ")",
             BuildType.FERRISWHEEL.getName() + " (" + BuildType.FERRISWHEEL.getBuildCost() + ")",
@@ -220,23 +219,23 @@ public class Main extends JFrame {
         });
 
         add(controlPanel);
-        
+
         JPanel gameArea = new JPanel();
         board = new Board(gm, buildButton, this, gameArea);
 
         Dimension d = board.getPreferredSize();
-        d.height*=1.5;
-        d.width*=1.5;
+        d.height *= 1.5;
+        d.width *= 1.5;
         gameArea.setPreferredSize(d);
         gameArea.setBackground(new Color(0, 130, 14, 255));
         gameArea.setLayout(new GridBagLayout());
         gameArea.add(board);
-        
+
         JScrollPane scroller = new JScrollPane(gameArea);
-        scroller.setPreferredSize(new Dimension(600,600));
+        scroller.setPreferredSize(new Dimension(600, 600));
         scroller.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
         scroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        
+
         add(scroller);
 
         MouseAdapter ma = new MouseAdapter() {
@@ -272,7 +271,6 @@ public class Main extends JFrame {
         gameArea.addMouseListener(ma);
         gameArea.addMouseMotionListener(ma);
 
-
         setResizable(false);
         setLocationRelativeTo(null);
         pack();
@@ -282,7 +280,7 @@ public class Main extends JFrame {
     public void updateInfobar() {
         timeLabel.setText(gm.getTime().toString());
         moneyLabel.setText(gm.getFinance().toString());
-        visitorCountLabel.setText("Visitors: "+gm.getAgentManager().getVisitorCount());
+        visitorCountLabel.setText("Visitors: " + gm.getAgentManager().getVisitorCount());
     }
 
     private void startNewGame() {
