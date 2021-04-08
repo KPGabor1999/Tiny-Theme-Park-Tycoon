@@ -116,7 +116,7 @@ public class AdministrationDialog extends JDialog {
             janitorNumberSlider.setPaintLabels(true);
             maintainerNumberLabel = new JLabel("Number of repairmen:");
             maintainerNumberSlider = new JSlider(0, 5);
-            maintainerNumberSlider.setValue(0);
+            maintainerNumberSlider.setValue(board.getGameManager().getAgentManager().getMaintainers().size());
             maintainerNumberSlider.setMajorTickSpacing(1);
             maintainerNumberSlider.setPaintTicks(true);
             maintainerNumberSlider.setPaintLabels(true);
