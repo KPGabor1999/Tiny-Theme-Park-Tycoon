@@ -63,7 +63,7 @@ public class Main extends JFrame {
 
         gm = new GameManager();
         //setUndecorated(true);
-        setTitle("Idle Theme Park World");
+        setTitle("Tiny Theme Park Tycoon");
         setSize(600, 600);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         //setUndecorated(true);
