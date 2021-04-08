@@ -15,10 +15,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Park implements Updatable {
+
     private static final int HISTORY_SIZE = 14;
-    
+
     private GameManager gm;
-    
+
     private double rating;
     private int parkValue;
     private int activeParkValue;
@@ -26,7 +27,6 @@ public class Park implements Updatable {
     private int[] valueHistory;
 
     //private boolean isOpen;
-
     private int maxGuests;
 
     private Tile[][] tiles;
@@ -62,7 +62,7 @@ public class Park implements Updatable {
         tiles = new Tile[rows][columns];
         pf = new PathFinding(tiles);
         reachable = new HashSet<>();
-        
+
         //1.Make sure all tiles are empty
         this.buildings = new ArrayList<>();
         for (int row = 0; row < tiles.length; row++) {
@@ -72,11 +72,11 @@ public class Park implements Updatable {
         }
         //2.Spawn in the gate tile
         build(BuildType.ENTRANCE, 0, 0, true);
-        
+
         //3. Install locked tiles
         for (int row = 0; row < tiles.length; row++) {
-            for (int column = 0; column<tiles[0].length; column++) {
-                if(row > 5 || column >5){
+            for (int column = 0; column < tiles[0].length; column++) {
+                if (row > 5 || column > 5) {
                     build(BuildType.LOCKEDTILE, column, row, true);
                 }
             }
@@ -148,32 +148,32 @@ public class Park implements Updatable {
             }
         }
     }
-    
-    public ArrayList<Building> getPavementNeighbours(int x, int y){
+
+    public ArrayList<Building> getPavementNeighbours(int x, int y) {
         ArrayList<Building> res = new ArrayList<>();
-        ArrayList<Tile> neighbours = getNeighbours(x,y,1,1);
+        ArrayList<Tile> neighbours = getNeighbours(x, y, 1, 1);
         neighbours.removeIf(n -> !(n.getBuilding() instanceof Pavement || n.getBuilding() instanceof Entrance));
         neighbours.forEach(n -> res.add(n.getBuilding()));
         return res;
     }
-    
-    public ArrayList<Building> getNonPavementNeighbours(int x, int y){
+
+    public ArrayList<Building> getNonPavementNeighbours(int x, int y) {
         ArrayList<Building> res = new ArrayList<>();
-        ArrayList<Tile> neighbours = getNeighbours(x,y,1,1);
+        ArrayList<Tile> neighbours = getNeighbours(x, y, 1, 1);
         neighbours.removeIf(n -> (n.getBuilding() instanceof Pavement || n.getBuilding() instanceof Entrance));
         neighbours.forEach(n -> res.add(n.getBuilding()));
         return res;
     }
-    
-    public ArrayList<Building> getWalkableNeighbours(int x, int y){
+
+    public ArrayList<Building> getWalkableNeighbours(int x, int y) {
         ArrayList<Building> res = new ArrayList<>();
-        ArrayList<Tile> neighbours = getNeighbours(x,y,1,1);
+        ArrayList<Tile> neighbours = getNeighbours(x, y, 1, 1);
         neighbours.removeIf(n -> (n.getBuilding() == null || n.getBuilding() instanceof LockedTile));
         neighbours.forEach(n -> res.add(n.getBuilding()));
         return res;
     }
-    
-    private ArrayList<Tile> getNeighbours(int x, int y, int height, int width){
+
+    private ArrayList<Tile> getNeighbours(int x, int y, int height, int width) {
         ArrayList<Tile> neighbours = new ArrayList<>();
         addNeighbourRange(neighbours, x, y - 1, width, true); //top neighbours
         addNeighbourRange(neighbours, x - 1, y, height, false); //left neighbours
@@ -222,25 +222,21 @@ public class Park implements Updatable {
         }
     }
 
-    public void updateFoodPrices(int hotdog, int icecream, int hamburger, int fishchips) {
+    public int checkFoodPrice(BuildType type) {
         for (int i = 0; i < buildings.size(); i++) {
-            if (buildings.get(i).getInfo() != BuildType.LOCKEDTILE && 
-               (buildings.get(i).getInfo() == BuildType.HOTDOGSTAND
-               || buildings.get(i).getInfo() == BuildType.ICECREAMPARLOR
-               || buildings.get(i).getInfo() == BuildType.BURGERJOINT)) {
-                switch(buildings.get(i).getInfo()){
-                    case HOTDOGSTAND:
-                        ((FoodStall)buildings.get(i)).setFoodPrice(hotdog);
-                        break;
-                    case ICECREAMPARLOR:
-                        ((FoodStall)buildings.get(i)).setFoodPrice(icecream);
-                        break;
-                    case BURGERJOINT:
-                        ((FoodStall)buildings.get(i)).setFoodPrice(hamburger);
-                        break;
-                    default:
-                        throw new AssertionError(buildings.get(i).getInfo().name());
-                }
+            if (buildings.get(i).getInfo() != BuildType.LOCKEDTILE
+                    && (buildings.get(i).getInfo() == type)) {
+                return ((FoodStall) buildings.get(i)).getFoodPrice();
+            }
+        }
+        return 0;
+    }
+
+    public void updateFoodPrice(BuildType type, int price) {
+        for (int i = 0; i < buildings.size(); i++) {
+            if (buildings.get(i).getInfo() != BuildType.LOCKEDTILE
+                    && (buildings.get(i).getInfo() == type)) {
+                ((FoodStall) buildings.get(i)).setFoodPrice(price);
             }
         }
     }
@@ -272,7 +268,6 @@ public class Park implements Updatable {
     public void closePark() {
         isOpen = false;
     }*/
-
     //Used for debugging
     public void setRating(int value) {
         rating = value;
@@ -309,16 +304,16 @@ public class Park implements Updatable {
         double negative = 0;
         for (int i = 0; i < buildings.size(); i++) {
             //sum += buildings.get(i).getRating();
-            if(buildings.get(i) instanceof Toilet){
-                negative += ((Toilet)buildings.get(i)).getCleanliness();
-            } else if(buildings.get(i) instanceof Infrastructure){
-                negative += ((Infrastructure)buildings.get(i)).checkLittering();
-            } 
+            if (buildings.get(i) instanceof Toilet) {
+                negative += ((Toilet) buildings.get(i)).getCleanliness();
+            } else if (buildings.get(i) instanceof Infrastructure) {
+                negative += ((Infrastructure) buildings.get(i)).checkLittering();
+            }
         }
         //rating = sum/buildings.size();
         rating = (rating + gm.getAgentManager().getVisitorHappinessRating()) / 2;
         rating -= 3;
-        rating += Math.min(gm.getAgentManager().getVisitorCount()/200.0, 3.0);
+        rating += Math.min(gm.getAgentManager().getVisitorCount() / 200.0, 3.0);
         negative *= 0.05;
         negative = Math.min(negative, 2);
         rating -= negative;
@@ -336,14 +331,14 @@ public class Park implements Updatable {
     private void calculateActiveValue() {
         activeParkValue = 0;
         for (int i = 0; i < buildings.size(); i++) {
-            switch(buildings.get(i).getStatus()){
+            switch (buildings.get(i).getStatus()) {
                 case RUNNING:
                 case OPEN:
                 case CLOSED:
                     activeParkValue += buildings.get(i).getValue();
                     break;
                 default:
-                    break;    
+                    break;
             }
         }
     }
