@@ -36,7 +36,7 @@ public abstract class FoodStall extends Building {
     
     @Override
     public int getRecommendedMax(){
-        return 10/serviceTime;
+        return (status == BuildingStatus.OPEN || status == BuildingStatus.OPEN) ? 10/serviceTime : 0;
     }
     
     public void setFoodPrice(int number){
