@@ -2,6 +2,7 @@ package Idlethemeparkworld.model.agent;
 
 import Idlethemeparkworld.misc.utils.Position;
 import Idlethemeparkworld.model.AgentManager;
+import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.Park;
 import Idlethemeparkworld.model.Time;
 import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentActionType;
@@ -98,6 +99,10 @@ public class Visitor extends Agent {
             }
         } else {
             if(state == AgentState.FLOATING){
+                if(park.getTile(x, y).getBuilding().getInfo() != BuildType.PAVEMENT){
+                    moveTo(lastEnter.x, lastEnter.y);
+                    this.resetAction();
+                }
                 state = AgentState.IDLE;
             }
         }
@@ -595,6 +600,10 @@ public class Visitor extends Agent {
     
     public int getCashSpent(){
         return cashSpent;
+    }
+    
+    public void reset(){
+        
     }
 
     @Override

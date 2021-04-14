@@ -105,14 +105,23 @@ public abstract class FoodStall extends Building {
             case INACTIVE:
                 condition-=0.1; break;
             case FLOATING:
-                condition-=0.25; 
-                if(condition<=0){
-                    status = BuildingStatus.DECAYED;
-                }
-                break;
+                condition-=0.25; break;
             default:
                 break;
         }
+        if(condition<=0){
+            condition=0;
+            status = BuildingStatus.DECAYED;
+        }
+    }
+    
+    @Override
+    public void setStatus(BuildingStatus status){
+        if(this.status == BuildingStatus.FLOATING){
+            queue.clear();
+            serviceTimer = 0;
+        }
+        super.setStatus(status);
     }
     
     @Override

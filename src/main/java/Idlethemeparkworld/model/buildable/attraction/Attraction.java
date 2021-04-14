@@ -50,9 +50,6 @@ public abstract class Attraction extends Building implements Updatable {
         }
     }
     
-    protected static ArrayList<AttractionStats> upgrades;
-    protected AttractionStats stats;
-    
     protected int fun;
     protected int capacity;
     protected int runtime;
@@ -87,7 +84,7 @@ public abstract class Attraction extends Building implements Updatable {
     
     @Override
     public int getRecommendedMax(){
-        return capacity*2;
+        return (status == BuildingStatus.OPEN || status == BuildingStatus.OPEN) ? capacity*2 : 0;
     }
     
     public ArrayList<Pair<String, String>> getAllData(){
@@ -154,10 +151,25 @@ public abstract class Attraction extends Building implements Updatable {
             case INACTIVE:
                 condition-=0.04; break;
             case FLOATING:
-                condition-=0.2; break;
+                condition-=2.5; break;
             default:
                 break;
         }
+        
+        if(condition<=0){
+            condition=0;
+            status = BuildingStatus.DECAYED;
+        }
+    }
+    
+    @Override
+    public void setStatus(BuildingStatus status){
+        if(this.status == BuildingStatus.FLOATING){
+            queue.clear();
+            onRide.clear();
+            statusTimer = 0;
+        }
+        super.setStatus(status);
     }
     
     public void update(long tickCount){
@@ -172,15 +184,6 @@ public abstract class Attraction extends Building implements Updatable {
                 if(queue.size() >= capacity){
                     loadVisitors();
                     start();
-                }
-                break;
-            case CLOSED:
-                break;
-            case INACTIVE:
-                break;
-            case FLOATING:
-                if(condition<=0){
-                    status = BuildingStatus.DECAYED;
                 }
                 break;
             default:

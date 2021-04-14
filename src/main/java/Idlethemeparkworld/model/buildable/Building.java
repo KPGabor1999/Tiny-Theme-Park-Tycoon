@@ -21,7 +21,6 @@ public abstract class Building extends Buildable{
         this.condition = 100;
     }
     
-    //for debugging and prototyping
     public void setStatus(BuildingStatus status){
         this.status = status;
     }

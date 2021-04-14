@@ -210,6 +210,11 @@ public class Board extends JPanel {
             if(buildings.get(i).getStatus() == BuildingStatus.FLOATING){
                 gr.drawImage(Assets.Texture.NOPATH.getAsset(), x*CELL_SIZE+w*CELL_SIZE/2-15, y*CELL_SIZE+h*CELL_SIZE/2-15, 30, 30, null);
             }
+            if(buildings.get(i).getStatus() == BuildingStatus.DECAYED){
+                gr.setColor(new Color(0, 0, 0, 100));
+                gr.fillRect(x * CELL_SIZE, y * CELL_SIZE, w * CELL_SIZE, h * CELL_SIZE);
+                gr.setColor(Color.WHITE);
+            }
         }
         
         ArrayList<Visitor> visitors = gm.getAgentManager().getVisitors();
