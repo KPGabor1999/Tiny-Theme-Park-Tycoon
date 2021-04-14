@@ -22,10 +22,6 @@ public class GameManager {
     private double dayNightCycle;
 
     private int entranceFee;
-    private int hotdogPrice;
-    private int icecreamPrice;
-    private int hamburgerPrice;
-    private int fishChipsPrice;
 
     private Park park;
     private Time time;
@@ -41,12 +37,6 @@ public class GameManager {
         this.gamePaused = false;
         this.gameSpeed = 1;
         this.dayNightCycle = 0;
-
-        this.entranceFee = 15;
-        this.hotdogPrice = 15;
-        this.icecreamPrice = 15;
-        this.hamburgerPrice = 15;
-        this.fishChipsPrice = 15;
 
         this.park = new Park(10, 11, this);
         this.time = new Time();
@@ -88,40 +78,8 @@ public class GameManager {
         return entranceFee;
     }
 
-    public int getHotdogPrice() {
-        return hotdogPrice;
-    }
-
-    public int getIcecreamPrice() {
-        return icecreamPrice;
-    }
-
-    public int getHamburgerPrice() {
-        return hamburgerPrice;
-    }
-
-    public int getFishChipsPrice() {
-        return fishChipsPrice;
-    }
-
     public void setEntranceFee(int number) {
         this.entranceFee = number;
-    }
-
-    public void setHotdogPrice(int number) {
-        this.hotdogPrice = number;
-    }
-
-    public void setIcecreamPrice(int number) {
-        this.icecreamPrice = number;
-    }
-
-    public void setHamburgerPrice(int number) {
-        this.hamburgerPrice = number;
-    }
-
-    public void setFishChipsPrice(int number) {
-        this.fishChipsPrice = number;
     }
 
     public void startNewGame() {
@@ -161,10 +119,6 @@ public class GameManager {
         }
     }
     
-    public void updateFoodPrices(){
-        park.updateFoodPrices(this.hotdogPrice, this.icecreamPrice, this.hamburgerPrice, this.fishChipsPrice);
-    }
-
     public void stopUpdateCycle() {
         updateCycleRunning = false;
     }

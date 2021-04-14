@@ -81,6 +81,10 @@ public abstract class Attraction extends Building implements Updatable {
     public int getEntryFee(){
         return entryFee;
     }
+
+    public void setCondition(double condition) {
+        this.condition = condition;
+    }
     
     @Override
     public int getRecommendedMax(){

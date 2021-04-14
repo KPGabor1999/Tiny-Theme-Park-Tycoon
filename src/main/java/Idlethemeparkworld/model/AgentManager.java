@@ -2,6 +2,7 @@ package Idlethemeparkworld.model;
 
 import Idlethemeparkworld.model.agent.Agent;
 import Idlethemeparkworld.model.agent.Janitor;
+import Idlethemeparkworld.model.agent.Maintainer;
 import Idlethemeparkworld.model.agent.Visitor;
 import java.util.ArrayList;
 import java.util.Random;
@@ -47,6 +48,7 @@ public class AgentManager implements Updatable {
     
     private ArrayList<Visitor> visitors;
     private ArrayList<Janitor> janitors;
+    private ArrayList<Maintainer> maintainers;
     private Visitor highlighted;
     
     public AgentManager(Park park, GameManager gm){
@@ -55,7 +57,8 @@ public class AgentManager implements Updatable {
         this.visitorProbability = 0;
         this.rand = new Random();
         this.visitors = new ArrayList<>();
-        this.janitors = new ArrayList<>(5);     //0-5 janitors allowed at a time.
+        this.janitors = new ArrayList<>(5);         //0-5 janitors allowed at a time.
+        this.maintainers = new ArrayList<>(5);      //0-5 maintainers allowed at a time.
         spawnVisitor();
         highlighted = visitors.get(0);
     }
@@ -135,9 +138,13 @@ public class AgentManager implements Updatable {
     public ArrayList<Visitor> getVisitors(){
         return visitors;
     }
-    
-    public ArrayList<Janitor> getJanitors(){
+
+    public ArrayList<Janitor> getJanitors() {
         return janitors;
+    }
+
+    public ArrayList<Maintainer> getMaintainers() {
+        return maintainers;
     }
     
     public void manageJanitors(int newNumberOfJanitors){
@@ -161,6 +168,27 @@ public class AgentManager implements Updatable {
         }
     }
     
+    public void manageMaintainers(int newNumberOfMaintainers){
+        int currentNumberOfMaintainers = maintainers.size();
+        
+        if(currentNumberOfMaintainers < newNumberOfMaintainers){
+        //Annyi új karbantartót adunk a listához, amennyit szükséges és minden létrehozást kiírunk a konzolra.
+            int numberOfNewMaintainers = newNumberOfMaintainers - currentNumberOfMaintainers;
+            for(int count = 1; count <= numberOfNewMaintainers; count++){
+                maintainers.add(new Maintainer(getRandomName(), park, this));
+                System.out.println("New maintainer hired. Now we've got " + maintainers.size() + " maintainers.");
+            }
+        }else if (currentNumberOfMaintainers > newNumberOfMaintainers){
+        //Annyi új takarítót adunk a listából (randomra), amennyit szükséges és minden törlést kiírunk a konzolra.
+            int numberOfMaintainersToFire = currentNumberOfMaintainers - newNumberOfMaintainers;
+            for(int count = 1; count <= numberOfMaintainersToFire; count++){
+                int index = rand.nextInt(maintainers.size());
+                maintainers.remove(index);
+                System.out.println("One maintainer fired. Now we've got " + maintainers.size() + " maintainers.");
+            }
+        }
+    }
+    
     @Override
     public void update(long tickCount){
         spawnUpdate();
@@ -168,7 +196,16 @@ public class AgentManager implements Updatable {
             visitors.get(i).update(tickCount);
         }
         for (int i = 0; i < janitors.size(); i++) {
-            janitors.get(i).update(tickCount);
+            janitors.get(i).update(tickCount);                      //dolgoztatjuk a takarítókat
+            if(gm.getTime().getTotalMinutes() % 60 == 0){           //óránként kifizetjük az órabérüket
+                gm.getFinance().pay(janitors.get(i).getSalary());
+            }
+        }
+        for (int i = 0; i < maintainers.size(); i++) {
+            maintainers.get(i).update(tickCount);                   //dolgoztatjuk a takarítókat
+            if(gm.getTime().getTotalMinutes() % 60 == 0){           //óránként kifizetjük az órabérüket
+                gm.getFinance().pay(maintainers.get(i).getSalary());
+            }
         }
         if(tickCount%24==0){
             updateVisitorProbability();

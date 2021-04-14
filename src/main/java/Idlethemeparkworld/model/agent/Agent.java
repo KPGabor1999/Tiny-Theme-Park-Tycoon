@@ -9,13 +9,14 @@ import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentState;
 import Idlethemeparkworld.model.agent.AgentTypes.AgentType;
 import Idlethemeparkworld.model.agent.AgentTypes.StaffType;
 import Idlethemeparkworld.model.buildable.Building;
+import Idlethemeparkworld.model.buildable.BuildingStatus;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
 
 public abstract class Agent implements Updatable {
-    private static final int AGENT_HISTORY_LENGTH = 10;
+    protected static final int AGENT_HISTORY_LENGTH = 10;
     
     AgentManager am;
     Park park;
@@ -31,15 +32,13 @@ public abstract class Agent implements Updatable {
     
     Random rand;
     
-    ArrayList<AgentThought> thoughts;
     AgentState state;
-    LinkedList<AgentAction> actionQueue;
-    
-    BuildType[] visitHistory;
-
+    protected int statusMaxTimer;
+    protected int statusTimer;
+    protected AgentAction currentAction;
     Building currentBuilding;
     
-    protected final Color color;
+    protected Color color;
     protected Position prevPos;
     protected Position newPos;
     protected int xOffset;
@@ -47,7 +46,7 @@ public abstract class Agent implements Updatable {
     protected int lerpTimer;
     protected boolean isMoving;
 
-    public Agent(String name, int startingHappiness, Park park, AgentManager am) {
+    public Agent(String name, Park park, AgentManager am) {
         this.am = am;
         this.park = park;
         
@@ -59,11 +58,8 @@ public abstract class Agent implements Updatable {
         this.destY = this.destX;
         this.rand = new Random();
         
-        this.thoughts = new ArrayList<>();
         this.state = AgentState.ENTERINGPARK;
-        this.actionQueue = new LinkedList<>();
         
-        this.visitHistory = new BuildType[AGENT_HISTORY_LENGTH];
         this.currentBuilding = park.getTile(x, y).getBuilding();
         
         this.color = new Color(rand.nextInt(255),rand.nextInt(255),rand.nextInt(255),255);
@@ -112,6 +108,25 @@ public abstract class Agent implements Updatable {
         this.state = newState;
     }
     
+    protected void checkFloating(){
+        if(park.getTile(x, y).isEmpty() || park.getTile(x, y).getBuilding().getStatus() == BuildingStatus.FLOATING){
+            if(state != AgentState.FLOATING){
+                resetAction();
+                statusTimer = 0;
+                state = AgentState.FLOATING;
+            }
+        } else {
+            if(state == AgentState.FLOATING){
+                state = AgentState.IDLE;
+            }
+        }
+    }
+    
+    protected void resetAction(){
+        setState(AgentState.IDLE);
+        currentAction = null;
+    }
+    
     protected void moveTo(Position p){
         moveTo(p.x, p.y);
     }
@@ -128,7 +143,7 @@ public abstract class Agent implements Updatable {
         newPos = new Position(this.x*64+xOffset,this.y*64+yOffset);
     }
     
-    private void checkMove(){
+    protected void checkMove(){
         if(isMoving){
             lerpTimer++;
             isMoving=lerpTimer<24;
@@ -161,9 +176,7 @@ public abstract class Agent implements Updatable {
         sb.append(", y=").append(y);
         sb.append(", destX=").append(destX);
         sb.append(", destY=").append(destY);
-        sb.append(", thoughts=").append(thoughts);
         sb.append(", state=").append(state);
-        sb.append(", actionQueue=").append(actionQueue);
         return sb.toString();
     }
 }

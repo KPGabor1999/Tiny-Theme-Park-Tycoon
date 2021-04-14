@@ -3,7 +3,6 @@ package Idlethemeparkworld.model.buildable.food;
 import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.GameManager;
 import Idlethemeparkworld.model.Time;
-import java.util.ArrayList;
 
 public class Hamburger extends FoodStall {
     public Hamburger(int x, int y, GameManager gm){

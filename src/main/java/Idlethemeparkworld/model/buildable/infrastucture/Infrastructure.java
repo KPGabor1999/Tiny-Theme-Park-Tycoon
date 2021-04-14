@@ -10,17 +10,22 @@ public abstract class Infrastructure extends Building {
 
     public Infrastructure(GameManager gm) {
         super(gm);
+        this.littering = 0;
     }
     
     public double checkLittering(){
         return littering;
     }
     
-    public void litter(double amount){
+    public void setLittering(double littering) {
+        this.littering = littering;
+    }
+    
+    public void litter(double amount){  //This should only be in the Visitor class
         littering += amount;
     }
     
-    public void clean(){
+    public void clean(){    //This should only be in the Janitor class.
         littering = 0;
     }
     

@@ -1,5 +1,6 @@
 package Idlethemeparkworld.view;
 
+import static Idlethemeparkworld.model.BuildType.*;
 import java.awt.*;
 import static java.awt.Component.CENTER_ALIGNMENT;
 import java.awt.event.WindowAdapter;
@@ -21,13 +22,14 @@ public class AdministrationDialog extends JDialog {
     private JLabel ticketPriceLabel;
     private JSlider ticketPriceSlider;
     private JLabel hotDogPriceLabel;
+    private JLabel hotDogNotBuilt;
     private JSlider hotDogPriceSlider;
     private JLabel iceCreamPriceLabel;
+    private JLabel iceCreamNotBuilt;
     private JSlider iceCreamPriceSlider;
     private JLabel hamburgerPriceLabel;
+    private JLabel hamburgerNotBuilt;
     private JSlider hamburgerPriceSlider;
-    private JLabel fishChipsPriceLabel;
-    private JSlider fishChipsPriceSlider;
 
     private JLabel employeesLabel;
 
@@ -68,49 +70,96 @@ public class AdministrationDialog extends JDialog {
             ticketPriceSlider.setPaintTicks(true);
             ticketPriceSlider.setPaintLabels(true);
             ticketPriceSlider.setValue(board.getGameManager().getEntranceFee());
-            //Hotdog
-            hotDogPriceLabel = new JLabel("Hot dog prices:");
-            hotDogPriceSlider = new JSlider(0, 30);
-            hotDogPriceSlider.setMajorTickSpacing(10);
-            hotDogPriceSlider.setMinorTickSpacing(1);
-            hotDogPriceSlider.setPaintTicks(true);
-            hotDogPriceSlider.setPaintLabels(true);
-            hotDogPriceSlider.setValue(board.getGameManager().getHotdogPrice());
-            //Jégkrémes
-            iceCreamPriceLabel = new JLabel("Ice cream prices:");
-            iceCreamPriceSlider = new JSlider(0, 30);
-            iceCreamPriceSlider.setMajorTickSpacing(10);
-            iceCreamPriceSlider.setMinorTickSpacing(1);
-            iceCreamPriceSlider.setPaintTicks(true);
-            iceCreamPriceSlider.setPaintLabels(true);
-            iceCreamPriceSlider.setValue(board.getGameManager().getIcecreamPrice());
-            //Hamburgeres
-            hamburgerPriceLabel = new JLabel("Hamburger prices:");
-            hamburgerPriceSlider = new JSlider(0, 30);
-            hamburgerPriceSlider.setMajorTickSpacing(10);
-            hamburgerPriceSlider.setMinorTickSpacing(1);
-            hamburgerPriceSlider.setPaintTicks(true);
-            hamburgerPriceSlider.setPaintLabels(true);
-            hamburgerPriceSlider.setValue(board.getGameManager().getHamburgerPrice());
-            //Fish & Chips
-            fishChipsPriceLabel = new JLabel("Fish & Chips prices:");
-            fishChipsPriceSlider = new JSlider(0, 30);
-            fishChipsPriceSlider.setMajorTickSpacing(10);
-            fishChipsPriceSlider.setMinorTickSpacing(1);
-            fishChipsPriceSlider.setPaintTicks(true);
-            fishChipsPriceSlider.setPaintLabels(true);
-            fishChipsPriceSlider.setValue(board.getGameManager().getFishChipsPrice());
-
             priceSettingsPanel.add(ticketPriceLabel);
             priceSettingsPanel.add(ticketPriceSlider);
-            priceSettingsPanel.add(hotDogPriceLabel);
-            priceSettingsPanel.add(hotDogPriceSlider);
+
+            //Jégkrémes
+            iceCreamPriceLabel = new JLabel("Ice cream prices:");
             priceSettingsPanel.add(iceCreamPriceLabel);
-            priceSettingsPanel.add(iceCreamPriceSlider);
+            int icecreamCheck = board.getGameManager().getPark().checkFoodPrice(ICECREAMPARLOR);
+            if (icecreamCheck == 0) {
+                iceCreamNotBuilt = new JLabel("Build an Ice Cream parlor");
+                iceCreamNotBuilt.setForeground(Color.RED);
+                priceSettingsPanel.add(iceCreamNotBuilt);
+            } else {
+                iceCreamPriceSlider = new JSlider(0, 30);
+                iceCreamPriceSlider.setMajorTickSpacing(10);
+                iceCreamPriceSlider.setMinorTickSpacing(1);
+                iceCreamPriceSlider.setPaintTicks(true);
+                iceCreamPriceSlider.setPaintLabels(true);
+                iceCreamPriceSlider.setValue(board.getGameManager().getPark().checkFoodPrice(ICECREAMPARLOR));
+                priceSettingsPanel.add(iceCreamPriceSlider);
+                //Slider Listener
+                iceCreamPriceSlider.addChangeListener(new ChangeListener() {
+                    public void stateChanged(ChangeEvent evt) {
+                        JSlider slider = (JSlider) evt.getSource();
+                        if (!slider.getValueIsAdjusting()) {
+                            int value = slider.getValue();
+                            //Action
+                            board.getGameManager().getPark().updateFoodPrice(ICECREAMPARLOR, value);
+                        }
+                    }
+                });
+            }
+
+            //Hotdog
+            hotDogPriceLabel = new JLabel("Hot dog prices:");
+            priceSettingsPanel.add(hotDogPriceLabel);
+            int hotdogCheck = board.getGameManager().getPark().checkFoodPrice(HOTDOGSTAND);
+            if (hotdogCheck == 0) {
+                hotDogNotBuilt = new JLabel("Build a Hot Dog stand");
+                hotDogNotBuilt.setForeground(Color.RED);
+                priceSettingsPanel.add(hotDogNotBuilt);
+            } else {
+                hotDogPriceSlider = new JSlider(0, 30);
+                hotDogPriceSlider.setMajorTickSpacing(10);
+                hotDogPriceSlider.setMinorTickSpacing(1);
+                hotDogPriceSlider.setPaintTicks(true);
+                hotDogPriceSlider.setPaintLabels(true);
+                hotDogPriceSlider.setValue(board.getGameManager().getPark().checkFoodPrice(HOTDOGSTAND));
+                priceSettingsPanel.add(hotDogPriceSlider);
+                //Slider Listener
+                hotDogPriceSlider.addChangeListener(new ChangeListener() {
+                    public void stateChanged(ChangeEvent evt) {
+                        JSlider slider = (JSlider) evt.getSource();
+                        if (!slider.getValueIsAdjusting()) {
+                            int value = slider.getValue();
+                            //Action
+                            board.getGameManager().getPark().updateFoodPrice(HOTDOGSTAND, value);
+                        }
+                    }
+                });
+            }
+
+            //Hamburgeres
+            hamburgerPriceLabel = new JLabel("Hamburger prices:");
             priceSettingsPanel.add(hamburgerPriceLabel);
-            priceSettingsPanel.add(hamburgerPriceSlider);
-            priceSettingsPanel.add(fishChipsPriceLabel);
-            priceSettingsPanel.add(fishChipsPriceSlider);
+            int hamburgerCheck = board.getGameManager().getPark().checkFoodPrice(BURGERJOINT);
+            if (hamburgerCheck == 0) {
+                hamburgerNotBuilt = new JLabel("Build a Burger joint");
+                hamburgerNotBuilt.setForeground(Color.RED);
+                priceSettingsPanel.add(hamburgerNotBuilt);
+            } else {
+                hamburgerPriceSlider = new JSlider(0, 30);
+                hamburgerPriceSlider.setMajorTickSpacing(10);
+                hamburgerPriceSlider.setMinorTickSpacing(1);
+                hamburgerPriceSlider.setPaintTicks(true);
+                hamburgerPriceSlider.setPaintLabels(true);
+                hamburgerPriceSlider.setValue(board.getGameManager().getPark().checkFoodPrice(BURGERJOINT));
+                priceSettingsPanel.add(hamburgerPriceSlider);
+                //Slider Listener
+                hamburgerPriceSlider.addChangeListener(new ChangeListener() {
+                    public void stateChanged(ChangeEvent evt) {
+                        JSlider slider = (JSlider) evt.getSource();
+                        if (!slider.getValueIsAdjusting()) {
+                            int value = slider.getValue();
+                            //Action
+                            board.getGameManager().getPark().updateFoodPrice(BURGERJOINT, value);
+                        }
+                    }
+                });
+            }
+
             this.getContentPane().add(priceSettingsPanel);
 
             employeesLabel = new JLabel("Employees");
@@ -118,15 +167,15 @@ public class AdministrationDialog extends JDialog {
             this.getContentPane().add(employeesLabel);
 
             employeeSettingsPanel = new JPanel(new GridLayout(3, 2));
-            janitorNumberLabel = new JLabel("Number of cleaners:");
+            janitorNumberLabel = new JLabel("Number of janitors:");
             janitorNumberSlider = new JSlider(0, 5);
-            janitorNumberSlider.setValue(0);
+            janitorNumberSlider.setValue(board.getGameManager().getAgentManager().getJanitors().size());
             janitorNumberSlider.setMajorTickSpacing(1);
             janitorNumberSlider.setPaintTicks(true);
             janitorNumberSlider.setPaintLabels(true);
             maintainerNumberLabel = new JLabel("Number of repairmen:");
             maintainerNumberSlider = new JSlider(0, 5);
-            maintainerNumberSlider.setValue(0);
+            maintainerNumberSlider.setValue(board.getGameManager().getAgentManager().getMaintainers().size());
             maintainerNumberSlider.setMajorTickSpacing(1);
             maintainerNumberSlider.setPaintTicks(true);
             maintainerNumberSlider.setPaintLabels(true);
@@ -143,57 +192,11 @@ public class AdministrationDialog extends JDialog {
                     if (!slider.getValueIsAdjusting()) {
                         int value = slider.getValue();
                         board.getGameManager().setEntranceFee(value);
-                        board.getGameManager().updateFoodPrices();
                     }
                 }
             });
 
-            hotDogPriceSlider.addChangeListener(new ChangeListener() {
-                public void stateChanged(ChangeEvent evt) {
-                    JSlider slider = (JSlider) evt.getSource();
-                    if (!slider.getValueIsAdjusting()) {
-                        int value = slider.getValue();
-                        //Action
-                        board.getGameManager().setHotdogPrice(value);
-                        board.getGameManager().updateFoodPrices();
-                    }
-                }
-            });
-            iceCreamPriceSlider.addChangeListener(new ChangeListener() {
-                public void stateChanged(ChangeEvent evt) {
-                    JSlider slider = (JSlider) evt.getSource();
-                    if (!slider.getValueIsAdjusting()) {
-                        int value = slider.getValue();
-                        //Action
-                        board.getGameManager().setIcecreamPrice(value);
-                        board.getGameManager().updateFoodPrices();
-                    }
-                }
-            });
-            hamburgerPriceSlider.addChangeListener(new ChangeListener() {
-                public void stateChanged(ChangeEvent evt) {
-                    JSlider slider = (JSlider) evt.getSource();
-                    if (!slider.getValueIsAdjusting()) {
-                        int value = slider.getValue();
-                        //Action
-                        board.getGameManager().setHamburgerPrice(value);
-                        board.getGameManager().updateFoodPrices();
-                    }
-                }
-            });
-            fishChipsPriceSlider.addChangeListener(new ChangeListener() {
-                public void stateChanged(ChangeEvent evt) {
-                    JSlider slider = (JSlider) evt.getSource();
-                    if (!slider.getValueIsAdjusting()) {
-                        int value = slider.getValue();
-                        //Action
-                        board.getGameManager().setFishChipsPrice(value);
-                    }
-                }
-            });
-
-            
-            janitorNumberSlider.addChangeListener(new ChangeListener(){
+            janitorNumberSlider.addChangeListener(new ChangeListener() {
                 @Override
                 public void stateChanged(ChangeEvent event) {
                     //A beállított érték alapján menedzseljük a takarítók listáját.
@@ -204,6 +207,20 @@ public class AdministrationDialog extends JDialog {
                         board.getGameManager().getAgentManager().manageJanitors(numberOfJanitors);
                     }
                 }
+
+            });
+            
+            maintainerNumberSlider.addChangeListener(new ChangeListener(){
+                @Override
+                public void stateChanged(ChangeEvent event) {
+                    //A beállított érték alapján menedzseljük a takarítók listáját.
+                    JSlider slider = (JSlider) event.getSource();
+                    if (!slider.getValueIsAdjusting()) {
+                        int numberOfMaintainers = slider.getValue();
+                        //Action
+                        board.getGameManager().getAgentManager().manageMaintainers(numberOfMaintainers);
+                    }
+                }
                 
             });
 
@@ -211,8 +228,8 @@ public class AdministrationDialog extends JDialog {
 
             this.pack();
 
-            int locationY = (int) owner.getLocation().getY() + this.getHeight()/ 2;
-            int locationX = (int) owner.getLocation().getX() + this.getWidth()/ 2;
+            int locationY = (int) owner.getLocation().getY() + this.getHeight() / 2;
+            int locationX = (int) owner.getLocation().getX() + this.getWidth() / 2;
             this.setLocation(locationX, locationY);
 
             this.setVisible(true);
