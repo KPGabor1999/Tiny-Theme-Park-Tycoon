@@ -156,7 +156,7 @@ public class Park implements Updatable {
     public ArrayList<Building> getNonPavementNeighbours(int x, int y) {
         ArrayList<Building> res = new ArrayList<>();
         ArrayList<Tile> neighbours = getNeighbours(x,y,1,1);
-        neighbours.removeIf(n -> (n.getBuilding() instanceof Pavement || n.getBuilding() instanceof Entrance) || n.getBuilding().getStatus() == BuildingStatus.DECAYED);
+        neighbours.removeIf(n -> (n.getBuilding() == null || n.getBuilding() instanceof Pavement || n.getBuilding() instanceof Entrance) || n.getBuilding().getStatus() == BuildingStatus.DECAYED);
         neighbours.forEach(n -> res.add(n.getBuilding()));
         return res;
     }

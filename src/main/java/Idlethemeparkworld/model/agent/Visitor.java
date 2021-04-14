@@ -9,6 +9,7 @@ import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentActionType;
 import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentState;
 import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentThoughts;
 import Idlethemeparkworld.model.buildable.Building;
+import Idlethemeparkworld.model.buildable.BuildingStatus;
 import Idlethemeparkworld.model.buildable.attraction.Attraction;
 import Idlethemeparkworld.model.buildable.food.FoodItem;
 import Idlethemeparkworld.model.buildable.food.FoodStall;
@@ -108,7 +109,8 @@ public class Visitor extends Agent {
         }
     }
     
-    private void checkFloating(){
+    @Override
+    protected void checkFloating(){
         if(park.getTile(x, y).isEmpty() || park.getTile(x, y).getBuilding().getStatus() == BuildingStatus.FLOATING){
             if(state != AgentState.FLOATING){
                 resetAction();
@@ -245,14 +247,6 @@ public class Visitor extends Agent {
         }
     }
     
-    private void updateThought(long tickCount){
-        for (int i = 0; i < thoughts.size(); i++) {
-            if(tickCount - thoughts.get(i).timeCreated > Time.convMinuteToTick(5)){
-                thoughts.remove(i);
-            }
-        }
-    }
-    
     private void updateState(){
         switch(state){
             case IDLE:
@@ -292,14 +286,6 @@ public class Visitor extends Agent {
         hunger-=0.02;
         thirst-=0.01;
         toilet-=0.01;
-    }
-    
-    private void updateCurrentAction(){
-         if(currentAction == null){
-             if(!actionQueue.isEmpty()){
-                 currentAction = actionQueue.poll();
-             }
-         }
     }
     
     private void performAction(long tickCount){
@@ -346,97 +332,6 @@ public class Visitor extends Agent {
         hunger = Math.min(AGENT_STATUS_MAXIMUM, Math.max(0, hunger));
         thirst = Math.min(AGENT_STATUS_MAXIMUM, Math.max(0, thirst));
         toilet = Math.min(AGENT_STATUS_MAXIMUM, Math.max(0, toilet));
-    }
-    
-    private void thoughtToHappiness(AgentThoughts thoughtType){
-        switch(thoughtType){
-            case CANTAFFORD:
-            case BADVALUE:
-            case LOST:
-            case LONGQUEUE:
-            case HUNGRY:
-            case THIRSTY:
-            case TIRED:
-            case TOOMUCHLITTER:
-            case CROWDED:
-                happiness--;
-                break;
-            case WOW:
-            case GOODVALUE:
-            case FEELINGGREAT:
-            case NOTHUNGRY:
-            case NOTTHIRSTY:
-            case CLEAN:
-                happiness++;
-                break;
-            default: break;
-        }
-    }
-    
-    private void addAction(AgentAction action){
-        if(!actionQueue.contains(action)){
-            actionQueue.add(action);
-        }
-    }
-    
-    private void thoughtToAction(AgentThoughts thoughtType){
-        switch(thoughtType){
-            case NOMONEY:
-                actionQueue.clear();
-                addAction(new AgentAction(AgentActionType.LEAVEPARK,null));
-                break;
-            case WANTTHRILL:
-                addAction(new AgentAction(AgentActionType.RIDE,null)); break;
-            case GOHOME:
-                actionQueue.clear();
-                addAction(new AgentAction(AgentActionType.LEAVEPARK,null));
-                break;
-            case TIRED:
-                addAction(new AgentAction(AgentActionType.SIT,null)); break;
-            case HUNGRY:
-                addAction(new AgentAction(AgentActionType.EAT,null)); break;
-            case THIRSTY:
-                addAction(new AgentAction(AgentActionType.EAT,null)); break;
-            case TOILET:
-                addAction(new AgentAction(AgentActionType.TOILET,null)); break;
-            case CROWDED:
-                addAction(new AgentAction(AgentActionType.WANDER,null)); break;
-            default:
-                break;
-        }
-    }
-        
-    private void insertThought(AgentThoughts thoughtType, Building subject,long tickCount){
-        AgentThought thought = new AgentThought(thoughtType,subject,tickCount);
-        if(!thoughts.contains(thought)){
-            thoughts.add(thought);
-            thoughtToHappiness(thoughtType);
-            thoughtToAction(thoughtType);
-        }
-    }
-    
-    private boolean conditionToThought(int condition, int lowerThreshold, long tickCount, AgentThoughts positive, AgentThoughts negative, double leaveHappinessMultiplier){
-        if(condition < lowerThreshold){
-            if(condition <= 0){
-                happiness *= leaveHappinessMultiplier;
-                insertThought(AgentThoughts.GOHOME,null,tickCount);
-                return true;
-            } else {
-                insertThought(negative,null,tickCount);
-                return true;
-            }
-        } else if(95 < condition){
-            insertThought(positive,null,tickCount);
-        }
-        return false;
-    }
-    
-    private void moveToRandomNeighbourPavement(){
-        ArrayList<Building> paves = park.getPavementNeighbours(x, y);
-        if(paves.size() > 0){
-            int nextIndex = rand.nextInt(paves.size());
-            moveTo(paves.get(nextIndex).getX(),paves.get(nextIndex).getY());
-        }
     }
     
     private void leaveParkCycle(){
@@ -688,6 +583,14 @@ public class Visitor extends Agent {
                 break;
             default:
                 break;
+        }
+    }
+    
+    private void moveToRandomNeighbourPavement(){
+        ArrayList<Building> paves = park.getPavementNeighbours(x, y);
+        if(paves.size() > 0){
+            int nextIndex = rand.nextInt(paves.size());
+            moveTo(paves.get(nextIndex).getX(),paves.get(nextIndex).getY());
         }
     }
     
