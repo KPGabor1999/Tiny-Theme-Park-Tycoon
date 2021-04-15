@@ -85,6 +85,10 @@ public abstract class Attraction extends Building implements Updatable {
         return entryFee;
     }
     
+    public void setEntryFee(int number) {
+        this.entryFee = number;
+    }
+    
     @Override
     public int getRecommendedMax(){
         return capacity*2;
