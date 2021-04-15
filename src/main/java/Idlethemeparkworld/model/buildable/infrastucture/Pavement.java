@@ -2,6 +2,7 @@ package Idlethemeparkworld.model.buildable.infrastucture;
 
 import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.GameManager;
+import Idlethemeparkworld.model.buildable.BuildingStatus;
 
 public class Pavement extends Infrastructure {
     
@@ -17,6 +18,6 @@ public class Pavement extends Infrastructure {
     
     @Override
     public int getRecommendedMax(){
-        return 5;
+        return (status == BuildingStatus.OPEN || status == BuildingStatus.OPEN) ? 2 : 0;
     }
 }

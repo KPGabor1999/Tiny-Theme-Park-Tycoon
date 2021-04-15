@@ -83,6 +83,10 @@ public abstract class Agent implements Updatable {
         return staffType;
     }
     
+    public AgentState getState(){
+        return state;
+    }
+    
     public int getX(){
         return x;
     }

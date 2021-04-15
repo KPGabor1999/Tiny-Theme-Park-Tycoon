@@ -38,8 +38,8 @@ public abstract class FoodStall extends Building {
     }
 
     @Override
-    public int getRecommendedMax() {
-        return 10 / serviceTime;
+    public int getRecommendedMax(){
+        return (status == BuildingStatus.OPEN || status == BuildingStatus.OPEN) ? 10/serviceTime : 0;
     }
 
     public void setFoodPrice(int number) {
@@ -113,14 +113,23 @@ public abstract class FoodStall extends Building {
                 condition -= 0.1;
                 break;
             case FLOATING:
-                condition -= 0.25;
-                if (condition <= 0) {
-                    status = BuildingStatus.DECAYED;
-                }
-                break;
+                condition-=0.25; break;
             default:
                 break;
         }
+        if(condition<=0){
+            condition=0;
+            status = BuildingStatus.DECAYED;
+        }
+    }
+    
+    @Override
+    public void setStatus(BuildingStatus status){
+        if(this.status == BuildingStatus.FLOATING){
+            queue.clear();
+            serviceTimer = 0;
+        }
+        super.setStatus(status);
     }
 
     @Override

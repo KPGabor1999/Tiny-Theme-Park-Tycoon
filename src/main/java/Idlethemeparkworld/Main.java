@@ -11,7 +11,6 @@ import java.awt.event.ActionListener;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
@@ -22,6 +21,8 @@ import javax.swing.JMenuItem;
 import javax.swing.WindowConstants;
 import Idlethemeparkworld.view.AdministrationDialog;
 import Idlethemeparkworld.view.Board;
+import Idlethemeparkworld.view.InformationBar;
+import Idlethemeparkworld.view.popups.StatsPanel;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
@@ -35,17 +36,13 @@ import java.io.IOException;
 import javax.swing.JScrollPane;
 import javax.swing.JViewport;
 import javax.swing.SwingUtilities;
-import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.plaf.FontUIResource;
 
 public class Main extends JFrame {
 
     Font custom;
-    private final JLabel timeLabel;
-    private final JLabel moneyLabel;
-    private final JLabel visitorCountLabel;
-    private final JLabel happinessLabel;
+    private InformationBar infoBar;
     private final JComboBox buildingChooser;
     private AdministrationDialog adminDialog;
     private Board board;
@@ -88,6 +85,18 @@ public class Main extends JFrame {
                 new HighscoreWindow(highscores.getHighscores(), Main.this);
             }
         });
+        
+        JMenuItem statistics = new JMenuItem(new AbstractAction("Statistics") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFrame frame = new JFrame ("MyPanel");
+                frame.setDefaultCloseOperation (JFrame.DISPOSE_ON_CLOSE);
+                frame.getContentPane().add (new StatsPanel(gm));
+                frame.pack();
+                frame.setLocationRelativeTo(Main.this);
+                frame.setVisible (true);
+            }
+        });
 
         JMenuItem menuGameExit = new JMenuItem(new AbstractAction("Exit") {
             @Override
@@ -98,6 +107,7 @@ public class Main extends JFrame {
 
         menuGame.add(menuNewGame);
         menuGame.add(menuHighScores);
+        menuGame.add(statistics);
         menuGame.addSeparator();
         menuGame.add(menuGameExit);
         menuBar.add(menuGame);
@@ -106,38 +116,9 @@ public class Main extends JFrame {
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
         /*---------------------------------------------------------*/
-        timeLabel = new JLabel("time");
-        moneyLabel = new JLabel("money");
-        visitorCountLabel = new JLabel("visitor");
-        happinessLabel = new JLabel("happiness");
-
-        timeLabel.setForeground(Color.cyan);
-        moneyLabel.setForeground(Color.GREEN);
-        visitorCountLabel.setText("Visitors: 20");
-        visitorCountLabel.setForeground(Color.RED);
-        happinessLabel.setText("Happiness: 100%");
-        happinessLabel.setForeground(Color.YELLOW);
-
-        JPanel informationPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        ((FlowLayout) informationPanel.getLayout()).setHgap(50);
-        informationPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
-
-        informationPanel.setBackground(Color.darkGray);
-        informationPanel.add(timeLabel);
-        informationPanel.add(moneyLabel);
-        informationPanel.add(visitorCountLabel);
-        informationPanel.add(happinessLabel);
-
-        add(informationPanel);
-
-        updateInfobar();
-        Timer timeTimer = new Timer(500, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                updateInfobar();
-            }
-        });
-        timeTimer.start();
+        
+        infoBar = new InformationBar(gm);
+        add(infoBar);
 
         /*---------------------------------------------------------*/
         JButton buildButton = new javax.swing.JButton();
@@ -169,7 +150,6 @@ public class Main extends JFrame {
 
         JPanel controlPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         ((FlowLayout) controlPanel.getLayout()).setHgap(10);
-        informationPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
 
         controlPanel.setBackground(Color.darkGray);
         controlPanel.add(buildingChooser);
@@ -221,7 +201,7 @@ public class Main extends JFrame {
         add(controlPanel);
 
         JPanel gameArea = new JPanel();
-        board = new Board(gm, buildButton, this, gameArea);
+        board = new Board(gm, this, gameArea);
 
         Dimension d = board.getPreferredSize();
         d.height *= 1.5;
@@ -276,11 +256,9 @@ public class Main extends JFrame {
         pack();
         setVisible(true);
     }
-
-    public void updateInfobar() {
-        timeLabel.setText(gm.getTime().toString());
-        moneyLabel.setText(gm.getFinance().toString());
-        visitorCountLabel.setText("Visitors: " + gm.getAgentManager().getVisitorCount());
+    
+    public InformationBar getInfoBar(){
+        return infoBar;
     }
 
     private void startNewGame() {

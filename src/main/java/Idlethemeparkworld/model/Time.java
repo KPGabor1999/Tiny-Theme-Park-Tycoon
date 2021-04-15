@@ -40,6 +40,10 @@ public class Time implements Updatable {
     public static int convMinuteToTick(double min){
         return (int) Math.round(min*MINUTE_DURATION);
     }
+    
+    public String toStringShort(){
+        return String.format("%02d:%02d", getHours(), getMinutes());
+    }
 
     @Override
     public String toString() {

@@ -23,10 +23,7 @@ public class Park implements Updatable {
     private double rating;
     private int parkValue;
     private int activeParkValue;
-    private int[] ratingHistory;
-    private int[] valueHistory;
 
-    //private boolean isOpen;
     private int maxGuests;
 
     private Tile[][] tiles;
@@ -57,7 +54,6 @@ public class Park implements Updatable {
         parkValue = 0;
         activeParkValue = 0;
         maxGuests = 0;
-        resetHistories();
 
         tiles = new Tile[rows][columns];
         pf = new PathFinding(tiles);
@@ -159,8 +155,8 @@ public class Park implements Updatable {
 
     public ArrayList<Building> getNonPavementNeighbours(int x, int y) {
         ArrayList<Building> res = new ArrayList<>();
-        ArrayList<Tile> neighbours = getNeighbours(x, y, 1, 1);
-        neighbours.removeIf(n -> (n.getBuilding() instanceof Pavement || n.getBuilding() instanceof Entrance));
+        ArrayList<Tile> neighbours = getNeighbours(x,y,1,1);
+        neighbours.removeIf(n -> (n.getBuilding() == null || n.getBuilding() instanceof Pavement || n.getBuilding() instanceof Entrance) || n.getBuilding().getStatus() == BuildingStatus.DECAYED);
         neighbours.forEach(n -> res.add(n.getBuilding()));
         return res;
     }
@@ -216,7 +212,7 @@ public class Park implements Updatable {
                 if (!reachable.contains(buildings.get(i))) {
                     buildings.get(i).setStatus(BuildingStatus.FLOATING);
                 } else if (buildings.get(i).getStatus() == BuildingStatus.FLOATING) {
-                    buildings.get(i).setStatus(BuildingStatus.INACTIVE);
+                    buildings.get(i).setStatus(BuildingStatus.OPEN);
                 }
             }
         }
@@ -255,22 +251,6 @@ public class Park implements Updatable {
 
         buildings.remove(demolitionIndex);
         updateBuildings();
-    }
-
-    /*public boolean isOpen() {
-        return isOpen;
-    }
-
-    public void openPark() {
-        isOpen = true;
-    }
-
-    public void closePark() {
-        isOpen = false;
-    }*/
-    //Used for debugging
-    public void setRating(int value) {
-        rating = value;
     }
 
     public double getRating() {
@@ -317,6 +297,9 @@ public class Park implements Updatable {
         negative *= 0.05;
         negative = Math.min(negative, 2);
         rating -= negative;
+        rating = (rating + gm.getAgentManager().getVisitorHappinessRating()) / 2.0;
+        rating -= 3;
+        rating += Math.min(gm.getAgentManager().getVisitorCount()/200.0, 3.0);
         rating = Math.min(rating, 10);
     }
 
@@ -348,14 +331,5 @@ public class Park implements Updatable {
         for (int i = 0; i < buildings.size(); i++) {
             maxGuests += buildings.get(i).getRecommendedMax();
         }
-    }
-
-    private void resetHistories() {
-        ratingHistory = new int[HISTORY_SIZE];
-        valueHistory = new int[HISTORY_SIZE];
-    }
-
-    private void updateHistories() {
-
     }
 }
