@@ -74,7 +74,7 @@ public class Visitor extends Agent {
         
         this.patience = Time.convMinuteToTick(10);
         this.energy = 100;
-        this.happiness = 100;
+        this.happiness = startingHappiness;
         this.nausea = 0;
         this.hunger = 100;
         this.thirst = 100;

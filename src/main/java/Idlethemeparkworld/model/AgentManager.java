@@ -49,7 +49,6 @@ public class AgentManager implements Updatable {
     private ArrayList<Visitor> visitors;
     private ArrayList<Janitor> janitors;
     private ArrayList<Maintainer> maintainers;
-    private Visitor highlighted;
     
     public AgentManager(Park park, GameManager gm){
         this.gm = gm;
@@ -60,11 +59,6 @@ public class AgentManager implements Updatable {
         this.janitors = new ArrayList<>(5);         //0-5 janitors allowed at a time.
         this.maintainers = new ArrayList<>(5);      //0-5 maintainers allowed at a time.
         spawnVisitor();
-        highlighted = visitors.get(0);
-    }
-    
-    public Visitor getHighlightedVisitor(){
-        return highlighted;
     }
     
     private void spawnVisitor(){

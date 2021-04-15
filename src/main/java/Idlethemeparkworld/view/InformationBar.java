@@ -54,5 +54,6 @@ public class InformationBar extends JPanel {
         timeLabel.setText(gm.getTime().toString());
         moneyLabel.setText(gm.getFinance().toString());
         visitorCountLabel.setText("Visitors: "+gm.getAgentManager().getVisitorCount());
+        happinessLabel.setText("Happiness: "+String.format("%.02f", gm.getAgentManager().getVisitorHappinessRating()));
     }
 }
