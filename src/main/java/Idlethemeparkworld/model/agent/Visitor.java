@@ -363,8 +363,13 @@ public class Visitor extends Agent {
         switch(state){
             case IDLE:
                 setState(AgentState.WANDERING);
+                statusTimer = 0;
                 break;
             case WANDERING:
+                if(statusTimer>this.patience){
+                    this.happiness -= 4;
+                    resetAction();
+                }
                 ArrayList<Building> bs = park.getNonPavementNeighbours(x, y);
                 bs.removeIf(b -> !(b instanceof Attraction));
                 if(bs.size() > 0){
@@ -408,8 +413,13 @@ public class Visitor extends Agent {
         switch(state){
             case IDLE:
                 setState(AgentState.WANDERING);
+                statusTimer = 0;
                 break;
             case WANDERING:
+                if(statusTimer>this.patience){
+                    this.happiness -= 4;
+                    resetAction();
+                }
                 ArrayList<Building> bs = park.getNonPavementNeighbours(x, y);
                 bs.removeIf(b -> !(b instanceof Toilet));
                 if(bs.size() > 0){
@@ -461,8 +471,13 @@ public class Visitor extends Agent {
         switch(state){
             case IDLE:
                 setState(AgentState.WANDERING);
+                statusTimer = 0;
                 break;
             case WANDERING:
+                if(statusTimer>this.patience){
+                    this.happiness -= 4;
+                    resetAction();
+                }
                 pave = (Pavement)currentBuilding;
                 if(/*pave.hasFreeSeating()*/true){
                     //pave.sit();
@@ -488,8 +503,13 @@ public class Visitor extends Agent {
         switch(state){
             case IDLE:
                 setState(AgentState.WANDERING);
+                statusTimer = 0;
                 break;
             case WANDERING:
+                if(statusTimer>this.patience){
+                    this.happiness -= 4;
+                    resetAction();
+                }
                 ArrayList<Building> bs = park.getNonPavementNeighbours(x, y);
                 bs.removeIf(b -> !(b instanceof FoodStall));
                 if(bs.size() > 0){
@@ -668,5 +688,25 @@ public class Visitor extends Agent {
 
     public int getAngriness() {
         return angriness;
+    }
+    
+    public boolean shouldRender(){
+        switch(state) {
+            case IDLE:
+            case WALKING:
+            case WANDERING:
+            case QUEUING:
+            case SITTING:
+            case FLOATING:
+            case ENTERINGPARK:
+            case LEAVINGPARK:
+                return true;
+            case ONRIDE:
+            case BUYING:
+            case EATING:
+            case SHITTING:
+            default:
+                return false;
+        }
     }
 }
