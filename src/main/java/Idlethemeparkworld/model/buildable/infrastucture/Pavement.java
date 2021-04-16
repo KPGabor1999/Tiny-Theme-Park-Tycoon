@@ -7,7 +7,7 @@ import Idlethemeparkworld.model.buildable.BuildingStatus;
 import java.util.ArrayList;
 
 public class Pavement extends Infrastructure {
-    
+
     public Pavement(int x, int y, GameManager gm) {
         super(gm);
         this.maxLevel = 0;
@@ -15,16 +15,15 @@ public class Pavement extends Infrastructure {
         this.y = y;
         this.buildingType = BuildType.PAVEMENT;
         this.value = BuildType.PAVEMENT.getBuildCost();
-        this.littering = 0;
     }
-    
+
     @Override
-    public int getRecommendedMax(){
+    public int getRecommendedMax() {
         return (status == BuildingStatus.OPEN || status == BuildingStatus.OPEN) ? 2 : 0;
     }
-    
+
     @Override
-    public ArrayList<Pair<String, String>> getAllData(){
+    public ArrayList<Pair<String, String>> getAllData() {
         ArrayList<Pair<String, String>> res = new ArrayList<>();
         res.add(new Pair<>("Littering: ", String.format("%.2f", littering)));
         return res;

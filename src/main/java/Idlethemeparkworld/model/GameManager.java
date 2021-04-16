@@ -19,15 +19,13 @@ public class GameManager {
     private static final double[] GAME_SPEEDS = {0.5, 1, 2};
     private int gameSpeed;
 
-    private double dayNightCycle;
-
     private int entranceFee;
 
-    private Park park;
-    private Time time;
-    private Finance finance;
-    private AgentManager am;
-    private Statistics stats;
+    private final Park park;
+    private final Time time;
+    private final Finance finance;
+    private final AgentManager am;
+    private final Statistics stats;
     private Board board;
 
     public GameManager() {
@@ -36,7 +34,6 @@ public class GameManager {
         this.tickCount = 0;
         this.gamePaused = false;
         this.gameSpeed = 1;
-        this.dayNightCycle = 0;
 
         this.park = new Park(10, 11, this);
         this.time = new Time();
@@ -46,14 +43,14 @@ public class GameManager {
         this.board = null;
     }
 
-    public void setBoard(Board board){
+    public void setBoard(Board board) {
         this.board = board;
     }
-    
-    public Board getBoard(){
+
+    public Board getBoard() {
         return board;
     }
-    
+
     public Park getPark() {
         return park;
     }
@@ -65,12 +62,12 @@ public class GameManager {
     public Finance getFinance() {
         return finance;
     }
-    
-    public Statistics getStats(){
+
+    public Statistics getStats() {
         return stats;
     }
-    
-    public AgentManager getAgentManager(){
+
+    public AgentManager getAgentManager() {
         return am;
     }
 
@@ -115,12 +112,8 @@ public class GameManager {
                     currentDeltaTime = 0;
                 }
             }
-            
+
         }
-    }
-    
-    public void stopUpdateCycle() {
-        updateCycleRunning = false;
     }
 
     private void update(int tickStep) {
@@ -145,7 +138,7 @@ public class GameManager {
         if (gameSpeed < GAME_SPEEDS.length - 1) {
             gameSpeed++;
         }
-    } 
+    }
 
     public void decreaseGameSpeed() {
         if (0 < gameSpeed) {
@@ -165,24 +158,8 @@ public class GameManager {
     public boolean isPaused() {
         return gamePaused;
     }
-    
-    public long getTickCount(){
+
+    public long getTickCount() {
         return tickCount;
-    }
-
-    //Perhaps game saving/loading and autosaving feature? *wink wink*
-    public void saveGame() {
-    }
-
-    public void saveGame(String name) {
-    }
-
-    public void loadGame() {
-    }
-
-    public void setupAutosave() {
-    }
-
-    private void autosave() {
     }
 }

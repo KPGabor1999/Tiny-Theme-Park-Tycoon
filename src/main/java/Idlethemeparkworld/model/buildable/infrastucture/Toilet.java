@@ -8,11 +8,12 @@ import Idlethemeparkworld.model.agent.Visitor;
 import java.util.LinkedList;
 
 public class Toilet extends Infrastructure {
+
     protected LinkedList<Visitor> waitingLine;
     protected int occupied;
     protected int capacity;
     private double cleanliness;
-    
+
     public Toilet(int x, int y, GameManager gm) {
         super(gm);
         this.maxLevel = 0;
@@ -25,9 +26,9 @@ public class Toilet extends Infrastructure {
         this.cleanliness = 100;
         this.value = BuildType.TOILET.getBuildCost();
     }
-    
+
     @Override
-    public int getRecommendedMax(){
+    public int getRecommendedMax() {
         return capacity;
     }
 
@@ -35,50 +36,45 @@ public class Toilet extends Infrastructure {
         return cleanliness;
     }
 
-    public void setCleanliness(double cleanliness) {
-        this.cleanliness = cleanliness;
-    }
-    
     @Override
-    public ArrayList<Pair<String, String>> getAllData(){
+    public ArrayList<Pair<String, String>> getAllData() {
         ArrayList<Pair<String, String>> res = new ArrayList<>();
         res.add(new Pair<>("Capacity: ", occupied + "/" + capacity));
         res.add(new Pair<>("Cleanliness: ", String.format("%.2f", cleanliness)));
+        res.add(new Pair<>("Littering: ", String.format("%.2f", littering)));
         return res;
     }
-    
-    //Methods for managing visitors:
-        
-    public void joinLine(Visitor visitor){
+
+    public void joinLine(Visitor visitor) {
         waitingLine.add(visitor);
     }
-    
-    public boolean isFirstInQueue(Visitor visitor){
+
+    public boolean isFirstInQueue(Visitor visitor) {
         return waitingLine.peek().equals(visitor);
     }
-    
-    public void leaveLine(Visitor visitor){
+
+    public void leaveLine(Visitor visitor) {
         waitingLine.remove(visitor);
     }
-    
-    public boolean isThereEmptyStool(){
-        return occupied<capacity;
+
+    public boolean isThereEmptyStool() {
+        return occupied < capacity;
     }
-    
-    public void enter(Visitor visitor){
+
+    public void enter(Visitor visitor) {
         waitingLine.poll();
         occupied++;
     }
-    
-    public void exit(){
+
+    public void exit() {
         occupied--;
     }
-    
-    public void decreaseHygiene(double amount){
-        cleanliness-=amount;
+
+    public void decreaseHygiene(double amount) {
+        cleanliness -= amount;
     }
-    
-    public void clean(){
+
+    public void clean() {
         this.cleanliness = 100;
     }
 }

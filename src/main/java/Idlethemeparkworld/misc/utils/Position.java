@@ -12,10 +12,10 @@ public class Position {
     public Position translate(Direction d) {
         return new Position(x + d.x, y + d.y);
     }
-    
-    public Position lerp(Position other, double ratio){
+
+    public Position lerp(Position other, double ratio) {
         return new Position(
-                (int) Math.round(x+(other.x-x)*ratio), 
-                (int) Math.round(y+(other.y-y)*ratio));
+                (int) Math.round(x + (other.x - x) * ratio),
+                (int) Math.round(y + (other.y - y) * ratio));
     }
 }

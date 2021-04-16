@@ -9,30 +9,31 @@ import java.io.PrintWriter;
 import java.util.Scanner;
 
 public class Highscores {
+
     int maxscores;
     ArrayList<Highscore> highscores;
 
-    public Highscores(int maxscores){
+    public Highscores(int maxscores) {
         this.maxscores = maxscores;
         this.highscores = new ArrayList<>();
         readHighscores();
     }
 
-    private void readHighscores(){
+    private void readHighscores() {
         highscores.clear();
-        try{
+        try {
             File f = new File("leaderboard.txt");
             Scanner sc = new Scanner(f);
             while (sc.hasNextLine()) {
                 String line = sc.nextLine();
                 String[] data = line.split("\t");
                 highscores.add(new Highscore(data[0], Integer.parseInt(data[1])));
-             }
-        } catch(IOException e) {
-            
+            }
+        } catch (IOException e) {
+
         }
     }
-    
+
     public ArrayList<Highscore> getHighscores() {
         return highscores;
     }
@@ -56,15 +57,15 @@ public class Highscores {
     private void insertScore(String name, int score) {
         highscores.add(new Highscore(name, score));
         sortHighscores();
-        
+
         try {
             PrintWriter writer = new PrintWriter(new FileOutputStream("leaderboard.txt", false));
-            for(int i=0; i<highscores.size(); i++){
+            for (int i = 0; i < highscores.size(); i++) {
                 Highscore sc = highscores.get(i);
                 writer.append(sc.getName() + "\t" + String.valueOf(sc.getScore()) + "\n");
             }
             writer.close();
-        } catch (IOException e){
+        } catch (IOException e) {
             System.err.println("Cannot open the file");
         }
     }

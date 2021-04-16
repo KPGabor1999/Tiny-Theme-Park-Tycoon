@@ -13,11 +13,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 
-public class Confirm extends JDialog{
-    public Confirm(Window o, ActionListener al){
-        super(o,"Confirm");
+public class Confirm extends JDialog {
+
+    public Confirm(Window o, ActionListener al) {
+        super(o, "Confirm");
         this.setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));
-        
+
         JLabel confirmDemolitionLabel = new JLabel("Are you sure?");
         confirmDemolitionLabel.setAlignmentX(CENTER_ALIGNMENT);
         JPanel optionsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -36,16 +37,16 @@ public class Confirm extends JDialog{
                 Confirm.this.dispose();
             }
         });
-        
+
         this.getContentPane().add(confirmDemolitionLabel);
         optionsPanel.add(yesButton);
         optionsPanel.add(noButton);
         this.getContentPane().add(optionsPanel);
         this.pack();
-        int xLocation = this.getOwner().getX() + this.getOwner().getWidth()/2 - this.getWidth()/2;
-        int yLocation = this.getOwner().getY() + this.getOwner().getHeight()/2 - this.getHeight()/2;
+        int xLocation = this.getOwner().getX() + this.getOwner().getWidth() / 2 - this.getWidth() / 2;
+        int yLocation = this.getOwner().getY() + this.getOwner().getHeight() / 2 - this.getHeight() / 2;
         this.setLocation(xLocation, yLocation);
-        
+
         this.setVisible(true);
     }
 }

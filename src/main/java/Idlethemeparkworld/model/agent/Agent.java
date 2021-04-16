@@ -104,7 +104,7 @@ public abstract class Agent implements Updatable {
         return res;
     }
     
-    public void setState(AgentState newState){
+    protected void setState(AgentState newState){
         this.state = newState;
     }
     

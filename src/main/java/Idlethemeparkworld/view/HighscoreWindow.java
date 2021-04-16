@@ -14,8 +14,9 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 public class HighscoreWindow extends JDialog {
+
     private final JTable table;
-    
+
     public HighscoreWindow(ArrayList<Highscore> highscores, JFrame parent) {
         super(parent, true);
         table = new JTable(new HighscoreTable(highscores));

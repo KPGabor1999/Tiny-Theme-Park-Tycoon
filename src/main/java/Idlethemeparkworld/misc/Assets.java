@@ -6,6 +6,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Assets {
+
     public static enum Texture {
         BURGERJOINT,
         CAROUSEL,
@@ -20,18 +21,16 @@ public class Assets {
         SWINGINGSHIP,
         TOILET,
         TRASHCAN,
-        
         LOCKED,
         NOPATH,
-        
         NONE;
 
         private static final String ASSETS_FOLDER_PATH = "resources/";
-        private String filename;     
+        private String filename;
         private Image asset;
 
         Texture(String path) {
-            if(!this.name().equals("NONE")){
+            if (!this.name().equals("NONE")) {
                 this.filename = path;
                 load();
             } else {
@@ -41,7 +40,7 @@ public class Assets {
         }
 
         Texture() {
-            if(!this.name().equals("NONE")){
+            if (!this.name().equals("NONE")) {
                 this.filename = ASSETS_FOLDER_PATH + name().replace("_", "").toLowerCase() + ".png";
                 load();
             } else {
@@ -49,17 +48,17 @@ public class Assets {
                 asset = null;
             }
         }
-        
-        private void load(){
+
+        private void load() {
             try {
                 asset = ResourceLoader.loadImage(filename);
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
         }
-        
-        public Image getAsset(){
+
+        public Image getAsset() {
             return asset;
-        } 
+        }
     }
 }

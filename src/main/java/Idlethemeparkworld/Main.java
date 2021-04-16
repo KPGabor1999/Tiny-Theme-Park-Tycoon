@@ -42,7 +42,7 @@ import javax.swing.plaf.FontUIResource;
 public class Main extends JFrame {
 
     Font custom;
-    private InformationBar infoBar;
+    private final InformationBar infoBar;
     private final JComboBox buildingChooser;
     private AdministrationDialog adminDialog;
     private Board board;
@@ -85,16 +85,16 @@ public class Main extends JFrame {
                 new HighscoreWindow(highscores.getHighscores(), Main.this);
             }
         });
-        
+
         JMenuItem statistics = new JMenuItem(new AbstractAction("Statistics") {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JFrame frame = new JFrame ("MyPanel");
-                frame.setDefaultCloseOperation (JFrame.DISPOSE_ON_CLOSE);
-                frame.getContentPane().add (new StatsPanel(gm));
+                JFrame frame = new JFrame("MyPanel");
+                frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                frame.getContentPane().add(new StatsPanel(gm));
                 frame.pack();
                 frame.setLocationRelativeTo(Main.this);
-                frame.setVisible (true);
+                frame.setVisible(true);
             }
         });
 
@@ -116,7 +116,6 @@ public class Main extends JFrame {
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
         /*---------------------------------------------------------*/
-        
         infoBar = new InformationBar(gm);
         add(infoBar);
 
@@ -256,8 +255,8 @@ public class Main extends JFrame {
         pack();
         setVisible(true);
     }
-    
-    public InformationBar getInfoBar(){
+
+    public InformationBar getInfoBar() {
         return infoBar;
     }
 

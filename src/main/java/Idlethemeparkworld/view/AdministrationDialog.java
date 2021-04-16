@@ -209,8 +209,8 @@ public class AdministrationDialog extends JDialog {
                 }
 
             });
-            
-            maintainerNumberSlider.addChangeListener(new ChangeListener(){
+
+            maintainerNumberSlider.addChangeListener(new ChangeListener() {
                 @Override
                 public void stateChanged(ChangeEvent event) {
                     //A beállított érték alapján menedzseljük a takarítók listáját.
@@ -221,7 +221,7 @@ public class AdministrationDialog extends JDialog {
                         board.getGameManager().getAgentManager().manageMaintainers(numberOfMaintainers);
                     }
                 }
-                
+
             });
 
             this.getContentPane().add(employeeSettingsPanel);

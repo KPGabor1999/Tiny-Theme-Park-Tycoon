@@ -4,7 +4,8 @@ import Idlethemeparkworld.model.buildable.Building;
 import java.util.Objects;
 
 public class AgentThought {
-    public AgentThought(){
+
+    public AgentThought() {
         this.thoughtType = AgentInnerLogic.AgentThoughts.NONE;
         this.subject = null;
         this.timeCreated = 0;
