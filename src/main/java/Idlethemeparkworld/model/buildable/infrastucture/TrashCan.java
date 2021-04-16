@@ -6,9 +6,10 @@ import Idlethemeparkworld.misc.utils.Pair;
 import Idlethemeparkworld.model.GameManager;
 
 public class TrashCan extends Infrastructure {
+
     private double capacity;
     private double filled;
-    
+
     public TrashCan(int x, int y, GameManager gm) {
         super(gm);
         this.maxLevel = 0;
@@ -28,38 +29,34 @@ public class TrashCan extends Infrastructure {
         return filled;
     }
 
-    public void setFilled(double filled) {
-        this.filled = filled;
-    }
-    
-    public ArrayList<Pair<String, String>> getAllData(){
+    @Override
+    public ArrayList<Pair<String, String>> getAllData() {
         ArrayList<Pair<String, String>> res = new ArrayList<>();
         res.add(new Pair<>("Capacity: ", String.format("%.2f", capacity)));
         res.add(new Pair<>("Filled: ", String.format("%.2f", filled)));
+        res.add(new Pair<>("Littering: ", String.format("%.2f", littering)));
         return res;
-    }    
-    
-    //Methods for managing visitors:
-    
-    public void use(double amount){
-        if(!isFull()){
-            filled+=amount;
-            if(isFull()){
+    }
+
+    public void use(double amount) {
+        if (!isFull()) {
+            filled += amount;
+            if (isFull()) {
                 filled = capacity;
             }
         }
     }
-    
-    public boolean isFull(){
+
+    public boolean isFull() {
         return filled >= capacity;
     }
-        
-    public void empty(){
+
+    public void empty() {
         filled = 0;
     }
-    
+
     @Override
-    public int getRecommendedMax(){
+    public int getRecommendedMax() {
         return 5;
     }
 }

@@ -23,6 +23,7 @@ import Idlethemeparkworld.view.AdministrationDialog;
 import Idlethemeparkworld.view.Board;
 import Idlethemeparkworld.view.InformationBar;
 import Idlethemeparkworld.view.popups.StatsPanel;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
@@ -33,19 +34,23 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JViewport;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.plaf.FontUIResource;
 
 public class Main extends JFrame {
 
     Font custom;
-    private InformationBar infoBar;
+    private final InformationBar infoBar;
     private final JComboBox buildingChooser;
+    private JPanel controlPanel;
     private AdministrationDialog adminDialog;
     private Board board;
+    private Timer gameEndTimer;
 
     GameManager gm;
     Highscores highscores;
@@ -75,26 +80,29 @@ public class Main extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 startNewGame();
                 board.refresh();
+                setControlPanel(true);
+                gameEndTimer.restart();
             }
         });
 
         this.highscores = new Highscores(10);
+        //highscores.reset();
         JMenuItem menuHighScores = new JMenuItem(new AbstractAction("Leaderboards") {
             @Override
             public void actionPerformed(ActionEvent e) {
                 new HighscoreWindow(highscores.getHighscores(), Main.this);
             }
         });
-        
+
         JMenuItem statistics = new JMenuItem(new AbstractAction("Statistics") {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JFrame frame = new JFrame ("MyPanel");
-                frame.setDefaultCloseOperation (JFrame.DISPOSE_ON_CLOSE);
-                frame.getContentPane().add (new StatsPanel(gm));
+                JFrame frame = new JFrame("MyPanel");
+                frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                frame.getContentPane().add(new StatsPanel(gm));
                 frame.pack();
                 frame.setLocationRelativeTo(Main.this);
-                frame.setVisible (true);
+                frame.setVisible(true);
             }
         });
 
@@ -116,7 +124,6 @@ public class Main extends JFrame {
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
         /*---------------------------------------------------------*/
-        
         infoBar = new InformationBar(gm);
         add(infoBar);
 
@@ -148,7 +155,7 @@ public class Main extends JFrame {
         pauseButton.setText("||");
         accelerateButton.setText(">>");
 
-        JPanel controlPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        this.controlPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         ((FlowLayout) controlPanel.getLayout()).setHgap(10);
 
         controlPanel.setBackground(Color.darkGray);
@@ -247,6 +254,19 @@ public class Main extends JFrame {
                 }
             }
         };
+        
+        gameEndTimer = new Timer(500, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(gm.gameOver()){
+                    String name = JOptionPane.showInputDialog(Main.this, "Game over! \n Please enter a name:");
+                    setControlPanel(false);
+                    highscores.putHighscore(name, gm.getScore());
+                    gameEndTimer.stop();
+                }
+            }
+        });
+        gameEndTimer.start();
 
         gameArea.addMouseListener(ma);
         gameArea.addMouseMotionListener(ma);
@@ -256,11 +276,21 @@ public class Main extends JFrame {
         pack();
         setVisible(true);
     }
-    
-    public InformationBar getInfoBar(){
+
+    public InformationBar getInfoBar() {
         return infoBar;
     }
+    
+    private void setControlPanel(boolean isEnabled) {
+        controlPanel.setEnabled(isEnabled);
 
+        Component[] components = controlPanel.getComponents();
+
+        for(int i = 0; i < components.length; i++) {
+            components[i].setEnabled(isEnabled);
+        }
+    }
+    
     private void startNewGame() {
         gm.startNewGame();
     }

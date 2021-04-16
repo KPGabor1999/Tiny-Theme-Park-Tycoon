@@ -2,9 +2,10 @@ package Idlethemeparkworld.model.agent;
 
 import java.util.Objects;
 
-public class AgentAction{
-    private AgentInnerLogic.AgentActionType action;
-    private String subject;
+public class AgentAction {
+
+    private final AgentInnerLogic.AgentActionType action;
+    private final String subject;
 
     public AgentAction(AgentInnerLogic.AgentActionType action, String subject) {
         this.action = action;

@@ -26,13 +26,13 @@ public enum Direction {
     public Direction turnOpposite() {
         return Direction.values()[((ordinal() + 2) + 4) % 4];
     }
-    
-    private static final List<Direction> VALUES =
-    Collections.unmodifiableList(Arrays.asList(values()));
+
+    private static final List<Direction> VALUES
+            = Collections.unmodifiableList(Arrays.asList(values()));
     private static final int SIZE = VALUES.size();
     private static final Random RANDOM = new Random();
 
-    public static Direction randomDirection()  {
-      return VALUES.get(RANDOM.nextInt(SIZE));
+    public static Direction randomDirection() {
+        return VALUES.get(RANDOM.nextInt(SIZE));
     }
 }

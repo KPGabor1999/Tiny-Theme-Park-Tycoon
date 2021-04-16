@@ -11,14 +11,14 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 public class InformationBar extends JPanel {
-    
+
     private GameManager gm;
     private final JLabel timeLabel;
     private final JLabel moneyLabel;
     private final JLabel visitorCountLabel;
     private final JLabel happinessLabel;
-    
-    public InformationBar(GameManager gm){
+
+    public InformationBar(GameManager gm) {
         this.gm = gm;
         timeLabel = new JLabel("time");
         moneyLabel = new JLabel("money");
@@ -31,7 +31,7 @@ public class InformationBar extends JPanel {
         happinessLabel.setText("Happiness: 100%");
         happinessLabel.setForeground(Color.YELLOW);
 
-        ((FlowLayout)getLayout()).setHgap(50);
+        ((FlowLayout) getLayout()).setHgap(50);
         setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
 
         setBackground(Color.darkGray);
@@ -49,10 +49,11 @@ public class InformationBar extends JPanel {
         });
         timeTimer.start();
     }
-    
+
     public void updateInfobar() {
         timeLabel.setText(gm.getTime().toString());
         moneyLabel.setText(gm.getFinance().toString());
-        visitorCountLabel.setText("Visitors: "+gm.getAgentManager().getVisitorCount());
+        visitorCountLabel.setText("Visitors: " + gm.getAgentManager().getVisitorCount());
+        happinessLabel.setText("Happiness: " + String.format("%.02f", gm.getAgentManager().getVisitorHappinessRating()));
     }
 }

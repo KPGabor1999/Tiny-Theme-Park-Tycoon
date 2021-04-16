@@ -16,8 +16,6 @@ import java.util.Set;
 
 public class Park implements Updatable {
 
-    private static final int HISTORY_SIZE = 14;
-
     private GameManager gm;
 
     private double rating;
@@ -42,10 +40,6 @@ public class Park implements Updatable {
 
     public Park(int rows, int columns, GameManager gm) {
         initializePark(rows, columns, gm);
-    }
-
-    public Tile[][] getTiles() {
-        return tiles;
     }
 
     public void initializePark(int rows, int columns, GameManager gm) {
@@ -155,7 +149,7 @@ public class Park implements Updatable {
 
     public ArrayList<Building> getNonPavementNeighbours(int x, int y) {
         ArrayList<Building> res = new ArrayList<>();
-        ArrayList<Tile> neighbours = getNeighbours(x,y,1,1);
+        ArrayList<Tile> neighbours = getNeighbours(x, y, 1, 1);
         neighbours.removeIf(n -> (n.getBuilding() == null || n.getBuilding() instanceof Pavement || n.getBuilding() instanceof Entrance) || n.getBuilding().getStatus() == BuildingStatus.DECAYED);
         neighbours.forEach(n -> res.add(n.getBuilding()));
         return res;
@@ -287,7 +281,7 @@ public class Park implements Updatable {
             if (buildings.get(i) instanceof Toilet) {
                 negative += ((Toilet) buildings.get(i)).getCleanliness();
             } else if (buildings.get(i) instanceof Infrastructure) {
-                negative += ((Infrastructure) buildings.get(i)).checkLittering();
+                negative += ((Infrastructure) buildings.get(i)).getLittering();
             }
         }
         //rating = sum/buildings.size();
@@ -299,7 +293,7 @@ public class Park implements Updatable {
         rating -= negative;
         rating = (rating + gm.getAgentManager().getVisitorHappinessRating()) / 2.0;
         rating -= 3;
-        rating += Math.min(gm.getAgentManager().getVisitorCount()/200.0, 3.0);
+        rating += Math.min(gm.getAgentManager().getVisitorCount() / 200.0, 3.0);
         rating = Math.min(rating, 10);
     }
 

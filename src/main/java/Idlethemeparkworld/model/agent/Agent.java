@@ -2,7 +2,6 @@ package Idlethemeparkworld.model.agent;
 
 import Idlethemeparkworld.misc.utils.Position;
 import Idlethemeparkworld.model.AgentManager;
-import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.Park;
 import Idlethemeparkworld.model.Updatable;
 import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentState;
@@ -11,8 +10,6 @@ import Idlethemeparkworld.model.agent.AgentTypes.StaffType;
 import Idlethemeparkworld.model.buildable.Building;
 import Idlethemeparkworld.model.buildable.BuildingStatus;
 import java.awt.Color;
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.Random;
 
 public abstract class Agent implements Updatable {
@@ -104,7 +101,7 @@ public abstract class Agent implements Updatable {
         return res;
     }
     
-    public void setState(AgentState newState){
+    protected void setState(AgentState newState){
         this.state = newState;
     }
     

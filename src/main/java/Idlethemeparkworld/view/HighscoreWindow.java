@@ -14,15 +14,16 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 public class HighscoreWindow extends JDialog {
+
     private final JTable table;
-    
+
     public HighscoreWindow(ArrayList<Highscore> highscores, JFrame parent) {
         super(parent, true);
         table = new JTable(new HighscoreTable(highscores));
         table.setFillsViewportHeight(true);
 
         TableRowSorter<TableModel> sorter
-                = new TableRowSorter<TableModel>(table.getModel());
+                = new TableRowSorter<>(table.getModel());
         List<RowSorter.SortKey> sortKeys = new ArrayList<>();
         sortKeys.add(new RowSorter.SortKey(1, SortOrder.DESCENDING));
         sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));

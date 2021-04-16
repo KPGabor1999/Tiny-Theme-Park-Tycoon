@@ -49,22 +49,28 @@ public class AgentManager implements Updatable {
     private ArrayList<Visitor> visitors;
     private ArrayList<Janitor> janitors;
     private ArrayList<Maintainer> maintainers;
-    private Visitor highlighted;
     
     public AgentManager(Park park, GameManager gm){
         this.gm = gm;
         this.park = park;
+        init();
+    }
+    
+    private void init(){
         this.visitorProbability = 0;
         this.rand = new Random();
         this.visitors = new ArrayList<>();
-        this.janitors = new ArrayList<>(5);         //0-5 janitors allowed at a time.
-        this.maintainers = new ArrayList<>(5);      //0-5 maintainers allowed at a time.
+        this.janitors = new ArrayList<>(5);
+        this.maintainers = new ArrayList<>(5);
         spawnVisitor();
-        highlighted = visitors.get(0);
     }
     
-    public Visitor getHighlightedVisitor(){
-        return highlighted;
+    public void reset(){
+        this.visitorProbability = 0;
+        this.visitors.clear();
+        this.janitors.clear();
+        this.maintainers.clear();
+        spawnVisitor();
     }
     
     private void spawnVisitor(){
@@ -99,7 +105,6 @@ public class AgentManager implements Updatable {
         double prob = park.getRating()*5;
         
         int visitorCount = visitors.size();
-        //System.out.println(visitorCount + " - " + park.getMaxGuest());
         if(visitorCount > park.getMaxGuest()){
             if(visitorCount > park.getMaxGuest()*1.2){
                 prob = 0;
@@ -114,7 +119,6 @@ public class AgentManager implements Updatable {
         }
         
         visitorProbability = prob;
-        //System.out.println(visitorProbability);
     }
     
     public void removeAgent(Agent agent){
@@ -155,7 +159,6 @@ public class AgentManager implements Updatable {
             int numberOfNewJanitors = newNumberOfJanitors - currentNumberOfJanitors;
             for(int count = 1; count <= numberOfNewJanitors; count++){
                 janitors.add(new Janitor(getRandomName(), park, this));
-                System.out.println("New janitor hired. Now we've got " + janitors.size() + " janitors.");
             }
         }else if (currentNumberOfJanitors > newNumberOfJanitors){
         //Annyi új takarítót adunk a listából (randomra), amennyit szükséges és minden törlést kiírunk a konzolra.
@@ -163,7 +166,6 @@ public class AgentManager implements Updatable {
             for(int count = 1; count <= numberOfJanitorsToFire; count++){
                 int index = rand.nextInt(janitors.size());
                 janitors.remove(index);
-                System.out.println("One janitor fired. Now we've got " + janitors.size() + " janitors.");
             }
         }
     }
@@ -176,7 +178,6 @@ public class AgentManager implements Updatable {
             int numberOfNewMaintainers = newNumberOfMaintainers - currentNumberOfMaintainers;
             for(int count = 1; count <= numberOfNewMaintainers; count++){
                 maintainers.add(new Maintainer(getRandomName(), park, this));
-                System.out.println("New maintainer hired. Now we've got " + maintainers.size() + " maintainers.");
             }
         }else if (currentNumberOfMaintainers > newNumberOfMaintainers){
         //Annyi új takarítót adunk a listából (randomra), amennyit szükséges és minden törlést kiírunk a konzolra.
@@ -184,7 +185,6 @@ public class AgentManager implements Updatable {
             for(int count = 1; count <= numberOfMaintainersToFire; count++){
                 int index = rand.nextInt(maintainers.size());
                 maintainers.remove(index);
-                System.out.println("One maintainer fired. Now we've got " + maintainers.size() + " maintainers.");
             }
         }
     }
@@ -196,14 +196,14 @@ public class AgentManager implements Updatable {
             visitors.get(i).update(tickCount);
         }
         for (int i = 0; i < janitors.size(); i++) {
-            janitors.get(i).update(tickCount);                      //dolgoztatjuk a takarítókat
-            if(gm.getTime().getTotalMinutes() % 60 == 0){           //óránként kifizetjük az órabérüket
+            janitors.get(i).update(tickCount);
+            if(gm.getTime().getTotalMinutes() % 60 == 0){
                 gm.getFinance().pay(janitors.get(i).getSalary());
             }
         }
         for (int i = 0; i < maintainers.size(); i++) {
-            maintainers.get(i).update(tickCount);                   //dolgoztatjuk a takarítókat
-            if(gm.getTime().getTotalMinutes() % 60 == 0){           //óránként kifizetjük az órabérüket
+            maintainers.get(i).update(tickCount);
+            if(gm.getTime().getTotalMinutes() % 60 == 0){
                 gm.getFinance().pay(maintainers.get(i).getSalary());
             }
         }

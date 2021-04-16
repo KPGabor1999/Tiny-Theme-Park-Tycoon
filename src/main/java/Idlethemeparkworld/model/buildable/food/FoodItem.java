@@ -1,13 +1,13 @@
 package Idlethemeparkworld.model.buildable.food;
 
 public class FoodItem {
+
     public final int hunger;
     public final int thirst;
     public final int consumeTime;
     public final boolean empty;
-    
-    
-    public FoodItem(){
+
+    public FoodItem() {
         this.hunger = 0;
         this.thirst = 0;
         this.consumeTime = 0;
