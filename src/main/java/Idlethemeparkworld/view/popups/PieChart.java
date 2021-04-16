@@ -12,7 +12,7 @@ import org.jfree.data.general.PieDataset;
 
 public class PieChart extends JPanel {
 
-    private ChartPanel chartPanel;
+    private final ChartPanel chartPanel;
 
     public PieChart() {
         JFreeChart chart = ChartFactory.createPieChart(

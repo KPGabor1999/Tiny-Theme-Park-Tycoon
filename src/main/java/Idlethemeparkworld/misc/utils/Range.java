@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class Range {
 
-    private Random rand;
+    private final Random rand;
     private int low;
     private int high;
 

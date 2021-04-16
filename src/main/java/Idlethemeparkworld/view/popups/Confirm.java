@@ -1,6 +1,5 @@
 package Idlethemeparkworld.view.popups;
 
-import Idlethemeparkworld.view.BuildingOptionsDialog;
 import static java.awt.Component.CENTER_ALIGNMENT;
 import java.awt.FlowLayout;
 import java.awt.Window;
@@ -11,7 +10,6 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 
 public class Confirm extends JDialog {
 

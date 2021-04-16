@@ -8,10 +8,6 @@ public class Finance {
     private int currentExpenditure;
     private int currentProfit;
 
-    private int historicalProfit;
-    private int weeklyProfitAverageDividend;
-    private int weeklyProfitAverageDivisor;
-
     public Finance() {
         this(0);
     }
@@ -27,9 +23,6 @@ public class Finance {
 
         this.currentExpenditure = 0;
         this.currentProfit = 0;
-        this.historicalProfit = 0;
-        this.weeklyProfitAverageDividend = 0;
-        this.weeklyProfitAverageDivisor = 0;
     }
 
     public boolean canAfford(int cost) {

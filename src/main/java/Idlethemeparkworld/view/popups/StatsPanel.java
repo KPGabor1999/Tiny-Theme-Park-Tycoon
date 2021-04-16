@@ -2,7 +2,6 @@ package Idlethemeparkworld.view.popups;
 
 import Idlethemeparkworld.model.GameManager;
 import java.awt.CardLayout;
-import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.BoxLayout;
@@ -13,11 +12,11 @@ import javax.swing.Timer;
 
 public class StatsPanel extends JPanel {
 
-    private GameManager gm;
-    private JComboBox statDropdown;
-    private JPanel chart;
+    private final GameManager gm;
+    private final JComboBox statDropdown;
+    private final JPanel chart;
     private PieChart pieChart;
-    private LineChart lineChart;
+    private final LineChart lineChart;
 
     public StatsPanel(GameManager gm) {
         this.gm = gm;
