@@ -7,9 +7,10 @@ import Idlethemeparkworld.misc.utils.Range;
 import Idlethemeparkworld.model.GameManager;
 import Idlethemeparkworld.model.agent.Visitor;
 import Idlethemeparkworld.model.buildable.BuildingStatus;
+import Idlethemeparkworld.model.buildable.Queueable;
 import java.util.LinkedList;
 
-public abstract class FoodStall extends Building {
+public abstract class FoodStall extends Building implements Queueable {
 
     protected LinkedList<Visitor> queue;
     protected int serviceTime;
@@ -51,6 +52,7 @@ public abstract class FoodStall extends Building {
         this.condition = condition;
     }
 
+    @Override
     public ArrayList<Pair<String, String>> getAllData() {
         ArrayList<Pair<String, String>> res = new ArrayList<>();
         res.add(new Pair<>("Food price: ", Integer.toString(foodPrice)));
@@ -60,18 +62,22 @@ public abstract class FoodStall extends Building {
     }
 
     //Methods for managing visitors:
+    @Override
     public void joinQueue(Visitor visitor) {
         queue.add(visitor);
     }
 
+    @Override
     public boolean isFirstInQueue(Visitor visitor) {
         return queue.peek().equals(visitor);
     }
 
+    @Override
     public void leaveQueue(Visitor visitor) {
         queue.remove(visitor);
     }
 
+    @Override
     public boolean canService() {
         return serviceTimer <= 0;
     }

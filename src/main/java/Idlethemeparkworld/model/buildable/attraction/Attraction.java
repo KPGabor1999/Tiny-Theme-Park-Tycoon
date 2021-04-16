@@ -8,9 +8,10 @@ import Idlethemeparkworld.model.agent.Visitor;
 import Idlethemeparkworld.model.buildable.Building;
 import Idlethemeparkworld.model.buildable.BuildingStatus;
 import Idlethemeparkworld.misc.utils.Pair;
+import Idlethemeparkworld.model.buildable.Queueable;
 import java.util.ArrayList;
 
-public abstract class Attraction extends Building implements Updatable {
+public abstract class Attraction extends Building implements Updatable, Queueable {
 
     protected int fun;
     protected int capacity;
@@ -98,12 +99,24 @@ public abstract class Attraction extends Building implements Updatable {
         }
     }
 
+    @Override
     public void joinQueue(Visitor v) {
         queue.add(v);
     }
 
+    @Override
     public void leaveQueue(Visitor v) {
         queue.remove(v);
+    }
+    
+    @Override
+    public boolean isFirstInQueue(Visitor v) {
+        return false;
+    }
+    
+    @Override
+    public boolean canService() {
+        return true;
     }
 
     private void updateCondition() {

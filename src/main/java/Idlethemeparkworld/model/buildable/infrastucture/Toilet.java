@@ -5,11 +5,12 @@ import java.util.ArrayList;
 import Idlethemeparkworld.misc.utils.Pair;
 import Idlethemeparkworld.model.GameManager;
 import Idlethemeparkworld.model.agent.Visitor;
+import Idlethemeparkworld.model.buildable.Queueable;
 import java.util.LinkedList;
 
-public class Toilet extends Infrastructure {
+public class Toilet extends Infrastructure implements Queueable {
 
-    protected LinkedList<Visitor> waitingLine;
+    protected LinkedList<Visitor> queue;
     protected int occupied;
     protected int capacity;
     private double cleanliness;
@@ -20,7 +21,7 @@ public class Toilet extends Infrastructure {
         this.x = x;
         this.y = y;
         this.buildingType = BuildType.TOILET;
-        this.waitingLine = new LinkedList<>();
+        this.queue = new LinkedList<>();
         this.occupied = 0;
         this.capacity = 10;
         this.cleanliness = 100;
@@ -45,24 +46,28 @@ public class Toilet extends Infrastructure {
         return res;
     }
 
-    public void joinLine(Visitor visitor) {
-        waitingLine.add(visitor);
+    @Override
+    public void joinQueue(Visitor visitor) {
+        queue.add(visitor);
     }
 
+    @Override
     public boolean isFirstInQueue(Visitor visitor) {
-        return waitingLine.peek().equals(visitor);
+        return queue.peek().equals(visitor);
     }
 
-    public void leaveLine(Visitor visitor) {
-        waitingLine.remove(visitor);
+    @Override
+    public void leaveQueue(Visitor visitor) {
+        queue.remove(visitor);
     }
-
-    public boolean isThereEmptyStool() {
+    
+    @Override
+    public boolean canService() {
         return occupied < capacity;
     }
 
     public void enter(Visitor visitor) {
-        waitingLine.poll();
+        queue.poll();
         occupied++;
     }
 

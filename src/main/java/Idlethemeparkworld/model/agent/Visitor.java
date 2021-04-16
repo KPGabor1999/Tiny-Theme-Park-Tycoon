@@ -433,7 +433,7 @@ public class Visitor extends Agent {
                 if (bs.size() > 0) {
                     lastEnter = new Position(x, y);
                     moveTo(bs.get(0).getX(), bs.get(0).getY());
-                    ((Toilet) currentBuilding).joinLine(this);
+                    ((Toilet) currentBuilding).joinQueue(this);
                     setState(AgentState.QUEUING);
                     break;
                 } else {
@@ -443,13 +443,13 @@ public class Visitor extends Agent {
             case QUEUING:
                 tlt = ((Toilet) currentBuilding);
                 if (statusTimer > this.patience) {
-                    tlt.leaveLine(this);
+                    tlt.leaveQueue(this);
                     moveTo(lastEnter.x, lastEnter.y);
                     this.happiness -= 5;
                     setState(AgentState.IDLE);
                 } else {
                     if (tlt.isFirstInQueue(this)) {
-                        if (tlt.isThereEmptyStool()) {
+                        if (tlt.canService()) {
                             tlt.enter(this);
                             setState(AgentState.SHITTING);
                             statusMaxTimer = Time.convMinuteToTick(rand.nextInt(5) + 2);
