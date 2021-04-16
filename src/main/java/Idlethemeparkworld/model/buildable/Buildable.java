@@ -32,7 +32,7 @@ public abstract class Buildable implements Updatable {
     @Override
     public void update(long tickCount) {
         upkeepTimer++;
-        if (upkeepTimer >= Time.convMinuteToTick(60)) {
+        if (upkeepTimer >= Time.convMinuteToTick(30)) {
             gm.getFinance().pay(upkeepCost);
             upkeepTimer = 0;
         }

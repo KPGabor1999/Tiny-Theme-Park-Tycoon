@@ -10,7 +10,7 @@ public class Pavement extends Infrastructure {
 
     public Pavement(int x, int y, GameManager gm) {
         super(gm);
-        this.upkeepCost = 1000;
+        this.upkeepCost = 10;
         this.maxLevel = 0;
         this.x = x;
         this.y = y;
