@@ -1,8 +1,10 @@
 package Idlethemeparkworld.model.buildable.infrastucture;
 
+import Idlethemeparkworld.misc.utils.Pair;
 import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.GameManager;
 import Idlethemeparkworld.model.buildable.BuildingStatus;
+import java.util.ArrayList;
 
 public class Pavement extends Infrastructure {
     
@@ -19,5 +21,12 @@ public class Pavement extends Infrastructure {
     @Override
     public int getRecommendedMax(){
         return (status == BuildingStatus.OPEN || status == BuildingStatus.OPEN) ? 2 : 0;
+    }
+    
+    @Override
+    public ArrayList<Pair<String, String>> getAllData(){
+        ArrayList<Pair<String, String>> res = new ArrayList<>();
+        res.add(new Pair<>("Littering: ", String.format("%.2f", littering)));
+        return res;
     }
 }

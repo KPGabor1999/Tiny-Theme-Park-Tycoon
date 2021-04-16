@@ -21,14 +21,15 @@ public abstract class Infrastructure extends Building {
         this.littering = littering;
     }
     
-    public void litter(double amount){  //This should only be in the Visitor class
+    public void litter(double amount){
         littering += amount;
     }
     
-    public void clean(){    //This should only be in the Janitor class.
+    public void clean(){
         littering = 0;
     }
     
+    @Override
     public ArrayList<Pair<String, String>> getAllData(){
         ArrayList<Pair<String, String>> res = new ArrayList<>();
         return res;
