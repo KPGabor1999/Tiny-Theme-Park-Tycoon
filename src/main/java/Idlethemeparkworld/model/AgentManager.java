@@ -53,11 +53,23 @@ public class AgentManager implements Updatable {
     public AgentManager(Park park, GameManager gm){
         this.gm = gm;
         this.park = park;
+        init();
+    }
+    
+    private void init(){
         this.visitorProbability = 0;
         this.rand = new Random();
         this.visitors = new ArrayList<>();
-        this.janitors = new ArrayList<>(5);         //0-5 janitors allowed at a time.
-        this.maintainers = new ArrayList<>(5);      //0-5 maintainers allowed at a time.
+        this.janitors = new ArrayList<>(5);
+        this.maintainers = new ArrayList<>(5);
+        spawnVisitor();
+    }
+    
+    public void reset(){
+        this.visitorProbability = 0;
+        this.visitors.clear();
+        this.janitors.clear();
+        this.maintainers.clear();
         spawnVisitor();
     }
     

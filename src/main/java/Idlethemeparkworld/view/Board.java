@@ -53,7 +53,7 @@ public class Board extends JPanel {
         this.canBuild = new boolean[1];
         this.main = main;
         this.dragged = false;
-        Timer timer = new Timer(18, new ActionListener() {
+        Timer timer = new Timer(19, new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 Board.this.repaint();
             }
@@ -119,7 +119,7 @@ public class Board extends JPanel {
             public void mouseClicked(MouseEvent e) {
                 Position mPos = retrieveCoords(e);
                 if (buildMode) {
-                    if (canBuild[0]) {
+                    if (!(SwingUtilities.isRightMouseButton(e)) && canBuild[0]) {
                         park.build(type, pos[0], pos[1], false);
                         gm.getFinance().pay(type.getBuildCost());
                         main.getInfoBar().updateInfobar();

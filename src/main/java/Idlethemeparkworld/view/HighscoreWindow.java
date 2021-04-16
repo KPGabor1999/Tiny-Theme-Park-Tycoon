@@ -23,7 +23,7 @@ public class HighscoreWindow extends JDialog {
         table.setFillsViewportHeight(true);
 
         TableRowSorter<TableModel> sorter
-                = new TableRowSorter<TableModel>(table.getModel());
+                = new TableRowSorter<>(table.getModel());
         List<RowSorter.SortKey> sortKeys = new ArrayList<>();
         sortKeys.add(new RowSorter.SortKey(1, SortOrder.DESCENDING));
         sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));

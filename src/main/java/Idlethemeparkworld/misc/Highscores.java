@@ -37,6 +37,11 @@ public class Highscores {
     public ArrayList<Highscore> getHighscores() {
         return highscores;
     }
+    
+    public void reset() {
+        highscores.clear();
+        saveHighscores();
+    }
 
     public void putHighscore(String name, int score) {
         if (highscores.size() < maxscores) {
@@ -56,6 +61,10 @@ public class Highscores {
 
     private void insertScore(String name, int score) {
         highscores.add(new Highscore(name, score));
+        saveHighscores();
+    }
+    
+    private void saveHighscores(){
         sortHighscores();
 
         try {

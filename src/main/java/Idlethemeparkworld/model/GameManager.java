@@ -15,6 +15,7 @@ public class GameManager {
     private double updateCount;
 
     private boolean gamePaused;
+    private boolean gameOver;
 
     private static final double[] GAME_SPEEDS = {0.5, 1, 2};
     private int gameSpeed;
@@ -35,9 +36,9 @@ public class GameManager {
         this.gamePaused = false;
         this.gameSpeed = 1;
 
-        this.park = new Park(10, 11, this);
+        this.park = new Park(10, 10, this);
         this.time = new Time();
-        this.finance = new Finance(100000);
+        this.finance = new Finance(10000);
         this.am = new AgentManager(park, this);
         this.stats = new Statistics(this);
         this.board = null;
@@ -71,6 +72,10 @@ public class GameManager {
         return am;
     }
 
+    public boolean gameOver() {
+        return gameOver;
+    }
+    
     public int getEntranceFee() {
         return entranceFee;
     }
@@ -80,17 +85,22 @@ public class GameManager {
     }
 
     public void startNewGame() {
-        gamePaused = true;
+        gameOver = false;
+        unpause();
         tickCount = 0;
+        currentDeltaTime = 0;
+        gameSpeed = 1;
         initAllComponents();
         //startUpdateCycle();
         gamePaused = false;
     }
 
     private void initAllComponents() {
-        park.initializePark(10, 15, this);
+        park.initializePark(10, 10, this);
+        System.out.println("resetting");
         time.reset();
         finance.init();
+        am.reset();
     }
 
     public void startUpdateCycle() {
@@ -98,6 +108,15 @@ public class GameManager {
         currentDeltaTime = 0;
         lastTime = System.nanoTime();
         updateCycle();
+    }
+    
+    public int getScore(){
+        return time.getTotalMinutes();
+    }
+    
+    public void endGame() {
+        pause();
+        gameOver = true;
     }
 
     private void updateCycle() {
@@ -128,6 +147,9 @@ public class GameManager {
             time.update(tickCount);
             stats.update(tickCount);
         }
+        if(finance.getFunds()<=0){
+            endGame();
+        }
     }
 
     public void resetGameSpeed() {
@@ -149,7 +171,17 @@ public class GameManager {
     public double getGameSpeed() {
         return GAME_SPEEDS[gameSpeed];
     }
-
+    
+    private void pause() {
+        lastTime = System.nanoTime();
+        gamePaused = true;
+    }
+    
+    private void unpause() {
+        lastTime = System.nanoTime();
+        gamePaused = false;
+    }
+    
     public void togglePause() {
         lastTime = System.nanoTime();
         gamePaused = !gamePaused;
