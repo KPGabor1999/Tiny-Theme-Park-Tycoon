@@ -19,7 +19,7 @@ public class Pavement extends Infrastructure {
 
     @Override
     public int getRecommendedMax() {
-        return (status == BuildingStatus.OPEN || status == BuildingStatus.OPEN) ? 2 : 0;
+        return (status == BuildingStatus.OPEN || status == BuildingStatus.OPEN) ? 1 : 0;
     }
 
     @Override

@@ -58,7 +58,7 @@ public class Maintainer extends Agent {
                 break;
             case FLOATING:
                 if (statusTimer > Time.convMinuteToTick(5)) {
-                    remove();
+                    moveTo(0,0);
                 }
                 break;
             default:

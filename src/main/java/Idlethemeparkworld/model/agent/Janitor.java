@@ -62,7 +62,7 @@ public class Janitor extends Agent implements Updatable {
                 break;
             case FLOATING:
                 if (statusTimer > Time.convMinuteToTick(5)) {
-                    remove();
+                    moveTo(0,0);
                 }
                 break;
             default:
