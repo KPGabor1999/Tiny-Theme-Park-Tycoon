@@ -387,12 +387,16 @@ public class Visitor extends Agent {
                 }
                 break;
             case QUEUING:
-                attr = ((Attraction) currentBuilding);
-                if (statusTimer > this.patience) {
-                    attr.leaveQueue(this);
-                    moveTo(lastEnter.x, lastEnter.y);
-                    this.happiness -= 5;
-                    setState(AgentState.IDLE);
+                if(currentBuilding instanceof Attraction){
+                    attr = ((Attraction) currentBuilding);
+                    if (statusTimer > this.patience) {
+                        attr.leaveQueue(this);
+                        moveTo(lastEnter.x, lastEnter.y);
+                        this.happiness -= 5;
+                        setState(AgentState.IDLE);
+                    }
+                } else {
+                    System.out.println("TOOOOOOO");
                 }
                 break;
             case ONRIDE:
@@ -526,16 +530,20 @@ public class Visitor extends Agent {
                 }
                 break;
             case QUEUING:
-                stall = ((FoodStall) currentBuilding);
-                if (statusTimer > patience) {
-                    stall.leaveQueue(this);
-                    moveTo(lastEnter.x, lastEnter.y);
-                    this.happiness -= 5;
-                    resetAction();
-                } else {
-                    if (stall.isFirstInQueue(this)) {
-                        setState(AgentState.BUYING);
+                if(currentBuilding instanceof FoodStall){
+                    stall = ((FoodStall) currentBuilding);
+                    if (statusTimer > patience) {
+                        stall.leaveQueue(this);
+                        moveTo(lastEnter.x, lastEnter.y);
+                        this.happiness -= 5;
+                        resetAction();
+                    } else {
+                        if (stall.isFirstInQueue(this)) {
+                            setState(AgentState.BUYING);
+                        }
                     }
+                } else {
+                    System.out.println("TOOOOOOO");
                 }
                 break;
             case BUYING:

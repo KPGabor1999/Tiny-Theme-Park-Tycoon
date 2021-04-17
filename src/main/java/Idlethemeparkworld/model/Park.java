@@ -274,7 +274,7 @@ public class Park implements Updatable {
 
     private void calculateParkRating() {
         rating = 9;
-        double sum = 0;
+        //double sum = 0;
         double negative = 0;
         for (int i = 0; i < buildings.size(); i++) {
             //sum += buildings.get(i).getRating();
@@ -291,9 +291,6 @@ public class Park implements Updatable {
         negative *= 0.05;
         negative = Math.min(negative, 2);
         rating -= negative;
-        rating = (rating + gm.getAgentManager().getVisitorHappinessRating()) / 2.0;
-        rating -= 3;
-        rating += Math.min(gm.getAgentManager().getVisitorCount() / 200.0, 3.0);
         rating = Math.min(rating, 10);
     }
 

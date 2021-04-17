@@ -80,6 +80,7 @@ public class Main extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 startNewGame();
                 board.refresh();
+                board.drawParkRender();
                 setControlPanel(true);
                 gameEndTimer.restart();
             }
