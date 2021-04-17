@@ -292,6 +292,7 @@ public class Park implements Updatable {
         negative = Math.min(negative, 2);
         rating -= negative;
         rating = Math.min(rating, 10);
+        rating = Math.max(rating, 0);
     }
 
     private void calculateValue() {

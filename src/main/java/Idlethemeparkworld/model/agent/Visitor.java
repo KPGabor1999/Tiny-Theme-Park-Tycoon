@@ -38,11 +38,9 @@ public class Visitor extends Agent {
     int patience;
     int energy;
     int happiness;
-    int nausea;
     int hunger;
     int thirst;
     int toilet;
-    int angriness;
 
     ArrayList<AgentThought> thoughts;
     LinkedList<AgentAction> actionQueue;
@@ -63,11 +61,9 @@ public class Visitor extends Agent {
         this.patience = Time.convMinuteToTick(10);
         this.energy = 100;
         this.happiness = startingHappiness;
-        this.nausea = 0;
         this.hunger = 100;
         this.thirst = 100;
         this.toilet = 100;
-        this.angriness = 0;
         this.lastEnter = null;
         this.item = null;
         this.statusMaxTimer = 0;
@@ -119,6 +115,11 @@ public class Visitor extends Agent {
     private void updateCurrentAction() {
         if (currentAction == null) {
             if (!actionQueue.isEmpty()) {
+                if(this.lastEnter != null){
+                    resetAction();
+                } else {
+                    state = AgentState.IDLE;
+                }
                 currentAction = actionQueue.poll();
             }
         }
@@ -223,17 +224,19 @@ public class Visitor extends Agent {
     }
 
     private void generateThoughts(long tickCount) {
-        if (cash < 50) {
+        if (cash < 100) {
             if (cash <= 0) {
                 insertThought(AgentThoughts.NOMONEY, null, tickCount);
             } else {
                 insertThought(AgentThoughts.LOWMONEY, null, tickCount);
             }
         }
-        boolean anyUrgent = false;
-        anyUrgent = anyUrgent || conditionToThought(hunger, AGENT_HUNGER_WARNING_THRESHOLD, tickCount, AgentThoughts.NOTHUNGRY, AgentThoughts.HUNGRY, 0.5);
-        anyUrgent = anyUrgent || conditionToThought(thirst, AGENT_THIRST_WARNING_THRESHOLD, tickCount, AgentThoughts.NOTTHIRSTY, AgentThoughts.THIRSTY, 0.6);
-        anyUrgent = anyUrgent || conditionToThought(energy, AGENT_ENERGY_WARNING_THRESHOLD, tickCount, AgentThoughts.FEELINGGREAT, AgentThoughts.TIRED, 0.1);
+        
+        boolean hungerUrgent = conditionToThought(hunger, AGENT_HUNGER_WARNING_THRESHOLD, tickCount, AgentThoughts.NOTHUNGRY, AgentThoughts.HUNGRY, 0.6);
+        boolean thirstUrgent = conditionToThought(thirst, AGENT_THIRST_WARNING_THRESHOLD, tickCount, AgentThoughts.NOTTHIRSTY, AgentThoughts.THIRSTY, 0.75);
+        boolean energyUrgent = conditionToThought(energy, AGENT_ENERGY_WARNING_THRESHOLD, tickCount, AgentThoughts.FEELINGGREAT, AgentThoughts.TIRED, 0.9);
+        boolean anyUrgent = hungerUrgent || thirstUrgent || energyUrgent;
+        
         if (toilet < AGENT_TOILET_WARNING_THRESHOLD) {
             insertThought(AgentThoughts.TOILET, null, tickCount);
         }
@@ -306,9 +309,6 @@ public class Visitor extends Agent {
                     break;
                 case RIDE:
                     attractionCycle();
-                    break;
-                case THROWUP:
-                    //TODO
                     break;
                 case LITTER:
                     litterCycle();
@@ -387,16 +387,12 @@ public class Visitor extends Agent {
                 }
                 break;
             case QUEUING:
-                if(currentBuilding instanceof Attraction){
-                    attr = ((Attraction) currentBuilding);
-                    if (statusTimer > this.patience) {
-                        attr.leaveQueue(this);
-                        moveTo(lastEnter.x, lastEnter.y);
-                        this.happiness -= 5;
-                        setState(AgentState.IDLE);
-                    }
-                } else {
-                    System.out.println("TOOOOOOO");
+                attr = ((Attraction) currentBuilding);
+                if (statusTimer > this.patience) {
+                    attr.leaveQueue(this);
+                    moveTo(lastEnter.x, lastEnter.y);
+                    this.happiness -= 5;
+                    setState(AgentState.IDLE);
                 }
                 break;
             case ONRIDE:
@@ -530,20 +526,16 @@ public class Visitor extends Agent {
                 }
                 break;
             case QUEUING:
-                if(currentBuilding instanceof FoodStall){
-                    stall = ((FoodStall) currentBuilding);
-                    if (statusTimer > patience) {
-                        stall.leaveQueue(this);
-                        moveTo(lastEnter.x, lastEnter.y);
-                        this.happiness -= 5;
-                        resetAction();
-                    } else {
-                        if (stall.isFirstInQueue(this)) {
-                            setState(AgentState.BUYING);
-                        }
-                    }
+                stall = ((FoodStall) currentBuilding);
+                if (statusTimer > patience) {
+                    stall.leaveQueue(this);
+                    moveTo(lastEnter.x, lastEnter.y);
+                    this.happiness -= 5;
+                    resetAction();
                 } else {
-                    System.out.println("TOOOOOOO");
+                    if (stall.isFirstInQueue(this)) {
+                        setState(AgentState.BUYING);
+                    }
                 }
                 break;
             case BUYING:
@@ -669,10 +661,6 @@ public class Visitor extends Agent {
         return happiness;
     }
 
-    public int getNausea() {
-        return nausea;
-    }
-
     public int getHunger() {
         return hunger;
     }
@@ -683,10 +671,6 @@ public class Visitor extends Agent {
 
     public int getToilet() {
         return toilet;
-    }
-
-    public int getAngriness() {
-        return angriness;
     }
 
     public boolean shouldRender() {

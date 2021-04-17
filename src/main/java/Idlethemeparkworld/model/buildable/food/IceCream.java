@@ -14,7 +14,7 @@ public class IceCream extends FoodStall {
         this.buildingType = BuildType.ICECREAMPARLOR;
         this.serviceTime = Time.convMinuteToTick(1);
         this.foodPrice = 5;
-        this.foodQuality.setRange(10, 15);
+        this.foodQuality.setRange(30, 70);
         this.upkeepCost = 2 * 10;
         this.upgradeCost = this.value * 2;
     }

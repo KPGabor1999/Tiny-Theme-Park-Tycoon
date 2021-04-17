@@ -9,7 +9,6 @@ import Idlethemeparkworld.model.agent.AgentTypes.AgentType;
 import Idlethemeparkworld.model.agent.AgentTypes.StaffType;
 import Idlethemeparkworld.model.buildable.Building;
 import Idlethemeparkworld.model.buildable.BuildingStatus;
-import java.awt.Color;
 import java.util.Random;
 
 public abstract class Agent implements Updatable {
@@ -24,8 +23,6 @@ public abstract class Agent implements Updatable {
     
     AgentType type;
     StaffType staffType;
-    
-    int destX, destY;
     
     Random rand;
     
@@ -50,8 +47,6 @@ public abstract class Agent implements Updatable {
         this.x = 0;
         this.y = this.x;
         
-        this.destX = 0;
-        this.destY = this.destX;
         this.rand = new Random();
         
         this.state = AgentState.ENTERINGPARK;
@@ -118,10 +113,6 @@ public abstract class Agent implements Updatable {
         currentAction = null;
     }
     
-    protected void moveTo(Position p){
-        moveTo(p.x, p.y);
-    }
-    
     protected void moveTo(int x, int y){
         prevPos = new Position(this.x*64+xOffset,this.y*64+yOffset);
         lerpTimer = 0;
@@ -139,11 +130,6 @@ public abstract class Agent implements Updatable {
             lerpTimer++;
             isMoving=lerpTimer<24;
         }
-    }
-    
-    protected void setDestination(int x, int y){
-        this.destX = x;
-        this.destY = y;
     }
     
     protected void remove(){
@@ -165,8 +151,6 @@ public abstract class Agent implements Updatable {
         sb.append("Agent{name=").append(name);
         sb.append(", x=").append(x);
         sb.append(", y=").append(y);
-        sb.append(", destX=").append(destX);
-        sb.append(", destY=").append(destY);
         sb.append(", state=").append(state);
         return sb.toString();
     }
