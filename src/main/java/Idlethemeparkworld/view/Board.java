@@ -21,6 +21,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
@@ -40,6 +41,8 @@ public class Board extends JPanel {
     private boolean dragged;
     private final boolean[] canBuild;
     private final int[] pos;
+    
+    private BufferedImage parkRender;
 
     public Board(GameManager gm, Main main, JPanel gameArea) {
         this.gm = gm;
@@ -77,6 +80,7 @@ public class Board extends JPanel {
                             park.build(type, pos[0], pos[1], false);
                             gm.getFinance().pay(type.getBuildCost());
                             main.getInfoBar().updateInfobar();
+                            drawParkRender();
                         }
                     }
                 } else if (origin != null) {
@@ -120,6 +124,7 @@ public class Board extends JPanel {
                         park.build(type, pos[0], pos[1], false);
                         gm.getFinance().pay(type.getBuildCost());
                         main.getInfoBar().updateInfobar();
+                        drawParkRender();
                     }
                     Board.this.exitBuildMode();
                 } else {
@@ -139,15 +144,23 @@ public class Board extends JPanel {
         setBorder(BorderFactory.createEmptyBorder(0, -5, 0, -5));
 
         resizeMap(park.getHeight(), park.getWidth());
+        this.parkRender = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_RGB);
+        drawParkRender();
+    }
+    
+    private boolean legalPos(Position pos){
+        return 0 <= pos.x && pos.x < park.getWidth() && 0 <= pos.y && pos.y < park.getHeight();
     }
 
     private void updateGhost(MouseEvent e) {
         Position mPos = retrieveCoords(e);
-        canBuild[0] = park.canBuild(type, mPos.x, mPos.y);
-        canBuild[0] = canBuild[0] && gm.getFinance().canAfford(type.getBuildCost());
-        pos[0] = mPos.x;
-        pos[1] = mPos.y;
-        repaint();
+        if(legalPos(mPos)){
+            canBuild[0] = park.canBuild(type, mPos.x, mPos.y);
+            canBuild[0] = canBuild[0] && gm.getFinance().canAfford(type.getBuildCost());
+            pos[0] = mPos.x;
+            pos[1] = mPos.y;
+            repaint();
+        }
     }
 
     private Position retrieveCoords(MouseEvent e) {
@@ -190,13 +203,10 @@ public class Board extends JPanel {
         this.type = null;
         repaint();
     }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-
-        Graphics2D gr = (Graphics2D) g;
-
+    
+    public void drawParkRender(){
+        Graphics2D gr = parkRender.createGraphics();
+        
         for (int i = 0; i < park.getHeight(); i++) {
             for (int j = 0; j < park.getWidth(); j++) {
                 if(park.getTile(i, j).getBuilding() == null){
@@ -222,6 +232,15 @@ public class Board extends JPanel {
                 gr.setColor(Color.WHITE);
             }
         }
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        Graphics2D gr = (Graphics2D) g;
+        
+        gr.drawImage(parkRender, 0, 0, null);
 
         ArrayList<Visitor> visitors = gm.getAgentManager().getVisitors();
         for (int i = 0; i < visitors.size(); i++) {

@@ -20,12 +20,21 @@ public class Statistics implements Updatable {
     private final ArrayList<String> times;
     private final ArrayList<Double> rating;
     private final ArrayList<Double> happiness;
+    private final ArrayList<Integer> visitorCount;
 
     public Statistics(GameManager gm) {
         this.gm = gm;
         this.times = new ArrayList<>();
         this.rating = new ArrayList<>();
         this.happiness = new ArrayList<>();
+        this.visitorCount = new ArrayList<>();
+    }
+    
+    public void reset(){
+        times.clear();
+        rating.clear();
+        happiness.clear();
+        visitorCount.clear();
     }
 
     private ArrayList<Pair<String, Double>> combineLists(ArrayList<Double> list) {
@@ -113,12 +122,13 @@ public class Statistics implements Updatable {
         int foodstall = 0;
         int infrastructure = 0;
         for (int i = 0; i < buildings.size(); i++) {
+            int size = buildings.get(i).getInfo().getLength() * buildings.get(i).getInfo().getWidth();
             if (buildings.get(i) instanceof Attraction) {
-                attraction++;
+                attraction+=size;
             } else if (buildings.get(i) instanceof FoodStall) {
-                foodstall++;
+                foodstall+=size;
             } else if (!(buildings.get(i) instanceof LockedTile)) {
-                infrastructure++;
+                infrastructure+=size;
             }
         }
         res.add(new Pair("Attraction", new Double(attraction)));

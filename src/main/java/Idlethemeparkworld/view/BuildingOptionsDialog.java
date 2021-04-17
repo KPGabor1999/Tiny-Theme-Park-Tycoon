@@ -131,6 +131,7 @@ public class BuildingOptionsDialog extends JDialog {
                 BuildingOptionsDialog.this.dispose();
                 BuildingOptionsDialog.this.board.getGameManager().getFinance().earn(currentBuilding.getValue() / 2); //Az plet addigi teljes rtknek(!) a felt adja vissza.
                 BuildingOptionsDialog.this.board.getGameManager().getPark().demolish(currentBuilding.getX(), currentBuilding.getY());
+                BuildingOptionsDialog.this.board.drawParkRender();
                 BuildingOptionsDialog.this.board.refresh();
             }
         });
