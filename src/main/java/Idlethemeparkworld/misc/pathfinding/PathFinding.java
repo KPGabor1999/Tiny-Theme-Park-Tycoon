@@ -1,5 +1,6 @@
 package Idlethemeparkworld.misc.pathfinding;
 
+import Idlethemeparkworld.misc.utils.Position;
 import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.Tile;
 import Idlethemeparkworld.model.buildable.Building;
@@ -8,7 +9,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class PathFinding {
-
+    private int[][] dist;
+    private Position[][] parent;
     private Tile[][] tiles;
     private final ArrayList<Tile> reachables;
 
@@ -19,10 +21,12 @@ public class PathFinding {
 
     public void updateTiles(Tile[][] tiles) {
         this.tiles = tiles;
+        this.dist = new int[tiles.length][tiles[0].length];
+        this.parent = new Position[tiles.length][tiles[0].length];
     }
 
     public Set<Building> getReachableBuildings() {
-        resetPathfinding();
+        resetReachables();
         Set<Building> result = new HashSet<>();
 
         Tile current = null;
@@ -41,8 +45,18 @@ public class PathFinding {
 
         return result;
     }
-
+    
+    public ArrayList<Position> getPath(Position start, Position destination){
+        ArrayList<Position> path = new ArrayList<>();
+        
+        return path;
+    }
+    
     private void resetPathfinding() {
+        
+    }
+
+    private void resetReachables() {
         reachables.clear();
         for (int i = 0; i < tiles.length; i++) {
             for (int j = 0; j < tiles[0].length; j++) {

@@ -44,31 +44,18 @@ public class Visitor extends Agent {
     int toilet;
     int angriness;
 
-    private Color[] visitorColors = {
-        Color.RED,
-        Color.ORANGE,
-        Color.YELLOW,
-        Color.GREEN,
-        Color.CYAN,
-        Color.BLUE,
-        Color.PINK,
-        Color.MAGENTA
-    };
-
     ArrayList<AgentThought> thoughts;
     LinkedList<AgentAction> actionQueue;
 
     BuildType[] visitHistory;
     private Position lastEnter;
     private FoodItem item;
-
-    private int statusMaxTimer;
-    private int statusTimer;
+    
+    private final int skinID;
 
     public Visitor(String name, int startingHappiness, Park park, AgentManager am) {
         super(name, park, am);
-        int chosenColor = rand.nextInt(visitorColors.length);
-        this.color = visitorColors[chosenColor];
+        this.skinID = rand.nextInt(10)+1;
         this.cash = rand.nextInt(1000) + 1000;
         this.cashSpent = 0;
         this.currentAction = new AgentAction(AgentActionType.ENTERPARK, null);
@@ -645,10 +632,6 @@ public class Visitor extends Agent {
         return cashSpent;
     }
 
-    public void reset() {
-
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -716,5 +699,9 @@ public class Visitor extends Agent {
             default:
                 return false;
         }
+    }
+    
+    public int getSkinID() {
+        return skinID;
     }
 }

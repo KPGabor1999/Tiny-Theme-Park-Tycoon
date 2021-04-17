@@ -17,7 +17,6 @@ public class Maintainer extends Agent {
         super(name, park, am);
         this.type = AgentTypes.AgentType.STAFF;
         this.staffType = AgentTypes.StaffType.MAINTAINER;
-        this.color = Color.BLACK;
         this.salary = 20;
     }
 

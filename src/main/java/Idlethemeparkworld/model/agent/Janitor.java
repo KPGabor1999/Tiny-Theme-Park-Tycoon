@@ -21,7 +21,6 @@ public class Janitor extends Agent implements Updatable {
         super(name, park, am);
         this.type = AgentTypes.AgentType.STAFF;
         this.staffType = AgentTypes.StaffType.JANITOR;
-        this.color = Color.WHITE;
         this.salary = 8;
     }
 

@@ -1,6 +1,7 @@
 package Idlethemeparkworld.misc;
 
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 public class Assets {
@@ -21,11 +22,26 @@ public class Assets {
         TRASHCAN,
         LOCKED,
         NOPATH,
+        
+        NPC1,
+        NPC2,
+        NPC3,
+        NPC4,
+        NPC5,
+        NPC6,
+        NPC7,
+        NPC8,
+        NPC9,
+        NPC10,
+        
+        JANITOR,
+        MAINTAINER,
+        
         NONE;
 
         private static final String ASSETS_FOLDER_PATH = "resources/";
         private String filename;
-        private Image asset;
+        private BufferedImage asset;
 
         Texture(String path) {
             if (!this.name().equals("NONE")) {

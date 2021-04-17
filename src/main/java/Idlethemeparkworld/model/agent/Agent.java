@@ -35,7 +35,6 @@ public abstract class Agent implements Updatable {
     protected AgentAction currentAction;
     Building currentBuilding;
     
-    protected Color color;
     protected Position prevPos;
     protected Position newPos;
     protected int xOffset;
@@ -59,7 +58,6 @@ public abstract class Agent implements Updatable {
         
         this.currentBuilding = park.getTile(x, y).getBuilding();
         
-        this.color = new Color(rand.nextInt(255),rand.nextInt(255),rand.nextInt(255),255);
         this.xOffset = rand.nextInt(64);
         this.yOffset = rand.nextInt(64);
         this.prevPos = new Position(xOffset,yOffset);
@@ -90,10 +88,6 @@ public abstract class Agent implements Updatable {
 
     public int getY(){
         return y;
-    }
-    
-    public Color getColor(){
-        return color;
     }
     
     public Position calculateExactPosition(int cellSize){
