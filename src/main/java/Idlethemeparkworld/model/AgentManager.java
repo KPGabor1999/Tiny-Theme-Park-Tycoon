@@ -191,7 +191,7 @@ public class AgentManager implements Updatable {
     
     @Override
     public void update(long tickCount){
-        spawnUpdate();
+        //spawnUpdate();
         for (int i = 0; i < visitors.size(); i++) {
             visitors.get(i).update(tickCount);
         }

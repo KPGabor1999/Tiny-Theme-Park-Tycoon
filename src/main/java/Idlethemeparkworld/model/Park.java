@@ -1,6 +1,7 @@
 package Idlethemeparkworld.model;
 
 import Idlethemeparkworld.misc.pathfinding.PathFinding;
+import Idlethemeparkworld.misc.utils.Position;
 import Idlethemeparkworld.model.buildable.Building;
 import Idlethemeparkworld.model.buildable.BuildingStatus;
 import Idlethemeparkworld.model.buildable.food.FoodStall;
@@ -50,7 +51,7 @@ public class Park implements Updatable {
         maxGuests = 0;
 
         tiles = new Tile[rows][columns];
-        pf = new PathFinding(tiles);
+        pf = new PathFinding(tiles, this);
         reachable = new HashSet<>();
 
         //1.Make sure all tiles are empty
@@ -71,6 +72,17 @@ public class Park implements Updatable {
                 }
             }
         }
+        
+        build(BuildType.PAVEMENT, 1, 0, true);
+        build(BuildType.PAVEMENT, 2, 0, true);
+        build(BuildType.PAVEMENT, 3, 0, true);
+        build(BuildType.PAVEMENT, 4, 0, true);
+        build(BuildType.PAVEMENT, 5, 0, true);
+        build(BuildType.PAVEMENT, 5, 1, true);
+        build(BuildType.PAVEMENT, 5, 2, true);
+        Building Toilet = build(BuildType.TOILET, 4, 2, true);
+        
+        System.out.println(pf.getPath(new Position(1,0), Toilet).toString());
     }
 
     public int getWidth() {
@@ -150,7 +162,7 @@ public class Park implements Updatable {
     public ArrayList<Building> getNonPavementNeighbours(int x, int y) {
         ArrayList<Building> res = new ArrayList<>();
         ArrayList<Tile> neighbours = getNeighbours(x, y, 1, 1);
-        neighbours.removeIf(n -> (n.getBuilding() == null || n.getBuilding() instanceof Pavement || n.getBuilding() instanceof Entrance) || n.getBuilding().getStatus() == BuildingStatus.DECAYED);
+        neighbours.removeIf(n -> (n.getBuilding() == null || n.getBuilding() instanceof Pavement || n.getBuilding() instanceof Entrance) || n.getBuilding() instanceof LockedTile || n.getBuilding().getStatus() == BuildingStatus.DECAYED);
         neighbours.forEach(n -> res.add(n.getBuilding()));
         return res;
     }
@@ -180,7 +192,7 @@ public class Park implements Updatable {
         }
     }
 
-    public void build(BuildType type, int x, int y, boolean force) {
+    public Building build(BuildType type, int x, int y, boolean force) {
         if (canBuild(type, x, y) || force) {
             Building newBuilding = null;
             try {
@@ -194,7 +206,9 @@ public class Park implements Updatable {
             buildings.add(newBuilding);
             setAreaToBuilding(x, y, type.getLength(), type.getWidth(), newBuilding);
             updateBuildings();
+            return newBuilding;
         }
+        return null;
     }
 
     private void updateBuildings() {

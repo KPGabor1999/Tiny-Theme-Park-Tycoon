@@ -2,27 +2,29 @@ package Idlethemeparkworld.misc.pathfinding;
 
 import Idlethemeparkworld.misc.utils.Position;
 import Idlethemeparkworld.model.BuildType;
+import Idlethemeparkworld.model.Park;
 import Idlethemeparkworld.model.Tile;
 import Idlethemeparkworld.model.buildable.Building;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 public class PathFinding {
-    private int[][] dist;
-    private Position[][] parent;
     private Tile[][] tiles;
     private final ArrayList<Tile> reachables;
+    private final ArrayList<Node> discovered;
+    private Park park;
 
-    public PathFinding(Tile[][] tiles) {
+    public PathFinding(Tile[][] tiles, Park park) {
         this.tiles = tiles;
         this.reachables = new ArrayList<>();
+        this.discovered = new ArrayList<>();
+        this.park = park;
     }
 
     public void updateTiles(Tile[][] tiles) {
         this.tiles = tiles;
-        this.dist = new int[tiles.length][tiles[0].length];
-        this.parent = new Position[tiles.length][tiles[0].length];
     }
 
     public Set<Building> getReachableBuildings() {
@@ -46,14 +48,59 @@ public class PathFinding {
         return result;
     }
     
-    public ArrayList<Position> getPath(Position start, Position destination){
+    public ArrayList<Position> getPath(Position start, Building destination){
+        resetPathFinding();
+        
         ArrayList<Position> path = new ArrayList<>();
         
+        Node current;
+        Node parser = null;
+        
+        ArrayList<Node> leaves = new ArrayList<>();
+        ArrayList<Position> foundPositions = new ArrayList<>();
+        leaves.add(new Node(0, null, start));
+        
+        boolean found = false;
+        while (!leaves.isEmpty() && !found) {
+            current = leaves.remove(0);
+            discovered.add(current);
+            foundPositions.add(current.current);
+            ArrayList<Building> pavements = park.getPavementNeighbours(current.current.x, current.current.y);
+            for (int i = 0; i < pavements.size(); i++) {
+                if(!foundPositions.contains(pavements.get(i).getPos())){
+                    leaves.add(new Node(current.distance+1, current, pavements.get(i).getPos()));
+                    foundPositions.add(pavements.get(i).getPos());
+                }
+            }
+            
+            ArrayList<Building> buildings = park.getNonPavementNeighbours(current.current.x, current.current.y);
+            for (int i = 0; i < buildings.size(); i++) {
+                if(!foundPositions.contains(buildings.get(i).getPos())){
+                    Node newNode = new Node(current.distance+1, current, buildings.get(i).getPos());
+                    discovered.add(newNode);
+                    found = found || park.getTile(buildings.get(i).getPos().x, buildings.get(i).getPos().y).getBuilding().equals(destination);
+                    foundPositions.add(buildings.get(i).getPos());
+                    if(found){
+                        parser = newNode;
+                    }
+                }
+            }
+        }
+        
+        if(parser != null){
+            while (!parser.current.equals(start)) {
+                path.add(parser.current);
+                parser = parser.parent;
+            }
+        }
+        
+        Collections.reverse(path);
         return path;
     }
     
-    private void resetPathfinding() {
-        
+    private void resetPathFinding() {
+        discovered.clear();
+        park.getBuildings().forEach((b) -> b.setVisited(false));
     }
 
     private void resetReachables() {
