@@ -34,6 +34,9 @@ public class Assets {
         NPC9,
         NPC10,
         
+        JANITOR,
+        MAINTAINER,
+        
         NONE;
 
         private static final String ASSETS_FOLDER_PATH = "resources/";

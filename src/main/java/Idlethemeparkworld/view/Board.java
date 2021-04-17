@@ -227,9 +227,8 @@ public class Board extends JPanel {
         for (int i = 0; i < visitors.size(); i++) {
             if (visitors.get(i).shouldRender()) {
                 Position position = visitors.get(i).calculateExactPosition(CELL_SIZE);
-
-                gr.setColor(visitors.get(i).getColor());
-                gr.drawRect(position.x, position.y, 2, 3);
+                
+                gr.drawImage(Assets.Texture.valueOf("NPC"+visitors.get(i).getSkinID()).getAsset(), position.x-2, position.y-15, 5, 15, null);
             }
         }
 
@@ -237,16 +236,14 @@ public class Board extends JPanel {
         for (int i = 0; i < janitors.size(); i++) {
             Position position = janitors.get(i).calculateExactPosition(CELL_SIZE);
 
-            gr.setColor(janitors.get(i).getColor());
-            gr.drawOval(position.x, position.y, 6, 6);
+            gr.drawImage(Assets.Texture.JANITOR.getAsset(), position.x, position.y, 5, 15, null);
         }
 
         ArrayList<Maintainer> maintainers = gm.getAgentManager().getMaintainers();
         for (int i = 0; i < maintainers.size(); i++) {
             Position position = maintainers.get(i).calculateExactPosition(CELL_SIZE);
 
-            gr.setColor(maintainers.get(i).getColor());
-            gr.drawOval(position.x, position.y, 6, 6);
+            gr.drawImage(Assets.Texture.MAINTAINER.getAsset(), position.x, position.y, 5, 15, null);
         }
     }
 
