@@ -41,8 +41,6 @@ public class Board extends JPanel {
     private final boolean[] canBuild;
     private final int[] pos;
 
-    private final Main main;
-
     public Board(GameManager gm, Main main, JPanel gameArea) {
         this.gm = gm;
         gm.setBoard(this);
@@ -51,7 +49,6 @@ public class Board extends JPanel {
         this.type = null;
         this.pos = new int[2];
         this.canBuild = new boolean[1];
-        this.main = main;
         this.dragged = false;
         Timer timer = new Timer(19, new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
@@ -200,6 +197,14 @@ public class Board extends JPanel {
 
         Graphics2D gr = (Graphics2D) g;
 
+        for (int i = 0; i < park.getHeight(); i++) {
+            for (int j = 0; j < park.getWidth(); j++) {
+                if(park.getTile(i, j).getBuilding() == null){
+                    gr.drawImage(Assets.Texture.GRASS.getAsset(), i * CELL_SIZE, j * CELL_SIZE, CELL_SIZE, CELL_SIZE, null);
+                }
+            }
+        }
+        
         ArrayList<Building> buildings = park.getBuildings();
         for (int i = 0; i < buildings.size(); i++) {
             int x = buildings.get(i).getX();
