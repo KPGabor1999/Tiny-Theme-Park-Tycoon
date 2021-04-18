@@ -64,24 +64,29 @@ public class PathFinding {
         while (!leaves.isEmpty() && !found) {
             current = leaves.remove(0);
             discovered.add(current);
+            found = found || park.getTile(current.current.x, current.current.y).getBuilding().equals(destination);
             foundPositions.add(current.current);
-            ArrayList<Building> pavements = park.getPavementNeighbours(current.current.x, current.current.y);
-            for (int i = 0; i < pavements.size(); i++) {
-                if(!foundPositions.contains(pavements.get(i).getPos())){
-                    leaves.add(new Node(current.distance+1, current, pavements.get(i).getPos()));
-                    foundPositions.add(pavements.get(i).getPos());
+            if(found){
+                parser = current;
+            } else {
+                ArrayList<Building> pavements = park.getPavementNeighbours(current.current.x, current.current.y);
+                for (int i = 0; i < pavements.size(); i++) {
+                    if(!foundPositions.contains(pavements.get(i).getPos())){
+                        leaves.add(new Node(current.distance+1, current, pavements.get(i).getPos()));
+                        foundPositions.add(pavements.get(i).getPos());
+                    }
                 }
-            }
-            
-            ArrayList<Building> buildings = park.getNonPavementNeighbours(current.current.x, current.current.y);
-            for (int i = 0; i < buildings.size(); i++) {
-                if(!foundPositions.contains(buildings.get(i).getPos())){
-                    Node newNode = new Node(current.distance+1, current, buildings.get(i).getPos());
-                    discovered.add(newNode);
-                    found = found || park.getTile(buildings.get(i).getPos().x, buildings.get(i).getPos().y).getBuilding().equals(destination);
-                    foundPositions.add(buildings.get(i).getPos());
-                    if(found){
-                        parser = newNode;
+
+                ArrayList<Building> buildings = park.getNonPavementNeighbours(current.current.x, current.current.y);
+                for (int i = 0; i < buildings.size(); i++) {
+                    if(!foundPositions.contains(buildings.get(i).getPos())){
+                        Node newNode = new Node(current.distance+1, current, buildings.get(i).getPos());
+                        discovered.add(newNode);
+                        found = found || park.getTile(buildings.get(i).getPos().x, buildings.get(i).getPos().y).getBuilding().equals(destination);
+                        foundPositions.add(buildings.get(i).getPos());
+                        if(found){
+                            parser = newNode;
+                        }
                     }
                 }
             }

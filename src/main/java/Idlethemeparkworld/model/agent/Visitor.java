@@ -18,7 +18,6 @@ import Idlethemeparkworld.model.buildable.infrastucture.Infrastructure;
 import Idlethemeparkworld.model.buildable.infrastucture.Pavement;
 import Idlethemeparkworld.model.buildable.infrastucture.Toilet;
 import Idlethemeparkworld.model.buildable.infrastucture.TrashCan;
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -46,6 +45,7 @@ public class Visitor extends Agent {
 
     BuildType[] visitHistory;
     private Position lastEnter;
+    private ArrayList<Position> path;
     private FoodItem item;
     
     private final int skinID;
@@ -72,6 +72,7 @@ public class Visitor extends Agent {
 
         this.thoughts = new ArrayList<>();
         this.actionQueue = new LinkedList<>();
+        this.path = new ArrayList<>();
     }
 
     @Override
@@ -342,12 +343,16 @@ public class Visitor extends Agent {
     private void leaveParkCycle() {
         switch (state) {
             case IDLE:
+                Building entrance = findType(Entrance.class);
+                path = park.getPathfinding().getPath(new Position(x,y), entrance);
+                System.out.println(path);
                 setState(AgentState.LEAVINGPARK);
                 break;
             case LEAVINGPARK:
-                moveToRandomNeighbourPavement();
                 if (currentBuilding instanceof Entrance) {
                     am.removeAgent(this);
+                } else {
+                    moveOnPath();
                 }
                 break;
             default:
@@ -389,7 +394,10 @@ public class Visitor extends Agent {
         switch (state) {
             case IDLE:
                 setState(AgentState.WANDERING); break;
+                
             case WANDERING:
+                wandering(Toilet.class); break;
+            case WALKING:
                 wandering(Toilet.class); break;
             case QUEUING:
                 tlt = ((Toilet) currentBuilding);
@@ -534,7 +542,7 @@ public class Visitor extends Agent {
             item = null;
             resetAction();
         } else {
-            ArrayList<Building> bs = park.getNonPavementNeighbours(x, y);
+            ArrayList<Building> bs = park.getNonPavementOrEntranceNeighbours(x, y);
             bs.removeIf(b -> !(buildingClass.isInstance(b)));
             if (bs.size() > 0) {
                 boolean foundBuilding = false;
@@ -551,7 +559,7 @@ public class Visitor extends Agent {
                             }
                             break;
                         case EAT:
-                            if (rand.nextDouble() < ((double)statusTimer)/patience) {
+                            if (rand.nextDouble() < (((double)statusTimer)/patience/2) + 0.5) {
                                 lastEnter = new Position(x, y);
                                 moveTo(bs.get(i).getX(), bs.get(i).getY());
                                 ((FoodStall) currentBuilding).joinQueue(this);
@@ -602,6 +610,13 @@ public class Visitor extends Agent {
         }
     }
     
+    private void moveOnPath(){
+        if(path.size() > 0){
+            Position nextPos = path.remove(0);
+            moveTo(nextPos.x, nextPos.y);
+        }
+    }
+    
     private void checkLittering(){
         if(((Infrastructure)currentBuilding).getLittering() < 1){
             if(rand.nextInt(10) < 3){
@@ -612,6 +627,16 @@ public class Visitor extends Agent {
         }
     }
 
+    private Building findType(Class clazz){
+        ArrayList<Building> buildings = new ArrayList<>();
+        park.getBuildings().forEach((b) -> {
+            if(clazz.isInstance(b)){
+                buildings.add(b);
+            }
+        });
+        return buildings.get(rand.nextInt(buildings.size()));
+    }
+    
     public boolean canPay(int amount) {
         return amount <= cash;
     }
