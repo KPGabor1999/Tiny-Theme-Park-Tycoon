@@ -157,7 +157,7 @@ public class Visitor extends Agent {
             case HUNGRY:
             case THIRSTY:
             case TIRED:
-                happiness-=15;
+                happiness-=7;
                 break;
             case NOTHUNGRY:
             case NOTTHIRSTY:
@@ -165,11 +165,11 @@ public class Visitor extends Agent {
                 happiness++;
                 break;
             case WOW:
-                happiness+=5;
+                happiness+=8;
                 break;
             case GOODVALUE:
             case CLEAN:
-                happiness+=3;
+                happiness+=5;
                 break;
             default:
                 break;

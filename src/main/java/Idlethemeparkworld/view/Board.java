@@ -250,6 +250,15 @@ public class Board extends JPanel {
                 gr.drawImage(Assets.Texture.valueOf("NPC"+visitors.get(i).getSkinID()).getAsset(), position.x-3, position.y-18, 6, 18, null);
             }
         }
+        
+        Visitor activeVisitor = gm.getAgentManager().getActiveVisitor();
+        if(activeVisitor != null){
+            Position position = activeVisitor.calculateExactPosition(CELL_SIZE);
+                
+            gr.setColor(new Color(0, 0, 100, 150));
+            gr.fillOval(position.x-12, position.y-21, 24, 24);
+            gr.drawImage(Assets.Texture.valueOf("NPC"+activeVisitor.getSkinID()).getAsset(), position.x-3, position.y-18, 6, 18, null);
+        }
 
         ArrayList<Janitor> janitors = gm.getAgentManager().getJanitors();
         for (int i = 0; i < janitors.size(); i++) {

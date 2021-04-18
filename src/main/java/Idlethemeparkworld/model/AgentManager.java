@@ -80,6 +80,8 @@ public class AgentManager implements Updatable {
     private ArrayList<Janitor> janitors;
     private ArrayList<Maintainer> maintainers;
     
+    private Visitor activeVisitor;
+    
     public AgentManager(Park park, GameManager gm){
         this.gm = gm;
         this.park = park;
@@ -92,6 +94,7 @@ public class AgentManager implements Updatable {
         this.visitors = new ArrayList<>();
         this.janitors = new ArrayList<>(5);
         this.maintainers = new ArrayList<>(5);
+        this.activeVisitor = null;
         spawnVisitor();
     }
     
@@ -113,6 +116,14 @@ public class AgentManager implements Updatable {
             
     private int getRandomHappiness(){
         return rand.nextInt(50)+35;
+    }
+
+    public Visitor getActiveVisitor() {
+        return activeVisitor;
+    }
+
+    public void setActiveVisitor(Visitor activeVisitor) {
+        this.activeVisitor = activeVisitor;
     }
     
     public double getVisitorHappinessRating(){

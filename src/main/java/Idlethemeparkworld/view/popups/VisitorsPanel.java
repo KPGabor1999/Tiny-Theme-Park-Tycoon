@@ -117,6 +117,7 @@ public class VisitorsPanel extends JPanel {
         String[] parts = selected.split(" ", 2);
         int id = Integer.parseInt(parts[0]);
         currentVisitor = gm.getAgentManager().getVisitor(id);
+        gm.getAgentManager().setActiveVisitor(currentVisitor);
     }
     
     private void updateVisitorDetail() {
