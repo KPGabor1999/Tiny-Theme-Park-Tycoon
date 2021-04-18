@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class AgentManager implements Updatable {
-    private static final String[] NAMES = {
+    private static final String[] FIRST_NAMES = {
         "Creola",
         "Josue",
         "Bradford",
@@ -36,6 +36,38 @@ public class AgentManager implements Updatable {
         "Gil",
         "Caron",
         "Vrenda"
+    };
+    private static final String[] LAST_NAMES = {
+        "Yates",
+        "Foley",
+        "Greene",
+        "Donaldson",
+        "Lowe",
+        "Moreno",
+        "Lucero",
+        "Fleming",
+        "Ayala",
+        "Melton",
+        "Chang",
+        "Underwood",
+        "Campos",
+        "Munoz",
+        "Saunders",
+        "Moyer",
+        "Case",
+        "Watkins",
+        "Trevino",
+        "Finley",
+        "Mccarthy",
+        "Massey",
+        "Perry",
+        "Holland",
+        "Lynch",
+        "Silva",
+        "Ellison",
+        "Wang",
+        "Frederick",
+        "Thomas"
     };
     
     private double visitorProbability;
@@ -76,7 +108,7 @@ public class AgentManager implements Updatable {
     }
     
     private String getRandomName(){
-        return NAMES[rand.nextInt(NAMES.length)];
+        return FIRST_NAMES[rand.nextInt(FIRST_NAMES.length)] + " " + LAST_NAMES[rand.nextInt(LAST_NAMES.length)];
     }
             
     private int getRandomHappiness(){
@@ -135,6 +167,14 @@ public class AgentManager implements Updatable {
     
     public int getVisitorCount(){
         return visitors.size();
+    }
+    
+    public Visitor getVisitor(int id){
+        Visitor res = null;
+        for (int i = 0; i < visitors.size() && res == null; i++) {
+            res = visitors.get(i).getID() == id ? visitors.get(i) : null;
+        }
+        return res;
     }
     
     public ArrayList<Visitor> getVisitors(){
