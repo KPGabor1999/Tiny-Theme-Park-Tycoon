@@ -79,7 +79,8 @@ public class Toilet extends Infrastructure implements Queueable {
         cleanliness -= amount;
     }
 
-    public void clean() {
-        this.cleanliness = 100;
+    public void clean(int amount) {
+        cleanliness -= amount;
+        cleanliness = Math.max(cleanliness, 0);
     }
 }

@@ -155,6 +155,8 @@ public class Visitor extends Agent {
                 happiness++;
                 break;
             case WOW:
+                happiness+=10;
+                break;
             case GOODVALUE:
             case CLEAN:
                 happiness+=5;
@@ -198,9 +200,6 @@ public class Visitor extends Agent {
                 break;
             case TOILET:
                 addAction(new AgentAction(AgentActionType.TOILET, null));
-                break;
-            case CROWDED:
-                addAction(new AgentAction(AgentActionType.WANDER, null));
                 break;
             default:
                 break;
@@ -345,7 +344,6 @@ public class Visitor extends Agent {
             case IDLE:
                 Building entrance = findType(Entrance.class);
                 path = park.getPathfinding().getPath(new Position(x,y), entrance);
-                System.out.println(path);
                 setState(AgentState.LEAVINGPARK);
                 break;
             case LEAVINGPARK:
@@ -370,7 +368,26 @@ public class Visitor extends Agent {
         Attraction attr;
         switch (state) {
             case IDLE:
-                setState(AgentState.WANDERING); break;
+                if(rand.nextInt(10)>6){
+                    Building attraction = findType(Attraction.class);
+                    if(attraction == null){
+                        setState(AgentState.WANDERING);
+                    } else {
+                        path = park.getPathfinding().getPath(new Position(x,y), attraction);
+                        setState(AgentState.WALKING);
+                    }
+                } else {
+                    setState(AgentState.WANDERING);
+                }
+                break;
+            case WALKING:
+                if (currentBuilding instanceof Attraction) {
+                    ((Attraction) currentBuilding).joinQueue(this);
+                    setState(AgentState.QUEUING);
+                } else {
+                    moveOnPath();
+                }
+                break;
             case WANDERING:
                 wandering(Attraction.class); break;
             case QUEUING:
@@ -393,12 +410,24 @@ public class Visitor extends Agent {
         Toilet tlt;
         switch (state) {
             case IDLE:
-                setState(AgentState.WANDERING); break;
-                
+                if(rand.nextInt(10)>2){
+                    Building toilet = findType(Toilet.class);
+                    path = park.getPathfinding().getPath(new Position(x,y), toilet);
+                    setState(AgentState.WALKING);
+                } else {
+                    setState(AgentState.WANDERING);
+                }
+                break;
             case WANDERING:
                 wandering(Toilet.class); break;
             case WALKING:
-                wandering(Toilet.class); break;
+                if (currentBuilding instanceof Toilet) {
+                    ((Toilet) currentBuilding).joinQueue(this);
+                    setState(AgentState.QUEUING);
+                } else {
+                    moveOnPath();
+                }
+                break;
             case QUEUING:
                 tlt = ((Toilet) currentBuilding);
                 if (statusTimer > this.patience) {
@@ -430,7 +459,7 @@ public class Visitor extends Agent {
                     }
                     toilet = 100;
                     thirst += rand.nextInt(40)+50;
-                    tlt.decreaseHygiene(rand.nextDouble() / 2);
+                    tlt.decreaseHygiene(rand.nextDouble()*1.5);
                     tlt.exit();
                     moveTo(lastEnter.x, lastEnter.y);
                     resetAction();
@@ -471,9 +500,24 @@ public class Visitor extends Agent {
         FoodStall stall;
         switch (state) {
             case IDLE:
-                setState(AgentState.WANDERING); break;
+                if(rand.nextInt(10)>2){
+                    Building foodStall = findType(FoodStall.class);
+                    path = park.getPathfinding().getPath(new Position(x,y), foodStall);
+                    setState(AgentState.WALKING);
+                } else {
+                    setState(AgentState.WANDERING);
+                }
+                break;
             case WANDERING:
                 wandering(FoodStall.class); break;
+            case WALKING:
+                if (currentBuilding instanceof FoodStall) {
+                    ((FoodStall) currentBuilding).joinQueue(this);
+                    setState(AgentState.QUEUING);
+                } else {
+                    moveOnPath();
+                }
+                break;
             case QUEUING:
                 stall = ((FoodStall) currentBuilding);
                 if (statusTimer > patience) {
@@ -508,6 +552,9 @@ public class Visitor extends Agent {
                     moveToRandomNeighbourPavement();
                 }
                 if (statusTimer > Time.convMinuteToTick(item.consumeTime)) {
+                    if(rand.nextInt(200)<item.hunger+thirst){
+                        insertThought(AgentThoughts.WOW, null);
+                    }
                     hunger += item.hunger;
                     thirst += item.thirst;
                     if(currentBuilding instanceof FoodStall){
@@ -525,7 +572,25 @@ public class Visitor extends Agent {
     private void litterCycle() {
         switch (state) {
             case IDLE:
-                setState(AgentState.WANDERING); break;
+                if(rand.nextInt(10)>4){
+                    Building trashcan = findType(TrashCan.class);
+                    path = park.getPathfinding().getPath(new Position(x,y), trashcan);
+                    setState(AgentState.WALKING);
+                } else {
+                    setState(AgentState.WANDERING);
+                }
+                break;
+            case WALKING:
+                if (currentBuilding instanceof TrashCan) {
+                    ((TrashCan) currentBuilding).use(item.consumeTime * 0.05);
+                    checkLittering();
+                    item = null;
+                    lastEnter = new Position(x, y);
+                    resetAction();
+                } else {
+                    moveOnPath();
+                }
+                break;
             case WANDERING:
                 wandering(TrashCan.class); break;
             default:
@@ -613,6 +678,9 @@ public class Visitor extends Agent {
     private void moveOnPath(){
         if(path.size() > 0){
             Position nextPos = path.remove(0);
+            if(path.isEmpty()) {
+                lastEnter = new Position(x, y);
+            }
             moveTo(nextPos.x, nextPos.y);
         }
     }
@@ -634,7 +702,11 @@ public class Visitor extends Agent {
                 buildings.add(b);
             }
         });
-        return buildings.get(rand.nextInt(buildings.size()));
+        if(buildings.isEmpty()){
+            return null;
+        } else {
+            return buildings.get(rand.nextInt(buildings.size()));
+        }
     }
     
     public boolean canPay(int amount) {
@@ -714,10 +786,10 @@ public class Visitor extends Agent {
             case FLOATING:
             case ENTERINGPARK:
             case LEAVINGPARK:
+            case EATING:
+            case BUYING:
                 return true;
             case ONRIDE:
-            case BUYING:
-            case EATING:
             case SHITTING:
             default:
                 return false;
@@ -726,5 +798,9 @@ public class Visitor extends Agent {
     
     public int getSkinID() {
         return skinID;
+    }
+    
+    public AgentAction getAction(){
+        return currentAction;
     }
 }

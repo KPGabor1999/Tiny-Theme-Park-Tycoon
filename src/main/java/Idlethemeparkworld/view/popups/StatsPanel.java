@@ -27,7 +27,9 @@ public class StatsPanel extends JPanel {
             "Building types",
             "Park rating",
             "Happiness",
-            "Visitor states"
+            "Visitor count",
+            "Visitor states",
+            "Visitor actions"
         }));
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -73,6 +75,14 @@ public class StatsPanel extends JPanel {
             case "Happiness":
                 lineChart.setData("Happiness", "happiness", "time", gm.getStats().getHappinessHistory());
                 ((CardLayout) (chart.getLayout())).show(chart, "line");
+                break;
+            case "Visitor count":
+                lineChart.setData("Visitor count", "Visitors", "time", gm.getStats().getVisitorCountHistory());
+                ((CardLayout) (chart.getLayout())).show(chart, "line");
+                break;
+            case "Visitor actions":
+                pieChart.setData("Visitor actions", gm.getStats().getVisitorAction(), true);
+                ((CardLayout) (chart.getLayout())).show(chart, "pie");
                 break;
             default:
                 break;

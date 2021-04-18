@@ -22,8 +22,9 @@ public abstract class Infrastructure extends Building {
         littering += amount;
     }
 
-    public void sweep() {
-        littering = 0;
+    public void sweep(double amount) {
+        littering -= amount;
+        littering = Math.max(littering, 0);
     }
 
     @Override
