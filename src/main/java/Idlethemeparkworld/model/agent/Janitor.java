@@ -24,6 +24,10 @@ public class Janitor extends Agent implements Updatable {
         this.salary = 8;
     }
 
+    public AgentState getState() {
+        return state;
+    }
+
     public int getSalary() {
         return salary;
     }
