@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class AgentManager implements Updatable {
-    //Will store these in a file in the future
     private static final String[] NAMES = {
         "Creola",
         "Josue",
@@ -38,11 +37,10 @@ public class AgentManager implements Updatable {
         "Caron",
         "Vrenda"
     };
-    private static final int AGENT_UPDATE_TICK = 12;
     
     private double visitorProbability;
-    private Park park;
-    private GameManager gm;
+    private final Park park;
+    private final GameManager gm;
     
     private Random rand;
     

@@ -78,7 +78,7 @@ public class PathFinding {
                 }
 
                 ArrayList<Building> buildings = park.getNonPavementNeighbours(current.current.x, current.current.y);
-                for (int i = 0; i < buildings.size(); i++) {
+                for (int i = 0; i < buildings.size() && !found; i++) {
                     if(!foundPositions.contains(buildings.get(i).getPos())){
                         Node newNode = new Node(current.distance+1, current, buildings.get(i).getPos());
                         discovered.add(newNode);

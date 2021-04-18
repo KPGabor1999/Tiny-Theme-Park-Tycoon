@@ -368,7 +368,7 @@ public class Visitor extends Agent {
         Attraction attr;
         switch (state) {
             case IDLE:
-                if(rand.nextInt(10)>6){
+                if(rand.nextInt(10)>3){
                     Building attraction = findType(Attraction.class);
                     if(attraction == null){
                         setState(AgentState.WANDERING);
@@ -410,10 +410,14 @@ public class Visitor extends Agent {
         Toilet tlt;
         switch (state) {
             case IDLE:
-                if(rand.nextInt(10)>2){
-                    Building toilet = findType(Toilet.class);
-                    path = park.getPathfinding().getPath(new Position(x,y), toilet);
-                    setState(AgentState.WALKING);
+                if(rand.nextInt(10)>3){
+                    Building chosenToilet = findType(Toilet.class);
+                    if(chosenToilet == null){
+                        setState(AgentState.WANDERING);
+                    } else {
+                        path = park.getPathfinding().getPath(new Position(x,y), chosenToilet);
+                        setState(AgentState.WALKING);
+                    }
                 } else {
                     setState(AgentState.WANDERING);
                 }
@@ -500,10 +504,14 @@ public class Visitor extends Agent {
         FoodStall stall;
         switch (state) {
             case IDLE:
-                if(rand.nextInt(10)>2){
+                if(rand.nextInt(10)>3){
                     Building foodStall = findType(FoodStall.class);
-                    path = park.getPathfinding().getPath(new Position(x,y), foodStall);
-                    setState(AgentState.WALKING);
+                    if(foodStall == null){
+                        setState(AgentState.WANDERING);
+                    } else {
+                        path = park.getPathfinding().getPath(new Position(x,y), foodStall);
+                        setState(AgentState.WALKING);
+                    }
                 } else {
                     setState(AgentState.WANDERING);
                 }
@@ -540,7 +548,7 @@ public class Visitor extends Agent {
                         moveTo(lastEnter.x, lastEnter.y);
                         resetAction();
                     } else {
-                        if(rand.nextBoolean()){
+                        if(rand.nextInt(10)>7){
                             moveTo(lastEnter.x, lastEnter.y);
                         }
                         setState(AgentState.EATING);
@@ -572,10 +580,14 @@ public class Visitor extends Agent {
     private void litterCycle() {
         switch (state) {
             case IDLE:
-                if(rand.nextInt(10)>4){
+                if(rand.nextInt(10)>2){
                     Building trashcan = findType(TrashCan.class);
-                    path = park.getPathfinding().getPath(new Position(x,y), trashcan);
-                    setState(AgentState.WALKING);
+                    if(trashcan == null){
+                        setState(AgentState.WANDERING);
+                    } else {
+                        path = park.getPathfinding().getPath(new Position(x,y), trashcan);
+                        setState(AgentState.WALKING);
+                    }
                 } else {
                     setState(AgentState.WANDERING);
                 }
@@ -585,7 +597,7 @@ public class Visitor extends Agent {
                     ((TrashCan) currentBuilding).use(item.consumeTime * 0.05);
                     checkLittering();
                     item = null;
-                    lastEnter = new Position(x, y);
+                    moveTo(lastEnter.x, lastEnter.y);
                     resetAction();
                 } else {
                     moveOnPath();
@@ -651,7 +663,6 @@ public class Visitor extends Agent {
                                 insertThought(AgentThoughts.CANTAFFORD, null);
                             }
                             break;
-
                         default:
                             break;
                     }
