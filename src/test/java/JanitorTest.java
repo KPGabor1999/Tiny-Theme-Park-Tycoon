@@ -29,7 +29,7 @@ public class JanitorTest{
         entrance = park.getTile(0,0).getBuilding();
         ((Entrance)entrance).setLittering(100);
         //Oda rakd le a takarítót.
-        janitor = new Janitor("Ephran", null, null);
+        janitor = new Janitor(null, null, null);
     }
     
     public void correctLifeCycle(){
@@ -45,4 +45,6 @@ public class JanitorTest{
         //Ellenõrizd, hogy a takarító visszaállt-e WANDERING-be.
         assertEquals(WANDERING, janitor.getState());
     }
+    
+    //Teszteljünk minden infrastruktúra típusra?
 }
