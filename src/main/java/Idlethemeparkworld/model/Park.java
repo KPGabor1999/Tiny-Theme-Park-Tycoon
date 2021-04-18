@@ -72,17 +72,6 @@ public class Park implements Updatable {
                 }
             }
         }
-        
-        build(BuildType.PAVEMENT, 1, 0, true);
-        build(BuildType.PAVEMENT, 2, 0, true);
-        build(BuildType.PAVEMENT, 3, 0, true);
-        build(BuildType.PAVEMENT, 4, 0, true);
-        build(BuildType.PAVEMENT, 5, 0, true);
-        build(BuildType.PAVEMENT, 5, 1, true);
-        build(BuildType.PAVEMENT, 5, 2, true);
-        Building Toilet = build(BuildType.TOILET, 4, 2, true);
-        
-        System.out.println(pf.getPath(new Position(1,0), Toilet).toString());
     }
 
     public int getWidth() {
@@ -284,6 +273,9 @@ public class Park implements Updatable {
     @Override
     public void update(long tickCount) {
         buildings.forEach(b -> b.update(tickCount));
+        if(tickCount % Time.convMinuteToTick(15) == 0){
+            gm.getFinance().pay(500);
+        }
     }
 
     private void calculateParkRating() {

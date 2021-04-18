@@ -51,7 +51,7 @@ public abstract class Attraction extends Building implements Updatable, Queueabl
 
     @Override
     public int getRecommendedMax() {
-        return (status == BuildingStatus.OPEN || status == BuildingStatus.OPEN) ? capacity * 2 : 0;
+        return (status == BuildingStatus.OPEN || status == BuildingStatus.OPEN) ? (int)Math.floor(capacity * 1.5) : 0;
     }
 
     public ArrayList<Pair<String, String>> getAllData() {

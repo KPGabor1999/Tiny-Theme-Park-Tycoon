@@ -91,7 +91,8 @@ public abstract class Agent implements Updatable {
     }
     
     protected void setState(AgentState newState){
-        this.state = newState;
+        statusTimer = 0;
+        state = newState;
     }
     
     protected void checkFloating(){

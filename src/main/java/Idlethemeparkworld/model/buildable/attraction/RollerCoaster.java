@@ -12,7 +12,7 @@ public class RollerCoaster extends Attraction {
         this.value = BuildType.ROLLERCOASTER.getBuildCost();
         this.buildingType = BuildType.ROLLERCOASTER;
         this.upkeepCost = 13;
-        this.fun = 12;
+        this.fun = 16;
         this.capacity = 10;
         this.runtime = 2;
         this.entryFee = 24;

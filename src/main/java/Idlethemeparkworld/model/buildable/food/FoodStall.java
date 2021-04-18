@@ -28,7 +28,7 @@ public abstract class FoodStall extends Building implements Queueable {
         this.foodPrice = 0;
         this.foodQuality = new Range(45, 55);
         this.drinkQuality = new Range(45, 90);
-        this.servingSize = new Range(2, 5);
+        this.servingSize = new Range(5, 15);
     }
 
     public int getFoodPrice() {
