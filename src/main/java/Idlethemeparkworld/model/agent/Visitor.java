@@ -1,5 +1,6 @@
 package Idlethemeparkworld.model.agent;
 
+import Idlethemeparkworld.misc.utils.Pair;
 import Idlethemeparkworld.misc.utils.Position;
 import Idlethemeparkworld.model.AgentManager;
 import Idlethemeparkworld.model.BuildType;
@@ -22,6 +23,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class Visitor extends Agent {
+    
+    private static int ID = 0;
 
     protected static final int AGENT_HUNGER_WARNING_THRESHOLD = 45;
     protected static final int AGENT_THIRST_WARNING_THRESHOLD = 45;
@@ -30,15 +33,17 @@ public class Visitor extends Agent {
 
     protected static final int AGENT_STATUS_MAXIMUM = 100;
 
+    private int id;
+    
     private int cash;
     private int cashSpent;
 
     int patience;
-    int energy;
-    int happiness;
-    int hunger;
-    int thirst;
-    int toilet;
+    double energy;
+    double happiness;
+    double hunger;
+    double thirst;
+    double toilet;
 
     ArrayList<AgentThought> thoughts;
     LinkedList<AgentAction> actionQueue;
@@ -54,6 +59,9 @@ public class Visitor extends Agent {
 
     public Visitor(String name, int startingHappiness, Park park, AgentManager am) {
         super(name, park, am);
+        this.id = ID;
+        ID++;
+        
         this.skinID = rand.nextInt(10)+1;
         this.cash = rand.nextInt(1000) + 500;
         this.cashSpent = 0;
@@ -138,16 +146,18 @@ public class Visitor extends Agent {
         switch (thoughtType) {
             case CANTAFFORD:
             case BADVALUE:
+                happiness-=5;
+                break;
             case LOST:
             case TOOMUCHLITTER:
             case CROWDED:
-                happiness-=5;
+                happiness-=10;
                 break;
             case LONGQUEUE:
             case HUNGRY:
             case THIRSTY:
             case TIRED:
-                happiness--;
+                happiness-=15;
                 break;
             case NOTHUNGRY:
             case NOTTHIRSTY:
@@ -155,11 +165,11 @@ public class Visitor extends Agent {
                 happiness++;
                 break;
             case WOW:
-                happiness+=10;
+                happiness+=5;
                 break;
             case GOODVALUE:
             case CLEAN:
-                happiness+=5;
+                happiness+=3;
                 break;
             default:
                 break;
@@ -219,7 +229,7 @@ public class Visitor extends Agent {
         }
     }
 
-    private boolean conditionToThought(int condition, int lowerThreshold, long tickCount, AgentThoughts positive, AgentThoughts negative, double leaveHappinessMultiplier) {
+    private boolean conditionToThought(double condition, int lowerThreshold, long tickCount, AgentThoughts positive, AgentThoughts negative, double leaveHappinessMultiplier) {
         if (condition < lowerThreshold) {
             if (condition <= 0) {
                 happiness *= leaveHappinessMultiplier;
@@ -260,27 +270,24 @@ public class Visitor extends Agent {
     private void updateState() {
         switch (state) {
             case IDLE:
-                energy += 0.05;
+                energy += 0.5;
                 break;
             case ENTERINGPARK:
             case LEAVINGPARK:
             case WANDERING:
             case WALKING:
-                energy -= 0.03;
-                hunger -= 0.01;
-                thirst -= 0.01;
-                break;
-            case QUEUING:
-                if (statusTimer > patience) {
-                    happiness -= 0.5;
-                }
+                energy -= 0.35;
+                hunger -= 0.35;
+                thirst -= 0.35;
                 break;
             case ONRIDE:
-                energy -= 0.02;
+                energy -= 0.25;
+                hunger -= 0.25;
+                thirst -= 0.25;
                 break;
             case SITTING:
-                energy += 0.1;
-                hunger -= 0.02;
+                energy += 2;
+                hunger -= 0.2;
                 break;
             case BUYING:
                 break;
@@ -291,9 +298,10 @@ public class Visitor extends Agent {
             default:
                 break;
         }
-        hunger -= 0.02;
-        thirst -= 0.01;
-        toilet -= 0.01;
+        energy -= 0.1;
+        hunger -= 0.45;
+        thirst -= 0.35;
+        toilet -= 0.5;
     }
 
     private void performAction(long tickCount) {
@@ -438,7 +446,7 @@ public class Visitor extends Agent {
                     insertThought(AgentThoughts.LONGQUEUE, currentBuilding);
                     tlt.leaveQueue(this);
                     moveTo(lastEnter.x, lastEnter.y);
-                    this.happiness -= 5;
+                    this.happiness -= 10;
                     setState(AgentState.IDLE);
                 } else {
                     if (tlt.isFirstInQueue(this)) {
@@ -481,17 +489,19 @@ public class Visitor extends Agent {
                 break;
             case WANDERING:
                 if (statusTimer > this.patience) {
-                    this.happiness -= 3;
+                    this.happiness -= 5;
                     resetAction();
                 }
                 if (rand.nextBoolean()) {
+                    statusTimer = 0;
+                    statusMaxTimer = Time.convMinuteToTick(rand.nextInt(6)+6);
                     setState(AgentState.SITTING);
                 } else {
                     moveToRandomNeighbourPavement();
                 }
                 break;
             case SITTING:
-                if (energy >= 100) {
+                if(statusTimer > statusMaxTimer || energy >= 100){
                     resetAction();
                 }
                 break;
@@ -531,7 +541,7 @@ public class Visitor extends Agent {
                 if (statusTimer > patience) {
                     stall.leaveQueue(this);
                     moveTo(lastEnter.x, lastEnter.y);
-                    this.happiness -= 5;
+                    this.happiness -= 10;
                     resetAction();
                 } else {
                     if (stall.isFirstInQueue(this)) {
@@ -612,7 +622,7 @@ public class Visitor extends Agent {
     
     private void wandering(Class buildingClass){
         if (statusTimer > patience) {
-            happiness -= 5;
+            happiness -= 10;
             if(this.currentAction.getAction() == AgentActionType.LITTER){
                 ((Infrastructure) currentBuilding).litter(item.consumeTime * 0.07);
             }
@@ -745,45 +755,48 @@ public class Visitor extends Agent {
     public int getCashSpent() {
         return cashSpent;
     }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(super.toString());
-        sb.append(", cash=").append(cash);
-        sb.append(", cashSpent=").append(cashSpent);
-        sb.append(", thoughts=").append(thoughts);
-        sb.append(", actionQueue=").append(actionQueue);
-        sb.append(", currentAction=").append(currentAction);
-        sb.append(", lastEnter=").append(lastEnter);
-        sb.append(", item=").append(item);
-        sb.append(", statusMaxTimer=").append(statusMaxTimer);
-        sb.append(", statusTimer=").append(statusTimer);
-        sb.append('}');
-        return sb.toString();
+    
+    public ArrayList<String> getAllData() {
+        ArrayList<String> res = new ArrayList<>();
+        res.add(state.toString());
+        res.add("X:" + x + "/Y:" + y);
+        res.add(Integer.toString(cash));
+        res.add(Integer.toString(cashSpent));
+        res.add(thoughts.toString());
+        if(currentAction == null){
+            res.add("None");
+        } else {
+            res.add(currentAction.getAction().toString());
+        }
+        res.add(String.format("%.1f",happiness));
+        res.add(String.format("%.1f",hunger));
+        res.add(String.format("%.1f",thirst));
+        res.add(String.format("%.1f",toilet));
+        res.add(String.format("%.1f",energy));
+        return res;
     }
 
     public int getPatience() {
         return patience;
     }
 
-    public int getEnergy() {
+    public double getEnergy() {
         return energy;
     }
 
-    public int getHappiness() {
+    public double getHappiness() {
         return happiness;
     }
 
-    public int getHunger() {
+    public double getHunger() {
         return hunger;
     }
 
-    public int getThirst() {
+    public double getThirst() {
         return thirst;
     }
 
-    public int getToilet() {
+    public double getToilet() {
         return toilet;
     }
 
@@ -805,6 +818,10 @@ public class Visitor extends Agent {
             default:
                 return false;
         }
+    }
+    
+    public int getID(){
+        return id;
     }
     
     public int getSkinID() {

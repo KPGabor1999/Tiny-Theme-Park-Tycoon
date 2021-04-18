@@ -14,7 +14,7 @@ public class Carousel extends Attraction {
         this.upgradeCost = this.value * 2;
 
         this.upkeepCost = 11;
-        this.fun = 16;
+        this.fun = 12;
         this.capacity = 10;
         this.runtime = 3;
         this.entryFee = 15;

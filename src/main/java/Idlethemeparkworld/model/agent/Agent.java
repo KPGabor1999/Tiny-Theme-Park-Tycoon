@@ -149,10 +149,10 @@ public abstract class Agent implements Updatable {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Agent{name=").append(name);
-        sb.append(", x=").append(x);
-        sb.append(", y=").append(y);
-        sb.append(", state=").append(state);
+        sb.append("name=").append(name).append("\n");
+        sb.append("x=").append(x).append("\n");
+        sb.append("y=").append(y).append("\n");
+        sb.append("state=").append(state).append("\n");
         return sb.toString();
     }
 }

@@ -23,6 +23,7 @@ import Idlethemeparkworld.view.AdministrationDialog;
 import Idlethemeparkworld.view.Board;
 import Idlethemeparkworld.view.InformationBar;
 import Idlethemeparkworld.view.popups.StatsPanel;
+import Idlethemeparkworld.view.popups.VisitorsPanel;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.FontFormatException;
@@ -98,9 +99,21 @@ public class Main extends JFrame {
         JMenuItem statistics = new JMenuItem(new AbstractAction("Statistics") {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JFrame frame = new JFrame("MyPanel");
+                JFrame frame = new JFrame("Statistics");
                 frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 frame.getContentPane().add(new StatsPanel(gm));
+                frame.pack();
+                frame.setLocationRelativeTo(Main.this);
+                frame.setVisible(true);
+            }
+        });
+        
+        JMenuItem visitors = new JMenuItem(new AbstractAction("Visitors") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFrame frame = new JFrame("Visitors");
+                frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                frame.getContentPane().add(new VisitorsPanel(gm));
                 frame.pack();
                 frame.setLocationRelativeTo(Main.this);
                 frame.setVisible(true);
@@ -117,6 +130,7 @@ public class Main extends JFrame {
         menuGame.add(menuNewGame);
         menuGame.add(menuHighScores);
         menuGame.add(statistics);
+        menuGame.add(visitors);
         menuGame.addSeparator();
         menuGame.add(menuGameExit);
         menuBar.add(menuGame);
@@ -172,6 +186,7 @@ public class Main extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Main.this.adminDialog = new AdministrationDialog(Main.this, "Administration", board);
+                adminDialog.setLocationRelativeTo(Main.this);
             }
         });
 
