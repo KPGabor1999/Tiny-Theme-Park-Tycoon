@@ -225,6 +225,7 @@ public class Main extends JFrame {
 
         JPanel gameArea = new JPanel();
         board = new Board(gm, this, gameArea);
+        gm.setBoard(board);
 
         Dimension d = board.getPreferredSize();
         d.height *= 1.5;
