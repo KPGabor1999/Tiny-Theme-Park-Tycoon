@@ -36,6 +36,10 @@ public class Toilet extends Infrastructure implements Queueable {
     public double getCleanliness() {
         return cleanliness;
     }
+    
+    public int getQueueLength(){
+        return queue.size();
+    }
 
     @Override
     public ArrayList<Pair<String, String>> getAllData() {
