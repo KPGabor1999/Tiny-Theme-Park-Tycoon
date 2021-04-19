@@ -73,8 +73,8 @@ public class Park implements Updatable {
             }
         }
     }
-    
-    public PathFinding getPathfinding(){
+
+    public PathFinding getPathfinding() {
         return pf;
     }
 
@@ -150,7 +150,7 @@ public class Park implements Updatable {
         neighbours.forEach(n -> res.add(n.getBuilding()));
         return res;
     }
-    
+
     public ArrayList<Building> getNonPavementNeighbours(int x, int y) {
         ArrayList<Building> res = new ArrayList<>();
         ArrayList<Tile> neighbours = getNeighbours(x, y, 1, 1);
@@ -236,8 +236,18 @@ public class Park implements Updatable {
             }
         }
     }
-    
+
     public int checkTicketPrice(BuildType type) {
+        for (int i = 0; i < buildings.size(); i++) {
+            if (buildings.get(i).getInfo() != BuildType.LOCKEDTILE
+                    && (buildings.get(i).getInfo() == type)) {
+                return ((Attraction) buildings.get(i)).getBaseEntryFee();
+            }
+        }
+        return 0;
+    }
+
+    public int getTicketPrice(BuildType type) {
         for (int i = 0; i < buildings.size(); i++) {
             if (buildings.get(i).getInfo() != BuildType.LOCKEDTILE
                     && (buildings.get(i).getInfo() == type)) {
@@ -295,7 +305,7 @@ public class Park implements Updatable {
     @Override
     public synchronized void update(long tickCount) {
         buildings.forEach(b -> b.update(tickCount));
-        if(tickCount % Time.convMinuteToTick(15) == 0){
+        if (tickCount % Time.convMinuteToTick(15) == 0) {
             gm.getFinance().pay(500);
         }
     }

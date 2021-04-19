@@ -16,6 +16,7 @@ public class SwingingShip extends Attraction {
         this.capacity = 10;
         this.runtime = 3;
         this.entryFee = 15;
+        this.baseEntryFee = 15;
         this.upgradeCost = this.value * 2;
     }
 

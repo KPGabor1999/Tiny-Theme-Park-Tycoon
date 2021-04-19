@@ -16,6 +16,7 @@ public class FerrisWheel extends Attraction {
         this.capacity = 40;
         this.runtime = 9;
         this.entryFee = 20;
+        this.baseEntryFee = 20;        
         this.upgradeCost = this.value * 2;
     }
 

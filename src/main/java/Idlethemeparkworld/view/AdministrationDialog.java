@@ -214,7 +214,7 @@ public class AdministrationDialog extends JDialog {
                 carouselPriceSlider.setMinorTickSpacing(1);
                 carouselPriceSlider.setPaintTicks(true);
                 carouselPriceSlider.setPaintLabels(true);
-                carouselPriceSlider.setValue(board.getGameManager().getPark().checkTicketPrice(CAROUSEL));
+                carouselPriceSlider.setValue(board.getGameManager().getPark().getTicketPrice(CAROUSEL));
                 ticketPriceSettingsPanel.add(carouselPriceSlider);
                 //Slider Listener
                 carouselPriceSlider.addChangeListener(new ChangeListener() {
@@ -244,7 +244,7 @@ public class AdministrationDialog extends JDialog {
                 shipPriceSlider.setMinorTickSpacing(1);
                 shipPriceSlider.setPaintTicks(true);
                 shipPriceSlider.setPaintLabels(true);
-                shipPriceSlider.setValue(board.getGameManager().getPark().checkTicketPrice(SWINGINGSHIP));
+                shipPriceSlider.setValue(board.getGameManager().getPark().getTicketPrice(SWINGINGSHIP));
                 ticketPriceSettingsPanel.add(shipPriceSlider);
                 //Slider Listener
                 shipPriceSlider.addChangeListener(new ChangeListener() {
@@ -274,7 +274,7 @@ public class AdministrationDialog extends JDialog {
                 hauntedPriceSlider.setMinorTickSpacing(1);
                 hauntedPriceSlider.setPaintTicks(true);
                 hauntedPriceSlider.setPaintLabels(true);
-                hauntedPriceSlider.setValue(board.getGameManager().getPark().checkTicketPrice(HAUNTEDMANSION));
+                hauntedPriceSlider.setValue(board.getGameManager().getPark().getTicketPrice(HAUNTEDMANSION));
                 ticketPriceSettingsPanel.add(hauntedPriceSlider);
                 //Slider Listener
                 hauntedPriceSlider.addChangeListener(new ChangeListener() {
@@ -304,7 +304,7 @@ public class AdministrationDialog extends JDialog {
                 ferrisPriceSlider.setMinorTickSpacing(1);
                 ferrisPriceSlider.setPaintTicks(true);
                 ferrisPriceSlider.setPaintLabels(true);
-                ferrisPriceSlider.setValue(board.getGameManager().getPark().checkTicketPrice(FERRISWHEEL));
+                ferrisPriceSlider.setValue(board.getGameManager().getPark().getTicketPrice(FERRISWHEEL));
                 ticketPriceSettingsPanel.add(ferrisPriceSlider);
                 //Slider Listener
                 ferrisPriceSlider.addChangeListener(new ChangeListener() {
@@ -334,7 +334,7 @@ public class AdministrationDialog extends JDialog {
                 rollerPriceSlider.setMinorTickSpacing(1);
                 rollerPriceSlider.setPaintTicks(true);
                 rollerPriceSlider.setPaintLabels(true);
-                rollerPriceSlider.setValue(board.getGameManager().getPark().checkTicketPrice(ROLLERCOASTER));
+                rollerPriceSlider.setValue(board.getGameManager().getPark().getTicketPrice(ROLLERCOASTER));
                 ticketPriceSettingsPanel.add(rollerPriceSlider);
                 //Slider Listener
                 rollerPriceSlider.addChangeListener(new ChangeListener() {

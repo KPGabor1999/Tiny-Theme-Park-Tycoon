@@ -18,6 +18,7 @@ public abstract class Attraction extends Building implements Updatable, Queueabl
     protected int capacity;
     protected int runtime;
     protected int entryFee;
+    protected int baseEntryFee;
 
     protected int statusTimer;
 
@@ -25,7 +26,7 @@ public abstract class Attraction extends Building implements Updatable, Queueabl
     protected ArrayList<Visitor> onRide;
 
     protected Random rand;
-    
+
     public Attraction(GameManager gm) {
         super(gm);
         this.queue = new ArrayList<>();
@@ -45,10 +46,14 @@ public abstract class Attraction extends Building implements Updatable, Queueabl
         return condition;
     }
 
+    public int getBaseEntryFee() {
+        return baseEntryFee;
+    }
+
     public int getEntryFee() {
         return entryFee;
     }
-    
+
     public void setEntryFee(int number) {
         this.entryFee = number;
     }
@@ -59,7 +64,7 @@ public abstract class Attraction extends Building implements Updatable, Queueabl
 
     @Override
     public int getRecommendedMax() {
-        return (status == BuildingStatus.OPEN || status == BuildingStatus.OPEN) ? (int)Math.floor(capacity * 1.5) : 0;
+        return (status == BuildingStatus.OPEN || status == BuildingStatus.OPEN) ? (int) Math.floor(capacity * 1.5) : 0;
     }
 
     public ArrayList<Pair<String, String>> getAllData() {
@@ -92,10 +97,10 @@ public abstract class Attraction extends Building implements Updatable, Queueabl
     private void finish() {
         Range r = new Range((int) Math.floor(fun * condition / 100), fun);
         int rideEvent = 0;
-        if(rand.nextInt(100) < condition*1.5){
+        if (rand.nextInt(100) < condition * 1.5) {
             rideEvent = r.getNextRandom();
         } else {
-            rideEvent = (rand.nextInt(15)+10)*(-1);
+            rideEvent = (rand.nextInt(15) + 10) * (-1);
         }
         for (int i = 0; i < onRide.size(); i++) {
             onRide.get(i).sendRideEvent(rideEvent);
@@ -121,12 +126,12 @@ public abstract class Attraction extends Building implements Updatable, Queueabl
     public void leaveQueue(Visitor v) {
         queue.remove(v);
     }
-    
+
     @Override
     public boolean isFirstInQueue(Visitor v) {
         return false;
     }
-    
+
     @Override
     public boolean canService() {
         return true;
