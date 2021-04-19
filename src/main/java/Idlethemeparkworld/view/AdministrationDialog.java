@@ -94,7 +94,7 @@ public class AdministrationDialog extends JDialog {
             //Ételek
             foodPricesLabel = new JLabel("Food prices");
             foodPricesLabel.setAlignmentX(CENTER_ALIGNMENT);
-            foodPricesLabel.setBorder(new EmptyBorder(10, 0, 15, 0));
+            foodPricesLabel.setBorder(new EmptyBorder(5, 0, 5, 0));
             this.getContentPane().add(foodPricesLabel);
 
             foodPriceSettingsPanel = new JPanel(new GridLayout(4, 2));
@@ -102,7 +102,7 @@ public class AdministrationDialog extends JDialog {
 
             //Jégkrémes
             iceCreamPriceLabel = new JLabel("Ice cream prices:");
-            iceCreamPriceLabel.setBorder(new EmptyBorder(5, 0, 5, 0));
+            iceCreamPriceLabel.setBorder(new EmptyBorder(3, 0, 3, 0));
             foodPriceSettingsPanel.add(iceCreamPriceLabel);
             int icecreamCheck = board.getGameManager().getPark().checkFoodPrice(ICECREAMPARLOR);
             if (icecreamCheck == 0) {
@@ -132,7 +132,7 @@ public class AdministrationDialog extends JDialog {
 
             //Hotdog
             hotDogPriceLabel = new JLabel("Hot dog prices:");
-            hotDogPriceLabel.setBorder(new EmptyBorder(5, 0, 5, 0));
+            hotDogPriceLabel.setBorder(new EmptyBorder(3, 0, 3, 0));
             foodPriceSettingsPanel.add(hotDogPriceLabel);
             int hotdogCheck = board.getGameManager().getPark().checkFoodPrice(HOTDOGSTAND);
             if (hotdogCheck == 0) {
@@ -162,7 +162,7 @@ public class AdministrationDialog extends JDialog {
 
             //Hamburgeres
             hamburgerPriceLabel = new JLabel("Hamburger prices:");
-            hamburgerPriceLabel.setBorder(new EmptyBorder(5, 0, 5, 0));
+            hamburgerPriceLabel.setBorder(new EmptyBorder(3, 0, 3, 0));
             foodPriceSettingsPanel.add(hamburgerPriceLabel);
             int hamburgerCheck = board.getGameManager().getPark().checkFoodPrice(BURGERJOINT);
             if (hamburgerCheck == 0) {
@@ -193,7 +193,7 @@ public class AdministrationDialog extends JDialog {
             //Attrakciók
             ticketPricesLabel = new JLabel("Activity prices");
             ticketPricesLabel.setAlignmentX(CENTER_ALIGNMENT);
-            ticketPricesLabel.setBorder(new EmptyBorder(10, 0, 15, 0));
+            ticketPricesLabel.setBorder(new EmptyBorder(5, 0, 5, 0));
             this.getContentPane().add(ticketPricesLabel);
 
             ticketPriceSettingsPanel = new JPanel(new GridLayout(6, 2));
@@ -201,7 +201,7 @@ public class AdministrationDialog extends JDialog {
 
             //Carousel
             carouselPriceLabel = new JLabel("Carousel prices:");
-            carouselPriceLabel.setBorder(new EmptyBorder(5, 0, 5, 0));
+            carouselPriceLabel.setBorder(new EmptyBorder(3, 0, 3, 0));
             ticketPriceSettingsPanel.add(carouselPriceLabel);
             int carouselCheck = board.getGameManager().getPark().checkTicketPrice(CAROUSEL);
             if (carouselCheck == 0) {
@@ -231,7 +231,7 @@ public class AdministrationDialog extends JDialog {
 
             //Swinging ship
             shipPriceLabel = new JLabel("Swinging ship prices:");
-            shipPriceLabel.setBorder(new EmptyBorder(5, 0, 5, 0));            
+            shipPriceLabel.setBorder(new EmptyBorder(3, 0, 3, 0));            
             ticketPriceSettingsPanel.add(shipPriceLabel);
             int shipCheck = board.getGameManager().getPark().checkTicketPrice(SWINGINGSHIP);
             if (shipCheck == 0) {
@@ -261,7 +261,7 @@ public class AdministrationDialog extends JDialog {
             
             //Haunted mansion
             hauntedPriceLabel = new JLabel("Haunted mansion prices:");
-            hauntedPriceLabel.setBorder(new EmptyBorder(5, 0, 5, 0));               
+            hauntedPriceLabel.setBorder(new EmptyBorder(3, 0, 3, 0));               
             ticketPriceSettingsPanel.add(hauntedPriceLabel);
             int hauntedCheck = board.getGameManager().getPark().checkTicketPrice(HAUNTEDMANSION);
             if (hauntedCheck == 0) {
@@ -291,7 +291,7 @@ public class AdministrationDialog extends JDialog {
 
             //Ferriswheel
             ferrisPriceLabel = new JLabel("Ferriswheel prices:");
-            ferrisPriceLabel.setBorder(new EmptyBorder(5, 0, 5, 0));              
+            ferrisPriceLabel.setBorder(new EmptyBorder(3, 0, 3, 0));              
             ticketPriceSettingsPanel.add(ferrisPriceLabel);
             int ferrisCheck = board.getGameManager().getPark().checkTicketPrice(FERRISWHEEL);
             if (ferrisCheck == 0) {
@@ -321,7 +321,7 @@ public class AdministrationDialog extends JDialog {
 
             //Roller coaster
             rollerPriceLabel = new JLabel("Roller coaster prices:");
-            rollerPriceLabel.setBorder(new EmptyBorder(5, 0, 5, 0));                 
+            rollerPriceLabel.setBorder(new EmptyBorder(3, 0, 3, 0));                 
             ticketPriceSettingsPanel.add(rollerPriceLabel);
             int rollerCheck = board.getGameManager().getPark().checkTicketPrice(ROLLERCOASTER);
             if (rollerCheck == 0) {
@@ -352,7 +352,7 @@ public class AdministrationDialog extends JDialog {
             //Employee
             employeesLabel = new JLabel("Employees");
             employeesLabel.setAlignmentX(CENTER_ALIGNMENT);
-            employeesLabel.setBorder(new EmptyBorder(10,0,15,0));
+            employeesLabel.setBorder(new EmptyBorder(5,0,5,0));
             this.getContentPane().add(employeesLabel);
 
             employeeSettingsPanel = new JPanel(new GridLayout(3, 2));
