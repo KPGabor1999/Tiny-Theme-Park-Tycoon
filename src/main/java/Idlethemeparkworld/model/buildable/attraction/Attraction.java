@@ -48,6 +48,10 @@ public abstract class Attraction extends Building implements Updatable, Queueabl
     public int getEntryFee() {
         return entryFee;
     }
+    
+    public void setEntryFee(int number) {
+        this.entryFee = number;
+    }
 
     public void setCondition(double condition) {
         this.condition = condition;

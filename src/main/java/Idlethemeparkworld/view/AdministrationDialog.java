@@ -9,6 +9,7 @@ import java.awt.event.WindowListener;
 import javax.swing.*;
 import javax.swing.JDialog;
 import static javax.swing.BoxLayout.Y_AXIS;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -16,9 +17,13 @@ public class AdministrationDialog extends JDialog {
 
     private Board board;
 
-    private JLabel pricesLabel;
+    private JLabel foodPricesLabel;
+    private JLabel ticketPricesLabel;
 
-    private JPanel priceSettingsPanel;
+    private JPanel entryPriceSettingPanel;
+    private JPanel foodPriceSettingsPanel;
+    private JPanel ticketPriceSettingsPanel;
+
     private JLabel ticketPriceLabel;
     private JSlider ticketPriceSlider;
     private JLabel hotDogPriceLabel;
@@ -30,6 +35,21 @@ public class AdministrationDialog extends JDialog {
     private JLabel hamburgerPriceLabel;
     private JLabel hamburgerNotBuilt;
     private JSlider hamburgerPriceSlider;
+    private JLabel carouselPriceLabel;
+    private JLabel carouselNotBuilt;
+    private JSlider carouselPriceSlider;
+    private JLabel shipPriceLabel;
+    private JLabel shipNotBuilt;
+    private JSlider shipPriceSlider;
+    private JLabel ferrisPriceLabel;
+    private JLabel ferrisNotBuilt;
+    private JSlider ferrisPriceSlider;
+    private JLabel rollerPriceLabel;
+    private JLabel rollerNotBuilt;
+    private JSlider rollerPriceSlider;
+    private JLabel hauntedPriceLabel;
+    private JLabel hauntedNotBuilt;
+    private JSlider hauntedPriceSlider;
 
     private JLabel employeesLabel;
 
@@ -58,11 +78,9 @@ public class AdministrationDialog extends JDialog {
             });
             this.getContentPane().setLayout(new BoxLayout(this.getContentPane(), Y_AXIS));
 
-            pricesLabel = new JLabel("Prices");
-            pricesLabel.setAlignmentX(CENTER_ALIGNMENT);
-            this.getContentPane().add(pricesLabel);
             //Belépõ
-            priceSettingsPanel = new JPanel(new GridLayout(5, 2));
+            entryPriceSettingPanel = new JPanel(new GridLayout(1, 2));
+            this.getContentPane().add(entryPriceSettingPanel);
             ticketPriceLabel = new JLabel("Entry fee:");
             ticketPriceSlider = new JSlider(0, 30);
             ticketPriceSlider.setMajorTickSpacing(10);
@@ -70,17 +88,27 @@ public class AdministrationDialog extends JDialog {
             ticketPriceSlider.setPaintTicks(true);
             ticketPriceSlider.setPaintLabels(true);
             ticketPriceSlider.setValue(board.getGameManager().getEntranceFee());
-            priceSettingsPanel.add(ticketPriceLabel);
-            priceSettingsPanel.add(ticketPriceSlider);
+            entryPriceSettingPanel.add(ticketPriceLabel);
+            entryPriceSettingPanel.add(ticketPriceSlider);
+
+            //Ételek
+            foodPricesLabel = new JLabel("Food prices");
+            foodPricesLabel.setAlignmentX(CENTER_ALIGNMENT);
+            foodPricesLabel.setBorder(new EmptyBorder(10, 0, 15, 0));
+            this.getContentPane().add(foodPricesLabel);
+
+            foodPriceSettingsPanel = new JPanel(new GridLayout(4, 2));
+            this.getContentPane().add(foodPriceSettingsPanel);
 
             //Jégkrémes
             iceCreamPriceLabel = new JLabel("Ice cream prices:");
-            priceSettingsPanel.add(iceCreamPriceLabel);
+            iceCreamPriceLabel.setBorder(new EmptyBorder(5, 0, 5, 0));
+            foodPriceSettingsPanel.add(iceCreamPriceLabel);
             int icecreamCheck = board.getGameManager().getPark().checkFoodPrice(ICECREAMPARLOR);
             if (icecreamCheck == 0) {
                 iceCreamNotBuilt = new JLabel("Build an Ice Cream parlor");
                 iceCreamNotBuilt.setForeground(Color.RED);
-                priceSettingsPanel.add(iceCreamNotBuilt);
+                foodPriceSettingsPanel.add(iceCreamNotBuilt);
             } else {
                 iceCreamPriceSlider = new JSlider(0, 30);
                 iceCreamPriceSlider.setMajorTickSpacing(10);
@@ -88,7 +116,7 @@ public class AdministrationDialog extends JDialog {
                 iceCreamPriceSlider.setPaintTicks(true);
                 iceCreamPriceSlider.setPaintLabels(true);
                 iceCreamPriceSlider.setValue(board.getGameManager().getPark().checkFoodPrice(ICECREAMPARLOR));
-                priceSettingsPanel.add(iceCreamPriceSlider);
+                foodPriceSettingsPanel.add(iceCreamPriceSlider);
                 //Slider Listener
                 iceCreamPriceSlider.addChangeListener(new ChangeListener() {
                     public void stateChanged(ChangeEvent evt) {
@@ -104,12 +132,13 @@ public class AdministrationDialog extends JDialog {
 
             //Hotdog
             hotDogPriceLabel = new JLabel("Hot dog prices:");
-            priceSettingsPanel.add(hotDogPriceLabel);
+            hotDogPriceLabel.setBorder(new EmptyBorder(5, 0, 5, 0));
+            foodPriceSettingsPanel.add(hotDogPriceLabel);
             int hotdogCheck = board.getGameManager().getPark().checkFoodPrice(HOTDOGSTAND);
             if (hotdogCheck == 0) {
                 hotDogNotBuilt = new JLabel("Build a Hot Dog stand");
                 hotDogNotBuilt.setForeground(Color.RED);
-                priceSettingsPanel.add(hotDogNotBuilt);
+                foodPriceSettingsPanel.add(hotDogNotBuilt);
             } else {
                 hotDogPriceSlider = new JSlider(0, 30);
                 hotDogPriceSlider.setMajorTickSpacing(10);
@@ -117,7 +146,7 @@ public class AdministrationDialog extends JDialog {
                 hotDogPriceSlider.setPaintTicks(true);
                 hotDogPriceSlider.setPaintLabels(true);
                 hotDogPriceSlider.setValue(board.getGameManager().getPark().checkFoodPrice(HOTDOGSTAND));
-                priceSettingsPanel.add(hotDogPriceSlider);
+                foodPriceSettingsPanel.add(hotDogPriceSlider);
                 //Slider Listener
                 hotDogPriceSlider.addChangeListener(new ChangeListener() {
                     public void stateChanged(ChangeEvent evt) {
@@ -133,12 +162,13 @@ public class AdministrationDialog extends JDialog {
 
             //Hamburgeres
             hamburgerPriceLabel = new JLabel("Hamburger prices:");
-            priceSettingsPanel.add(hamburgerPriceLabel);
+            hamburgerPriceLabel.setBorder(new EmptyBorder(5, 0, 5, 0));
+            foodPriceSettingsPanel.add(hamburgerPriceLabel);
             int hamburgerCheck = board.getGameManager().getPark().checkFoodPrice(BURGERJOINT);
             if (hamburgerCheck == 0) {
                 hamburgerNotBuilt = new JLabel("Build a Burger joint");
                 hamburgerNotBuilt.setForeground(Color.RED);
-                priceSettingsPanel.add(hamburgerNotBuilt);
+                foodPriceSettingsPanel.add(hamburgerNotBuilt);
             } else {
                 hamburgerPriceSlider = new JSlider(0, 30);
                 hamburgerPriceSlider.setMajorTickSpacing(10);
@@ -146,7 +176,7 @@ public class AdministrationDialog extends JDialog {
                 hamburgerPriceSlider.setPaintTicks(true);
                 hamburgerPriceSlider.setPaintLabels(true);
                 hamburgerPriceSlider.setValue(board.getGameManager().getPark().checkFoodPrice(BURGERJOINT));
-                priceSettingsPanel.add(hamburgerPriceSlider);
+                foodPriceSettingsPanel.add(hamburgerPriceSlider);
                 //Slider Listener
                 hamburgerPriceSlider.addChangeListener(new ChangeListener() {
                     public void stateChanged(ChangeEvent evt) {
@@ -160,10 +190,169 @@ public class AdministrationDialog extends JDialog {
                 });
             }
 
-            this.getContentPane().add(priceSettingsPanel);
+            //Attrakciók
+            ticketPricesLabel = new JLabel("Activity prices");
+            ticketPricesLabel.setAlignmentX(CENTER_ALIGNMENT);
+            ticketPricesLabel.setBorder(new EmptyBorder(10, 0, 15, 0));
+            this.getContentPane().add(ticketPricesLabel);
 
+            ticketPriceSettingsPanel = new JPanel(new GridLayout(6, 2));
+            this.getContentPane().add(ticketPriceSettingsPanel);
+
+            //Carousel
+            carouselPriceLabel = new JLabel("Carousel prices:");
+            carouselPriceLabel.setBorder(new EmptyBorder(5, 0, 5, 0));
+            ticketPriceSettingsPanel.add(carouselPriceLabel);
+            int carouselCheck = board.getGameManager().getPark().checkTicketPrice(CAROUSEL);
+            if (carouselCheck == 0) {
+                carouselNotBuilt = new JLabel("Build a Carousel");
+                carouselNotBuilt.setForeground(Color.RED);
+                ticketPriceSettingsPanel.add(carouselNotBuilt);
+            } else {
+                carouselPriceSlider = new JSlider(0, 30);
+                carouselPriceSlider.setMajorTickSpacing(10);
+                carouselPriceSlider.setMinorTickSpacing(1);
+                carouselPriceSlider.setPaintTicks(true);
+                carouselPriceSlider.setPaintLabels(true);
+                carouselPriceSlider.setValue(board.getGameManager().getPark().checkTicketPrice(CAROUSEL));
+                ticketPriceSettingsPanel.add(carouselPriceSlider);
+                //Slider Listener
+                carouselPriceSlider.addChangeListener(new ChangeListener() {
+                    public void stateChanged(ChangeEvent evt) {
+                        JSlider slider = (JSlider) evt.getSource();
+                        if (!slider.getValueIsAdjusting()) {
+                            int value = slider.getValue();
+                            //Action
+                            board.getGameManager().getPark().updateTicketPrice(CAROUSEL, value);
+                        }
+                    }
+                });
+            }
+
+            //Swinging ship
+            shipPriceLabel = new JLabel("Swinging ship prices:");
+            shipPriceLabel.setBorder(new EmptyBorder(5, 0, 5, 0));            
+            ticketPriceSettingsPanel.add(shipPriceLabel);
+            int shipCheck = board.getGameManager().getPark().checkTicketPrice(SWINGINGSHIP);
+            if (shipCheck == 0) {
+                shipNotBuilt = new JLabel("Build a Swinging ship");
+                shipNotBuilt.setForeground(Color.RED);
+                ticketPriceSettingsPanel.add(shipNotBuilt);
+            } else {
+                shipPriceSlider = new JSlider(0, 30);
+                shipPriceSlider.setMajorTickSpacing(10);
+                shipPriceSlider.setMinorTickSpacing(1);
+                shipPriceSlider.setPaintTicks(true);
+                shipPriceSlider.setPaintLabels(true);
+                shipPriceSlider.setValue(board.getGameManager().getPark().checkTicketPrice(SWINGINGSHIP));
+                ticketPriceSettingsPanel.add(shipPriceSlider);
+                //Slider Listener
+                shipPriceSlider.addChangeListener(new ChangeListener() {
+                    public void stateChanged(ChangeEvent evt) {
+                        JSlider slider = (JSlider) evt.getSource();
+                        if (!slider.getValueIsAdjusting()) {
+                            int value = slider.getValue();
+                            //Action
+                            board.getGameManager().getPark().updateTicketPrice(SWINGINGSHIP, value);
+                        }
+                    }
+                });
+            }
+
+            //Ferriswheel
+            ferrisPriceLabel = new JLabel("Ferriswheel prices:");
+            ferrisPriceLabel.setBorder(new EmptyBorder(5, 0, 5, 0));              
+            ticketPriceSettingsPanel.add(ferrisPriceLabel);
+            int ferrisCheck = board.getGameManager().getPark().checkTicketPrice(FERRISWHEEL);
+            if (ferrisCheck == 0) {
+                ferrisNotBuilt = new JLabel("Build a Ferriswheel");
+                ferrisNotBuilt.setForeground(Color.RED);
+                ticketPriceSettingsPanel.add(ferrisNotBuilt);
+            } else {
+                ferrisPriceSlider = new JSlider(0, 30);
+                ferrisPriceSlider.setMajorTickSpacing(10);
+                ferrisPriceSlider.setMinorTickSpacing(1);
+                ferrisPriceSlider.setPaintTicks(true);
+                ferrisPriceSlider.setPaintLabels(true);
+                ferrisPriceSlider.setValue(board.getGameManager().getPark().checkTicketPrice(FERRISWHEEL));
+                ticketPriceSettingsPanel.add(ferrisPriceSlider);
+                //Slider Listener
+                ferrisPriceSlider.addChangeListener(new ChangeListener() {
+                    public void stateChanged(ChangeEvent evt) {
+                        JSlider slider = (JSlider) evt.getSource();
+                        if (!slider.getValueIsAdjusting()) {
+                            int value = slider.getValue();
+                            //Action
+                            board.getGameManager().getPark().updateTicketPrice(FERRISWHEEL, value);
+                        }
+                    }
+                });
+            }
+
+            //Roller coaster
+            rollerPriceLabel = new JLabel("Roller coaster prices:");
+            rollerPriceLabel.setBorder(new EmptyBorder(5, 0, 5, 0));                 
+            ticketPriceSettingsPanel.add(rollerPriceLabel);
+            int rollerCheck = board.getGameManager().getPark().checkTicketPrice(ROLLERCOASTER);
+            if (rollerCheck == 0) {
+                rollerNotBuilt = new JLabel("Build a Roller coaster");
+                rollerNotBuilt.setForeground(Color.RED);
+                ticketPriceSettingsPanel.add(rollerNotBuilt);
+            } else {
+                rollerPriceSlider = new JSlider(0, 30);
+                rollerPriceSlider.setMajorTickSpacing(10);
+                rollerPriceSlider.setMinorTickSpacing(1);
+                rollerPriceSlider.setPaintTicks(true);
+                rollerPriceSlider.setPaintLabels(true);
+                rollerPriceSlider.setValue(board.getGameManager().getPark().checkTicketPrice(ROLLERCOASTER));
+                ticketPriceSettingsPanel.add(rollerPriceSlider);
+                //Slider Listener
+                rollerPriceSlider.addChangeListener(new ChangeListener() {
+                    public void stateChanged(ChangeEvent evt) {
+                        JSlider slider = (JSlider) evt.getSource();
+                        if (!slider.getValueIsAdjusting()) {
+                            int value = slider.getValue();
+                            //Action
+                            board.getGameManager().getPark().updateTicketPrice(ROLLERCOASTER, value);
+                        }
+                    }
+                });
+            }
+
+            //Haunted mansion
+            hauntedPriceLabel = new JLabel("Haunted mansion prices:");
+            hauntedPriceLabel.setBorder(new EmptyBorder(5, 0, 5, 0));               
+            ticketPriceSettingsPanel.add(hauntedPriceLabel);
+            int hauntedCheck = board.getGameManager().getPark().checkTicketPrice(HAUNTEDMANSION);
+            if (hauntedCheck == 0) {
+                hauntedNotBuilt = new JLabel("Build a Haunted mansion");
+                hauntedNotBuilt.setForeground(Color.RED);
+                ticketPriceSettingsPanel.add(hauntedNotBuilt);
+            } else {
+                hauntedPriceSlider = new JSlider(0, 30);
+                hauntedPriceSlider.setMajorTickSpacing(10);
+                hauntedPriceSlider.setMinorTickSpacing(1);
+                hauntedPriceSlider.setPaintTicks(true);
+                hauntedPriceSlider.setPaintLabels(true);
+                hauntedPriceSlider.setValue(board.getGameManager().getPark().checkTicketPrice(HAUNTEDMANSION));
+                ticketPriceSettingsPanel.add(hauntedPriceSlider);
+                //Slider Listener
+                hauntedPriceSlider.addChangeListener(new ChangeListener() {
+                    public void stateChanged(ChangeEvent evt) {
+                        JSlider slider = (JSlider) evt.getSource();
+                        if (!slider.getValueIsAdjusting()) {
+                            int value = slider.getValue();
+                            //Action
+                            board.getGameManager().getPark().updateTicketPrice(HAUNTEDMANSION, value);
+                        }
+                    }
+                });
+            }
+
+            //Employee
             employeesLabel = new JLabel("Employees");
             employeesLabel.setAlignmentX(CENTER_ALIGNMENT);
+            employeesLabel.setBorder(new EmptyBorder(10,0,15,0));
             this.getContentPane().add(employeesLabel);
 
             employeeSettingsPanel = new JPanel(new GridLayout(3, 2));
