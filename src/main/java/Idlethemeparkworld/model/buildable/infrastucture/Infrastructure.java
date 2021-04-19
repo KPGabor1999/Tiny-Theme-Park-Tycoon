@@ -6,30 +6,29 @@ import Idlethemeparkworld.misc.utils.Pair;
 import Idlethemeparkworld.model.GameManager;
 
 public abstract class Infrastructure extends Building {
+
     protected double littering;
 
     public Infrastructure(GameManager gm) {
         super(gm);
         this.littering = 0;
     }
-    
-    public double checkLittering(){
+
+    public double getLittering() {
         return littering;
     }
-    
-    public void setLittering(double littering) {
-        this.littering = littering;
-    }
-    
-    public void litter(double amount){  //This should only be in the Visitor class
+
+    public void litter(double amount) {
         littering += amount;
     }
-    
-    public void clean(){    //This should only be in the Janitor class.
-        littering = 0;
+
+    public void sweep(double amount) {
+        littering -= amount;
+        littering = Math.max(littering, 0);
     }
-    
-    public ArrayList<Pair<String, String>> getAllData(){
+
+    @Override
+    public ArrayList<Pair<String, String>> getAllData() {
         ArrayList<Pair<String, String>> res = new ArrayList<>();
         return res;
     }

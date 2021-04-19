@@ -19,16 +19,17 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class BuildingOptionsDialog extends JDialog{
+public class BuildingOptionsDialog extends JDialog {
+
     private Board board;
     private Building currentBuilding;
-    
+
     private static int instanceCount;
-    
-    public BuildingOptionsDialog(Frame owner, Board board, int x, int y){
+
+    public BuildingOptionsDialog(Frame owner, Board board, int x, int y) {
         super(owner, "Building options");
-        
-        if(instanceCount == 0){
+
+        if (instanceCount == 0) {
             instanceCount++;
             this.board = board;
             this.currentBuilding = board.getGameManager().getPark().getTile(x, y).getBuilding();
@@ -41,17 +42,17 @@ public class BuildingOptionsDialog extends JDialog{
             });
             this.setLayout(new BoxLayout(this.getContentPane(), BoxLayout.PAGE_AXIS));
             this.setResizable(false);
-            
+
             JLabel nameLabel;
-            if(currentBuilding.getMaxLevel() != 0){
+            if (currentBuilding.getMaxLevel() != 0) {
                 nameLabel = new JLabel(currentBuilding.getInfo().getName() + " (Level " + currentBuilding.getCurrentLevel() + ")");
             } else {
                 nameLabel = new JLabel(currentBuilding.getInfo().getName());
             }
             nameLabel.setAlignmentX(CENTER_ALIGNMENT);
             this.getContentPane().add(nameLabel);
-            
-            if(!currentBuilding.getInfo().getDescription().isEmpty()){
+
+            if (!currentBuilding.getInfo().getDescription().isEmpty()) {
                 JLabel descriptionLabel = new JLabel(currentBuilding.getInfo().getDescription());
                 descriptionLabel.setAlignmentX(CENTER_ALIGNMENT);
                 this.getContentPane().add(descriptionLabel);
@@ -59,13 +60,13 @@ public class BuildingOptionsDialog extends JDialog{
 
             ArrayList<Pair<String, String>> info = currentBuilding.getAllData();
             JPanel statsPanel = new JPanel(new GridLayout(info.size(), 2));
-            for(Pair<String, String> p : info){
+            for (Pair<String, String> p : info) {
                 statsPanel.add(new JLabel(p.getKey()));
                 statsPanel.add(new JLabel(p.getValue()));
             }
             this.getContentPane().add(statsPanel);
-            
-            if(currentBuilding.getMaxLevel() != 0){
+
+            if (currentBuilding.getMaxLevel() != 0) {
                 JButton upgradeButton = new JButton("Upgrade: costs " + currentBuilding.getUpgradeCost() + "$");
                 upgradeButton.setAlignmentX(CENTER_ALIGNMENT);
                 upgradeButton.addActionListener(new ActionListener() {
@@ -78,8 +79,8 @@ public class BuildingOptionsDialog extends JDialog{
                 this.getContentPane().add(upgradeButton);
             }
 
-            if(!(currentBuilding instanceof Entrance) && !(currentBuilding instanceof LockedTile)){
-                JButton demolishButton = new JButton("Demolish: returns " + currentBuilding.getValue()/2 + "$");
+            if (!(currentBuilding instanceof Entrance) && !(currentBuilding instanceof LockedTile)) {
+                JButton demolishButton = new JButton("Demolish: returns " + currentBuilding.getValue() / 2 + "$");
                 demolishButton.setAlignmentX(CENTER_ALIGNMENT);
                 demolishButton.addActionListener(new ActionListener() {
                     @Override
@@ -88,15 +89,15 @@ public class BuildingOptionsDialog extends JDialog{
                     }
                 });
                 this.getContentPane().add(demolishButton);
-            } else if(currentBuilding instanceof LockedTile){
-                JButton unlockButton = new JButton("Unlock for " + ((LockedTile)currentBuilding).getUnlockCost() + "$");
+            } else if (currentBuilding instanceof LockedTile) {
+                JButton unlockButton = new JButton("Unlock for " + ((LockedTile) currentBuilding).getUnlockCost() + "$");
                 unlockButton.setAlignmentX(CENTER_ALIGNMENT);
                 unlockButton.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         BuildingOptionsDialog.this.instanceCount--;
                         BuildingOptionsDialog.this.dispose();
-                        BuildingOptionsDialog.this.board.getGameManager().getFinance().pay(((LockedTile)currentBuilding).getUnlockCost());      //Ezt a sort még commitolni kéne.
+                        BuildingOptionsDialog.this.board.getGameManager().getFinance().pay(((LockedTile) currentBuilding).getUnlockCost());      //Ezt a sort még commitolni kéne.
                         BuildingOptionsDialog.this.board.getGameManager().getPark().demolish(currentBuilding.getX(), currentBuilding.getY());
                         BuildingOptionsDialog.this.board.refresh();
                     }
@@ -107,11 +108,11 @@ public class BuildingOptionsDialog extends JDialog{
             this.setVisible(true);
         }
     }
-    
-    private void upgradeBuilding(){
+
+    private void upgradeBuilding() {
         int funds = board.getGameManager().getFinance().getFunds();
         int upgradeCost = currentBuilding.getUpgradeCost();
-        if(funds <= upgradeCost){
+        if (funds <= upgradeCost) {
             new Notification(this.getOwner(), "Problem", "Insufficient funds for upgrade.");
         } else {
             board.getGameManager().getFinance().pay(upgradeCost);
@@ -121,15 +122,16 @@ public class BuildingOptionsDialog extends JDialog{
             new Notification(this.getOwner(), "Success", "Building successfully upgraded.");
         }
     }
-    
-    private void demolishBuilding(){
+
+    private void demolishBuilding() {
         new Confirm(this.getOwner(), new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 BuildingOptionsDialog.this.instanceCount--;
                 BuildingOptionsDialog.this.dispose();
-                BuildingOptionsDialog.this.board.getGameManager().getFinance().earn(currentBuilding.getValue()/2); //Az plet addigi teljes rtknek(!) a felt adja vissza.
+                BuildingOptionsDialog.this.board.getGameManager().getFinance().earn(currentBuilding.getValue() / 2); //Az plet addigi teljes rtknek(!) a felt adja vissza.
                 BuildingOptionsDialog.this.board.getGameManager().getPark().demolish(currentBuilding.getX(), currentBuilding.getY());
+                BuildingOptionsDialog.this.board.drawParkRender();
                 BuildingOptionsDialog.this.board.refresh();
             }
         });

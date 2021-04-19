@@ -4,8 +4,9 @@ import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.GameManager;
 
 public class LockedTile extends Infrastructure {
+
     private final int unlockCost;
-    
+
     public LockedTile(int x, int y, GameManager gm) {
         super(gm);
         this.maxLevel = 0;
@@ -14,9 +15,9 @@ public class LockedTile extends Infrastructure {
         this.buildingType = BuildType.LOCKEDTILE;
         this.unlockCost = BuildType.LOCKEDTILE.getBuildCost();
     }
-    
+
     @Override
-    public int getRecommendedMax(){
+    public int getRecommendedMax() {
         return 0;
     }
 

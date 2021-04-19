@@ -2,7 +2,6 @@ package Idlethemeparkworld.model.agent;
 
 import Idlethemeparkworld.misc.utils.Position;
 import Idlethemeparkworld.model.AgentManager;
-import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.Park;
 import Idlethemeparkworld.model.Updatable;
 import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentState;
@@ -10,9 +9,6 @@ import Idlethemeparkworld.model.agent.AgentTypes.AgentType;
 import Idlethemeparkworld.model.agent.AgentTypes.StaffType;
 import Idlethemeparkworld.model.buildable.Building;
 import Idlethemeparkworld.model.buildable.BuildingStatus;
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.Random;
 
 public abstract class Agent implements Updatable {
@@ -28,8 +24,6 @@ public abstract class Agent implements Updatable {
     AgentType type;
     StaffType staffType;
     
-    int destX, destY;
-    
     Random rand;
     
     AgentState state;
@@ -38,7 +32,6 @@ public abstract class Agent implements Updatable {
     protected AgentAction currentAction;
     Building currentBuilding;
     
-    protected Color color;
     protected Position prevPos;
     protected Position newPos;
     protected int xOffset;
@@ -54,15 +47,12 @@ public abstract class Agent implements Updatable {
         this.x = 0;
         this.y = this.x;
         
-        this.destX = 0;
-        this.destY = this.destX;
         this.rand = new Random();
         
         this.state = AgentState.ENTERINGPARK;
         
         this.currentBuilding = park.getTile(x, y).getBuilding();
         
-        this.color = new Color(rand.nextInt(255),rand.nextInt(255),rand.nextInt(255),255);
         this.xOffset = rand.nextInt(64);
         this.yOffset = rand.nextInt(64);
         this.prevPos = new Position(xOffset,yOffset);
@@ -83,6 +73,10 @@ public abstract class Agent implements Updatable {
         return staffType;
     }
     
+    public AgentState getState(){
+        return state;
+    }
+    
     public int getX(){
         return x;
     }
@@ -91,17 +85,14 @@ public abstract class Agent implements Updatable {
         return y;
     }
     
-    public Color getColor(){
-        return color;
-    }
-    
     public Position calculateExactPosition(int cellSize){
         Position res = prevPos.lerp(newPos, lerpTimer/24.0);
         return res;
     }
     
-    public void setState(AgentState newState){
-        this.state = newState;
+    protected void setState(AgentState newState){
+        statusTimer = 0;
+        state = newState;
     }
     
     protected void checkFloating(){
@@ -123,10 +114,6 @@ public abstract class Agent implements Updatable {
         currentAction = null;
     }
     
-    protected void moveTo(Position p){
-        moveTo(p.x, p.y);
-    }
-    
     protected void moveTo(int x, int y){
         prevPos = new Position(this.x*64+xOffset,this.y*64+yOffset);
         lerpTimer = 0;
@@ -146,11 +133,6 @@ public abstract class Agent implements Updatable {
         }
     }
     
-    protected void setDestination(int x, int y){
-        this.destX = x;
-        this.destY = y;
-    }
-    
     protected void remove(){
         am.removeAgent(this);
     }
@@ -167,12 +149,10 @@ public abstract class Agent implements Updatable {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Agent{name=").append(name);
-        sb.append(", x=").append(x);
-        sb.append(", y=").append(y);
-        sb.append(", destX=").append(destX);
-        sb.append(", destY=").append(destY);
-        sb.append(", state=").append(state);
+        sb.append("name=").append(name).append("\n");
+        sb.append("x=").append(x).append("\n");
+        sb.append("y=").append(y).append("\n");
+        sb.append("state=").append(state).append("\n");
         return sb.toString();
     }
 }

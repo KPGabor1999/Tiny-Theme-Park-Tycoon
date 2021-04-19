@@ -7,10 +7,11 @@ import Idlethemeparkworld.misc.utils.Range;
 import Idlethemeparkworld.model.GameManager;
 import Idlethemeparkworld.model.agent.Visitor;
 import Idlethemeparkworld.model.buildable.BuildingStatus;
+import Idlethemeparkworld.model.buildable.Queueable;
 import java.util.LinkedList;
-import java.util.PriorityQueue;
 
-public abstract class FoodStall extends Building {
+public abstract class FoodStall extends Building implements Queueable {
+
     protected LinkedList<Visitor> queue;
     protected int serviceTime;
     protected int serviceTimer;
@@ -26,8 +27,12 @@ public abstract class FoodStall extends Building {
         this.serviceTimer = 0;
         this.foodPrice = 0;
         this.foodQuality = new Range(45, 55);
-        this.drinkQuality = new Range(45, 55);
-        this.servingSize = new Range(2, 5);
+        this.drinkQuality = new Range(45, 90);
+        this.servingSize = new Range(5, 15);
+    }
+
+    public int getFoodPrice() {
+        return foodPrice;
     }
 
     public int getQueueLength() {
@@ -36,17 +41,18 @@ public abstract class FoodStall extends Building {
 
     @Override
     public int getRecommendedMax() {
-        return 10 / serviceTime;
+        return (status == BuildingStatus.OPEN || status == BuildingStatus.OPEN) ? 10 / serviceTime : 0;
     }
 
     public void setFoodPrice(int number) {
         this.foodPrice = number;
     }
 
-    public int getFoodPrice() {
-        return this.foodPrice;
+    public void setCondition(double condition) {
+        this.condition = condition;
     }
 
+    @Override
     public ArrayList<Pair<String, String>> getAllData() {
         ArrayList<Pair<String, String>> res = new ArrayList<>();
         res.add(new Pair<>("Food price: ", Integer.toString(foodPrice)));
@@ -56,23 +62,22 @@ public abstract class FoodStall extends Building {
     }
 
     //Methods for managing visitors:
+    @Override
     public void joinQueue(Visitor visitor) {
         queue.add(visitor);
     }
 
+    @Override
     public boolean isFirstInQueue(Visitor visitor) {
         return queue.peek().equals(visitor);
     }
 
+    @Override
     public void leaveQueue(Visitor visitor) {
         queue.remove(visitor);
     }
 
-    /*
-    public List<Food> getMenu() {
-        return Collections.unmodifiableList(menu);
-    }
-     */
+    @Override
     public boolean canService() {
         return serviceTimer <= 0;
     }
@@ -94,10 +99,6 @@ public abstract class FoodStall extends Building {
         }
     }
 
-    public void repair(int amount) {
-        condition += amount;
-    }
-
     private void updateCondition() {
         switch (status) {
             case OPEN:
@@ -111,13 +112,23 @@ public abstract class FoodStall extends Building {
                 break;
             case FLOATING:
                 condition -= 0.25;
-                if (condition <= 0) {
-                    status = BuildingStatus.DECAYED;
-                }
                 break;
             default:
                 break;
         }
+        if (condition <= 0) {
+            condition = 0;
+            status = BuildingStatus.DECAYED;
+        }
+    }
+
+    @Override
+    public void setStatus(BuildingStatus status) {
+        if (this.status == BuildingStatus.FLOATING) {
+            queue.clear();
+            serviceTimer = 0;
+        }
+        super.setStatus(status);
     }
 
     @Override

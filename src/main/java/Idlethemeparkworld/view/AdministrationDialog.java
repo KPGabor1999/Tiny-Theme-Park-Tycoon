@@ -364,7 +364,7 @@ public class AdministrationDialog extends JDialog {
             janitorNumberSlider.setPaintLabels(true);
             maintainerNumberLabel = new JLabel("Number of repairmen:");
             maintainerNumberSlider = new JSlider(0, 5);
-            maintainerNumberSlider.setValue(0);
+            maintainerNumberSlider.setValue(board.getGameManager().getAgentManager().getMaintainers().size());
             maintainerNumberSlider.setMajorTickSpacing(1);
             maintainerNumberSlider.setPaintTicks(true);
             maintainerNumberSlider.setPaintLabels(true);
@@ -399,14 +399,23 @@ public class AdministrationDialog extends JDialog {
 
             });
 
+            maintainerNumberSlider.addChangeListener(new ChangeListener() {
+                @Override
+                public void stateChanged(ChangeEvent event) {
+                    //A beállított érték alapján menedzseljük a takarítók listáját.
+                    JSlider slider = (JSlider) event.getSource();
+                    if (!slider.getValueIsAdjusting()) {
+                        int numberOfMaintainers = slider.getValue();
+                        //Action
+                        board.getGameManager().getAgentManager().manageMaintainers(numberOfMaintainers);
+                    }
+                }
+
+            });
+
             this.getContentPane().add(employeeSettingsPanel);
 
             this.pack();
-
-            int locationY = (int) owner.getLocation().getY() + this.getHeight() / 2;
-            int locationX = (int) owner.getLocation().getX() + this.getWidth() / 2;
-            this.setLocation(locationX, locationY);
-
             this.setVisible(true);
         }
     }

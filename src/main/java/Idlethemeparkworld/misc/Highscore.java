@@ -1,6 +1,7 @@
 package Idlethemeparkworld.misc;
 
 public class Highscore {
+
     private final String name;
     private final int score;
 
@@ -16,7 +17,7 @@ public class Highscore {
     public int getScore() {
         return score;
     }
-    
+
     @Override
     public String toString() {
         return "Highscore{" + "name=" + name + ", score=" + score + '}';

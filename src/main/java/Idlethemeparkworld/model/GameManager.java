@@ -1,6 +1,7 @@
 package Idlethemeparkworld.model;
 
 import Idlethemeparkworld.model.administration.Finance;
+import Idlethemeparkworld.model.administration.Statistics;
 import Idlethemeparkworld.view.Board;
 
 public class GameManager {
@@ -14,18 +15,18 @@ public class GameManager {
     private double updateCount;
 
     private boolean gamePaused;
+    private boolean gameOver;
 
     private static final double[] GAME_SPEEDS = {0.5, 1, 2};
     private int gameSpeed;
 
-    private double dayNightCycle;
-
     private int entranceFee;
 
-    private Park park;
-    private Time time;
-    private Finance finance;
-    private AgentManager am;
+    private final Park park;
+    private final Time time;
+    private final Finance finance;
+    private final AgentManager am;
+    private final Statistics stats;
     private Board board;
 
     public GameManager() {
@@ -34,23 +35,23 @@ public class GameManager {
         this.tickCount = 0;
         this.gamePaused = false;
         this.gameSpeed = 1;
-        this.dayNightCycle = 0;
 
-        this.park = new Park(10, 11, this);
+        this.park = new Park(10, 10, this);
         this.time = new Time();
         this.finance = new Finance(100000);
         this.am = new AgentManager(park, this);
+        this.stats = new Statistics(this);
         this.board = null;
     }
 
-    public void setBoard(Board board){
+    public void setBoard(Board board) {
         this.board = board;
     }
-    
-    public Board getBoard(){
+
+    public Board getBoard() {
         return board;
     }
-    
+
     public Park getPark() {
         return park;
     }
@@ -62,11 +63,19 @@ public class GameManager {
     public Finance getFinance() {
         return finance;
     }
-    
-    public AgentManager getAgentManager(){
+
+    public Statistics getStats() {
+        return stats;
+    }
+
+    public AgentManager getAgentManager() {
         return am;
     }
 
+    public boolean gameOver() {
+        return gameOver;
+    }
+    
     public int getEntranceFee() {
         return entranceFee;
     }
@@ -76,17 +85,21 @@ public class GameManager {
     }
 
     public void startNewGame() {
-        gamePaused = true;
+        gameOver = false;
+        unpause();
         tickCount = 0;
+        currentDeltaTime = 0;
+        gameSpeed = 1;
         initAllComponents();
         //startUpdateCycle();
         gamePaused = false;
     }
 
     private void initAllComponents() {
-        park.initializePark(10, 15, this);
+        park.initializePark(10, 10, this);
         time.reset();
         finance.init();
+        am.reset();
     }
 
     public void startUpdateCycle() {
@@ -94,6 +107,15 @@ public class GameManager {
         currentDeltaTime = 0;
         lastTime = System.nanoTime();
         updateCycle();
+    }
+    
+    public int getScore(){
+        return time.getTotalMinutes();
+    }
+    
+    public void endGame() {
+        pause();
+        gameOver = true;
     }
 
     private void updateCycle() {
@@ -108,12 +130,8 @@ public class GameManager {
                     currentDeltaTime = 0;
                 }
             }
-            
+
         }
-    }
-    
-    public void stopUpdateCycle() {
-        updateCycleRunning = false;
     }
 
     private void update(int tickStep) {
@@ -126,6 +144,10 @@ public class GameManager {
             park.update(tickCount);
             am.update(tickCount);
             time.update(tickCount);
+            stats.update(tickCount);
+        }
+        if(finance.getFunds()<=0){
+            endGame();
         }
     }
 
@@ -137,7 +159,7 @@ public class GameManager {
         if (gameSpeed < GAME_SPEEDS.length - 1) {
             gameSpeed++;
         }
-    } 
+    }
 
     public void decreaseGameSpeed() {
         if (0 < gameSpeed) {
@@ -148,7 +170,17 @@ public class GameManager {
     public double getGameSpeed() {
         return GAME_SPEEDS[gameSpeed];
     }
-
+    
+    private void pause() {
+        lastTime = System.nanoTime();
+        gamePaused = true;
+    }
+    
+    private void unpause() {
+        lastTime = System.nanoTime();
+        gamePaused = false;
+    }
+    
     public void togglePause() {
         lastTime = System.nanoTime();
         gamePaused = !gamePaused;
@@ -157,24 +189,8 @@ public class GameManager {
     public boolean isPaused() {
         return gamePaused;
     }
-    
-    public long getTickCount(){
+
+    public long getTickCount() {
         return tickCount;
-    }
-
-    //Perhaps game saving/loading and autosaving feature? *wink wink*
-    public void saveGame() {
-    }
-
-    public void saveGame(String name) {
-    }
-
-    public void loadGame() {
-    }
-
-    public void setupAutosave() {
-    }
-
-    private void autosave() {
     }
 }

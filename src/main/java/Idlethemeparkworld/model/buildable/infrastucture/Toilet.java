@@ -5,29 +5,31 @@ import java.util.ArrayList;
 import Idlethemeparkworld.misc.utils.Pair;
 import Idlethemeparkworld.model.GameManager;
 import Idlethemeparkworld.model.agent.Visitor;
+import Idlethemeparkworld.model.buildable.Queueable;
 import java.util.LinkedList;
 
-public class Toilet extends Infrastructure {
-    protected LinkedList<Visitor> waitingLine;
+public class Toilet extends Infrastructure implements Queueable {
+
+    protected LinkedList<Visitor> queue;
     protected int occupied;
     protected int capacity;
     private double cleanliness;
-    
+
     public Toilet(int x, int y, GameManager gm) {
         super(gm);
         this.maxLevel = 0;
         this.x = x;
         this.y = y;
         this.buildingType = BuildType.TOILET;
-        this.waitingLine = new LinkedList<>();
+        this.queue = new LinkedList<>();
         this.occupied = 0;
         this.capacity = 10;
         this.cleanliness = 100;
         this.value = BuildType.TOILET.getBuildCost();
     }
-    
+
     @Override
-    public int getRecommendedMax(){
+    public int getRecommendedMax() {
         return capacity;
     }
 
@@ -35,51 +37,50 @@ public class Toilet extends Infrastructure {
         return cleanliness;
     }
 
-    public void setCleanliness(double cleanliness) {
-        this.cleanliness = cleanliness;
-    }
-    
-    
-    
-    public ArrayList<Pair<String, String>> getAllData(){
+    @Override
+    public ArrayList<Pair<String, String>> getAllData() {
         ArrayList<Pair<String, String>> res = new ArrayList<>();
         res.add(new Pair<>("Capacity: ", occupied + "/" + capacity));
         res.add(new Pair<>("Cleanliness: ", String.format("%.2f", cleanliness)));
+        res.add(new Pair<>("Littering: ", String.format("%.2f", littering)));
         return res;
     }
-    
-    //Methods for managing visitors:
-        
-    public void joinLine(Visitor visitor){
-        waitingLine.add(visitor);
+
+    @Override
+    public void joinQueue(Visitor visitor) {
+        queue.add(visitor);
+    }
+
+    @Override
+    public boolean isFirstInQueue(Visitor visitor) {
+        return queue.peek().equals(visitor);
+    }
+
+    @Override
+    public void leaveQueue(Visitor visitor) {
+        queue.remove(visitor);
     }
     
-    public boolean isFirstInQueue(Visitor visitor){
-        return waitingLine.peek().equals(visitor);
+    @Override
+    public boolean canService() {
+        return occupied < capacity;
     }
-    
-    public void leaveLine(Visitor visitor){
-        waitingLine.remove(visitor);
-    }
-    
-    public boolean isThereEmptyStool(){
-        return occupied<capacity;
-    }
-    
-    public void enter(Visitor visitor){
-        waitingLine.poll();
+
+    public void enter(Visitor visitor) {
+        queue.poll();
         occupied++;
     }
-    
-    public void exit(){
+
+    public void exit() {
         occupied--;
     }
-    
-    public void decreaseHygiene(double amount){
-        cleanliness-=amount;
+
+    public void decreaseHygiene(double amount) {
+        cleanliness -= amount;
     }
-    
-    public void clean(){
-        this.cleanliness = 100;
+
+    public void clean(int amount) {
+        cleanliness -= amount;
+        cleanliness = Math.max(cleanliness, 0);
     }
 }

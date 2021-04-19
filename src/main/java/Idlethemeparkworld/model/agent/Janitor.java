@@ -10,18 +10,17 @@ import Idlethemeparkworld.model.buildable.Building;
 import Idlethemeparkworld.model.buildable.infrastucture.Infrastructure;
 import Idlethemeparkworld.model.buildable.infrastucture.Toilet;
 import Idlethemeparkworld.model.buildable.infrastucture.TrashCan;
-import java.awt.Color;
 import java.util.ArrayList;
 
-public class Janitor extends Agent implements Updatable{
-    private int salary;     //dollars per hour
-    
-    public Janitor(String name, Park park, AgentManager am){
+public class Janitor extends Agent implements Updatable {
+
+    private final int salary;     //dollars per hour
+
+    public Janitor(String name, Park park, AgentManager am) {
         super(name, park, am);
-        this.type      = AgentTypes.AgentType.STAFF;
+        this.type = AgentTypes.AgentType.STAFF;
         this.staffType = AgentTypes.StaffType.JANITOR;
-        this.color     = new Color(30,30,255,255);
-        this.salary    = 8;
+        this.salary = 8;
     }
 
     public int getSalary() {
@@ -33,9 +32,9 @@ public class Janitor extends Agent implements Updatable{
         //Randomra járkál fel alá, és ha infrastrukturális mezõre lép, kitakarítja.
         checkMove();
         statusTimer++;
-        if(tickCount % 24 == 0){
+        if (tickCount % 24 == 0) {
             checkFloating();
-            if(state != AgentInnerLogic.AgentState.FLOATING){
+            if (state != AgentInnerLogic.AgentState.FLOATING) {
                 updateState();
                 performAction(tickCount);
             } else {
@@ -43,9 +42,9 @@ public class Janitor extends Agent implements Updatable{
             }
         }
     }
-    
-    private void updateState(){
-        switch(state){
+
+    private void updateState() {
+        switch (state) {
             case ENTERINGPARK:
                 setState(AgentState.IDLE);
                 break;
@@ -60,25 +59,25 @@ public class Janitor extends Agent implements Updatable{
                 currentAction = new AgentAction(AgentActionType.STAFFCLEAN, null);
                 break;
             case FLOATING:
-                if(statusTimer>Time.convMinuteToTick(5)){
-                    remove();
+                if (statusTimer > Time.convMinuteToTick(5)) {
+                    moveTo(0,0);
                 }
                 break;
             default:
                 break;
         }
     }
-    
-    private void performAction(long tickCount){
-        if(currentAction != null){
-            switch (currentAction.getAction()){
+
+    private void performAction(long tickCount) {
+        if (currentAction != null) {
+            switch (currentAction.getAction()) {
                 case WANDER:
                     //Átlép egy környezõ mezõre, ami nem fû vagy lockedTile.
                     //Frissítjük a currentBuilding-et.
                     //Ha currentBuilding instanceof Infrastructure, STAFFCLEAN akció
                     moveToRandomNeighbourTile();
                     updateCurBuilding();
-                    if(currentBuilding instanceof Infrastructure){
+                    if (currentBuilding instanceof Infrastructure) {
                         setState(AgentState.CLEANING);
                     }
                     break;
@@ -93,22 +92,22 @@ public class Janitor extends Agent implements Updatable{
             }
         }
     }
-    
-    private void moveToRandomNeighbourTile(){
+
+    private void moveToRandomNeighbourTile() {
         ArrayList<Building> neighbours = park.getWalkableNeighbours(x, y);
-        if(neighbours.size() > 0){
+        if (neighbours.size() > 0) {
             int nextIndex = rand.nextInt(neighbours.size());
-            moveTo(neighbours.get(nextIndex).getX(),neighbours.get(nextIndex).getY());
+            moveTo(neighbours.get(nextIndex).getX(), neighbours.get(nextIndex).getY());
         }
     }
-    
-    private void clean(Building currentBuilding){
-        ((Infrastructure)currentBuilding).setLittering(0);
-        if(currentBuilding instanceof Toilet){
-            ((Toilet)currentBuilding).setCleanliness(100);
-        } else if(currentBuilding instanceof TrashCan){
-            ((TrashCan)currentBuilding).setFilled(0);
+
+    private void clean(Building currentBuilding) {
+        ((Infrastructure) currentBuilding).sweep(rand.nextInt(5));
+        if (currentBuilding instanceof Toilet) {
+            ((Toilet) currentBuilding).clean(rand.nextInt(5));
+        } else if (currentBuilding instanceof TrashCan) {
+            ((TrashCan) currentBuilding).empty();
         }
     }
-    
+
 }
