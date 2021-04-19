@@ -18,6 +18,10 @@ public abstract class Infrastructure extends Building {
         return littering;
     }
 
+    public void setLittering(double littering) {    //Only for debugging.
+        this.littering = littering;
+    }
+
     public void litter(double amount) {
         littering += amount;
     }
