@@ -3,6 +3,7 @@ package Idlethemeparkworld.model;
 import Idlethemeparkworld.misc.pathfinding.PathFinding;
 import Idlethemeparkworld.model.buildable.Building;
 import Idlethemeparkworld.model.buildable.BuildingStatus;
+import Idlethemeparkworld.model.buildable.attraction.Attraction;
 import Idlethemeparkworld.model.buildable.food.FoodStall;
 import Idlethemeparkworld.model.buildable.infrastucture.Entrance;
 import Idlethemeparkworld.model.buildable.infrastucture.Infrastructure;
@@ -232,6 +233,25 @@ public class Park implements Updatable {
             if (buildings.get(i).getInfo() != BuildType.LOCKEDTILE
                     && (buildings.get(i).getInfo() == type)) {
                 ((FoodStall) buildings.get(i)).setFoodPrice(price);
+            }
+        }
+    }
+    
+    public int checkTicketPrice(BuildType type) {
+        for (int i = 0; i < buildings.size(); i++) {
+            if (buildings.get(i).getInfo() != BuildType.LOCKEDTILE
+                    && (buildings.get(i).getInfo() == type)) {
+                return ((Attraction) buildings.get(i)).getEntryFee();
+            }
+        }
+        return 0;
+    }
+
+    public void updateTicketPrice(BuildType type, int price) {
+        for (int i = 0; i < buildings.size(); i++) {
+            if (buildings.get(i).getInfo() != BuildType.LOCKEDTILE
+                    && (buildings.get(i).getInfo() == type)) {
+                ((Attraction) buildings.get(i)).setEntryFee(price);
             }
         }
     }
