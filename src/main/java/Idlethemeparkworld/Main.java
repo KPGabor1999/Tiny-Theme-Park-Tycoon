@@ -107,7 +107,7 @@ public class Main extends JFrame {
                 frame.setVisible(true);
             }
         });
-        
+
         JMenuItem visitors = new JMenuItem(new AbstractAction("Visitors") {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -159,10 +159,10 @@ public class Main extends JFrame {
             BuildType.HOTDOGSTAND.getName() + " (" + BuildType.HOTDOGSTAND.getBuildCost() + ")",
             BuildType.BURGERJOINT.getName() + " (" + BuildType.BURGERJOINT.getBuildCost() + ")",
             BuildType.CAROUSEL.getName() + " (" + BuildType.CAROUSEL.getBuildCost() + ")",
-            BuildType.FERRISWHEEL.getName() + " (" + BuildType.FERRISWHEEL.getBuildCost() + ")",
             BuildType.SWINGINGSHIP.getName() + " (" + BuildType.SWINGINGSHIP.getBuildCost() + ")",
-            BuildType.ROLLERCOASTER.getName() + " (" + BuildType.ROLLERCOASTER.getBuildCost() + ")",
-            BuildType.HAUNTEDMANSION.getName() + " (" + BuildType.HAUNTEDMANSION.getBuildCost() + ")",}));
+            BuildType.HAUNTEDMANSION.getName() + " (" + BuildType.HAUNTEDMANSION.getBuildCost() + ")",
+            BuildType.FERRISWHEEL.getName() + " (" + BuildType.FERRISWHEEL.getBuildCost() + ")",
+            BuildType.ROLLERCOASTER.getName() + " (" + BuildType.ROLLERCOASTER.getBuildCost() + ")",}));
 
         buildButton.setText("Build");
         administrationButton.setText("Administration");
@@ -270,11 +270,11 @@ public class Main extends JFrame {
                 }
             }
         };
-        
+
         gameEndTimer = new Timer(500, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(gm.gameOver()){
+                if (gm.gameOver()) {
                     String name = JOptionPane.showInputDialog(Main.this, "Game over! \n Please enter a name:");
                     setControlPanel(false);
                     highscores.putHighscore(name, gm.getScore());
@@ -296,17 +296,17 @@ public class Main extends JFrame {
     public InformationBar getInfoBar() {
         return infoBar;
     }
-    
+
     private void setControlPanel(boolean isEnabled) {
         controlPanel.setEnabled(isEnabled);
 
         Component[] components = controlPanel.getComponents();
 
-        for(int i = 0; i < components.length; i++) {
+        for (int i = 0; i < components.length; i++) {
             components[i].setEnabled(isEnabled);
         }
     }
-    
+
     private void startNewGame() {
         gm.startNewGame();
     }

@@ -17,7 +17,7 @@ public class Carousel extends Attraction {
         this.fun = 12;
         this.capacity = 10;
         this.runtime = 3;
-        this.entryFee = 15;
+        this.entryFee = 10;
     }
 
     @Override

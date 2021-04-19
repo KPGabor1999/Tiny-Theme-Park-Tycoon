@@ -24,12 +24,12 @@ public enum BuildType {
     HOTDOGSTAND(2, 1, "Hot Dog stand", "", 15000, Assets.Texture.HOTDOGSTAND, 50, 20),
     BURGERJOINT(2, 1, "Burger joint", "", 25000, Assets.Texture.BURGERJOINT, 50, 20),
     CAROUSEL(2, 2, "Carousel", "", 16000, Assets.Texture.CAROUSEL, 20, 20),
-    FERRISWHEEL(3, 3, "Ferriswheel", "", 36000, Assets.Texture.FERRISWHEEL, 78, 78),
-    SWINGINGSHIP(3, 3, "Swinging ship", "", 30000, Assets.Texture.SWINGINGSHIP, 10, 20),
-    ROLLERCOASTER(3, 2, "Roller coaster", "", 48000, Assets.Texture.ROLLERCOASTER, 90, 90),
-    HAUNTEDMANSION(3, 3, "Haunted mansion", "", 64000, Assets.Texture.HAUNTEDMANSION, 80, 80),
+    SWINGINGSHIP(3, 2, "Swinging ship", "", 32000, Assets.Texture.SWINGINGSHIP, 10, 20),
+    HAUNTEDMANSION(3, 2, "Haunted mansion", "", 32000, Assets.Texture.HAUNTEDMANSION, 80, 80),
+    FERRISWHEEL(3, 3, "Ferriswheel", "", 48000, Assets.Texture.FERRISWHEEL, 78, 78),
+    ROLLERCOASTER(3, 3, "Roller coaster", "", 60000, Assets.Texture.ROLLERCOASTER, 90, 90),
     ENTRANCE(1, 1, "Entrance", "", 0, Assets.Texture.GATE, 0, 0),
-    LOCKEDTILE(1, 1, "Locked", "Unlock to use it as a building ground.", 7000, Assets.Texture.LOCKED, 0, 0);
+    LOCKEDTILE(1, 1, "Locked", "Unlock to use it as a building ground.", 5000, Assets.Texture.LOCKED, 0, 0);
 
     private final int width, length;
     private final String name, description;

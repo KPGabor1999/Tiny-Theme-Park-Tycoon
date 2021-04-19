@@ -209,7 +209,7 @@ public class AdministrationDialog extends JDialog {
                 carouselNotBuilt.setForeground(Color.RED);
                 ticketPriceSettingsPanel.add(carouselNotBuilt);
             } else {
-                carouselPriceSlider = new JSlider(0, 30);
+                carouselPriceSlider = new JSlider(0, board.getGameManager().getPark().checkTicketPrice(CAROUSEL)*2);
                 carouselPriceSlider.setMajorTickSpacing(10);
                 carouselPriceSlider.setMinorTickSpacing(1);
                 carouselPriceSlider.setPaintTicks(true);
@@ -239,7 +239,7 @@ public class AdministrationDialog extends JDialog {
                 shipNotBuilt.setForeground(Color.RED);
                 ticketPriceSettingsPanel.add(shipNotBuilt);
             } else {
-                shipPriceSlider = new JSlider(0, 30);
+                shipPriceSlider = new JSlider(0, board.getGameManager().getPark().checkTicketPrice(SWINGINGSHIP)*2);
                 shipPriceSlider.setMajorTickSpacing(10);
                 shipPriceSlider.setMinorTickSpacing(1);
                 shipPriceSlider.setPaintTicks(true);
@@ -258,6 +258,36 @@ public class AdministrationDialog extends JDialog {
                     }
                 });
             }
+            
+            //Haunted mansion
+            hauntedPriceLabel = new JLabel("Haunted mansion prices:");
+            hauntedPriceLabel.setBorder(new EmptyBorder(5, 0, 5, 0));               
+            ticketPriceSettingsPanel.add(hauntedPriceLabel);
+            int hauntedCheck = board.getGameManager().getPark().checkTicketPrice(HAUNTEDMANSION);
+            if (hauntedCheck == 0) {
+                hauntedNotBuilt = new JLabel("Build a Haunted mansion");
+                hauntedNotBuilt.setForeground(Color.RED);
+                ticketPriceSettingsPanel.add(hauntedNotBuilt);
+            } else {
+                hauntedPriceSlider = new JSlider(0, board.getGameManager().getPark().checkTicketPrice(HAUNTEDMANSION)*2);
+                hauntedPriceSlider.setMajorTickSpacing(10);
+                hauntedPriceSlider.setMinorTickSpacing(1);
+                hauntedPriceSlider.setPaintTicks(true);
+                hauntedPriceSlider.setPaintLabels(true);
+                hauntedPriceSlider.setValue(board.getGameManager().getPark().checkTicketPrice(HAUNTEDMANSION));
+                ticketPriceSettingsPanel.add(hauntedPriceSlider);
+                //Slider Listener
+                hauntedPriceSlider.addChangeListener(new ChangeListener() {
+                    public void stateChanged(ChangeEvent evt) {
+                        JSlider slider = (JSlider) evt.getSource();
+                        if (!slider.getValueIsAdjusting()) {
+                            int value = slider.getValue();
+                            //Action
+                            board.getGameManager().getPark().updateTicketPrice(HAUNTEDMANSION, value);
+                        }
+                    }
+                });
+            }
 
             //Ferriswheel
             ferrisPriceLabel = new JLabel("Ferriswheel prices:");
@@ -269,7 +299,7 @@ public class AdministrationDialog extends JDialog {
                 ferrisNotBuilt.setForeground(Color.RED);
                 ticketPriceSettingsPanel.add(ferrisNotBuilt);
             } else {
-                ferrisPriceSlider = new JSlider(0, 30);
+                ferrisPriceSlider = new JSlider(0, board.getGameManager().getPark().checkTicketPrice(FERRISWHEEL)*2);
                 ferrisPriceSlider.setMajorTickSpacing(10);
                 ferrisPriceSlider.setMinorTickSpacing(1);
                 ferrisPriceSlider.setPaintTicks(true);
@@ -299,7 +329,7 @@ public class AdministrationDialog extends JDialog {
                 rollerNotBuilt.setForeground(Color.RED);
                 ticketPriceSettingsPanel.add(rollerNotBuilt);
             } else {
-                rollerPriceSlider = new JSlider(0, 30);
+                rollerPriceSlider = new JSlider(0, board.getGameManager().getPark().checkTicketPrice(ROLLERCOASTER)*2);
                 rollerPriceSlider.setMajorTickSpacing(10);
                 rollerPriceSlider.setMinorTickSpacing(1);
                 rollerPriceSlider.setPaintTicks(true);
@@ -318,37 +348,7 @@ public class AdministrationDialog extends JDialog {
                     }
                 });
             }
-
-            //Haunted mansion
-            hauntedPriceLabel = new JLabel("Haunted mansion prices:");
-            hauntedPriceLabel.setBorder(new EmptyBorder(5, 0, 5, 0));               
-            ticketPriceSettingsPanel.add(hauntedPriceLabel);
-            int hauntedCheck = board.getGameManager().getPark().checkTicketPrice(HAUNTEDMANSION);
-            if (hauntedCheck == 0) {
-                hauntedNotBuilt = new JLabel("Build a Haunted mansion");
-                hauntedNotBuilt.setForeground(Color.RED);
-                ticketPriceSettingsPanel.add(hauntedNotBuilt);
-            } else {
-                hauntedPriceSlider = new JSlider(0, 30);
-                hauntedPriceSlider.setMajorTickSpacing(10);
-                hauntedPriceSlider.setMinorTickSpacing(1);
-                hauntedPriceSlider.setPaintTicks(true);
-                hauntedPriceSlider.setPaintLabels(true);
-                hauntedPriceSlider.setValue(board.getGameManager().getPark().checkTicketPrice(HAUNTEDMANSION));
-                ticketPriceSettingsPanel.add(hauntedPriceSlider);
-                //Slider Listener
-                hauntedPriceSlider.addChangeListener(new ChangeListener() {
-                    public void stateChanged(ChangeEvent evt) {
-                        JSlider slider = (JSlider) evt.getSource();
-                        if (!slider.getValueIsAdjusting()) {
-                            int value = slider.getValue();
-                            //Action
-                            board.getGameManager().getPark().updateTicketPrice(HAUNTEDMANSION, value);
-                        }
-                    }
-                });
-            }
-
+            
             //Employee
             employeesLabel = new JLabel("Employees");
             employeesLabel.setAlignmentX(CENTER_ALIGNMENT);
