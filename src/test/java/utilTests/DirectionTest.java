@@ -1,11 +1,12 @@
 package utilTests;
 
 import Idlethemeparkworld.misc.utils.Direction;
+import java.util.Arrays;
 import static org.junit.Assert.assertEquals;
-
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
-public class LevelTest {
+public class DirectionTest {
   
     private Direction dir;
     
@@ -31,5 +32,11 @@ public class LevelTest {
         dir = dir.turnOpposite();
         
         assertEquals(dir, Direction.UP);
+    }
+    
+    @Test
+    public void randomTest(){
+        dir = Direction.randomDirection();
+        assertTrue(Arrays.asList(Direction.values()).contains(dir));
     }
 }

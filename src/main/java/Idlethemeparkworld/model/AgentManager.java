@@ -166,8 +166,6 @@ public class AgentManager implements Updatable {
     public void removeAgent(Agent agent){
         if(agent instanceof Visitor){
             visitors.remove((Visitor)agent);
-        } else if(agent instanceof Janitor){
-            janitors.remove((Janitor)agent);
         }
     }
     

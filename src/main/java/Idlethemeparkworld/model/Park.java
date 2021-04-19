@@ -1,7 +1,6 @@
 package Idlethemeparkworld.model;
 
 import Idlethemeparkworld.misc.pathfinding.PathFinding;
-import Idlethemeparkworld.misc.utils.Position;
 import Idlethemeparkworld.model.buildable.Building;
 import Idlethemeparkworld.model.buildable.BuildingStatus;
 import Idlethemeparkworld.model.buildable.food.FoodStall;
@@ -92,15 +91,6 @@ public class Park implements Updatable {
 
     public ArrayList<Building> getBuildings() {
         return buildings;
-    }
-
-    public Building findBuilding(String type) {
-        for (int i = 0; i < buildings.size(); i++) {
-            if (buildings.get(i).getInfo().getName().equals(type)) {
-                return buildings.get(i);
-            }
-        }
-        return null;
     }
 
     public boolean canBuild(BuildType type, int x, int y) {
@@ -194,7 +184,7 @@ public class Park implements Updatable {
     }
 
     public Building build(BuildType type, int x, int y, boolean force) {
-        if (canBuild(type, x, y) || force) {
+        if (force || canBuild(type, x, y)) {
             Building newBuilding = null;
             try {
                 Class buildingClass = BuildType.GetClass(type);
@@ -202,7 +192,7 @@ public class Park implements Updatable {
                 Constructor cons = buildingClass.getConstructor(paramType);
                 newBuilding = (Building) cons.newInstance(x, y, gm);
             } catch (Exception e) {
-                e.printStackTrace();
+                return null;
             }
             buildings.add(newBuilding);
             setAreaToBuilding(x, y, type.getLength(), type.getWidth(), newBuilding);
