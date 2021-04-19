@@ -1,3 +1,5 @@
+package agenttest;
+
 import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.Park;
 import Idlethemeparkworld.model.Tile;
@@ -44,30 +46,30 @@ public class JanitorTest{
         assertEquals(IDLE, janitor.getState());
         janitor.update(0);
         assertEquals(CLEANING, janitor.getState());
-        //Várd meg még kitakarítja a bejáratot, majd ellenõrizd, hogy tényleg tiszta lett-e.
+        //Várd meg még kitakarítja a bejáratot, majd ellenõrizd, hogy tényleg tisztább lett-e.
         janitor.update(0);
-        assertEquals(0, (int)((Entrance)currentBuilding).getLittering());
+        assertTrue((int)((Entrance)currentBuilding).getLittering() < 100);
         //Kitakarítja a járdát is?
         park.build(BuildType.PAVEMENT, 0, 0, true);
         currentBuilding = park.getTile(0,0).getBuilding();
         ((Infrastructure)currentBuilding).setLittering(100);
         janitor.update(0);
         janitor.update(0);
-        assertEquals(0, (int)((Pavement)currentBuilding).getLittering());
+        assertTrue((int)((Pavement)currentBuilding).getLittering() < 100);
         //Kitakarítja a mosdót is?
         park.build(BuildType.TOILET, 0, 0, true);
         currentBuilding = park.getTile(0,0).getBuilding();
         ((Infrastructure)currentBuilding).setLittering(100);
         janitor.update(0);
         janitor.update(0);
-        assertEquals(0, (int)((Toilet)currentBuilding).getLittering());
+        assertTrue((int)((Toilet)currentBuilding).getLittering() < 100);
         //Kiüríti a szemeteseket is?
         park.build(BuildType.TRASHCAN, 0, 0, true);
         currentBuilding = park.getTile(0,0).getBuilding();
         ((Infrastructure)currentBuilding).setLittering(100);
         janitor.update(0);
         janitor.update(0);
-        assertEquals(0, (int)((TrashCan)currentBuilding).getLittering());
+        assertEquals(0, (int)((TrashCan)currentBuilding).getFilled());
         //Ellenõrizd, hogy takarítás után visszaáll-e WANDERING-be.
         assertEquals(WANDERING, janitor.getState());
     }

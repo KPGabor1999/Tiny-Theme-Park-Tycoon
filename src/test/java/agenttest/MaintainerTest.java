@@ -1,3 +1,5 @@
+package agenttest;
+
 import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.Park;
 import static Idlethemeparkworld.model.agent.AgentInnerLogic.AgentState.ENTERINGPARK;
