@@ -26,12 +26,13 @@ public class RollerCoaster extends Attraction {
             case 1:
                 this.fun *= 1.5;
                 this.capacity += 4;
-                this.runtime -= 1;
+                this.runtime -= 0.5;
                 this.upgradeCost *= 2;
                 break;
             case 2:
                 this.fun *= 1.5;
                 this.capacity += 4;
+                this.runtime -= 0.5;
                 break;
             default:
                 break;

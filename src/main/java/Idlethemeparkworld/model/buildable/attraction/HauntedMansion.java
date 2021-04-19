@@ -13,8 +13,8 @@ public class HauntedMansion extends Attraction {
         this.buildingType = BuildType.HAUNTEDMANSION;
         this.upkeepCost = 15;
         this.fun = 15;
-        this.capacity = 30;
-        this.runtime = 9;
+        this.capacity = 20;
+        this.runtime = 6;
         this.entryFee = 15;
         this.baseEntryFee = 15;
         this.upgradeCost = this.value * 2;
