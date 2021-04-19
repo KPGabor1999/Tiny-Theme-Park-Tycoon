@@ -49,13 +49,14 @@ public class Main extends JFrame {
     Font custom;
     private final InformationBar infoBar;
     private final JComboBox buildingChooser;
-    private JPanel controlPanel;
+    private final JPanel controlPanel;
     private AdministrationDialog adminDialog;
     private Board board;
     private Timer gameEndTimer;
 
     GameManager gm;
-    Highscores highscores;
+    Highscores campaignHighscores;
+    Highscores sandboxHighscores;
 
     public Board getBoard() {
         return board;
@@ -88,12 +89,13 @@ public class Main extends JFrame {
             }
         });
 
-        this.highscores = new Highscores(10);
+        this.campaignHighscores = new Highscores(10, true, "campaign leaderboards");
+        this.sandboxHighscores = new Highscores(10, false, "sandbox leaderboards");
         //highscores.reset();
         JMenuItem menuHighScores = new JMenuItem(new AbstractAction("Leaderboards") {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new HighscoreWindow(highscores.getHighscores(), Main.this);
+                new HighscoreWindow(campaignHighscores.getHighscores(), sandboxHighscores.getHighscores(), Main.this);
             }
         });
 
@@ -293,7 +295,7 @@ public class Main extends JFrame {
                 if(gm.gameOver()){
                     String name = JOptionPane.showInputDialog(Main.this, "Game over! \n Please enter a name:");
                     setControlPanel(false);
-                    highscores.putHighscore(name, gm.getScore());
+                    sandboxHighscores.putHighscore(name, gm.getScore());
                     gameEndTimer.stop();
                 }
             }
