@@ -693,10 +693,15 @@ public class Visitor extends Agent {
     private void moveOnPath(){
         if(path.size() > 0){
             Position nextPos = path.remove(0);
-            if(path.isEmpty()) {
-                lastEnter = new Position(x, y);
+            if(park.getTile(nextPos.x, nextPos.y).isEmpty()){
+                happiness -= 5;
+                resetAction();
+            } else {
+                if(path.isEmpty()) {
+                    lastEnter = new Position(x, y);
+                }
+                moveTo(nextPos.x, nextPos.y);
             }
-            moveTo(nextPos.x, nextPos.y);
         }
     }
     
@@ -715,7 +720,7 @@ public class Visitor extends Agent {
     private Building findType(Class clazz){
         ArrayList<Building> buildings = new ArrayList<>();
         park.getBuildings().forEach((b) -> {
-            if(clazz.isInstance(b)){
+            if(clazz.isInstance(b) && (b.getStatus() == BuildingStatus.OPEN || b.getStatus() == BuildingStatus.RUNNING)){
                 buildings.add(b);
             }
         });
