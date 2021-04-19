@@ -1,3 +1,4 @@
+import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.Park;
 import Idlethemeparkworld.model.Tile;
 import static Idlethemeparkworld.model.agent.AgentInnerLogic.AgentState.*;
@@ -5,6 +6,9 @@ import Idlethemeparkworld.model.agent.Janitor;
 import Idlethemeparkworld.model.buildable.Building;
 import Idlethemeparkworld.model.buildable.infrastucture.Entrance;
 import Idlethemeparkworld.model.buildable.infrastucture.Infrastructure;
+import Idlethemeparkworld.model.buildable.infrastucture.Pavement;
+import Idlethemeparkworld.model.buildable.infrastucture.Toilet;
+import Idlethemeparkworld.model.buildable.infrastucture.TrashCan;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -18,33 +22,53 @@ import static org.junit.Assert.*;
  */
 public class JanitorTest{
     Park park;
-    Building entrance;
+    Building currentBuilding;
     Janitor janitor;
     
-    @BeforeClass
+    @Before
     public void initPark(){
         //Inicializálj egy parkot, amiben csak egy Entrance van.
         park = new Park(1,1,null);
         //Az Entrance legyen teleszemetelve.
-        entrance = park.getTile(0,0).getBuilding();
-        ((Entrance)entrance).setLittering(100);
+        currentBuilding = park.getTile(0,0).getBuilding();
+        ((Entrance)currentBuilding).setLittering(100);
         //Oda rakd le a takarítót.
-        janitor = new Janitor(null, null, null);
+        janitor = new Janitor(null, park, null);
     }
     
+    @Test
     public void correctLifeCycle(){
         //Update-eld, amíg járkálni nem kezd: ENTERINGPARK -> IDLE -> WANDERING
         assertEquals(ENTERINGPARK, janitor.getState());
         janitor.update(0);
         assertEquals(IDLE, janitor.getState());
         janitor.update(0);
-        assertEquals(WANDERING, janitor.getState());
+        assertEquals(CLEANING, janitor.getState());
         //Várd meg még kitakarítja a bejáratot, majd ellenõrizd, hogy tényleg tiszta lett-e.
         janitor.update(0);
-        assertEquals(0, ((Entrance)entrance).getLittering());
-        //Ellenõrizd, hogy a takarító visszaállt-e WANDERING-be.
+        assertEquals(0, (int)((Entrance)currentBuilding).getLittering());
+        //Kitakarítja a járdát is?
+        park.build(BuildType.PAVEMENT, 0, 0, true);
+        currentBuilding = park.getTile(0,0).getBuilding();
+        ((Infrastructure)currentBuilding).setLittering(100);
+        janitor.update(0);
+        janitor.update(0);
+        assertEquals(0, (int)((Pavement)currentBuilding).getLittering());
+        //Kitakarítja a mosdót is?
+        park.build(BuildType.TOILET, 0, 0, true);
+        currentBuilding = park.getTile(0,0).getBuilding();
+        ((Infrastructure)currentBuilding).setLittering(100);
+        janitor.update(0);
+        janitor.update(0);
+        assertEquals(0, (int)((Toilet)currentBuilding).getLittering());
+        //Kiüríti a szemeteseket is?
+        park.build(BuildType.TRASHCAN, 0, 0, true);
+        currentBuilding = park.getTile(0,0).getBuilding();
+        ((Infrastructure)currentBuilding).setLittering(100);
+        janitor.update(0);
+        janitor.update(0);
+        assertEquals(0, (int)((TrashCan)currentBuilding).getLittering());
+        //Ellenõrizd, hogy takarítás után visszaáll-e WANDERING-be.
         assertEquals(WANDERING, janitor.getState());
     }
-    
-    //Teszteljünk minden infrastruktúra típusra?
 }
