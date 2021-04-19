@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import Idlethemeparkworld.misc.utils.Pair;
 import Idlethemeparkworld.model.GameManager;
 import Idlethemeparkworld.model.agent.Visitor;
+import Idlethemeparkworld.model.buildable.BuildingStatus;
 import Idlethemeparkworld.model.buildable.Queueable;
 import java.util.LinkedList;
 
@@ -76,7 +77,12 @@ public class Toilet extends Infrastructure implements Queueable {
     }
 
     public void decreaseHygiene(double amount) {
-        cleanliness -= amount;
+        cleanliness -= 5;
+        if(cleanliness <= 0){
+            cleanliness = 0;
+            this.setStatus(BuildingStatus.DECAYED);
+            gm.getBoard().drawParkRender();
+        }
     }
 
     public void clean(int amount) {

@@ -156,6 +156,7 @@ public abstract class Attraction extends Building implements Updatable, Queueabl
         if (condition <= 0) {
             condition = 0;
             status = BuildingStatus.DECAYED;
+            gm.getBoard().drawParkRender();
         }
     }
 

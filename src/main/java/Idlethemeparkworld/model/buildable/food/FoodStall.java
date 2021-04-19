@@ -119,6 +119,7 @@ public abstract class FoodStall extends Building implements Queueable {
         if (condition <= 0) {
             condition = 0;
             status = BuildingStatus.DECAYED;
+            gm.getBoard().drawParkRender();
         }
     }
 

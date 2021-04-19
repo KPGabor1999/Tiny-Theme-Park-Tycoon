@@ -692,7 +692,8 @@ public class Visitor extends Agent {
     private void moveOnPath(){
         if(path.size() > 0){
             Position nextPos = path.remove(0);
-            if(park.getTile(nextPos.x, nextPos.y).isEmpty()){
+            if(park.getTile(nextPos.x, nextPos.y).isEmpty()
+                    || park.getTile(nextPos.x, nextPos.y).getBuilding().getStatus() == BuildingStatus.DECAYED){
                 addHappiness(-5);
                 resetAction();
             } else {
