@@ -22,6 +22,7 @@ import javax.swing.WindowConstants;
 import Idlethemeparkworld.view.AdministrationDialog;
 import Idlethemeparkworld.view.Board;
 import Idlethemeparkworld.view.InformationBar;
+import Idlethemeparkworld.view.popups.CreditPanel;
 import Idlethemeparkworld.view.popups.StatsPanel;
 import Idlethemeparkworld.view.popups.VisitorsPanel;
 import java.awt.Component;
@@ -119,6 +120,19 @@ public class Main extends JFrame {
                 frame.setVisible(true);
             }
         });
+        
+        JMenuItem credit = new JMenuItem(new AbstractAction("Credits") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFrame frame = new JFrame("Credits");
+                frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                frame.getContentPane().add(new CreditPanel());
+                frame.pack();
+                frame.setResizable(false);
+                frame.setLocationRelativeTo(Main.this);
+                frame.setVisible(true);
+            }
+        });
 
         JMenuItem menuGameExit = new JMenuItem(new AbstractAction("Exit") {
             @Override
@@ -132,6 +146,7 @@ public class Main extends JFrame {
         menuGame.add(statistics);
         menuGame.add(visitors);
         menuGame.addSeparator();
+        menuGame.add(credit);
         menuGame.add(menuGameExit);
         menuBar.add(menuGame);
         setJMenuBar(menuBar);
