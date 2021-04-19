@@ -1,6 +1,5 @@
 package Idlethemeparkworld.model.agent;
 
-import Idlethemeparkworld.misc.utils.Pair;
 import Idlethemeparkworld.misc.utils.Position;
 import Idlethemeparkworld.model.AgentManager;
 import Idlethemeparkworld.model.BuildType;
@@ -56,6 +55,10 @@ public class Visitor extends Agent {
     private final int skinID;
     
     private long tickCount;
+    
+    public static void resetIDCounter(){
+        ID = 0;
+    }
 
     public Visitor(String name, int startingHappiness, Park park, AgentManager am) {
         super(name, park, am);
@@ -229,14 +232,23 @@ public class Visitor extends Agent {
         }
     }
 
-    private boolean conditionToThought(double condition, int lowerThreshold, long tickCount, AgentThoughts positive, AgentThoughts negative, double leaveHappinessMultiplier) {
+    private boolean conditionToThought(double condition, int lowerThreshold, long tickCount, AgentThoughts positive, AgentThoughts negative, double leaveHappinessMultiplier, boolean homeOnNegative) {
         if (condition < lowerThreshold) {
             if (condition <= 0) {
                 happiness *= leaveHappinessMultiplier;
                 insertThought(AgentThoughts.GOHOME, null, tickCount);
                 return true;
             } else {
-                insertThought(negative, null, tickCount);
+                if(homeOnNegative){
+                    if(rand.nextInt(10) > 4){
+                        insertThought(negative, null, tickCount);
+                    } else {
+                        happiness *= leaveHappinessMultiplier;
+                        insertThought(AgentThoughts.GOHOME, null, tickCount);
+                    }
+                } else {
+                    insertThought(negative, null, tickCount);
+                }
                 return true;
             }
         } else if (95 < condition) {
@@ -254,9 +266,9 @@ public class Visitor extends Agent {
             }
         }
         
-        boolean hungerUrgent = conditionToThought(hunger, AGENT_HUNGER_WARNING_THRESHOLD, tickCount, AgentThoughts.NOTHUNGRY, AgentThoughts.HUNGRY, 0.6);
-        boolean thirstUrgent = conditionToThought(thirst, AGENT_THIRST_WARNING_THRESHOLD, tickCount, AgentThoughts.NOTTHIRSTY, AgentThoughts.THIRSTY, 0.75);
-        boolean energyUrgent = conditionToThought(energy, AGENT_ENERGY_WARNING_THRESHOLD, tickCount, AgentThoughts.FEELINGGREAT, AgentThoughts.TIRED, 0.9);
+        boolean hungerUrgent = conditionToThought(hunger, AGENT_HUNGER_WARNING_THRESHOLD, tickCount, AgentThoughts.NOTHUNGRY, AgentThoughts.HUNGRY, 0.6, false);
+        boolean thirstUrgent = conditionToThought(thirst, AGENT_THIRST_WARNING_THRESHOLD, tickCount, AgentThoughts.NOTTHIRSTY, AgentThoughts.THIRSTY, 0.75, false);
+        boolean energyUrgent = conditionToThought(energy, AGENT_ENERGY_WARNING_THRESHOLD, tickCount, AgentThoughts.FEELINGGREAT, AgentThoughts.TIRED, 0.95, true);
         boolean anyUrgent = hungerUrgent || thirstUrgent || energyUrgent;
         
         if (toilet < AGENT_TOILET_WARNING_THRESHOLD) {
@@ -276,12 +288,12 @@ public class Visitor extends Agent {
             case LEAVINGPARK:
             case WANDERING:
             case WALKING:
-                energy -= 0.35;
+                energy -= 0.45;
                 hunger -= 0.35;
                 thirst -= 0.35;
                 break;
             case ONRIDE:
-                energy -= 0.25;
+                energy -= 0.35;
                 hunger -= 0.25;
                 thirst -= 0.25;
                 break;
@@ -298,7 +310,7 @@ public class Visitor extends Agent {
             default:
                 break;
         }
-        energy -= 0.1;
+        energy -= 0.25;
         hunger -= 0.45;
         thirst -= 0.35;
         toilet -= 0.5;
@@ -307,34 +319,16 @@ public class Visitor extends Agent {
     private void performAction(long tickCount) {
         if (currentAction != null) {
             switch (currentAction.getAction()) {
-                case ENTERPARK:
-                    enterCycle();
-                    break;
-                case EAT:
-                    eatCycle();
-                    break;
-                case SIT:
-                    sitCycle();
-                    break;
-                case WANDER:
-                    moveToRandomNeighbourPavement();
-                    break;
-                case TOILET:
-                    toiletCycle();
-                    break;
-                case LEAVEPARK:
-                    leaveParkCycle();
-                    break;
-                case RIDE:
-                    attractionCycle();
-                    break;
-                case LITTER:
-                    litterCycle();
-                    break;
-                case NONE:
-                    break;
-                default:
-                    break;
+                case ENTERPARK: enterCycle(); break;
+                case EAT: eatCycle(); break;
+                case SIT: sitCycle(); break;
+                case WANDER: moveToRandomNeighbourPavement(); break;
+                case TOILET: toiletCycle(); break;
+                case LEAVEPARK: leaveParkCycle(); break;
+                case RIDE: attractionCycle(); break;
+                case LITTER: litterCycle(); break;
+                case NONE: break;
+                default: break;
             }
         }
     }
@@ -462,11 +456,11 @@ public class Visitor extends Agent {
                 tlt = ((Toilet) currentBuilding);
                 if (statusTimer > statusMaxTimer) {
                     checkLittering();
-                    if(tlt.getCleanliness() < 1){
+                    if(tlt.getCleanliness() > 85){
                         if(rand.nextInt(10) < 3){
                             insertThought(AgentThoughts.CLEAN, null);
                         }
-                    } else if(tlt.getCleanliness() > 10){
+                    } else if(tlt.getCleanliness() < 25){
                         insertThought(AgentThoughts.TOOMUCHLITTER, null);
                     }
                     toilet = 100;
@@ -711,8 +705,10 @@ public class Visitor extends Agent {
             if(rand.nextInt(10) < 3){
                 insertThought(AgentThoughts.CLEAN, null);
             }
-        } else if(((Infrastructure)currentBuilding).getLittering() > 10){
-            insertThought(AgentThoughts.TOOMUCHLITTER, null);
+        } else if(((Infrastructure)currentBuilding).getLittering() > 7){
+            if(rand.nextInt(10) < 4){
+                insertThought(AgentThoughts.TOOMUCHLITTER, null);
+            }
         }
     }
 

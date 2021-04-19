@@ -283,7 +283,7 @@ public class Park implements Updatable {
     }
 
     @Override
-    public void update(long tickCount) {
+    public synchronized void update(long tickCount) {
         buildings.forEach(b -> b.update(tickCount));
         if(tickCount % Time.convMinuteToTick(15) == 0){
             gm.getFinance().pay(500);

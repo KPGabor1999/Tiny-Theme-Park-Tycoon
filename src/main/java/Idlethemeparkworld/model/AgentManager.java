@@ -99,6 +99,7 @@ public class AgentManager implements Updatable {
     }
     
     public void reset(){
+        Visitor.resetIDCounter();
         this.visitorProbability = 0;
         this.visitors.clear();
         this.janitors.clear();
