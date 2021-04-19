@@ -6,7 +6,7 @@ import Idlethemeparkworld.model.Time;
 import Idlethemeparkworld.model.Updatable;
 
 public abstract class Buildable implements Updatable {
-
+   
     protected BuildType buildingType;
     protected int upkeepCost;
     protected int upkeepTimer;

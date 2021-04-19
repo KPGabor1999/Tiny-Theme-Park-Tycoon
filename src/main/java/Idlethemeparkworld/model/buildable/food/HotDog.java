@@ -14,7 +14,7 @@ public class HotDog extends FoodStall {
         this.buildingType = BuildType.HOTDOGSTAND;
         this.serviceTime = Time.convMinuteToTick(1);
         this.foodPrice = 10;
-        this.foodQuality.setRange(10, 15);
+        this.foodQuality.setRange(40, 75);
         this.upkeepCost = 10;
         this.upgradeCost = this.value * 2;
     }

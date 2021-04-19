@@ -33,9 +33,7 @@ public class Notification extends JDialog {
 
         this.pack();
 
-        int xLocation = this.getOwner().getX() + this.getOwner().getWidth() / 2 - this.getWidth() / 2;
-        int yLocation = this.getOwner().getY() + this.getOwner().getHeight() / 2 - this.getHeight() / 2;
-        this.setLocation(xLocation, yLocation);
+        this.setLocationRelativeTo(this.getOwner());
 
         this.setVisible(true);
     }

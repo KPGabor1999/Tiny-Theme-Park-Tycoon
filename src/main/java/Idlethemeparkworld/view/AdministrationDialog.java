@@ -227,11 +227,6 @@ public class AdministrationDialog extends JDialog {
             this.getContentPane().add(employeeSettingsPanel);
 
             this.pack();
-
-            int locationY = (int) owner.getLocation().getY() + this.getHeight() / 2;
-            int locationX = (int) owner.getLocation().getX() + this.getWidth() / 2;
-            this.setLocation(locationX, locationY);
-
             this.setVisible(true);
         }
     }

@@ -10,6 +10,7 @@ import Idlethemeparkworld.model.buildable.BuildingStatus;
 import Idlethemeparkworld.misc.utils.Pair;
 import Idlethemeparkworld.model.buildable.Queueable;
 import java.util.ArrayList;
+import java.util.Random;
 
 public abstract class Attraction extends Building implements Updatable, Queueable {
 
@@ -23,10 +24,13 @@ public abstract class Attraction extends Building implements Updatable, Queueabl
     protected ArrayList<Visitor> queue;
     protected ArrayList<Visitor> onRide;
 
+    protected Random rand;
+    
     public Attraction(GameManager gm) {
         super(gm);
         this.queue = new ArrayList<>();
         this.onRide = new ArrayList<>();
+        this.rand = new Random();
     }
 
     public int getQueueLength() {
@@ -51,7 +55,7 @@ public abstract class Attraction extends Building implements Updatable, Queueabl
 
     @Override
     public int getRecommendedMax() {
-        return (status == BuildingStatus.OPEN || status == BuildingStatus.OPEN) ? capacity * 2 : 0;
+        return (status == BuildingStatus.OPEN || status == BuildingStatus.OPEN) ? (int)Math.floor(capacity * 1.5) : 0;
     }
 
     public ArrayList<Pair<String, String>> getAllData() {
@@ -83,7 +87,12 @@ public abstract class Attraction extends Building implements Updatable, Queueabl
 
     private void finish() {
         Range r = new Range((int) Math.floor(fun * condition / 100), fun);
-        int rideEvent = r.getNextRandom();
+        int rideEvent = 0;
+        if(rand.nextInt(100) < condition*1.5){
+            rideEvent = r.getNextRandom();
+        } else {
+            rideEvent = (rand.nextInt(15)+10)*(-1);
+        }
         for (int i = 0; i < onRide.size(); i++) {
             onRide.get(i).sendRideEvent(rideEvent);
         }

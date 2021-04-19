@@ -26,11 +26,6 @@ public class Range {
         return rand.nextInt(high - low + 1) + low;
     }
 
-    public void add(Range r) {
-        low += r.low;
-        high += r.high;
-    }
-
     public void add(int a, int b) {
         low += a;
         high += b;

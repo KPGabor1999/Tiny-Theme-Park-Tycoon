@@ -50,7 +50,7 @@ public class Park implements Updatable {
         maxGuests = 0;
 
         tiles = new Tile[rows][columns];
-        pf = new PathFinding(tiles);
+        pf = new PathFinding(tiles, this);
         reachable = new HashSet<>();
 
         //1.Make sure all tiles are empty
@@ -72,6 +72,10 @@ public class Park implements Updatable {
             }
         }
     }
+    
+    public PathFinding getPathfinding(){
+        return pf;
+    }
 
     public int getWidth() {
         return tiles[0].length;
@@ -87,15 +91,6 @@ public class Park implements Updatable {
 
     public ArrayList<Building> getBuildings() {
         return buildings;
-    }
-
-    public Building findBuilding(String type) {
-        for (int i = 0; i < buildings.size(); i++) {
-            if (buildings.get(i).getInfo().getName().equals(type)) {
-                return buildings.get(i);
-            }
-        }
-        return null;
     }
 
     public boolean canBuild(BuildType type, int x, int y) {
@@ -147,10 +142,18 @@ public class Park implements Updatable {
         return res;
     }
 
+    public ArrayList<Building> getNonPavementOrEntranceNeighbours(int x, int y) {
+        ArrayList<Building> res = new ArrayList<>();
+        ArrayList<Tile> neighbours = getNeighbours(x, y, 1, 1);
+        neighbours.removeIf(n -> n.getBuilding() == null || n.getBuilding() instanceof Pavement || n.getBuilding() instanceof Entrance || n.getBuilding() instanceof LockedTile || n.getBuilding().getStatus() == BuildingStatus.DECAYED);
+        neighbours.forEach(n -> res.add(n.getBuilding()));
+        return res;
+    }
+    
     public ArrayList<Building> getNonPavementNeighbours(int x, int y) {
         ArrayList<Building> res = new ArrayList<>();
         ArrayList<Tile> neighbours = getNeighbours(x, y, 1, 1);
-        neighbours.removeIf(n -> (n.getBuilding() == null || n.getBuilding() instanceof Pavement || n.getBuilding() instanceof Entrance) || n.getBuilding().getStatus() == BuildingStatus.DECAYED);
+        neighbours.removeIf(n -> n.getBuilding() == null || n.getBuilding() instanceof Pavement || n.getBuilding() instanceof LockedTile || n.getBuilding().getStatus() == BuildingStatus.DECAYED);
         neighbours.forEach(n -> res.add(n.getBuilding()));
         return res;
     }
@@ -180,8 +183,8 @@ public class Park implements Updatable {
         }
     }
 
-    public void build(BuildType type, int x, int y, boolean force) {
-        if (canBuild(type, x, y) || force) {
+    public Building build(BuildType type, int x, int y, boolean force) {
+        if (force || canBuild(type, x, y)) {
             Building newBuilding = null;
             try {
                 Class buildingClass = BuildType.GetClass(type);
@@ -189,12 +192,14 @@ public class Park implements Updatable {
                 Constructor cons = buildingClass.getConstructor(paramType);
                 newBuilding = (Building) cons.newInstance(x, y, gm);
             } catch (Exception e) {
-                e.printStackTrace();
+                return null;
             }
             buildings.add(newBuilding);
             setAreaToBuilding(x, y, type.getLength(), type.getWidth(), newBuilding);
             updateBuildings();
+            return newBuilding;
         }
+        return null;
     }
 
     private void updateBuildings() {
@@ -268,13 +273,16 @@ public class Park implements Updatable {
     }
 
     @Override
-    public void update(long tickCount) {
+    public synchronized void update(long tickCount) {
         buildings.forEach(b -> b.update(tickCount));
+        if(tickCount % Time.convMinuteToTick(15) == 0){
+            gm.getFinance().pay(500);
+        }
     }
 
     private void calculateParkRating() {
         rating = 9;
-        double sum = 0;
+        //double sum = 0;
         double negative = 0;
         for (int i = 0; i < buildings.size(); i++) {
             //sum += buildings.get(i).getRating();
@@ -291,10 +299,8 @@ public class Park implements Updatable {
         negative *= 0.05;
         negative = Math.min(negative, 2);
         rating -= negative;
-        rating = (rating + gm.getAgentManager().getVisitorHappinessRating()) / 2.0;
-        rating -= 3;
-        rating += Math.min(gm.getAgentManager().getVisitorCount() / 200.0, 3.0);
         rating = Math.min(rating, 10);
+        rating = Math.max(rating, 0);
     }
 
     private void calculateValue() {

@@ -2,6 +2,7 @@ package Idlethemeparkworld.model.buildable;
 
 import java.util.ArrayList;
 import Idlethemeparkworld.misc.utils.Pair;
+import Idlethemeparkworld.misc.utils.Position;
 import Idlethemeparkworld.model.GameManager;
 
 public abstract class Building extends Buildable {
@@ -13,7 +14,9 @@ public abstract class Building extends Buildable {
     protected int maxLevel;
     protected int upgradeCost;
     protected double condition;
-
+    
+    protected boolean visited;
+ 
     public Building(GameManager gm) {
         super(gm);
         this.status = BuildingStatus.OPEN;
@@ -30,6 +33,19 @@ public abstract class Building extends Buildable {
         return status;
     }
 
+    public Position getPos(){
+        return new Position(x, y);
+    }
+    
+    public boolean isVisited() {
+        return visited;
+    }
+
+    public void setVisited(boolean visited) {
+        this.visited = visited;
+    }
+    
+    
     public int getX() {
         return x;
     }

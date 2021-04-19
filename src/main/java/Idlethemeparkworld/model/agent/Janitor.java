@@ -10,12 +10,11 @@ import Idlethemeparkworld.model.buildable.Building;
 import Idlethemeparkworld.model.buildable.infrastucture.Infrastructure;
 import Idlethemeparkworld.model.buildable.infrastucture.Toilet;
 import Idlethemeparkworld.model.buildable.infrastucture.TrashCan;
-import java.awt.Color;
 import java.util.ArrayList;
 
 public class Janitor extends Agent implements Updatable {
 
-    private int salary;     //dollars per hour
+    private final int salary;     //dollars per hour
 
     public Janitor(String name, Park park, AgentManager am) {
         super(name, park, am);
@@ -103,9 +102,9 @@ public class Janitor extends Agent implements Updatable {
     }
 
     private void clean(Building currentBuilding) {
-        ((Infrastructure) currentBuilding).sweep();
+        ((Infrastructure) currentBuilding).sweep(rand.nextInt(5));
         if (currentBuilding instanceof Toilet) {
-            ((Toilet) currentBuilding).sweep();
+            ((Toilet) currentBuilding).clean(rand.nextInt(5));
         } else if (currentBuilding instanceof TrashCan) {
             ((TrashCan) currentBuilding).empty();
         }

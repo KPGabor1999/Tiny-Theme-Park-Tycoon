@@ -8,8 +8,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class AgentManager implements Updatable {
-    //Will store these in a file in the future
-    private static final String[] NAMES = {
+    private static final String[] FIRST_NAMES = {
         "Creola",
         "Josue",
         "Bradford",
@@ -38,17 +37,50 @@ public class AgentManager implements Updatable {
         "Caron",
         "Vrenda"
     };
-    private static final int AGENT_UPDATE_TICK = 12;
+    private static final String[] LAST_NAMES = {
+        "Yates",
+        "Foley",
+        "Greene",
+        "Donaldson",
+        "Lowe",
+        "Moreno",
+        "Lucero",
+        "Fleming",
+        "Ayala",
+        "Melton",
+        "Chang",
+        "Underwood",
+        "Campos",
+        "Munoz",
+        "Saunders",
+        "Moyer",
+        "Case",
+        "Watkins",
+        "Trevino",
+        "Finley",
+        "Mccarthy",
+        "Massey",
+        "Perry",
+        "Holland",
+        "Lynch",
+        "Silva",
+        "Ellison",
+        "Wang",
+        "Frederick",
+        "Thomas"
+    };
     
     private double visitorProbability;
-    private Park park;
-    private GameManager gm;
+    private final Park park;
+    private final GameManager gm;
     
     private Random rand;
     
     private ArrayList<Visitor> visitors;
     private ArrayList<Janitor> janitors;
     private ArrayList<Maintainer> maintainers;
+    
+    private Visitor activeVisitor;
     
     public AgentManager(Park park, GameManager gm){
         this.gm = gm;
@@ -62,10 +94,12 @@ public class AgentManager implements Updatable {
         this.visitors = new ArrayList<>();
         this.janitors = new ArrayList<>(5);
         this.maintainers = new ArrayList<>(5);
+        this.activeVisitor = null;
         spawnVisitor();
     }
     
     public void reset(){
+        Visitor.resetIDCounter();
         this.visitorProbability = 0;
         this.visitors.clear();
         this.janitors.clear();
@@ -78,11 +112,19 @@ public class AgentManager implements Updatable {
     }
     
     private String getRandomName(){
-        return NAMES[rand.nextInt(NAMES.length)];
+        return FIRST_NAMES[rand.nextInt(FIRST_NAMES.length)] + " " + LAST_NAMES[rand.nextInt(LAST_NAMES.length)];
     }
             
     private int getRandomHappiness(){
         return rand.nextInt(50)+35;
+    }
+
+    public Visitor getActiveVisitor() {
+        return activeVisitor;
+    }
+
+    public void setActiveVisitor(Visitor activeVisitor) {
+        this.activeVisitor = activeVisitor;
     }
     
     public double getVisitorHappinessRating(){
@@ -124,8 +166,6 @@ public class AgentManager implements Updatable {
     public void removeAgent(Agent agent){
         if(agent instanceof Visitor){
             visitors.remove((Visitor)agent);
-        } else if(agent instanceof Janitor){
-            janitors.remove((Janitor)agent);
         }
     }
     
@@ -137,6 +177,14 @@ public class AgentManager implements Updatable {
     
     public int getVisitorCount(){
         return visitors.size();
+    }
+    
+    public Visitor getVisitor(int id){
+        Visitor res = null;
+        for (int i = 0; i < visitors.size() && res == null; i++) {
+            res = visitors.get(i).getID() == id ? visitors.get(i) : null;
+        }
+        return res;
     }
     
     public ArrayList<Visitor> getVisitors(){

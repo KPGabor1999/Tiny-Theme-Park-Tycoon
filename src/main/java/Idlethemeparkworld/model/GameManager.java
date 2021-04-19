@@ -97,7 +97,6 @@ public class GameManager {
 
     private void initAllComponents() {
         park.initializePark(10, 10, this);
-        System.out.println("resetting");
         time.reset();
         finance.init();
         am.reset();
