@@ -67,7 +67,7 @@ public class Park implements Updatable {
         //3. Install locked tiles
         for (int row = 0; row < tiles.length; row++) {
             for (int column = 0; column < tiles[0].length; column++) {
-                if (row > 5 || column > 5) {
+                if (row > 10 || column > 5) {
                     build(BuildType.LOCKEDTILE, column, row, true);
                 }
             }
@@ -103,9 +103,17 @@ public class Park implements Updatable {
             return false;
         }
     }
+    
+    private boolean checkLegalArea(int x, int y, int width, int height) {
+        return (0 <= x && x+width < getWidth())
+                && (0 <= y && y+height < getHeight());
+    }
 
     private boolean checkEmptyArea(int x, int y, int width, int height) {
         boolean isEmpty = true;
+        if(!checkLegalArea(x, y, width, height)) {
+            return false;
+        }
         for (int i = y; i < y + height; i++) {
             for (int j = x; j < x + width; j++) {
                 isEmpty = isEmpty && tiles[i][j].isEmpty();
