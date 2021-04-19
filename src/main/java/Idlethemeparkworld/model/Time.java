@@ -10,6 +10,7 @@ public class Time implements Updatable {
         this.ticks = 0;
     }
 
+    @Override
     public void update(long tickCount) {
         ticks++;
     }
@@ -40,6 +41,13 @@ public class Time implements Updatable {
 
     public static int convMinuteToTick(double min) {
         return (int) Math.round(min * MINUTE_DURATION);
+    }
+    
+    public static String minutesToString(int mins) {
+        int days = (mins/60) / 24;
+        int hours = (mins/60) % 24;
+        int minutes = mins % 60;
+        return String.format("Day %d - %02d:%02d", days, hours, minutes);
     }
 
     public String toStringShort() {

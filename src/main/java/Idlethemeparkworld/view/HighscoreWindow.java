@@ -1,6 +1,7 @@
 package Idlethemeparkworld.view;
 
 import Idlethemeparkworld.misc.Highscore;
+import Idlethemeparkworld.model.Time;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JDialog;
@@ -11,19 +12,30 @@ import javax.swing.JTable;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
 import javax.swing.WindowConstants;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 public class HighscoreWindow extends JDialog {
 
+    static class CustomRenderer extends DefaultTableCellRenderer {
+        
+        public CustomRenderer() { super(); }
+        
+        @Override
+        public void setValue(Object value) {
+            setText((value == null) ? "" : Time.minutesToString((int) value));
+        }
+    };
+    
     public HighscoreWindow(ArrayList<Highscore> campaignHighscores, ArrayList<Highscore> sandboxHighscores, JFrame parent) {
         super(parent, true);
         
         JTabbedPane tabbedPane = new JTabbedPane();
         
-        
         JTable table1 = new JTable(new HighscoreTable(campaignHighscores));
         table1.setFillsViewportHeight(true);
+        table1.getColumn("Score").setCellRenderer(new CustomRenderer());
 
         TableRowSorter<TableModel> sorter1 = new TableRowSorter<>(table1.getModel());
         List<RowSorter.SortKey> sortKeys1 = new ArrayList<>();
@@ -34,6 +46,7 @@ public class HighscoreWindow extends JDialog {
         
         JTable table2 = new JTable(new HighscoreTable(sandboxHighscores));
         table2.setFillsViewportHeight(true);
+        table2.getColumn("Score").setCellRenderer(new CustomRenderer());
 
         TableRowSorter<TableModel> sorter2 = new TableRowSorter<>(table2.getModel());
         List<RowSorter.SortKey> sortKeys2 = new ArrayList<>();

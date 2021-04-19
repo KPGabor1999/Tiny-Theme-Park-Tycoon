@@ -22,6 +22,15 @@ public class HighscoreTable extends AbstractTableModel {
     public int getColumnCount() {
         return 2;
     }
+    
+    @Override
+    public Class getColumnClass(int column)
+    {
+        if (column == 0)
+            return String.class;
+        else
+            return Integer.class;
+    }
 
     @Override
     public Object getValueAt(int r, int c) {
