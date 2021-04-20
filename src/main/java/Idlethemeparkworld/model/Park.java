@@ -206,7 +206,9 @@ public class Park implements Updatable {
             buildings.add(newBuilding);
             setAreaToBuilding(x, y, type.getLength(), type.getWidth(), newBuilding);
             updateBuildings();
-            gm.checkWin();
+            if(gm != null){
+                gm.checkWin();
+            }
             return newBuilding;
         }
         return null;

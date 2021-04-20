@@ -106,9 +106,11 @@ public class Janitor extends Agent implements Updatable {
     }
 
     private void clean(Building currentBuilding) {
-        ((Infrastructure) currentBuilding).sweep(rand.nextInt(5));
+        //((Infrastructure) currentBuilding).sweep(rand.nextInt(5));
+        ((Infrastructure) currentBuilding).sweep(100);
         if (currentBuilding instanceof Toilet) {
-            ((Toilet) currentBuilding).clean(rand.nextInt(5));
+            //((Toilet) currentBuilding).clean(rand.nextInt(5));
+            ((Toilet) currentBuilding).clean(100);
         } else if (currentBuilding instanceof TrashCan) {
             ((TrashCan) currentBuilding).empty();
         }

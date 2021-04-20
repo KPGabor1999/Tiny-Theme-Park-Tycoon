@@ -19,6 +19,5 @@ public class AgentManagerTest {
         assertEquals(gm.getAgentManager().getMaintainers().size(), 0);
         gm.getAgentManager().update(0);
         gm.getAgentManager().reset();
-        gm.getAgentManager().reset();
     }
 }
