@@ -35,7 +35,6 @@ import javax.swing.Timer;
 public class Board extends JPanel implements MouseWheelListener {
 
     private final GameManager gm;
-    private Park park;
     private final int CELL_SIZE = 64;
     private double scale;
     private int scaledCellSize;
@@ -53,7 +52,6 @@ public class Board extends JPanel implements MouseWheelListener {
     public Board(GameManager gm, Main main, JPanel gameArea) {
         this.gm = gm;
         
-        this.park = gm.getPark();
         this.buildMode = false;
         this.type = null;
         this.pos = new int[2];
@@ -86,7 +84,7 @@ public class Board extends JPanel implements MouseWheelListener {
                         if (type == BuildType.PAVEMENT) {
                             dragged = true;
                             if (canBuild[0]) {
-                                park.build(type, pos[0], pos[1], false);
+                                gm.getPark().build(type, pos[0], pos[1], false);
                                 gm.getFinance().pay(type.getBuildCost());
                                 main.getInfoBar().updateInfobar();
                                 drawParkRender();
@@ -130,14 +128,14 @@ public class Board extends JPanel implements MouseWheelListener {
                 Position mPos = retrieveCoords(e);
                 if (buildMode) {
                     if (!(SwingUtilities.isRightMouseButton(e)) && canBuild[0]) {
-                        park.build(type, pos[0], pos[1], false);
+                        gm.getPark().build(type, pos[0], pos[1], false);
                         gm.getFinance().pay(type.getBuildCost());
                         main.getInfoBar().updateInfobar();
                         drawParkRender();
                     }
                     Board.this.exitBuildMode();
                 } else {
-                    if (park.getTile(mPos.x, mPos.y).getBuilding() != null) {
+                    if (gm.getPark().getTile(mPos.x, mPos.y).getBuilding() != null) {
                         JFrame parentFrame = (JFrame) getRootPane().getParent();
                         BuildingOptionsDialog buildingOptions = new BuildingOptionsDialog(parentFrame, Board.this, mPos.x, mPos.y);
                         buildingOptions.setLocationRelativeTo(Board.this);
@@ -179,7 +177,7 @@ public class Board extends JPanel implements MouseWheelListener {
         }
         this.scale = scale;
         this.scaledCellSize = (int)Math.floor(this.CELL_SIZE * this.scale);
-        resizeMap(park.getHeight(), park.getWidth());
+        resizeMap(gm.getPark().getHeight(), gm.getPark().getWidth());
         this.parkRender = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_RGB);
         scaledAgentSize = new Dimension((int)Math.floor(6*scale), (int)Math.floor(18*scale));
         Dimension d = getPreferredSize();
@@ -194,13 +192,13 @@ public class Board extends JPanel implements MouseWheelListener {
     }
     
     private boolean legalPos(Position pos){
-        return 0 <= pos.x && pos.x < park.getWidth() && 0 <= pos.y && pos.y < park.getHeight();
+        return 0 <= pos.x && pos.x < gm.getPark().getWidth() && 0 <= pos.y && pos.y < gm.getPark().getHeight();
     }
 
     private void updateGhost(MouseEvent e) {
         Position mPos = retrieveCoords(e);
         if(legalPos(mPos)){
-            canBuild[0] = park.canBuild(type, mPos.x, mPos.y);
+            canBuild[0] = gm.getPark().canBuild(type, mPos.x, mPos.y);
             canBuild[0] = canBuild[0] && gm.getFinance().canAfford(type.getBuildCost());
             pos[0] = mPos.x;
             pos[1] = mPos.y;
@@ -210,8 +208,8 @@ public class Board extends JPanel implements MouseWheelListener {
 
     private Position retrieveCoords(MouseEvent e) {
         Dimension sizes = Board.this.getSize();
-        int x = Math.floorDiv(e.getX(), sizes.width / park.getWidth());
-        int y = Math.floorDiv(e.getY(), sizes.height / park.getHeight());
+        int x = Math.floorDiv(e.getX(), sizes.width / gm.getPark().getWidth());
+        int y = Math.floorDiv(e.getY(), sizes.height / gm.getPark().getHeight());
         
         return new Position(x, y);
     }
@@ -253,15 +251,15 @@ public class Board extends JPanel implements MouseWheelListener {
     public void drawParkRender(){
         Graphics2D gr = parkRender.createGraphics();
         
-        for (int i = 0; i < park.getHeight(); i++) {
-            for (int j = 0; j < park.getWidth(); j++) {
-                if(park.getTile(i, j).getBuilding() == null){
+        for (int i = 0; i < gm.getPark().getHeight(); i++) {
+            for (int j = 0; j < gm.getPark().getWidth(); j++) {
+                if(gm.getPark().getTile(i, j).getBuilding() == null){
                     gr.drawImage(Assets.Texture.GRASS.getAsset(), i * scaledCellSize, j * scaledCellSize, scaledCellSize, scaledCellSize, null);
                 }
             }
         }
         
-        ArrayList<Building> buildings = park.getBuildings();
+        ArrayList<Building> buildings = gm.getPark().getBuildings();
         for (int i = 0; i < buildings.size(); i++) {
             int x = buildings.get(i).getX();
             int y = buildings.get(i).getY();

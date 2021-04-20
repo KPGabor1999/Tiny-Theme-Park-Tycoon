@@ -90,7 +90,7 @@ public class Park implements Updatable {
         return tiles[y][x];
     }
 
-    public ArrayList<Building> getBuildings() {
+    public synchronized ArrayList<Building> getBuildings() {
         return buildings;
     }
 
@@ -105,8 +105,8 @@ public class Park implements Updatable {
     }
     
     private boolean checkLegalArea(int x, int y, int width, int height) {
-        return (0 <= x && x+width < getWidth())
-                && (0 <= y && y+height < getHeight());
+        return (0 <= x && x+width-1 < getWidth())
+                && (0 <= y && y+height-1 < getHeight());
     }
 
     private boolean checkEmptyArea(int x, int y, int width, int height) {
@@ -192,7 +192,7 @@ public class Park implements Updatable {
         }
     }
 
-    public Building build(BuildType type, int x, int y, boolean force) {
+    public synchronized Building build(BuildType type, int x, int y, boolean force) {
         if (force || canBuild(type, x, y)) {
             Building newBuilding = null;
             try {
@@ -206,6 +206,7 @@ public class Park implements Updatable {
             buildings.add(newBuilding);
             setAreaToBuilding(x, y, type.getLength(), type.getWidth(), newBuilding);
             updateBuildings();
+            gm.checkWin();
             return newBuilding;
         }
         return null;
@@ -264,7 +265,7 @@ public class Park implements Updatable {
         }
     }
 
-    public void demolish(int x, int y) {
+    public synchronized void demolish(int x, int y) {
         (this.tiles[y][x]).unsetBuilding();
 
         int demolitionIndex = 0;

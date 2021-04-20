@@ -298,6 +298,21 @@ public class Main extends JFrame {
                     sandboxHighscores.putHighscore(name, gm.getScore());
                     gameEndTimer.stop();
                 }
+                if(gm.gameWon()){
+                    String name = JOptionPane.showInputDialog(Main.this, "You have completed the campaign! \n Please enter a name:");
+                    setControlPanel(false);
+                    campaignHighscores.putHighscore(name, gm.getScore());
+                    int result = JOptionPane.showConfirmDialog(Main.this,"Do you want to continue in sandbox mode?", "Sandbox mode",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE);
+                    if(result == JOptionPane.YES_OPTION){
+                        setControlPanel(true);
+                        gm.enableSandbox();
+                        gm.unFreeze();
+                    } else {
+                        gameEndTimer.stop();
+                    } 
+                }
             }
         });
         gameEndTimer.start();
