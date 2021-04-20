@@ -172,8 +172,10 @@ public class Board extends JPanel implements MouseWheelListener {
         Rectangle view = null;
         if(viewPort != null){
             view = viewPort.getViewRect();
-            view.x = (int)Math.floor(view.x*(scale/this.scale));
-            view.y = (int)Math.floor(view.y*(scale/this.scale));
+            Position middle = new Position(view.x+view.width/2, view.y+view.height/2);
+            Position newMiddle = new Position((int)Math.floor(middle.x*(scale/this.scale)) ,(int)Math.floor(middle.y*(scale/this.scale)));
+            view.x = newMiddle.x - view.width/2;
+            view.y = newMiddle.y - view.height/2;
         }
         this.scale = scale;
         this.scaledCellSize = (int)Math.floor(this.CELL_SIZE * this.scale);
