@@ -5,12 +5,14 @@ import java.util.ArrayList;
 import Idlethemeparkworld.misc.utils.Pair;
 import Idlethemeparkworld.misc.utils.Range;
 import Idlethemeparkworld.model.GameManager;
+import Idlethemeparkworld.model.agent.Maintainer;
 import Idlethemeparkworld.model.agent.Visitor;
 import Idlethemeparkworld.model.buildable.BuildingStatus;
 import Idlethemeparkworld.model.buildable.Queueable;
+import Idlethemeparkworld.model.buildable.Repairable;
 import java.util.LinkedList;
 
-public abstract class FoodStall extends Building implements Queueable {
+public abstract class FoodStall extends Building implements Queueable, Repairable {
 
     protected LinkedList<Visitor> queue;
     protected int serviceTime;
@@ -19,6 +21,7 @@ public abstract class FoodStall extends Building implements Queueable {
     protected Range foodQuality;
     protected Range drinkQuality;
     protected Range servingSize;
+    protected double condition;
 
     protected FoodStall(GameManager gm) {
         super(gm);
@@ -29,6 +32,7 @@ public abstract class FoodStall extends Building implements Queueable {
         this.foodQuality = new Range(45, 55);
         this.drinkQuality = new Range(45, 90);
         this.servingSize = new Range(5, 15);
+        this.condition = 100;
     }
 
     public int getFoodPrice() {
@@ -47,7 +51,18 @@ public abstract class FoodStall extends Building implements Queueable {
     public void setFoodPrice(int number) {
         this.foodPrice = number;
     }
+    
+    @Override
+    public boolean shouldRepair(){
+        return condition < 90;
+    }
+    
+    @Override
+    public double getCondition(){
+        return condition;
+    }   
 
+    @Override
     public void setCondition(double condition) {
         this.condition = condition;
     }
@@ -58,6 +73,8 @@ public abstract class FoodStall extends Building implements Queueable {
         res.add(new Pair<>("Food price: ", Integer.toString(foodPrice)));
         res.add(new Pair<>("Food quality: ", "(" + foodQuality.getLow() + "-" + foodQuality.getHigh() + ")"));
         res.add(new Pair<>("Upkeep cost: ", Integer.toString(upkeepCost)));
+        res.add(new Pair<>("Condition: ", String.format("%.2f", condition)));
+        res.add(new Pair<>("In queue: ", Integer.toString(queue.size())));
         return res;
     }
 
@@ -102,19 +119,22 @@ public abstract class FoodStall extends Building implements Queueable {
     private void updateCondition() {
         switch (status) {
             case OPEN:
-                condition -= 0.02;
+                condition -= 1;
                 break;
             case CLOSED:
-                condition -= 0.04;
+                condition -= 2;
                 break;
             case INACTIVE:
                 condition -= 0.1;
                 break;
             case FLOATING:
-                condition -= 0.25;
+                condition -= 4;
                 break;
             default:
                 break;
+        }
+        if(condition < 35) {
+            Maintainer.alertOfCriticalBuilding(this);
         }
         if (condition <= 0) {
             condition = 0;

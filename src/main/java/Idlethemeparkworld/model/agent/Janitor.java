@@ -45,13 +45,28 @@ public class Janitor extends Agent implements Updatable {
     
     private static void addAction(AgentAction action) {
         if (!actionQueue.contains(action)) {
-            
             actionQueue.add(action);
+            System.out.println(action.getSubject().getInfo());
         }
     }
     
     public static void alertOfCriticalBuilding(Building building){
         addAction(new AgentAction(AgentActionType.STAFFCLEAN, building));
+    }
+    
+    private void checkActionQueue(){
+        if(actionQueue.isEmpty()){
+            setState(AgentInnerLogic.AgentState.WANDERING);
+        } else {
+            currentAction = actionQueue.pop();
+            Building building = currentAction.getSubject();
+            if(building == null){
+                currentAction = null;
+            } else {
+                path = park.getPathfinding().getPath(new Position(x,y), building);
+                setState(AgentInnerLogic.AgentState.WALKING);
+            }
+        }
     }
 
     private void updateState() {
@@ -60,38 +75,30 @@ public class Janitor extends Agent implements Updatable {
                 setState(AgentState.IDLE);
                 break;
             case IDLE:
-                if(actionQueue.isEmpty()){
-                    setState(AgentState.WANDERING);
-                } else {
-                    System.out.println("Action queue not empty");
-                    currentAction = actionQueue.pop();
-                    Building building = currentAction.getSubject();
-                    if(building == null){
-                        currentAction = null;
-                    } else {
-                        System.out.println("building found");
-                        path = park.getPathfinding().getPath(new Position(x,y), building);
-                        setState(AgentState.WALKING);
-                    }
-                }
+                checkActionQueue();
                 break;
             case WANDERING:
-                ArrayList<Building> bs = park.getNonPavementOrEntranceNeighbours(x, y);
-                bs.removeIf(b -> !(b instanceof Infrastructure));
-                moveToRandomNeighbourTile();
-                if (currentBuilding instanceof Infrastructure && ((Infrastructure)currentBuilding).shouldClean()) {
-                    setState(AgentState.CLEANING);
+                checkActionQueue();
+                if(this.state != AgentState.WALKING){
+                    moveToRandomNeighbourTile();
+                    if (currentBuilding instanceof Infrastructure && ((Infrastructure)currentBuilding).shouldClean()) {
+                        statusMaxTimer = Time.convMinuteToTick(rand.nextInt(4)+1);
+                        setState(AgentState.CLEANING);
+                    }
                 }
                 break;
             case WALKING:
                 moveOnPath();
                 if (path.isEmpty() && currentBuilding instanceof Infrastructure) {
+                    statusMaxTimer = Time.convMinuteToTick(rand.nextInt(4)+1);
                     setState(AgentState.CLEANING);
                 }
                 break;
             case CLEANING:
-                clean(currentBuilding);
-                resetAction();
+                if(statusTimer > statusMaxTimer){
+                    clean(currentBuilding);
+                    resetAction();
+                }
                 break;
             case FLOATING:
                 if (statusTimer > Time.convMinuteToTick(5)) {
@@ -109,6 +116,7 @@ public class Janitor extends Agent implements Updatable {
             int nextIndex = rand.nextInt(neighbours.size());
             moveTo(neighbours.get(nextIndex).getX(), neighbours.get(nextIndex).getY());
         }
+        updateCurBuilding();
     }
 
     private void clean(Building currentBuilding) {
