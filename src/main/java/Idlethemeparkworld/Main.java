@@ -22,6 +22,7 @@ import javax.swing.WindowConstants;
 import Idlethemeparkworld.view.AdministrationDialog;
 import Idlethemeparkworld.view.Board;
 import Idlethemeparkworld.view.InformationBar;
+import Idlethemeparkworld.view.popups.CreditPanel;
 import Idlethemeparkworld.view.popups.StatsPanel;
 import Idlethemeparkworld.view.popups.VisitorsPanel;
 import java.awt.Component;
@@ -48,13 +49,14 @@ public class Main extends JFrame {
     Font custom;
     private final InformationBar infoBar;
     private final JComboBox buildingChooser;
-    private JPanel controlPanel;
+    private final JPanel controlPanel;
     private AdministrationDialog adminDialog;
     private Board board;
     private Timer gameEndTimer;
 
     GameManager gm;
-    Highscores highscores;
+    Highscores campaignHighscores;
+    Highscores sandboxHighscores;
 
     public Board getBoard() {
         return board;
@@ -87,12 +89,13 @@ public class Main extends JFrame {
             }
         });
 
-        this.highscores = new Highscores(10);
+        this.campaignHighscores = new Highscores(10, true, "campaign leaderboards");
+        this.sandboxHighscores = new Highscores(10, false, "sandbox leaderboards");
         //highscores.reset();
         JMenuItem menuHighScores = new JMenuItem(new AbstractAction("Leaderboards") {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new HighscoreWindow(highscores.getHighscores(), Main.this);
+                new HighscoreWindow(campaignHighscores.getHighscores(), sandboxHighscores.getHighscores(), Main.this);
             }
         });
 
@@ -119,6 +122,19 @@ public class Main extends JFrame {
                 frame.setVisible(true);
             }
         });
+        
+        JMenuItem credit = new JMenuItem(new AbstractAction("Credits") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFrame frame = new JFrame("Credits");
+                frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                frame.getContentPane().add(new CreditPanel());
+                frame.pack();
+                frame.setResizable(false);
+                frame.setLocationRelativeTo(Main.this);
+                frame.setVisible(true);
+            }
+        });
 
         JMenuItem menuGameExit = new JMenuItem(new AbstractAction("Exit") {
             @Override
@@ -132,6 +148,7 @@ public class Main extends JFrame {
         menuGame.add(statistics);
         menuGame.add(visitors);
         menuGame.addSeparator();
+        menuGame.add(credit);
         menuGame.add(menuGameExit);
         menuBar.add(menuGame);
         setJMenuBar(menuBar);
@@ -225,6 +242,7 @@ public class Main extends JFrame {
 
         JPanel gameArea = new JPanel();
         board = new Board(gm, this, gameArea);
+        gm.setBoard(board);
 
         Dimension d = board.getPreferredSize();
         d.height *= 1.5;
@@ -277,8 +295,23 @@ public class Main extends JFrame {
                 if (gm.gameOver()) {
                     String name = JOptionPane.showInputDialog(Main.this, "Game over! \n Please enter a name:");
                     setControlPanel(false);
-                    highscores.putHighscore(name, gm.getScore());
+                    sandboxHighscores.putHighscore(name, gm.getScore());
                     gameEndTimer.stop();
+                }
+                if(gm.gameWon()){
+                    String name = JOptionPane.showInputDialog(Main.this, "You have completed the campaign! \n Please enter a name:");
+                    setControlPanel(false);
+                    campaignHighscores.putHighscore(name, gm.getScore());
+                    int result = JOptionPane.showConfirmDialog(Main.this,"Do you want to continue in sandbox mode?", "Sandbox mode",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE);
+                    if(result == JOptionPane.YES_OPTION){
+                        setControlPanel(true);
+                        gm.enableSandbox();
+                        gm.unFreeze();
+                    } else {
+                        gameEndTimer.stop();
+                    } 
                 }
             }
         });

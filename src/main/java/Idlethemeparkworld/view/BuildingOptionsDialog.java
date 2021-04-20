@@ -66,7 +66,7 @@ public class BuildingOptionsDialog extends JDialog {
             }
             this.getContentPane().add(statsPanel);
 
-            if (currentBuilding.getMaxLevel() != 0) {
+            if (currentBuilding.getMaxLevel() != 0 && !board.getGameManager().gameFroze()) {
                 JButton upgradeButton = new JButton("Upgrade: costs " + currentBuilding.getUpgradeCost() + "$");
                 upgradeButton.setAlignmentX(CENTER_ALIGNMENT);
                 upgradeButton.addActionListener(new ActionListener() {
@@ -79,7 +79,7 @@ public class BuildingOptionsDialog extends JDialog {
                 this.getContentPane().add(upgradeButton);
             }
 
-            if (!(currentBuilding instanceof Entrance) && !(currentBuilding instanceof LockedTile)) {
+            if (!(currentBuilding instanceof Entrance) && !(currentBuilding instanceof LockedTile) && !board.getGameManager().gameFroze()) {
                 JButton demolishButton = new JButton("Demolish: returns " + currentBuilding.getValue() / 2 + "$");
                 demolishButton.setAlignmentX(CENTER_ALIGNMENT);
                 demolishButton.addActionListener(new ActionListener() {
@@ -89,7 +89,7 @@ public class BuildingOptionsDialog extends JDialog {
                     }
                 });
                 this.getContentPane().add(demolishButton);
-            } else if (currentBuilding instanceof LockedTile) {
+            } else if (currentBuilding instanceof LockedTile && !board.getGameManager().gameFroze()) {
                 JButton unlockButton = new JButton("Unlock for " + ((LockedTile) currentBuilding).getUnlockCost() + "$");
                 unlockButton.setAlignmentX(CENTER_ALIGNMENT);
                 unlockButton.addActionListener(new ActionListener() {
@@ -100,6 +100,7 @@ public class BuildingOptionsDialog extends JDialog {
                         BuildingOptionsDialog.this.board.getGameManager().getFinance().pay(((LockedTile) currentBuilding).getUnlockCost());      //Ezt a sort még commitolni kéne.
                         BuildingOptionsDialog.this.board.getGameManager().getPark().demolish(currentBuilding.getX(), currentBuilding.getY());
                         BuildingOptionsDialog.this.board.refresh();
+                        BuildingOptionsDialog.this.board.drawParkRender();
                     }
                 });
                 this.getContentPane().add(unlockButton);

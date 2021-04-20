@@ -2,7 +2,11 @@ package Idlethemeparkworld.model;
 
 import Idlethemeparkworld.model.administration.Finance;
 import Idlethemeparkworld.model.administration.Statistics;
+import Idlethemeparkworld.model.buildable.Building;
+import Idlethemeparkworld.model.buildable.attraction.Attraction;
+import Idlethemeparkworld.model.buildable.food.FoodStall;
 import Idlethemeparkworld.view.Board;
+import java.util.ArrayList;
 
 public class GameManager {
 
@@ -16,6 +20,9 @@ public class GameManager {
 
     private boolean gamePaused;
     private boolean gameOver;
+    private boolean gameWon;
+    private boolean gameFroze;
+    private boolean sandboxMode;
 
     private static final double[] GAME_SPEEDS = {0.5, 1, 2};
     private int gameSpeed;
@@ -36,6 +43,7 @@ public class GameManager {
         this.gamePaused = false;
         this.gameSpeed = 1;
 
+        this.gameFroze = false;
         this.park = new Park(10, 10, this);
         this.time = new Time();
         this.finance = new Finance(100000);
@@ -76,6 +84,14 @@ public class GameManager {
         return gameOver;
     }
     
+    public boolean gameWon() {
+        return gameWon && !sandboxMode;
+    }
+     
+    public boolean gameFroze(){
+        return gameFroze;
+    }
+    
     public int getEntranceFee() {
         return entranceFee;
     }
@@ -85,6 +101,9 @@ public class GameManager {
     }
 
     public void startNewGame() {
+        unFreeze();
+        sandboxMode = false;
+        gameWon = false;
         gameOver = false;
         unpause();
         tickCount = 0;
@@ -115,9 +134,50 @@ public class GameManager {
     
     public void endGame() {
         pause();
+        gameFroze = true;
         gameOver = true;
     }
+    
+    public void enableSandbox(){
+        sandboxMode = true;
+    }
+    
+    public void unFreeze(){
+        gameFroze = false;
+        unpause();
+    }
+    
+    public void winGame() {
+        pause();
+        gameFroze = true;
+        gameWon = true;
+    }
 
+    public void checkWin() {
+        if(!gameWon && park != null) {
+            ArrayList<Building> buildings = park.getBuildings();
+            boolean win = true;
+            for(BuildType type : BuildType.values()) {
+                boolean found = type == BuildType.LOCKEDTILE;
+                for (int i = 0; i < buildings.size() && !found; i++) {
+                    found = buildings.get(i).getInfo() == type;
+                }
+                win = win && found;
+            }
+            int maxLevelCount = 0;
+            for(Building building : buildings) {
+                if((building instanceof Attraction || building instanceof FoodStall) && building.getCurrentLevel() == building.getMaxLevel()){
+                    maxLevelCount++;
+                }
+            }
+            win = win && (maxLevelCount >= 2);
+            win = win && park.getRating() > 6.5;
+            if(win) {
+                winGame();
+            }
+        }
+    }
+    
     private void updateCycle() {
         while (updateCycleRunning) {
             long now = System.nanoTime();
@@ -130,7 +190,6 @@ public class GameManager {
                     currentDeltaTime = 0;
                 }
             }
-
         }
     }
 
@@ -138,7 +197,6 @@ public class GameManager {
         updateCount += tickStep * getGameSpeed();
         double actualUpdateCount = Math.floor(updateCount);
         updateCount -= actualUpdateCount;
-        //System.out.println(actualUpdateCount);
         for (int i = 0; i < actualUpdateCount; i++) {
             tickCount++;
             park.update(tickCount);

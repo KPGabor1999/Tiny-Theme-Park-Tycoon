@@ -67,7 +67,7 @@ public class Park implements Updatable {
         //3. Install locked tiles
         for (int row = 0; row < tiles.length; row++) {
             for (int column = 0; column < tiles[0].length; column++) {
-                if (row > 5 || column > 5) {
+                if (row > 10 || column > 5) {
                     build(BuildType.LOCKEDTILE, column, row, true);
                 }
             }
@@ -90,7 +90,7 @@ public class Park implements Updatable {
         return tiles[y][x];
     }
 
-    public ArrayList<Building> getBuildings() {
+    public synchronized ArrayList<Building> getBuildings() {
         return buildings;
     }
 
@@ -103,9 +103,17 @@ public class Park implements Updatable {
             return false;
         }
     }
+    
+    private boolean checkLegalArea(int x, int y, int width, int height) {
+        return (0 <= x && x+width-1 < getWidth())
+                && (0 <= y && y+height-1 < getHeight());
+    }
 
     private boolean checkEmptyArea(int x, int y, int width, int height) {
         boolean isEmpty = true;
+        if(!checkLegalArea(x, y, width, height)) {
+            return false;
+        }
         for (int i = y; i < y + height; i++) {
             for (int j = x; j < x + width; j++) {
                 isEmpty = isEmpty && tiles[i][j].isEmpty();
@@ -184,7 +192,7 @@ public class Park implements Updatable {
         }
     }
 
-    public Building build(BuildType type, int x, int y, boolean force) {
+    public synchronized Building build(BuildType type, int x, int y, boolean force) {
         if (force || canBuild(type, x, y)) {
             Building newBuilding = null;
             try {
@@ -198,6 +206,9 @@ public class Park implements Updatable {
             buildings.add(newBuilding);
             setAreaToBuilding(x, y, type.getLength(), type.getWidth(), newBuilding);
             updateBuildings();
+            if(gm != null){
+                gm.checkWin();
+            }
             return newBuilding;
         }
         return null;
@@ -266,7 +277,7 @@ public class Park implements Updatable {
         }
     }
 
-    public void demolish(int x, int y) {
+    public synchronized void demolish(int x, int y) {
         (this.tiles[y][x]).unsetBuilding();
 
         int demolitionIndex = 0;

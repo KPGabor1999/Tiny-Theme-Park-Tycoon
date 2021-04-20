@@ -149,30 +149,30 @@ public class Visitor extends Agent {
         switch (thoughtType) {
             case CANTAFFORD:
             case BADVALUE:
-                happiness-=5;
+                addHappiness(-5);
                 break;
             case LOST:
             case TOOMUCHLITTER:
             case CROWDED:
-                happiness-=10;
+                addHappiness(-10);
                 break;
             case LONGQUEUE:
             case HUNGRY:
             case THIRSTY:
             case TIRED:
-                happiness-=7;
+                addHappiness(-7);
                 break;
             case NOTHUNGRY:
             case NOTTHIRSTY:
             case FEELINGGREAT:
-                happiness++;
+                addHappiness(1);
                 break;
             case WOW:
-                happiness+=8;
+                addHappiness(8);
                 break;
             case GOODVALUE:
             case CLEAN:
-                happiness+=5;
+                addHappiness(5);
                 break;
             default:
                 break;
@@ -334,7 +334,6 @@ public class Visitor extends Agent {
     }
 
     private void normalizeStatuses() {
-        happiness = Math.min(AGENT_STATUS_MAXIMUM, Math.max(0, happiness));
         energy = Math.min(AGENT_STATUS_MAXIMUM, Math.max(0, energy));
         hunger = Math.min(AGENT_STATUS_MAXIMUM, Math.max(0, hunger));
         thirst = Math.min(AGENT_STATUS_MAXIMUM, Math.max(0, thirst));
@@ -397,7 +396,7 @@ public class Visitor extends Agent {
                 if (statusTimer > this.patience) {
                     attr.leaveQueue(this);
                     moveTo(lastEnter.x, lastEnter.y);
-                    this.happiness -= 5;
+                    addHappiness(-5);
                     setState(AgentState.IDLE);
                 }
                 break;
@@ -440,7 +439,7 @@ public class Visitor extends Agent {
                     insertThought(AgentThoughts.LONGQUEUE, currentBuilding);
                     tlt.leaveQueue(this);
                     moveTo(lastEnter.x, lastEnter.y);
-                    this.happiness -= 10;
+                    addHappiness(-10);
                     setState(AgentState.IDLE);
                 } else {
                     if (tlt.isFirstInQueue(this)) {
@@ -483,7 +482,7 @@ public class Visitor extends Agent {
                 break;
             case WANDERING:
                 if (statusTimer > this.patience) {
-                    this.happiness -= 5;
+                    addHappiness(-5);
                     resetAction();
                 }
                 if (rand.nextBoolean()) {
@@ -535,7 +534,7 @@ public class Visitor extends Agent {
                 if (statusTimer > patience) {
                     stall.leaveQueue(this);
                     moveTo(lastEnter.x, lastEnter.y);
-                    this.happiness -= 10;
+                    addHappiness(-10);
                     resetAction();
                 } else {
                     if (stall.isFirstInQueue(this)) {
@@ -616,7 +615,7 @@ public class Visitor extends Agent {
     
     private void wandering(Class buildingClass){
         if (statusTimer > patience) {
-            happiness -= 10;
+            addHappiness(-10);
             if(this.currentAction.getAction() == AgentActionType.LITTER){
                 ((Infrastructure) currentBuilding).litter(item.consumeTime * 0.07);
             }
@@ -693,10 +692,16 @@ public class Visitor extends Agent {
     private void moveOnPath(){
         if(path.size() > 0){
             Position nextPos = path.remove(0);
-            if(path.isEmpty()) {
-                lastEnter = new Position(x, y);
+            if(park.getTile(nextPos.x, nextPos.y).isEmpty()
+                    || park.getTile(nextPos.x, nextPos.y).getBuilding().getStatus() == BuildingStatus.DECAYED){
+                addHappiness(-5);
+                resetAction();
+            } else {
+                if(path.isEmpty()) {
+                    lastEnter = new Position(x, y);
+                }
+                moveTo(nextPos.x, nextPos.y);
             }
-            moveTo(nextPos.x, nextPos.y);
         }
     }
     
@@ -715,7 +720,7 @@ public class Visitor extends Agent {
     private Building findType(Class clazz){
         ArrayList<Building> buildings = new ArrayList<>();
         park.getBuildings().forEach((b) -> {
-            if(clazz.isInstance(b)){
+            if(clazz.isInstance(b) && (b.getStatus() == BuildingStatus.OPEN || b.getStatus() == BuildingStatus.RUNNING)){
                 buildings.add(b);
             }
         });
@@ -740,7 +745,7 @@ public class Visitor extends Agent {
     }
 
     public void sendRideEvent(int rideEvent) {
-        happiness += rideEvent;
+        addHappiness(rideEvent);
         if(happiness > rand.nextInt(100)){
             insertThought(AgentThoughts.WOW, null);
         }
@@ -782,6 +787,10 @@ public class Visitor extends Agent {
 
     public double getHappiness() {
         return happiness;
+    }
+    
+    public void addHappiness(int value) {
+        happiness = Math.max(0, Math.min(happiness+value, 100));
     }
 
     public double getHunger() {

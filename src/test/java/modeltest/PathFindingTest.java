@@ -2,19 +2,19 @@ package modeltest;
 
 import Idlethemeparkworld.misc.utils.Position;
 import Idlethemeparkworld.model.BuildType;
+import Idlethemeparkworld.model.GameManager;
 import Idlethemeparkworld.model.Park;
 import Idlethemeparkworld.model.buildable.Building;
 import java.util.ArrayList;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 public class PathFindingTest {
     
     @Test
     public void getterTest(){
-        Park p = new Park();
+        GameManager gm = new GameManager();
+        Park p = gm.getPark();
         p.build(BuildType.PAVEMENT, 1, 0, false);
         p.build(BuildType.PAVEMENT, 2, 0, false);
         p.build(BuildType.PAVEMENT, 3, 0, false);

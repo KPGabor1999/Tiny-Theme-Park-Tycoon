@@ -1,36 +1,64 @@
 package Idlethemeparkworld.view;
 
 import Idlethemeparkworld.misc.Highscore;
+import Idlethemeparkworld.model.Time;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
 import javax.swing.WindowConstants;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 public class HighscoreWindow extends JDialog {
 
-    private final JTable table;
-
-    public HighscoreWindow(ArrayList<Highscore> highscores, JFrame parent) {
+    static class CustomRenderer extends DefaultTableCellRenderer {
+        
+        public CustomRenderer() { super(); }
+        
+        @Override
+        public void setValue(Object value) {
+            setText((value == null) ? "" : Time.minutesToString((int) value));
+        }
+    };
+    
+    public HighscoreWindow(ArrayList<Highscore> campaignHighscores, ArrayList<Highscore> sandboxHighscores, JFrame parent) {
         super(parent, true);
-        table = new JTable(new HighscoreTable(highscores));
-        table.setFillsViewportHeight(true);
+        
+        JTabbedPane tabbedPane = new JTabbedPane();
+        
+        JTable table1 = new JTable(new HighscoreTable(campaignHighscores));
+        table1.setFillsViewportHeight(true);
+        table1.getColumn("Score").setCellRenderer(new CustomRenderer());
 
-        TableRowSorter<TableModel> sorter
-                = new TableRowSorter<>(table.getModel());
-        List<RowSorter.SortKey> sortKeys = new ArrayList<>();
-        sortKeys.add(new RowSorter.SortKey(1, SortOrder.DESCENDING));
-        sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
-        sorter.setSortKeys(sortKeys);
-        table.setRowSorter(sorter);
+        TableRowSorter<TableModel> sorter1 = new TableRowSorter<>(table1.getModel());
+        List<RowSorter.SortKey> sortKeys1 = new ArrayList<>();
+        sortKeys1.add(new RowSorter.SortKey(1, SortOrder.ASCENDING));
+        sortKeys1.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
+        sorter1.setSortKeys(sortKeys1);
+        table1.setRowSorter(sorter1);
+        
+        JTable table2 = new JTable(new HighscoreTable(sandboxHighscores));
+        table2.setFillsViewportHeight(true);
+        table2.getColumn("Score").setCellRenderer(new CustomRenderer());
 
-        add(new JScrollPane(table));
+        TableRowSorter<TableModel> sorter2 = new TableRowSorter<>(table2.getModel());
+        List<RowSorter.SortKey> sortKeys2 = new ArrayList<>();
+        sortKeys2.add(new RowSorter.SortKey(1, SortOrder.DESCENDING));
+        sortKeys2.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
+        sorter2.setSortKeys(sortKeys2);
+        table2.setRowSorter(sorter2);
+        
+        tabbedPane.addTab("Campaign", new JScrollPane(table1));
+        tabbedPane.addTab("Sandbox", new JScrollPane(table2));
+
+        add(tabbedPane);
         setSize(400, 250);
         setTitle("Leaderboards");
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);

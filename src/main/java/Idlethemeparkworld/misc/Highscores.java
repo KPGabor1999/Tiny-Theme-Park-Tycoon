@@ -10,19 +10,24 @@ import java.util.Scanner;
 
 public class Highscores {
 
-    int maxscores;
-    ArrayList<Highscore> highscores;
+    private int maxscores;
+    private ArrayList<Highscore> highscores;
+    private boolean ascending;
+    private String filename;
 
-    public Highscores(int maxscores) {
+    public Highscores(int maxscores, boolean ascending, String filename) {
         this.maxscores = maxscores;
         this.highscores = new ArrayList<>();
+        this.ascending = ascending;
+        this.filename = filename;
         readHighscores();
+        saveHighscores();
     }
 
     private void readHighscores() {
         highscores.clear();
         try {
-            File f = new File("leaderboard.txt");
+            File f = new File(filename);
             Scanner sc = new Scanner(f);
             while (sc.hasNextLine()) {
                 String line = sc.nextLine();
@@ -45,18 +50,29 @@ public class Highscores {
 
     public void putHighscore(String name, int score) {
         if (highscores.size() < maxscores) {
-            insertScore(name, score);
+        insertScore(name, score);
         } else {
             int worstScore = highscores.get(highscores.size() - 1).getScore();
-            if (worstScore < score) {
-                highscores.remove(highscores.size() - 1);
-                insertScore(name, score);
+            if(ascending){
+                if (worstScore > score) {
+                    highscores.remove(highscores.size() - 1);
+                    insertScore(name, score);
+                }
+            } else {
+                if (worstScore < score) {
+                    highscores.remove(highscores.size() - 1);
+                    insertScore(name, score);
+                }
             }
         }
     }
 
     private void sortHighscores() {
-        Collections.sort(highscores, (Highscore t, Highscore t1) -> t1.getScore() - t.getScore());
+        if(ascending){
+            Collections.sort(highscores, (Highscore t, Highscore t1) -> t.getScore() - t1.getScore());
+        } else {
+            Collections.sort(highscores, (Highscore t, Highscore t1) -> t1.getScore() - t.getScore());
+        }
     }
 
     private void insertScore(String name, int score) {
@@ -68,7 +84,7 @@ public class Highscores {
         sortHighscores();
 
         try {
-            PrintWriter writer = new PrintWriter(new FileOutputStream("leaderboard.txt", false));
+            PrintWriter writer = new PrintWriter(new FileOutputStream(filename, false));
             for (int i = 0; i < highscores.size(); i++) {
                 Highscore sc = highscores.get(i);
                 writer.append(sc.getName() + "\t" + String.valueOf(sc.getScore()) + "\n");

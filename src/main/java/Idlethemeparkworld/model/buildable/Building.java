@@ -81,6 +81,7 @@ public abstract class Building extends Buildable {
             innerUpgrade();
             currentLevel++;
             value += upgradeCost;
+            gm.checkWin();
         }
     }
 
