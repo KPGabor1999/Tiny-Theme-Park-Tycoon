@@ -6,12 +6,11 @@ import Idlethemeparkworld.model.Time;
 import Idlethemeparkworld.model.buildable.Building;
 import Idlethemeparkworld.model.buildable.attraction.Attraction;
 import Idlethemeparkworld.model.buildable.food.FoodStall;
-import java.awt.Color;
 import java.util.ArrayList;
 
 public class Maintainer extends Agent {
 
-    private int salary;     //dollars per hour
+    private final int salary;     //dollars per hour
 
     public Maintainer(String name, Park park, AgentManager am) {
         super(name, park, am);
@@ -91,7 +90,7 @@ public class Maintainer extends Agent {
     }
 
     private void moveToRandomNeighbourTile() {
-        ArrayList<Building> neighbours = park.getWalkableNeighbours(x, y);
+        ArrayList<Building> neighbours = park.getInfrastructureNeighbours(x, y);
         if (neighbours.size() > 0) {
             int nextIndex = rand.nextInt(neighbours.size());
             moveTo(neighbours.get(nextIndex).getX(), neighbours.get(nextIndex).getY());

@@ -4,6 +4,7 @@ import Idlethemeparkworld.model.BuildType;
 import java.util.ArrayList;
 import Idlethemeparkworld.misc.utils.Pair;
 import Idlethemeparkworld.model.GameManager;
+import Idlethemeparkworld.model.agent.Janitor;
 
 public class TrashCan extends Infrastructure {
 
@@ -28,6 +29,11 @@ public class TrashCan extends Infrastructure {
     public double getFilled() {
         return filled;
     }
+    
+    @Override
+    public boolean shouldClean() {
+        return littering > 3 || filled/capacity > 0.2;
+    }
 
     @Override
     public ArrayList<Pair<String, String>> getAllData() {
@@ -41,6 +47,9 @@ public class TrashCan extends Infrastructure {
     public void use(double amount) {
         if (!isFull()) {
             filled += amount;
+            if(filled/capacity > 0.7) {
+                Janitor.alertOfCriticalBuilding(this);
+            }
             if (isFull()) {
                 filled = capacity;
             }

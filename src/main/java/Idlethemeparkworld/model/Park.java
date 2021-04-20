@@ -167,10 +167,10 @@ public class Park implements Updatable {
         return res;
     }
 
-    public ArrayList<Building> getWalkableNeighbours(int x, int y) {
+    public ArrayList<Building> getInfrastructureNeighbours(int x, int y) {
         ArrayList<Building> res = new ArrayList<>();
         ArrayList<Tile> neighbours = getNeighbours(x, y, 1, 1);
-        neighbours.removeIf(n -> (n.getBuilding() == null || n.getBuilding() instanceof LockedTile));
+        neighbours.removeIf(n -> (n.getBuilding() == null || !(n.getBuilding() instanceof Infrastructure) || n.getBuilding() instanceof LockedTile || n.getBuilding().getStatus() == BuildingStatus.DECAYED));
         neighbours.forEach(n -> res.add(n.getBuilding()));
         return res;
     }

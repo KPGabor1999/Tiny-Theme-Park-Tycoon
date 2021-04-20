@@ -4,6 +4,7 @@ import Idlethemeparkworld.model.BuildType;
 import java.util.ArrayList;
 import Idlethemeparkworld.misc.utils.Pair;
 import Idlethemeparkworld.model.GameManager;
+import Idlethemeparkworld.model.agent.Janitor;
 import Idlethemeparkworld.model.agent.Visitor;
 import Idlethemeparkworld.model.buildable.BuildingStatus;
 import Idlethemeparkworld.model.buildable.Queueable;
@@ -81,7 +82,10 @@ public class Toilet extends Infrastructure implements Queueable {
     }
 
     public void decreaseHygiene(double amount) {
-        cleanliness -= 5;
+        cleanliness -= amount;
+        if(cleanliness < 35) {
+            Janitor.alertOfCriticalBuilding(this);
+        }
         if(cleanliness <= 0){
             cleanliness = 0;
             this.setStatus(BuildingStatus.DECAYED);
@@ -89,8 +93,13 @@ public class Toilet extends Infrastructure implements Queueable {
         }
     }
 
+    @Override
+    public boolean shouldClean() {
+        return littering > 3 || cleanliness < 85;
+    }
+    
     public void clean(int amount) {
-        cleanliness -= amount;
-        cleanliness = Math.max(cleanliness, 0);
+        cleanliness += amount;
+        cleanliness = Math.min(cleanliness, 100);
     }
 }

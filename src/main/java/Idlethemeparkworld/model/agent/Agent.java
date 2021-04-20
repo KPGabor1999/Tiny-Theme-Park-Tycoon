@@ -9,6 +9,7 @@ import Idlethemeparkworld.model.agent.AgentTypes.AgentType;
 import Idlethemeparkworld.model.agent.AgentTypes.StaffType;
 import Idlethemeparkworld.model.buildable.Building;
 import Idlethemeparkworld.model.buildable.BuildingStatus;
+import java.util.ArrayList;
 import java.util.Random;
 
 public abstract class Agent implements Updatable {
@@ -20,6 +21,7 @@ public abstract class Agent implements Updatable {
     String name;
     int x,y;
     boolean inPark;
+    protected ArrayList<Position> path;
     
     AgentType type;
     StaffType staffType;
@@ -59,6 +61,7 @@ public abstract class Agent implements Updatable {
         this.newPos = new Position(xOffset,yOffset);
         this.lerpTimer = 0;
         this.isMoving = false;
+        this.path = new ArrayList<>();
     }
 
     public String getName() {
@@ -112,6 +115,18 @@ public abstract class Agent implements Updatable {
     protected void resetAction(){
         setState(AgentState.IDLE);
         currentAction = null;
+    }
+    
+    protected void moveOnPath(){
+        if(path.size() > 0){
+            Position nextPos = path.remove(0);
+            if(park.getTile(nextPos.x, nextPos.y).isEmpty()
+                    || park.getTile(nextPos.x, nextPos.y).getBuilding().getStatus() == BuildingStatus.DECAYED){
+                resetAction();
+            } else {
+                moveTo(nextPos.x, nextPos.y);
+            }
+        }
     }
     
     protected void moveTo(int x, int y){

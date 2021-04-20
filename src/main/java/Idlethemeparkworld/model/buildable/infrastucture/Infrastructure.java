@@ -4,6 +4,7 @@ import Idlethemeparkworld.model.buildable.Building;
 import java.util.ArrayList;
 import Idlethemeparkworld.misc.utils.Pair;
 import Idlethemeparkworld.model.GameManager;
+import Idlethemeparkworld.model.agent.Janitor;
 
 public abstract class Infrastructure extends Building {
 
@@ -12,6 +13,10 @@ public abstract class Infrastructure extends Building {
     public Infrastructure(GameManager gm) {
         super(gm);
         this.littering = 0;
+    }
+    
+    public boolean shouldClean() {
+        return littering > 3;
     }
 
     public double getLittering() {
@@ -24,6 +29,9 @@ public abstract class Infrastructure extends Building {
 
     public void litter(double amount) {
         littering += amount;
+        if(littering > 5) {
+            Janitor.alertOfCriticalBuilding(this);
+        }
     }
 
     public void sweep(double amount) {

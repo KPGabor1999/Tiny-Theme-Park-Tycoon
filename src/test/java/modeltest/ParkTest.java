@@ -51,7 +51,6 @@ public class ParkTest {
         assertEquals(p.getPavementNeighbours(2,1).size(), 2);
         assertEquals(p.getNonPavementOrEntranceNeighbours(4,1).size(), 1);
         assertEquals(p.getNonPavementNeighbours(4,1).size(), 1);
-        assertEquals(p.getWalkableNeighbours(2,1).size(), 2);
     }
     
     @Test
