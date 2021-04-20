@@ -45,6 +45,7 @@ public class Janitor extends Agent implements Updatable {
     
     private static void addAction(AgentAction action) {
         if (!actionQueue.contains(action)) {
+            
             actionQueue.add(action);
         }
     }
@@ -62,11 +63,13 @@ public class Janitor extends Agent implements Updatable {
                 if(actionQueue.isEmpty()){
                     setState(AgentState.WANDERING);
                 } else {
+                    System.out.println("Action queue not empty");
                     currentAction = actionQueue.pop();
                     Building building = currentAction.getSubject();
                     if(building == null){
                         currentAction = null;
                     } else {
+                        System.out.println("building found");
                         path = park.getPathfinding().getPath(new Position(x,y), building);
                         setState(AgentState.WALKING);
                     }
@@ -88,7 +91,7 @@ public class Janitor extends Agent implements Updatable {
                 break;
             case CLEANING:
                 clean(currentBuilding);
-                setState(AgentState.IDLE);
+                resetAction();
                 break;
             case FLOATING:
                 if (statusTimer > Time.convMinuteToTick(5)) {
