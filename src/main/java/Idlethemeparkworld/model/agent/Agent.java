@@ -136,8 +136,8 @@ public abstract class Agent implements Updatable {
         this.x=x;
         this.y=y;
         updateCurBuilding();
-        xOffset = rand.nextInt(currentBuilding.getInfo().getWidth()*64);
-        yOffset = rand.nextInt(currentBuilding.getInfo().getLength()*64);
+        xOffset = rand.nextInt(currentBuilding.getInfo().getLobbyArea().width)+currentBuilding.getInfo().getLobbyArea().x;
+        yOffset = rand.nextInt(currentBuilding.getInfo().getLobbyArea().height)+currentBuilding.getInfo().getLobbyArea().y;
         newPos = new Position(this.x*64+xOffset,this.y*64+yOffset);
     }
     

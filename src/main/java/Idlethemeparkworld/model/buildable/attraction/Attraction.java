@@ -117,6 +117,7 @@ public abstract class Attraction extends Building implements Queueable, Repairab
             onRide.get(i).sendRideEvent(rideEvent);
         }
         onRide.clear();
+        changeCondition(-0.47);
         status = BuildingStatus.OPEN;
     }
 
@@ -147,27 +148,9 @@ public abstract class Attraction extends Building implements Queueable, Repairab
     public boolean canService() {
         return true;
     }
-
-    private void updateCondition() {
-        switch (status) {
-            case RUNNING:
-                condition -= 0.02;
-                break;
-            case OPEN:
-                condition -= 0.01;
-                break;
-            case CLOSED:
-                condition -= 0.02;
-                break;
-            case INACTIVE:
-                condition -= 0.04;
-                break;
-            case FLOATING:
-                condition -= 2.5;
-                break;
-            default:
-                break;
-        }
+    
+    private void changeCondition(double amount) {
+        condition += amount;
         if(condition < 35) {
             Maintainer.alertOfCriticalBuilding(this);
         }
@@ -175,6 +158,25 @@ public abstract class Attraction extends Building implements Queueable, Repairab
             condition = 0;
             status = BuildingStatus.DECAYED;
             gm.getBoard().drawParkRender();
+        }
+    }
+
+    private void updateCondition() {
+        switch (status) {
+            case OPEN:
+                changeCondition(-0.33);
+                break;
+            case CLOSED:
+                changeCondition(-1);
+                break;
+            case INACTIVE:
+                changeCondition(-2);
+                break;
+            case FLOATING:
+                changeCondition(-4);
+                break;
+            default:
+                break;
         }
     }
 

@@ -8,7 +8,6 @@ import Idlethemeparkworld.model.Updatable;
 import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentActionType;
 import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentState;
 import Idlethemeparkworld.model.buildable.Building;
-import Idlethemeparkworld.model.buildable.attraction.Attraction;
 import Idlethemeparkworld.model.buildable.infrastucture.Infrastructure;
 import Idlethemeparkworld.model.buildable.infrastucture.Toilet;
 import Idlethemeparkworld.model.buildable.infrastucture.TrashCan;
@@ -46,7 +45,6 @@ public class Janitor extends Agent implements Updatable {
     private static void addAction(AgentAction action) {
         if (!actionQueue.contains(action)) {
             actionQueue.add(action);
-            System.out.println(action.getSubject().getInfo());
         }
     }
     
