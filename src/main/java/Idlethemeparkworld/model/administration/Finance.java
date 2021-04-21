@@ -1,6 +1,7 @@
 package Idlethemeparkworld.model.administration;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class Finance {
     
@@ -29,7 +30,7 @@ public class Finance {
     private int initialFunds;
     private int funds;
 
-    HashMap<FinanceType, Integer> financialData;
+    LinkedHashMap<FinanceType, Integer> financialData;
     
     public Finance() {
         this(0);
@@ -43,7 +44,7 @@ public class Finance {
     public void init() {
         this.funds = initialFunds;
 
-        this.financialData = new HashMap<>();
+        this.financialData = new LinkedHashMap<>();
         for (FinanceType type : FinanceType.values()) {
             financialData.put(type, 0);
         }
@@ -79,8 +80,8 @@ public class Finance {
     
     public String getFinancialDataString(){
         StringBuilder sb = new StringBuilder();
-        sb.append("Money: ").append(funds).append("\n\n");
-        sb.append("-- Spendings --").append("\n");
+        sb.append("Money: ").append(funds).append("\n");
+        sb.append("--------").append("\n");
         financialData.forEach((k, v) -> sb.append(k.getName()).append(": ").append(v).append("\n"));
         return sb.toString();
     }

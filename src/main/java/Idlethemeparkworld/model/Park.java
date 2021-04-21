@@ -279,12 +279,12 @@ public class Park implements Updatable {
     }
 
     public synchronized void demolish(int x, int y) {
-        (this.tiles[y][x]).unsetBuilding();
+        Building building = tiles[y][x].getBuilding();
+        setAreaToBuilding(x, y, building.getInfo().getLength(), building.getInfo().getWidth(), null);
 
         int demolitionIndex = 0;
         for (int i = 0; i < buildings.size(); i++) {
-            if (buildings.get(i).getX() == x
-                    && buildings.get(i).getY() == y) {
+            if (buildings.get(i).getX() == x && buildings.get(i).getY() == y) {
                 demolitionIndex = i;
                 break;
             }
