@@ -2,6 +2,7 @@ package Idlethemeparkworld.model.buildable.infrastucture;
 
 import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.GameManager;
+import Idlethemeparkworld.model.administration.Finance;
 import Idlethemeparkworld.model.agent.Visitor;
 import Idlethemeparkworld.model.buildable.BuildingStatus;
 
@@ -23,7 +24,7 @@ public class Entrance extends Infrastructure {
     public void enterPark(Visitor visitor) {
         if (visitor.canPay(value)) {
             visitor.pay(gm.getEntranceFee());
-            gm.getFinance().earn(gm.getEntranceFee());
+            gm.getFinance().earn(gm.getEntranceFee(), Finance.FinanceType.ENTRY_FEE);
         }
     }
 }

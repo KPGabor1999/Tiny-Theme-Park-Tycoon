@@ -49,7 +49,6 @@ public class Visitor extends Agent {
 
     BuildType[] visitHistory;
     private Position lastEnter;
-    private ArrayList<Position> path;
     private FoodItem item;
     
     private final int skinID;
@@ -83,7 +82,6 @@ public class Visitor extends Agent {
 
         this.thoughts = new ArrayList<>();
         this.actionQueue = new LinkedList<>();
-        this.path = new ArrayList<>();
     }
 
     @Override
@@ -689,7 +687,9 @@ public class Visitor extends Agent {
         }
     }
     
-    private void moveOnPath(){
+    
+    @Override
+    protected void moveOnPath(){
         if(path.size() > 0){
             Position nextPos = path.remove(0);
             if(park.getTile(nextPos.x, nextPos.y).isEmpty()

@@ -3,16 +3,18 @@ package Idlethemeparkworld.model.buildable.attraction;
 import Idlethemeparkworld.misc.utils.Range;
 import Idlethemeparkworld.model.GameManager;
 import Idlethemeparkworld.model.Time;
-import Idlethemeparkworld.model.Updatable;
 import Idlethemeparkworld.model.agent.Visitor;
 import Idlethemeparkworld.model.buildable.Building;
 import Idlethemeparkworld.model.buildable.BuildingStatus;
 import Idlethemeparkworld.misc.utils.Pair;
+import Idlethemeparkworld.model.administration.Finance.FinanceType;
+import Idlethemeparkworld.model.agent.Maintainer;
 import Idlethemeparkworld.model.buildable.Queueable;
+import Idlethemeparkworld.model.buildable.Repairable;
 import java.util.ArrayList;
 import java.util.Random;
 
-public abstract class Attraction extends Building implements Updatable, Queueable {
+public abstract class Attraction extends Building implements Queueable, Repairable {
 
     protected int fun;
     protected int capacity;
@@ -21,6 +23,7 @@ public abstract class Attraction extends Building implements Updatable, Queueabl
     protected int baseEntryFee;
 
     protected int statusTimer;
+    protected double condition;
 
     protected ArrayList<Visitor> queue;
     protected ArrayList<Visitor> onRide;
@@ -32,6 +35,7 @@ public abstract class Attraction extends Building implements Updatable, Queueabl
         this.queue = new ArrayList<>();
         this.onRide = new ArrayList<>();
         this.rand = new Random();
+        this.condition = 100;
     }
 
     public int getQueueLength() {
@@ -40,10 +44,6 @@ public abstract class Attraction extends Building implements Updatable, Queueabl
 
     public int getCapacity() {
         return capacity;
-    }
-
-    public double getCondition() {
-        return condition;
     }
 
     public int getBaseEntryFee() {
@@ -58,6 +58,17 @@ public abstract class Attraction extends Building implements Updatable, Queueabl
         this.entryFee = number;
     }
 
+    @Override
+    public boolean shouldRepair(){
+        return condition < 90;
+    }
+    
+    @Override
+    public double getCondition(){
+        return condition;
+    }   
+
+    @Override
     public void setCondition(double condition) {
         this.condition = condition;
     }
@@ -91,7 +102,7 @@ public abstract class Attraction extends Building implements Updatable, Queueabl
                 onRide.get(i).sendRideEvent(0);
             }
         }
-        gm.getFinance().earn(profit);
+        gm.getFinance().earn(profit, FinanceType.RIDE_SELL);
     }
 
     private void finish() {
@@ -157,7 +168,9 @@ public abstract class Attraction extends Building implements Updatable, Queueabl
             default:
                 break;
         }
-
+        if(condition < 35) {
+            Maintainer.alertOfCriticalBuilding(this);
+        }
         if (condition <= 0) {
             condition = 0;
             status = BuildingStatus.DECAYED;

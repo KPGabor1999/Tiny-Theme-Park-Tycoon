@@ -2,7 +2,6 @@ package agenttest;
 
 import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.Park;
-import Idlethemeparkworld.model.Tile;
 import static Idlethemeparkworld.model.agent.AgentInnerLogic.AgentState.*;
 import Idlethemeparkworld.model.agent.Janitor;
 import Idlethemeparkworld.model.buildable.Building;
@@ -11,10 +10,7 @@ import Idlethemeparkworld.model.buildable.infrastucture.Infrastructure;
 import Idlethemeparkworld.model.buildable.infrastucture.Pavement;
 import Idlethemeparkworld.model.buildable.infrastucture.Toilet;
 import Idlethemeparkworld.model.buildable.infrastucture.TrashCan;
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -45,8 +41,9 @@ public class JanitorTest{
         janitor.update(0);
         assertEquals(IDLE, janitor.getState());
         janitor.update(0);
-        assertEquals(CLEANING, janitor.getState());
+        assertEquals(WANDERING, janitor.getState());
         //Várd meg még kitakarítja a bejáratot, majd ellenõrizd, hogy tényleg tisztább lett-e.
+        janitor.update(0);
         janitor.update(0);
         assertTrue((int)((Entrance)currentBuilding).getLittering() < 100);
         //Kitakarítja a járdát is?
@@ -55,11 +52,13 @@ public class JanitorTest{
         ((Infrastructure)currentBuilding).setLittering(100);
         janitor.update(0);
         janitor.update(0);
+        janitor.update(0);
         assertTrue((int)((Pavement)currentBuilding).getLittering() < 100);
         //Kitakarítja a mosdót is?
         park.build(BuildType.TOILET, 0, 0, true);
         currentBuilding = park.getTile(0,0).getBuilding();
         ((Infrastructure)currentBuilding).setLittering(100);
+        janitor.update(0);
         janitor.update(0);
         janitor.update(0);
         assertTrue((int)((Toilet)currentBuilding).getLittering() < 100);
@@ -70,7 +69,6 @@ public class JanitorTest{
         janitor.update(0);
         janitor.update(0);
         assertEquals(0, (int)((TrashCan)currentBuilding).getFilled());
-        //Ellenõrizd, hogy takarítás után visszaáll-e WANDERING-be.
-        assertEquals(WANDERING, janitor.getState());
+        assertEquals(CLEANING, janitor.getState());
     }
 }

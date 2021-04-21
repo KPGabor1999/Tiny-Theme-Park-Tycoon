@@ -6,6 +6,7 @@ import Idlethemeparkworld.model.buildable.infrastucture.LockedTile;
 import Idlethemeparkworld.view.popups.Confirm;
 import Idlethemeparkworld.view.popups.Notification;
 import Idlethemeparkworld.misc.utils.Pair;
+import Idlethemeparkworld.model.administration.Finance;
 import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -97,7 +98,7 @@ public class BuildingOptionsDialog extends JDialog {
                     public void actionPerformed(ActionEvent e) {
                         BuildingOptionsDialog.this.instanceCount--;
                         BuildingOptionsDialog.this.dispose();
-                        BuildingOptionsDialog.this.board.getGameManager().getFinance().pay(((LockedTile) currentBuilding).getUnlockCost());      //Ezt a sort még commitolni kéne.
+                        BuildingOptionsDialog.this.board.getGameManager().getFinance().pay(((LockedTile) currentBuilding).getUnlockCost(), Finance.FinanceType.BUILDING);
                         BuildingOptionsDialog.this.board.getGameManager().getPark().demolish(currentBuilding.getX(), currentBuilding.getY());
                         BuildingOptionsDialog.this.board.refresh();
                         BuildingOptionsDialog.this.board.drawParkRender();
@@ -116,7 +117,7 @@ public class BuildingOptionsDialog extends JDialog {
         if (funds <= upgradeCost) {
             new Notification(this.getOwner(), "Problem", "Insufficient funds for upgrade.");
         } else {
-            board.getGameManager().getFinance().pay(upgradeCost);
+            board.getGameManager().getFinance().pay(upgradeCost, Finance.FinanceType.UPGRADE);
             currentBuilding.upgrade();
             instanceCount--;
             this.dispose();
@@ -130,7 +131,7 @@ public class BuildingOptionsDialog extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 BuildingOptionsDialog.this.instanceCount--;
                 BuildingOptionsDialog.this.dispose();
-                BuildingOptionsDialog.this.board.getGameManager().getFinance().earn(currentBuilding.getValue() / 2); //Az plet addigi teljes rtknek(!) a felt adja vissza.
+                BuildingOptionsDialog.this.board.getGameManager().getFinance().earn(currentBuilding.getValue() / 2, Finance.FinanceType.DEMOLISH_BONUS);
                 BuildingOptionsDialog.this.board.getGameManager().getPark().demolish(currentBuilding.getX(), currentBuilding.getY());
                 BuildingOptionsDialog.this.board.drawParkRender();
                 BuildingOptionsDialog.this.board.refresh();

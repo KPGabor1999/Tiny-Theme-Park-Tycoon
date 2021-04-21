@@ -1,13 +1,14 @@
 package Idlethemeparkworld.model.agent;
 
+import Idlethemeparkworld.model.buildable.Building;
 import java.util.Objects;
 
 public class AgentAction {
 
     private final AgentInnerLogic.AgentActionType action;
-    private final String subject;
+    private final Building subject;
 
-    public AgentAction(AgentInnerLogic.AgentActionType action, String subject) {
+    public AgentAction(AgentInnerLogic.AgentActionType action, Building subject) {
         this.action = action;
         this.subject = subject;
     }
@@ -16,14 +17,15 @@ public class AgentAction {
         return action;
     }
 
-    public String getCreationTime() {
+    public Building getSubject() {
         return subject;
     }
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 71 * hash + Objects.hashCode(this.action);
+        int hash = 5;
+        hash = 59 * hash + Objects.hashCode(this.action);
+        hash = 59 * hash + Objects.hashCode(this.subject);
         return hash;
     }
 
@@ -42,8 +44,13 @@ public class AgentAction {
         if (this.action != other.action) {
             return false;
         }
+        if (!Objects.equals(this.subject, other.subject)) {
+            return false;
+        }
         return true;
     }
+
+    
 
     @Override
     public String toString() {

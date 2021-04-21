@@ -13,7 +13,6 @@ public abstract class Building extends Buildable {
     protected int currentLevel;
     protected int maxLevel;
     protected int upgradeCost;
-    protected double condition;
     
     protected boolean visited;
  
@@ -22,7 +21,6 @@ public abstract class Building extends Buildable {
         this.status = BuildingStatus.OPEN;
         this.maxLevel = 3;
         this.currentLevel = 1;
-        this.condition = 100;
     }
 
     public void setStatus(BuildingStatus status) {
@@ -44,7 +42,6 @@ public abstract class Building extends Buildable {
     public void setVisited(boolean visited) {
         this.visited = visited;
     }
-    
     
     public int getX() {
         return x;
@@ -85,8 +82,7 @@ public abstract class Building extends Buildable {
         }
     }
 
-    protected void innerUpgrade() {
-    }
+    protected void innerUpgrade() {}
 
     public abstract ArrayList<Pair<String, String>> getAllData();
 
