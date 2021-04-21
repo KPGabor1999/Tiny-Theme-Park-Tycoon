@@ -6,6 +6,7 @@ import Idlethemeparkworld.misc.utils.Position;
 import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.GameManager;
 import Idlethemeparkworld.model.Park;
+import Idlethemeparkworld.model.administration.Finance;
 import Idlethemeparkworld.model.agent.Janitor;
 import Idlethemeparkworld.model.agent.Maintainer;
 import Idlethemeparkworld.model.agent.Visitor;
@@ -85,7 +86,7 @@ public class Board extends JPanel implements MouseWheelListener {
                             dragged = true;
                             if (canBuild[0]) {
                                 gm.getPark().build(type, pos[0], pos[1], false);
-                                gm.getFinance().pay(type.getBuildCost());
+                                gm.getFinance().pay(type.getBuildCost(), Finance.FinanceType.BUILDING);
                                 main.getInfoBar().updateInfobar();
                                 drawParkRender();
                             }
@@ -129,7 +130,7 @@ public class Board extends JPanel implements MouseWheelListener {
                 if (buildMode) {
                     if (!(SwingUtilities.isRightMouseButton(e)) && canBuild[0]) {
                         gm.getPark().build(type, pos[0], pos[1], false);
-                        gm.getFinance().pay(type.getBuildCost());
+                        gm.getFinance().pay(type.getBuildCost(), Finance.FinanceType.BUILDING);
                         main.getInfoBar().updateInfobar();
                         drawParkRender();
                     }

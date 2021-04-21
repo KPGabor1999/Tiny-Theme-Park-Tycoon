@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import Idlethemeparkworld.misc.utils.Pair;
 import Idlethemeparkworld.misc.utils.Range;
 import Idlethemeparkworld.model.GameManager;
+import Idlethemeparkworld.model.administration.Finance;
 import Idlethemeparkworld.model.agent.Maintainer;
 import Idlethemeparkworld.model.agent.Visitor;
 import Idlethemeparkworld.model.buildable.BuildingStatus;
@@ -103,7 +104,7 @@ public abstract class FoodStall extends Building implements Queueable, Repairabl
         if (canService()) {
             if (visitor.canPay(foodPrice)) {
                 visitor.pay(foodPrice);
-                gm.getFinance().earn(foodPrice);
+                gm.getFinance().earn(foodPrice, Finance.FinanceType.FOOD_SELL);
 
                 leaveQueue(visitor);
                 serviceTimer = serviceTime;

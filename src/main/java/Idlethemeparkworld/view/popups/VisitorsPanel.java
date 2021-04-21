@@ -1,7 +1,5 @@
 package Idlethemeparkworld.view.popups;
 
-import Idlethemeparkworld.misc.utils.Pair;
-import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.GameManager;
 import Idlethemeparkworld.model.agent.Visitor;
 import java.awt.CardLayout;
@@ -16,7 +14,6 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.Timer;
 
 public class VisitorsPanel extends JPanel {

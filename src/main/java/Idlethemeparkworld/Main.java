@@ -23,6 +23,7 @@ import Idlethemeparkworld.view.AdministrationDialog;
 import Idlethemeparkworld.view.Board;
 import Idlethemeparkworld.view.InformationBar;
 import Idlethemeparkworld.view.popups.CreditPanel;
+import Idlethemeparkworld.view.popups.FinancePanel;
 import Idlethemeparkworld.view.popups.StatsPanel;
 import Idlethemeparkworld.view.popups.VisitorsPanel;
 import java.awt.Component;
@@ -91,7 +92,6 @@ public class Main extends JFrame {
 
         this.campaignHighscores = new Highscores(10, true, "campaign leaderboards");
         this.sandboxHighscores = new Highscores(10, false, "sandbox leaderboards");
-        //highscores.reset();
         JMenuItem menuHighScores = new JMenuItem(new AbstractAction("Leaderboards") {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -105,6 +105,18 @@ public class Main extends JFrame {
                 JFrame frame = new JFrame("Statistics");
                 frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 frame.getContentPane().add(new StatsPanel(gm));
+                frame.pack();
+                frame.setLocationRelativeTo(Main.this);
+                frame.setVisible(true);
+            }
+        });
+        
+        JMenuItem finances = new JMenuItem(new AbstractAction("Finances") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFrame frame = new JFrame("Finances");
+                frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                frame.getContentPane().add(new FinancePanel(gm));
                 frame.pack();
                 frame.setLocationRelativeTo(Main.this);
                 frame.setVisible(true);
@@ -147,6 +159,7 @@ public class Main extends JFrame {
         menuGame.add(menuHighScores);
         menuGame.add(statistics);
         menuGame.add(visitors);
+        menuGame.add(finances);
         menuGame.addSeparator();
         menuGame.add(credit);
         menuGame.add(menuGameExit);

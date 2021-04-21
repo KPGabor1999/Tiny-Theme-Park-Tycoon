@@ -7,6 +7,7 @@ import Idlethemeparkworld.model.agent.Visitor;
 import Idlethemeparkworld.model.buildable.Building;
 import Idlethemeparkworld.model.buildable.BuildingStatus;
 import Idlethemeparkworld.misc.utils.Pair;
+import Idlethemeparkworld.model.administration.Finance.FinanceType;
 import Idlethemeparkworld.model.agent.Maintainer;
 import Idlethemeparkworld.model.buildable.Queueable;
 import Idlethemeparkworld.model.buildable.Repairable;
@@ -101,7 +102,7 @@ public abstract class Attraction extends Building implements Queueable, Repairab
                 onRide.get(i).sendRideEvent(0);
             }
         }
-        gm.getFinance().earn(profit);
+        gm.getFinance().earn(profit, FinanceType.RIDE_SELL);
     }
 
     private void finish() {

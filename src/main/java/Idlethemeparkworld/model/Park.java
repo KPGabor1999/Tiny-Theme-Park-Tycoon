@@ -1,6 +1,7 @@
 package Idlethemeparkworld.model;
 
 import Idlethemeparkworld.misc.pathfinding.PathFinding;
+import Idlethemeparkworld.model.administration.Finance;
 import Idlethemeparkworld.model.buildable.Building;
 import Idlethemeparkworld.model.buildable.BuildingStatus;
 import Idlethemeparkworld.model.buildable.attraction.Attraction;
@@ -317,7 +318,7 @@ public class Park implements Updatable {
     public synchronized void update(long tickCount) {
         buildings.forEach(b -> b.update(tickCount));
         if (tickCount % Time.convMinuteToTick(15) == 0) {
-            gm.getFinance().pay(500);
+            gm.getFinance().pay(500, Finance.FinanceType.UPKEEP);
         }
     }
 
