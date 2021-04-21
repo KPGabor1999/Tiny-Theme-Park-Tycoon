@@ -18,8 +18,8 @@ import Idlethemeparkworld.model.buildable.infrastucture.TrashCan;
 import java.awt.Rectangle;
 
 public enum BuildType {
-    PAVEMENT(1, 1, "Pavement", "Use pavement tiles to connect buildings and help people get around.", 1000, Assets.Texture.PAVEMENT, null),
-    TRASHCAN(1, 1, "Trash can", "", 1000, Assets.Texture.TRASHCAN, null),
+    PAVEMENT(1, 1, "Pavement", "Use pavement tiles to connect buildings and help people get around.", 1000, Assets.Texture.PAVEMENT, new Rectangle(0,10,64,64)),
+    TRASHCAN(1, 1, "Trash can", "", 1000, Assets.Texture.TRASHCAN, new Rectangle(0,10,64,64)),
     TOILET(1, 1, "Toilet", "", 5000, Assets.Texture.TOILET, new Rectangle(0,40,64,24)),
     ICECREAMPARLOR(2, 1, "Ice Cream parlor", "", 10000, Assets.Texture.ICECREAMPARLOR, new Rectangle(0,0,75,64)),
     HOTDOGSTAND(2, 1, "Hot Dog stand", "", 15000, Assets.Texture.HOTDOGSTAND, new Rectangle(54,5,74,59)),
@@ -29,8 +29,8 @@ public enum BuildType {
     HAUNTEDMANSION(3, 2, "Haunted mansion", "", 32000, Assets.Texture.HAUNTEDMANSION, new Rectangle(0,86,128,42)),
     FERRISWHEEL(3, 3, "Ferriswheel", "", 48000, Assets.Texture.FERRISWHEEL, new Rectangle(0,138,192,54)),
     ROLLERCOASTER(3, 3, "Roller coaster", "", 60000, Assets.Texture.ROLLERCOASTER, new Rectangle(0,0,64,128)),
-    ENTRANCE(1, 1, "Entrance", "", 0, Assets.Texture.GATE, null),
-    LOCKEDTILE(1, 1, "Locked", "Unlock to use it as a building ground.", 5000, Assets.Texture.LOCKED, null);
+    ENTRANCE(1, 1, "Entrance", "", 0, Assets.Texture.GATE, new Rectangle(0,10,64,64)),
+    LOCKEDTILE(1, 1, "Locked", "Unlock to use it as a building ground.", 5000, Assets.Texture.LOCKED, new Rectangle(0,10,64,64));
 
     private final int width, length;
     private final String name, description;
