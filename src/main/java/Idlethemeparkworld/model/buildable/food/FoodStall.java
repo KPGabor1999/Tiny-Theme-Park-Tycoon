@@ -105,9 +105,9 @@ public abstract class FoodStall extends Building implements Queueable, Repairabl
             if (visitor.canPay(foodPrice)) {
                 visitor.pay(foodPrice);
                 gm.getFinance().earn(foodPrice, Finance.FinanceType.FOOD_SELL);
-
                 leaveQueue(visitor);
                 serviceTimer = serviceTime;
+                changeCondition(-0.27);
                 return new FoodItem(foodQuality.getNextRandom(), drinkQuality.getNextRandom(), servingSize.getNextRandom());
             } else {
                 return new FoodItem();
@@ -116,24 +116,9 @@ public abstract class FoodStall extends Building implements Queueable, Repairabl
             return new FoodItem();
         }
     }
-
-    private void updateCondition() {
-        switch (status) {
-            case OPEN:
-                condition -= 1;
-                break;
-            case CLOSED:
-                condition -= 2;
-                break;
-            case INACTIVE:
-                condition -= 0.1;
-                break;
-            case FLOATING:
-                condition -= 4;
-                break;
-            default:
-                break;
-        }
+    
+    private void changeCondition(double amount) {
+        condition += amount;
         if(condition < 35) {
             Maintainer.alertOfCriticalBuilding(this);
         }
@@ -141,6 +126,25 @@ public abstract class FoodStall extends Building implements Queueable, Repairabl
             condition = 0;
             status = BuildingStatus.DECAYED;
             gm.getBoard().drawParkRender();
+        }
+    }
+
+    private void updateCondition() {
+        switch (status) {
+            case OPEN:
+                changeCondition(-0.5);
+                break;
+            case CLOSED:
+                changeCondition(-1);
+                break;
+            case INACTIVE:
+                changeCondition(-2);
+                break;
+            case FLOATING:
+                changeCondition(-4);
+                break;
+            default:
+                break;
         }
     }
 
