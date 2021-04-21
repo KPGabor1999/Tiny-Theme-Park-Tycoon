@@ -2,6 +2,7 @@ package agenttest;
 
 import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.Park;
+import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentState;
 import static Idlethemeparkworld.model.agent.AgentInnerLogic.AgentState.*;
 import Idlethemeparkworld.model.agent.Janitor;
 import Idlethemeparkworld.model.buildable.Building;
@@ -43,24 +44,27 @@ public class JanitorTest{
         janitor.update(0);
         assertEquals(WANDERING, janitor.getState());
         //Várd meg még kitakarítja a bejáratot, majd ellenõrizd, hogy tényleg tisztább lett-e.
-        janitor.update(0);
-        janitor.update(0);
+        while(janitor.getState() != AgentState.IDLE){
+            janitor.update(0);
+        }
         assertTrue((int)((Entrance)currentBuilding).getLittering() < 100);
         //Kitakarítja a járdát is?
         park.build(BuildType.PAVEMENT, 0, 0, true);
         currentBuilding = park.getTile(0,0).getBuilding();
         ((Infrastructure)currentBuilding).setLittering(100);
         janitor.update(0);
-        janitor.update(0);
-        janitor.update(0);
+        while(janitor.getState() != AgentState.IDLE){
+            janitor.update(0);
+        }
         assertTrue((int)((Pavement)currentBuilding).getLittering() < 100);
         //Kitakarítja a mosdót is?
         park.build(BuildType.TOILET, 0, 0, true);
         currentBuilding = park.getTile(0,0).getBuilding();
         ((Infrastructure)currentBuilding).setLittering(100);
         janitor.update(0);
-        janitor.update(0);
-        janitor.update(0);
+        while(janitor.getState() != AgentState.IDLE){
+            janitor.update(0);
+        }
         assertTrue((int)((Toilet)currentBuilding).getLittering() < 100);
         //Kiüríti a szemeteseket is?
         park.build(BuildType.TRASHCAN, 0, 0, true);
