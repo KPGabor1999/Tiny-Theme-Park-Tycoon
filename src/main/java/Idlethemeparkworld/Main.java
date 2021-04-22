@@ -414,7 +414,7 @@ public class Main extends JFrame {
     private static void createFont() {
         final GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         try {
-            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("src/main/resources/resources/RetroGaming.ttf")));
+            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, ClassLoader.getSystemClassLoader().getResourceAsStream("resources/RetroGaming.ttf")));
         } catch (IOException | FontFormatException e) {
             System.err.println(e);
         }

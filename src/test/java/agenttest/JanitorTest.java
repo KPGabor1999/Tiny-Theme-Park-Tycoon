@@ -48,7 +48,7 @@ public class JanitorTest{
             janitor.update(0);
         }
         assertTrue((int)((Entrance)currentBuilding).getLittering() < 100);
-        //Kitakarítja a járdát is?
+        //Kitakartja a jrdt is?
         park.build(BuildType.PAVEMENT, 0, 0, true);
         currentBuilding = park.getTile(0,0).getBuilding();
         ((Infrastructure)currentBuilding).setLittering(100);
