@@ -27,7 +27,11 @@ public class Maintainer extends Agent {
     public int getSalary() {
         return salary;
     }
-
+    
+    /**
+     * Karbantartó frissítése az updatecycle-ben.
+     * @param tickCount 
+     */
     @Override
     public void update(long tickCount) {
         checkMove();
@@ -40,16 +44,27 @@ public class Maintainer extends Agent {
         }
     }
     
-    public static void alertOfCriticalBuilding(Building building){
-        addAction(new AgentAction(AgentInnerLogic.AgentActionType.STAFFREPAIR, building));
-    }
-    
+    /**
+     * Új teendõ kijelölése a karbantartónak.
+     * @param action 
+     */
     private static void addAction(AgentAction action) {
         if (!actionQueue.contains(action)) {
             actionQueue.add(action);
         }
     }
     
+    /**
+     * Felhívjuk egy karbantartó figyelmét arra, hogy egy épület sürgõsen takarításra szorul.
+     * @param building 
+     */
+    public static void alertOfCriticalBuilding(Building building){
+        addAction(new AgentAction(AgentInnerLogic.AgentActionType.STAFFREPAIR, building));
+    }
+    
+    /**
+     * Cselekvés a teendõlista szerint.
+     */
     private void checkActionQueue(){
         if(actionQueue.isEmpty()){
             setState(AgentInnerLogic.AgentState.WANDERING);
@@ -65,6 +80,9 @@ public class Maintainer extends Agent {
         }
     }
 
+    /**
+     * Karbantartó állapotának frissítése.
+     */
     private void updateState() {
         switch (state) {
             case ENTERINGPARK:
@@ -117,6 +135,9 @@ public class Maintainer extends Agent {
         }
     }
 
+    /**
+     * Átlépés egy véletlen szomszédos mezõre, ami nem fû vagy lezárt mezõ.
+     */
     private void moveToRandomNeighbourPavementTile() {
         ArrayList<Building> neighbours = park.getPavementNeighbours(x, y);
         if (neighbours.size() > 0) {
@@ -126,6 +147,10 @@ public class Maintainer extends Agent {
         updateCurBuilding();
     }
 
+    /**
+     * Attrakció vagy büfé megjavítása.
+     * @param currentBuilding 
+     */
     private void repair(Building currentBuilding) {
         if (currentBuilding instanceof Attraction) {
             ((Attraction) currentBuilding).setCondition(100);

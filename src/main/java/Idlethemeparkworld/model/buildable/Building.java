@@ -73,6 +73,9 @@ public abstract class Building extends Buildable {
         return currentLevel < maxLevel;
     }
 
+    /**
+     * Épület fejlesztése.
+     */
     public void upgrade() {
         if (canUpgrade()) {
             innerUpgrade();

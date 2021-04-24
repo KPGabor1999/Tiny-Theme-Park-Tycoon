@@ -19,6 +19,9 @@ public class Hamburger extends FoodStall {
         this.upgradeCost = (int) (this.value * 0.75);
     }
 
+    /**
+     * Hamburgerezõ fejlesztése.
+     */
     @Override
     public void innerUpgrade() {
         switch (currentLevel) {

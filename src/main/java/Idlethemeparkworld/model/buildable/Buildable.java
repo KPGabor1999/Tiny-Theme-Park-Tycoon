@@ -30,6 +30,10 @@ public abstract class Buildable implements Updatable {
         return underConstruction;
     }
 
+    /**
+     * Frissítéskor minden épület után levonódik a fenntartási költsége.
+     * @param tickCount 
+     */
     @Override
     public void update(long tickCount) {
         upkeepTimer++;

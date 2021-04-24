@@ -20,6 +20,9 @@ public class SwingingShip extends Attraction {
         this.upgradeCost = (int)(this.value * 0.75);
     }
 
+    /**
+     * Hajóhinta frissítése.
+     */
     @Override
     public void innerUpgrade() {
         switch (currentLevel) {

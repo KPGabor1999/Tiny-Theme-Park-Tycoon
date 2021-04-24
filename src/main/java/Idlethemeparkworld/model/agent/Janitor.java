@@ -30,6 +30,10 @@ public class Janitor extends Agent implements Updatable {
         return salary;
     }
 
+    /**
+     * Takarító frissítése az updatecycle-ben.
+     * @param tickCount 
+     */
     @Override
     public void update(long tickCount) {
         checkMove();
@@ -42,16 +46,27 @@ public class Janitor extends Agent implements Updatable {
         }
     }
     
+    /**
+     * Új teendõ kijelölése a takarítónak.
+     * @param action 
+     */
     private static void addAction(AgentAction action) {
         if (!actionQueue.contains(action)) {
             actionQueue.add(action);
         }
     }
     
+    /**
+     * Felhívjuk egy takarító figyelmét arra, hogy egy épület sürgõsen takarításra szorul.
+     * @param building 
+     */
     public static void alertOfCriticalBuilding(Building building){
         addAction(new AgentAction(AgentActionType.STAFFCLEAN, building));
     }
     
+    /**
+     * Cselekvés a teendõlista szerint.
+     */
     private void checkActionQueue(){
         if(actionQueue.isEmpty()){
             setState(AgentInnerLogic.AgentState.WANDERING);
@@ -67,6 +82,9 @@ public class Janitor extends Agent implements Updatable {
         }
     }
 
+    /**
+     * Takarító állapotának frissítése.
+     */
     private void updateState() {
         switch (state) {
             case ENTERINGPARK:
@@ -108,6 +126,9 @@ public class Janitor extends Agent implements Updatable {
         }
     }
 
+    /**
+     * Átlépés egy véletlen szomszédos mezõre, ami nem fû vagy lezárt mezõ.
+     */
     private void moveToRandomNeighbourTile() {
         ArrayList<Building> neighbours = park.getInfrastructureNeighbours(x, y);
         if (neighbours.size() > 0) {
@@ -117,6 +138,10 @@ public class Janitor extends Agent implements Updatable {
         updateCurBuilding();
     }
 
+    /**
+     * Infrastrukturális elem kitakarítása.
+     * @param currentBuilding 
+     */
     private void clean(Building currentBuilding) {
         //((Infrastructure) currentBuilding).sweep(rand.nextInt(5));
         ((Infrastructure) currentBuilding).sweep(100);

@@ -18,11 +18,19 @@ public class Pavement extends Infrastructure {
         this.value = BuildType.PAVEMENT.getBuildCost();
     }
 
+    /**
+     * Egy járdaelem +1 ember jelenlétét engedélyezi a parkban.
+     * @return 
+     */
     @Override
     public int getRecommendedMax() {
         return (status == BuildingStatus.OPEN || status == BuildingStatus.OPEN) ? 1 : 0;
     }
 
+    /**
+     * Járda adatainak lekérése (ezt írjuk ki a párbeszédablakba).
+     * @return 
+     */
     @Override
     public ArrayList<Pair<String, String>> getAllData() {
         ArrayList<Pair<String, String>> res = new ArrayList<>();

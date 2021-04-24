@@ -16,12 +16,16 @@ public class LockedTile extends Infrastructure {
         this.unlockCost = BuildType.LOCKEDTILE.getBuildCost();
     }
 
+    public int getUnlockCost() {
+        return unlockCost;
+    }
+    
+    /**
+     * Ez nem tesz hozzá a parban lévõ embrek számához.
+     * @return 
+     */
     @Override
     public int getRecommendedMax() {
         return 0;
-    }
-
-    public int getUnlockCost() {
-        return unlockCost;
     }
 }

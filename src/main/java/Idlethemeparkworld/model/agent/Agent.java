@@ -88,16 +88,28 @@ public abstract class Agent implements Updatable {
         return y;
     }
     
+    /**
+     * Hol van most a karakter a képernyõn?
+     * @param cellSize
+     * @return 
+     */
     public Position calculateExactPosition(int cellSize){
         Position res = prevPos.lerp(newPos, lerpTimer/24.0);
         return res;
     }
     
+    /**
+     * Karakter állapotának beállítása manuálisan.
+     * @param newState 
+     */
     protected void setState(AgentState newState){
         statusTimer = 0;
         state = newState;
     }
     
+    /**
+     * Karakter ellenõrzi, hogy lebegõ státuszban van-e?
+     */
     protected void checkFloating(){
         if(park.getTile(x, y).isEmpty() || park.getTile(x, y).getBuilding().getStatus() == BuildingStatus.FLOATING){
             if(state != AgentState.FLOATING){
@@ -112,11 +124,17 @@ public abstract class Agent implements Updatable {
         }
     }
     
+    /**
+     * Karakter jelenlegi akciójának kinullázása.
+     */
     protected void resetAction(){
         setState(AgentState.IDLE);
         currentAction = null;
     }
     
+    /**
+     * Karakter léptetése a kiválasztott útvonalon.
+     */
     protected void moveOnPath(){
         if(path.size() > 0){
             Position nextPos = path.remove(0);
@@ -129,6 +147,11 @@ public abstract class Agent implements Updatable {
         }
     }
     
+    /**
+     * Karakter áthelyezése ide.
+     * @param x
+     * @param y 
+     */
     protected void moveTo(int x, int y){
         prevPos = new Position(this.x*64+xOffset,this.y*64+yOffset);
         lerpTimer = 0;
@@ -145,6 +168,9 @@ public abstract class Agent implements Updatable {
         }
     }
     
+    /**
+     * Épp mozog-e a karakter.
+     */
     protected void checkMove(){
         if(isMoving){
             lerpTimer++;
@@ -152,14 +178,24 @@ public abstract class Agent implements Updatable {
         }
     }
     
+    /**
+     * Karakter törlése.
+     */
     protected void remove(){
         am.removeAgent(this);
     }
     
+    /**
+     * Frissítjük, melyik épületben van a karakter.
+     */
     protected void updateCurBuilding(){
         currentBuilding = park.getTile(x, y).getBuilding();
     }
     
+    /**
+     * Karakter frissítése az updatecycle-ben.
+     * @param tickCount 
+     */
     @Override
     public void update(long tickCount){
         checkMove();
