@@ -16,7 +16,7 @@ public class Hamburger extends FoodStall {
         this.foodPrice = 15;
         this.foodQuality.setRange(50, 90);
         this.upkeepCost = 30;
-        this.upgradeCost = this.value * 2;
+        this.upgradeCost = (int) (this.value * 0.75);
     }
 
     @Override

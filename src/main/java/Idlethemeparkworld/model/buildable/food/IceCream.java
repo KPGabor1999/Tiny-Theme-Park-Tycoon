@@ -16,7 +16,7 @@ public class IceCream extends FoodStall {
         this.foodPrice = 5;
         this.foodQuality.setRange(30, 70);
         this.upkeepCost = 2 * 10;
-        this.upgradeCost = this.value * 2;
+        this.upgradeCost = (int) (this.value * 0.75);
     }
 
     @Override
