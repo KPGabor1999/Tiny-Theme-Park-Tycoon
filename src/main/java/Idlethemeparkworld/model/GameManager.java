@@ -46,7 +46,7 @@ public class GameManager {
         this.gameFroze = false;
         this.park = new Park(10, 10, this);
         this.time = new Time();
-        this.finance = new Finance(100000);
+        this.finance = new Finance(100000);       //Normálisan 100K
         this.am = new AgentManager(park, this);
         this.stats = new Statistics(this);
         this.board = null;
@@ -192,7 +192,7 @@ public class GameManager {
             }
         }
     }
-
+    
     private void update(int tickStep) {
         updateCount += tickStep * getGameSpeed();
         double actualUpdateCount = Math.floor(updateCount);

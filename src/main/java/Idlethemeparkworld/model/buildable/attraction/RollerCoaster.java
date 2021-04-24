@@ -17,7 +17,7 @@ public class RollerCoaster extends Attraction {
         this.runtime = 2;
         this.entryFee = 25;
         this.baseEntryFee = 25;        
-        this.upgradeCost = this.value * 2;
+        this.upgradeCost = (int)(this.value * 0.75);
     }
 
     @Override

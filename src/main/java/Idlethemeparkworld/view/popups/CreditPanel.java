@@ -27,7 +27,7 @@ public class CreditPanel extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 try {
-                    Desktop.getDesktop().browse(new URI(""));
+                    Desktop.getDesktop().browse(new URI("https://korompalgabor.webnode.hu/"));
                 } catch (IOException | URISyntaxException e1) {
                     e1.printStackTrace();
                 }
