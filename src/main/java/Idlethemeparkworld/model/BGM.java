@@ -42,12 +42,6 @@ public class BGM extends Thread implements Runnable {
         } catch (LineUnavailableException ex) {
             System.err.println("LineUnavailableException!");
         }
-        
-        //Induljon újra, ha leállt.
-        /*
-        while(true){
-            System.out.println(fileName + " playing.");
-        }*/
     }
     
 }

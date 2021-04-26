@@ -18,6 +18,7 @@ public class FerrisWheel extends Attraction {
         this.entryFee = 20;
         this.baseEntryFee = 20;        
         this.upgradeCost = (int)(this.value * 0.75);
+        this.soundFileName = "cog_spinning.wav";
     }
 
     @Override

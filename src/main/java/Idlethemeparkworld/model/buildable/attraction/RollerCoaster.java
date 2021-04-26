@@ -18,6 +18,7 @@ public class RollerCoaster extends Attraction {
         this.entryFee = 25;
         this.baseEntryFee = 25;        
         this.upgradeCost = (int)(this.value * 0.75);
+        this.soundFileName = "people_screams.wav";
     }
 
     @Override

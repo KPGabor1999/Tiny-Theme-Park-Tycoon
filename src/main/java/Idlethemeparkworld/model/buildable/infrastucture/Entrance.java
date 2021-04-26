@@ -14,6 +14,7 @@ public class Entrance extends Infrastructure {
         this.x = x;
         this.y = y;
         this.buildingType = BuildType.ENTRANCE;
+        this.soundFileName = "crowd_ambience.wav";
     }
 
     @Override

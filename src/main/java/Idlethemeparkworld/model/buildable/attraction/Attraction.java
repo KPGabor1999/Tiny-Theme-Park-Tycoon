@@ -36,6 +36,7 @@ public abstract class Attraction extends Building implements Queueable, Repairab
         this.onRide = new ArrayList<>();
         this.rand = new Random();
         this.condition = 100;
+        playConstructionSound();
     }
 
     public int getQueueLength() {

@@ -14,6 +14,7 @@ public class LockedTile extends Infrastructure {
         this.y = y;
         this.buildingType = BuildType.LOCKEDTILE;
         this.unlockCost = BuildType.LOCKEDTILE.getBuildCost();
+        this.soundFileName = "nature.wav";
     }
 
     @Override
