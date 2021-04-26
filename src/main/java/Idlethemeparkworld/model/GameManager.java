@@ -35,6 +35,7 @@ public class GameManager {
     private final AgentManager am;
     private final Statistics stats;
     private Board board;
+    private BGM bgm;
 
     public GameManager() {
         this.updateCycleRunning = false;
@@ -50,6 +51,7 @@ public class GameManager {
         this.am = new AgentManager(park, this);
         this.stats = new Statistics(this);
         this.board = null;
+        this.bgm = new BGM("Chessington Entrance - Theme Park Music.wav");
     }
 
     public void setBoard(Board board) {
