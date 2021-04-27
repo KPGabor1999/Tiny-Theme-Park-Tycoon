@@ -47,7 +47,7 @@ public class GameManager {
         this.gameFroze = false;
         this.park = new Park(10, 10, this);
         this.time = new Time();
-        this.finance = new Finance(1000000);       //Normálisan 50K
+        this.finance = new Finance(50000);       //Normálisan 50K
         this.am = new AgentManager(park, this);
         this.stats = new Statistics(this);
         this.board = null;
