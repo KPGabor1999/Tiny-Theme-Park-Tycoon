@@ -17,9 +17,13 @@ public class FerrisWheel extends Attraction {
         this.runtime = 7;
         this.entryFee = 20;
         this.baseEntryFee = 20;        
-        this.upgradeCost = this.value * 2;
+        this.upgradeCost = (int)(this.value * 0.75);
+        this.soundFileName = "cog_spinning.wav";
     }
 
+    /**
+     * Óriáskerék fejlesztése.
+     */
     @Override
     public void innerUpgrade() {
         switch (currentLevel) {

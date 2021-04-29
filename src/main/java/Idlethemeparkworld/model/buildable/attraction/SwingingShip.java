@@ -17,9 +17,13 @@ public class SwingingShip extends Attraction {
         this.runtime = 3;
         this.entryFee = 15;
         this.baseEntryFee = 15;
-        this.upgradeCost = this.value * 2;
+        this.upgradeCost = (int)(this.value * 0.75);
+        this.soundFileName = "you_are_a_pirate.wav";
     }
 
+    /**
+     * Hajóhinta frissítése.
+     */
     @Override
     public void innerUpgrade() {
         switch (currentLevel) {

@@ -16,9 +16,12 @@ public class HotDog extends FoodStall {
         this.foodPrice = 10;
         this.foodQuality.setRange(40, 75);
         this.upkeepCost = 10;
-        this.upgradeCost = this.value * 2;
+        this.upgradeCost = (int) (this.value * 0.75);
     }
 
+    /**
+     * Hotdogstand fejlesztése.
+     */
     @Override
     public void innerUpgrade() {
         switch (currentLevel) {

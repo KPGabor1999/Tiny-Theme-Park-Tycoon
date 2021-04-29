@@ -4,6 +4,7 @@ import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.GameManager;
 import Idlethemeparkworld.model.Time;
 import Idlethemeparkworld.model.Updatable;
+import Idlethemeparkworld.model.administration.Finance.FinanceType;
 
 public abstract class Buildable implements Updatable {
    
@@ -29,11 +30,15 @@ public abstract class Buildable implements Updatable {
         return underConstruction;
     }
 
+    /**
+     * Frissítéskor minden épület után levonódik a fenntartási költsége.
+     * @param tickCount 
+     */
     @Override
     public void update(long tickCount) {
         upkeepTimer++;
-        if (upkeepTimer >= Time.convMinuteToTick(30)) {
-            gm.getFinance().pay(upkeepCost);
+        if (upkeepTimer >= Time.convMinuteToTick(60)) {
+            gm.getFinance().pay(upkeepCost, FinanceType.UPKEEP);
             upkeepTimer = 0;
         }
     }

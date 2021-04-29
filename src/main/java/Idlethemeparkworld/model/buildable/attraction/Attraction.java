@@ -3,16 +3,18 @@ package Idlethemeparkworld.model.buildable.attraction;
 import Idlethemeparkworld.misc.utils.Range;
 import Idlethemeparkworld.model.GameManager;
 import Idlethemeparkworld.model.Time;
-import Idlethemeparkworld.model.Updatable;
 import Idlethemeparkworld.model.agent.Visitor;
 import Idlethemeparkworld.model.buildable.Building;
 import Idlethemeparkworld.model.buildable.BuildingStatus;
 import Idlethemeparkworld.misc.utils.Pair;
+import Idlethemeparkworld.model.administration.Finance.FinanceType;
+import Idlethemeparkworld.model.agent.Maintainer;
 import Idlethemeparkworld.model.buildable.Queueable;
+import Idlethemeparkworld.model.buildable.Repairable;
 import java.util.ArrayList;
 import java.util.Random;
 
-public abstract class Attraction extends Building implements Updatable, Queueable {
+public abstract class Attraction extends Building implements Queueable, Repairable {
 
     protected int fun;
     protected int capacity;
@@ -21,6 +23,7 @@ public abstract class Attraction extends Building implements Updatable, Queueabl
     protected int baseEntryFee;
 
     protected int statusTimer;
+    protected double condition;
 
     protected ArrayList<Visitor> queue;
     protected ArrayList<Visitor> onRide;
@@ -32,6 +35,8 @@ public abstract class Attraction extends Building implements Updatable, Queueabl
         this.queue = new ArrayList<>();
         this.onRide = new ArrayList<>();
         this.rand = new Random();
+        this.condition = 100;
+        playConstructionSound();
     }
 
     public int getQueueLength() {
@@ -40,10 +45,6 @@ public abstract class Attraction extends Building implements Updatable, Queueabl
 
     public int getCapacity() {
         return capacity;
-    }
-
-    public double getCondition() {
-        return condition;
     }
 
     public int getBaseEntryFee() {
@@ -58,10 +59,26 @@ public abstract class Attraction extends Building implements Updatable, Queueabl
         this.entryFee = number;
     }
 
+    @Override
+    public boolean shouldRepair(){
+        return condition < 90;
+    }
+    
+    @Override
+    public double getCondition(){
+        return condition;
+    }   
+
+    @Override
     public void setCondition(double condition) {
         this.condition = condition;
     }
+    
 
+    /**
+     * Maximum hány ember tartózkodhat a parkban?
+     * @return 
+     */
     @Override
     public int getRecommendedMax() {
         return (status == BuildingStatus.OPEN || status == BuildingStatus.OPEN) ? (int) Math.floor(capacity * 1.5) : 0;
@@ -79,6 +96,9 @@ public abstract class Attraction extends Building implements Updatable, Queueabl
         return res;
     }
 
+    /**
+     * Attrakció elindítása.
+     */
     private void start() {
         status = BuildingStatus.RUNNING;
         statusTimer = 0;
@@ -91,9 +111,12 @@ public abstract class Attraction extends Building implements Updatable, Queueabl
                 onRide.get(i).sendRideEvent(0);
             }
         }
-        gm.getFinance().earn(profit);
+        gm.getFinance().earn(profit, FinanceType.RIDE_SELL);
     }
 
+    /**
+     * Attrakció leállítása.
+     */
     private void finish() {
         Range r = new Range((int) Math.floor(fun * condition / 100), fun);
         int rideEvent = 0;
@@ -106,9 +129,13 @@ public abstract class Attraction extends Building implements Updatable, Queueabl
             onRide.get(i).sendRideEvent(rideEvent);
         }
         onRide.clear();
+        changeCondition(-0.47);
         status = BuildingStatus.OPEN;
     }
 
+    /**
+     * Sorban váró látogatók beültetése az attrakcióba.
+     */
     private void loadVisitors() {
         while (!queue.isEmpty() && onRide.size() < capacity) {
             Visitor v = queue.remove(0);
@@ -117,47 +144,52 @@ public abstract class Attraction extends Building implements Updatable, Queueabl
         }
     }
 
+    /**
+     * Bátogató betétele a sorba.
+     * @param v 
+     */
     @Override
     public void joinQueue(Visitor v) {
         queue.add(v);
     }
 
+    /**
+     * Látogató kivétele a sorból.
+     * @param v 
+     */
     @Override
     public void leaveQueue(Visitor v) {
         queue.remove(v);
     }
 
+    /**
+     * Adott látogató a sor elején áll?
+     * @param v
+     * @return 
+     */
     @Override
     public boolean isFirstInQueue(Visitor v) {
         return false;
     }
 
+    /**
+     * Mûködik-e az attrakció?
+     * @return 
+     */
     @Override
     public boolean canService() {
         return true;
     }
-
-    private void updateCondition() {
-        switch (status) {
-            case RUNNING:
-                condition -= 0.02;
-                break;
-            case OPEN:
-                condition -= 0.01;
-                break;
-            case CLOSED:
-                condition -= 0.02;
-                break;
-            case INACTIVE:
-                condition -= 0.04;
-                break;
-            case FLOATING:
-                condition -= 2.5;
-                break;
-            default:
-                break;
+    
+    /**
+     * Attrakció állapotának romlása.
+     * @param amount 
+     */
+    private void changeCondition(double amount) {
+        condition += amount;
+        if(condition < 35) {
+            Maintainer.alertOfCriticalBuilding(this);
         }
-
         if (condition <= 0) {
             condition = 0;
             status = BuildingStatus.DECAYED;
@@ -165,6 +197,32 @@ public abstract class Attraction extends Building implements Updatable, Queueabl
         }
     }
 
+    /**
+     * Attrakció állapotának frissítése.
+     */
+    private void updateCondition() {
+        switch (status) {
+            case OPEN:
+                changeCondition(-0.33);
+                break;
+            case CLOSED:
+                changeCondition(-1);
+                break;
+            case INACTIVE:
+                changeCondition(-2);
+                break;
+            case FLOATING:
+                changeCondition(-4);
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * Attrakció állapotának beállítása manuálisan.
+     * @param status 
+     */
     @Override
     public void setStatus(BuildingStatus status) {
         if (this.status == BuildingStatus.FLOATING) {
@@ -175,6 +233,10 @@ public abstract class Attraction extends Building implements Updatable, Queueabl
         super.setStatus(status);
     }
 
+    /**
+     * Attrakció frissítése az updatecycle-ben.
+     * @param tickCount 
+     */
     @Override
     public void update(long tickCount) {
         statusTimer++;

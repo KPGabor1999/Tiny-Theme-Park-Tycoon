@@ -4,6 +4,7 @@ import Idlethemeparkworld.model.BuildType;
 import java.util.ArrayList;
 import Idlethemeparkworld.misc.utils.Pair;
 import Idlethemeparkworld.model.GameManager;
+import Idlethemeparkworld.model.agent.Janitor;
 
 public class TrashCan extends Infrastructure {
 
@@ -19,6 +20,8 @@ public class TrashCan extends Infrastructure {
         this.capacity = 30;
         this.filled = 0;
         this.value = BuildType.TRASHCAN.getBuildCost();
+        this.soundFileName = "paper_crumbling.wav";
+        playConstructionSound();
     }
 
     public double getCapacity() {
@@ -28,7 +31,20 @@ public class TrashCan extends Infrastructure {
     public double getFilled() {
         return filled;
     }
+    
+    /**
+     * Ideje kiüríteni a szemetest?
+     * @return 
+     */
+    @Override
+    public boolean shouldClean() {
+        return littering > 3 || filled/capacity > 0.2;
+    }
 
+    /**
+     * Szemetes adatainak lekérése (kiíratáshoz).
+     * @return 
+     */
     @Override
     public ArrayList<Pair<String, String>> getAllData() {
         ArrayList<Pair<String, String>> res = new ArrayList<>();
@@ -38,23 +54,41 @@ public class TrashCan extends Infrastructure {
         return res;
     }
 
+    /**
+     * Szemetes használata.
+     * @param amount 
+     */
     public void use(double amount) {
         if (!isFull()) {
             filled += amount;
+            if(filled/capacity > 0.7) {
+                Janitor.alertOfCriticalBuilding(this);
+            }
             if (isFull()) {
                 filled = capacity;
             }
         }
     }
 
+    /**
+     * Tele van-e a szemetes?
+     * @return 
+     */
     public boolean isFull() {
         return filled >= capacity;
     }
 
+    /**
+     * Szemetes kiürítése.
+     */
     public void empty() {
         filled = 0;
     }
 
+    /**
+     * Egy szemetes lerakása +5 ember tartózkodását engedélyezi a parkban.
+     * @return 
+     */
     @Override
     public int getRecommendedMax() {
         return 5;

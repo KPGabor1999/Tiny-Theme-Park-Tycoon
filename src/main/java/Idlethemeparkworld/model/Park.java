@@ -1,6 +1,7 @@
 package Idlethemeparkworld.model;
 
 import Idlethemeparkworld.misc.pathfinding.PathFinding;
+import Idlethemeparkworld.model.administration.Finance;
 import Idlethemeparkworld.model.buildable.Building;
 import Idlethemeparkworld.model.buildable.BuildingStatus;
 import Idlethemeparkworld.model.buildable.attraction.Attraction;
@@ -167,10 +168,10 @@ public class Park implements Updatable {
         return res;
     }
 
-    public ArrayList<Building> getWalkableNeighbours(int x, int y) {
+    public ArrayList<Building> getInfrastructureNeighbours(int x, int y) {
         ArrayList<Building> res = new ArrayList<>();
         ArrayList<Tile> neighbours = getNeighbours(x, y, 1, 1);
-        neighbours.removeIf(n -> (n.getBuilding() == null || n.getBuilding() instanceof LockedTile));
+        neighbours.removeIf(n -> (n.getBuilding() == null || !(n.getBuilding() instanceof Infrastructure) || n.getBuilding() instanceof LockedTile || n.getBuilding().getStatus() == BuildingStatus.DECAYED));
         neighbours.forEach(n -> res.add(n.getBuilding()));
         return res;
     }
@@ -278,12 +279,12 @@ public class Park implements Updatable {
     }
 
     public synchronized void demolish(int x, int y) {
-        (this.tiles[y][x]).unsetBuilding();
+        Building building = tiles[y][x].getBuilding();
+        setAreaToBuilding(x, y, building.getInfo().getLength(), building.getInfo().getWidth(), null);
 
         int demolitionIndex = 0;
         for (int i = 0; i < buildings.size(); i++) {
-            if (buildings.get(i).getX() == x
-                    && buildings.get(i).getY() == y) {
+            if (buildings.get(i).getX() == x && buildings.get(i).getY() == y) {
                 demolitionIndex = i;
                 break;
             }
@@ -317,7 +318,7 @@ public class Park implements Updatable {
     public synchronized void update(long tickCount) {
         buildings.forEach(b -> b.update(tickCount));
         if (tickCount % Time.convMinuteToTick(15) == 0) {
-            gm.getFinance().pay(500);
+            gm.getFinance().pay(500, Finance.FinanceType.UPKEEP);
         }
     }
 

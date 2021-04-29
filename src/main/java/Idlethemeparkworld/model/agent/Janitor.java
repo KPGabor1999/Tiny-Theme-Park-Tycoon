@@ -1,5 +1,6 @@
 package Idlethemeparkworld.model.agent;
 
+import Idlethemeparkworld.misc.utils.Position;
 import Idlethemeparkworld.model.AgentManager;
 import Idlethemeparkworld.model.Park;
 import Idlethemeparkworld.model.Time;
@@ -11,10 +12,12 @@ import Idlethemeparkworld.model.buildable.infrastucture.Infrastructure;
 import Idlethemeparkworld.model.buildable.infrastucture.Toilet;
 import Idlethemeparkworld.model.buildable.infrastucture.TrashCan;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class Janitor extends Agent implements Updatable {
 
-    private final int salary;     //dollars per hour
+    private final int salary;
+    private final static LinkedList<AgentAction> actionQueue = new LinkedList<>();
 
     public Janitor(String name, Park park, AgentManager am) {
         super(name, park, am);
@@ -23,44 +26,95 @@ public class Janitor extends Agent implements Updatable {
         this.salary = 8;
     }
 
-    public AgentState getState() {
-        return state;
-    }
-
     public int getSalary() {
         return salary;
     }
 
+    /**
+     * Takarító frissítése az updatecycle-ben.
+     * @param tickCount 
+     */
     @Override
     public void update(long tickCount) {
-        //Randomra járkál fel alá, és ha infrastrukturális mezõre lép, kitakarítja.
         checkMove();
         statusTimer++;
         if (tickCount % 24 == 0) {
             checkFloating();
             if (state != AgentInnerLogic.AgentState.FLOATING) {
                 updateState();
-                performAction(tickCount);
+            }
+        }
+    }
+    
+    /**
+     * Új teendõ kijelölése a takarítónak.
+     * @param action 
+     */
+    private static void addAction(AgentAction action) {
+        if (!actionQueue.contains(action)) {
+            actionQueue.add(action);
+        }
+    }
+    
+    /**
+     * Felhívjuk egy takarító figyelmét arra, hogy egy épület sürgõsen takarításra szorul.
+     * @param building 
+     */
+    public static void alertOfCriticalBuilding(Building building){
+        addAction(new AgentAction(AgentActionType.STAFFCLEAN, building));
+    }
+    
+    /**
+     * Cselekvés a teendõlista szerint.
+     */
+    private void checkActionQueue(){
+        if(actionQueue.isEmpty()){
+            setState(AgentInnerLogic.AgentState.WANDERING);
+        } else {
+            currentAction = actionQueue.pop();
+            Building building = currentAction.getSubject();
+            if(building == null){
+                currentAction = null;
             } else {
-                updateState();
+                path = park.getPathfinding().getPath(new Position(x,y), building);
+                setState(AgentInnerLogic.AgentState.WALKING);
             }
         }
     }
 
+    /**
+     * Takarító állapotának frissítése.
+     */
     private void updateState() {
         switch (state) {
             case ENTERINGPARK:
                 setState(AgentState.IDLE);
                 break;
             case IDLE:
-                setState(AgentState.WANDERING);
-                currentAction = new AgentAction(AgentActionType.WANDER, null);
+                checkActionQueue();
                 break;
             case WANDERING:
-                currentAction = new AgentAction(AgentActionType.WANDER, null);
+                checkActionQueue();
+                if(this.state != AgentState.WALKING){
+                    moveToRandomNeighbourTile();
+                    if (currentBuilding instanceof Infrastructure && ((Infrastructure)currentBuilding).shouldClean()) {
+                        statusMaxTimer = Time.convMinuteToTick(rand.nextInt(4)+1);
+                        setState(AgentState.CLEANING);
+                    }
+                }
+                break;
+            case WALKING:
+                moveOnPath();
+                if (path.isEmpty() && currentBuilding instanceof Infrastructure) {
+                    statusMaxTimer = Time.convMinuteToTick(rand.nextInt(4)+1);
+                    setState(AgentState.CLEANING);
+                }
                 break;
             case CLEANING:
-                currentAction = new AgentAction(AgentActionType.STAFFCLEAN, null);
+                if(statusTimer > statusMaxTimer){
+                    clean(currentBuilding);
+                    resetAction();
+                }
                 break;
             case FLOATING:
                 if (statusTimer > Time.convMinuteToTick(5)) {
@@ -72,39 +126,22 @@ public class Janitor extends Agent implements Updatable {
         }
     }
 
-    private void performAction(long tickCount) {
-        if (currentAction != null) {
-            switch (currentAction.getAction()) {
-                case WANDER:
-                    //Átlép egy környezõ mezõre, ami nem fû vagy lockedTile.
-                    //Frissítjük a currentBuilding-et.
-                    //Ha currentBuilding instanceof Infrastructure, STAFFCLEAN akció
-                    moveToRandomNeighbourTile();
-                    updateCurBuilding();
-                    if (currentBuilding instanceof Infrastructure) {
-                        setState(AgentState.CLEANING);
-                    }
-                    break;
-                case STAFFCLEAN:
-                    //Kitakarítjuk a currentBuilding-et.
-                    //Visszaáll Wandering-be.
-                    clean(currentBuilding);
-                    setState(AgentState.WANDERING);
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-
+    /**
+     * Átlépés egy véletlen szomszédos mezõre, ami nem fû vagy lezárt mezõ.
+     */
     private void moveToRandomNeighbourTile() {
-        ArrayList<Building> neighbours = park.getWalkableNeighbours(x, y);
+        ArrayList<Building> neighbours = park.getInfrastructureNeighbours(x, y);
         if (neighbours.size() > 0) {
             int nextIndex = rand.nextInt(neighbours.size());
             moveTo(neighbours.get(nextIndex).getX(), neighbours.get(nextIndex).getY());
         }
+        updateCurBuilding();
     }
 
+    /**
+     * Infrastrukturális elem kitakarítása.
+     * @param currentBuilding 
+     */
     private void clean(Building currentBuilding) {
         //((Infrastructure) currentBuilding).sweep(rand.nextInt(5));
         ((Infrastructure) currentBuilding).sweep(100);

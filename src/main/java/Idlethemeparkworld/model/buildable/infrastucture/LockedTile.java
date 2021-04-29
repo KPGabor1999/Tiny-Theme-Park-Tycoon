@@ -14,14 +14,19 @@ public class LockedTile extends Infrastructure {
         this.y = y;
         this.buildingType = BuildType.LOCKEDTILE;
         this.unlockCost = BuildType.LOCKEDTILE.getBuildCost();
-    }
-
-    @Override
-    public int getRecommendedMax() {
-        return 0;
+        this.soundFileName = "nature.wav";
     }
 
     public int getUnlockCost() {
         return unlockCost;
+    }
+    
+    /**
+     * Ez nem tesz hozzá a parban lévõ embrek számához.
+     * @return 
+     */
+    @Override
+    public int getRecommendedMax() {
+        return 0;
     }
 }

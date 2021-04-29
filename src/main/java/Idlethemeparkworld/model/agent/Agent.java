@@ -9,6 +9,7 @@ import Idlethemeparkworld.model.agent.AgentTypes.AgentType;
 import Idlethemeparkworld.model.agent.AgentTypes.StaffType;
 import Idlethemeparkworld.model.buildable.Building;
 import Idlethemeparkworld.model.buildable.BuildingStatus;
+import java.util.ArrayList;
 import java.util.Random;
 
 public abstract class Agent implements Updatable {
@@ -20,6 +21,7 @@ public abstract class Agent implements Updatable {
     String name;
     int x,y;
     boolean inPark;
+    protected ArrayList<Position> path;
     
     AgentType type;
     StaffType staffType;
@@ -59,6 +61,7 @@ public abstract class Agent implements Updatable {
         this.newPos = new Position(xOffset,yOffset);
         this.lerpTimer = 0;
         this.isMoving = false;
+        this.path = new ArrayList<>();
     }
 
     public String getName() {
@@ -85,16 +88,28 @@ public abstract class Agent implements Updatable {
         return y;
     }
     
+    /**
+     * Hol van most a karakter a képernyõn?
+     * @param cellSize
+     * @return 
+     */
     public Position calculateExactPosition(int cellSize){
         Position res = prevPos.lerp(newPos, lerpTimer/24.0);
         return res;
     }
     
+    /**
+     * Karakter állapotának beállítása manuálisan.
+     * @param newState 
+     */
     protected void setState(AgentState newState){
         statusTimer = 0;
         state = newState;
     }
     
+    /**
+     * Karakter ellenõrzi, hogy lebegõ státuszban van-e?
+     */
     protected void checkFloating(){
         if(park.getTile(x, y).isEmpty() || park.getTile(x, y).getBuilding().getStatus() == BuildingStatus.FLOATING){
             if(state != AgentState.FLOATING){
@@ -109,11 +124,34 @@ public abstract class Agent implements Updatable {
         }
     }
     
+    /**
+     * Karakter jelenlegi akciójának kinullázása.
+     */
     protected void resetAction(){
         setState(AgentState.IDLE);
         currentAction = null;
     }
     
+    /**
+     * Karakter léptetése a kiválasztott útvonalon.
+     */
+    protected void moveOnPath(){
+        if(path.size() > 0){
+            Position nextPos = path.remove(0);
+            if(park.getTile(nextPos.x, nextPos.y).isEmpty()
+                    || park.getTile(nextPos.x, nextPos.y).getBuilding().getStatus() == BuildingStatus.DECAYED){
+                resetAction();
+            } else {
+                moveTo(nextPos.x, nextPos.y);
+            }
+        }
+    }
+    
+    /**
+     * Karakter áthelyezése ide.
+     * @param x
+     * @param y 
+     */
     protected void moveTo(int x, int y){
         prevPos = new Position(this.x*64+xOffset,this.y*64+yOffset);
         lerpTimer = 0;
@@ -121,11 +159,18 @@ public abstract class Agent implements Updatable {
         this.x=x;
         this.y=y;
         updateCurBuilding();
-        xOffset = rand.nextInt(currentBuilding.getInfo().getWidth()*64);
-        yOffset = rand.nextInt(currentBuilding.getInfo().getLength()*64);
-        newPos = new Position(this.x*64+xOffset,this.y*64+yOffset);
+        if(currentBuilding != null) {
+            xOffset = rand.nextInt(currentBuilding.getInfo().getLobbyArea().width)+currentBuilding.getInfo().getLobbyArea().x;
+            yOffset = rand.nextInt(currentBuilding.getInfo().getLobbyArea().height)+currentBuilding.getInfo().getLobbyArea().y;
+            newPos = new Position(this.x*64+xOffset,this.y*64+yOffset);
+        } else {
+            setState(AgentState.FLOATING);
+        }
     }
     
+    /**
+     * Épp mozog-e a karakter.
+     */
     protected void checkMove(){
         if(isMoving){
             lerpTimer++;
@@ -133,14 +178,24 @@ public abstract class Agent implements Updatable {
         }
     }
     
+    /**
+     * Karakter törlése.
+     */
     protected void remove(){
         am.removeAgent(this);
     }
     
+    /**
+     * Frissítjük, melyik épületben van a karakter.
+     */
     protected void updateCurBuilding(){
         currentBuilding = park.getTile(x, y).getBuilding();
     }
     
+    /**
+     * Karakter frissítése az updatecycle-ben.
+     * @param tickCount 
+     */
     @Override
     public void update(long tickCount){
         checkMove();

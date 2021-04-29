@@ -1,5 +1,6 @@
 package Idlethemeparkworld.model;
 
+import Idlethemeparkworld.model.administration.Finance;
 import Idlethemeparkworld.model.agent.Agent;
 import Idlethemeparkworld.model.agent.Janitor;
 import Idlethemeparkworld.model.agent.Maintainer;
@@ -246,13 +247,13 @@ public class AgentManager implements Updatable {
         for (int i = 0; i < janitors.size(); i++) {
             janitors.get(i).update(tickCount);
             if(gm.getTime().getTotalMinutes() % 60 == 0){
-                gm.getFinance().pay(janitors.get(i).getSalary());
+                gm.getFinance().pay(janitors.get(i).getSalary(), Finance.FinanceType.SALARY);
             }
         }
         for (int i = 0; i < maintainers.size(); i++) {
             maintainers.get(i).update(tickCount);
             if(gm.getTime().getTotalMinutes() % 60 == 0){
-                gm.getFinance().pay(maintainers.get(i).getSalary());
+                gm.getFinance().pay(maintainers.get(i).getSalary(), Finance.FinanceType.SALARY);
             }
         }
         if(tickCount%24==0){
