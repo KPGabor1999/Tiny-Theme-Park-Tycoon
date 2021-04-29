@@ -20,6 +20,8 @@ public class TrashCan extends Infrastructure {
         this.capacity = 30;
         this.filled = 0;
         this.value = BuildType.TRASHCAN.getBuildCost();
+        this.soundFileName = "paper_crumbling.wav";
+        playConstructionSound();
     }
 
     public double getCapacity() {

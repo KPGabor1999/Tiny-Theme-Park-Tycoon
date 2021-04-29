@@ -34,6 +34,8 @@ public abstract class FoodStall extends Building implements Queueable, Repairabl
         this.drinkQuality = new Range(45, 90);
         this.servingSize = new Range(5, 15);
         this.condition = 100;
+        this.soundFileName = "nom_nom_nom.wav";
+        playConstructionSound();
     }
 
     public int getFoodPrice() {

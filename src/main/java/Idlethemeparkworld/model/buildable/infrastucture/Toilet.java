@@ -28,6 +28,8 @@ public class Toilet extends Infrastructure implements Queueable {
         this.capacity = 10;
         this.cleanliness = 100;
         this.value = BuildType.TOILET.getBuildCost();
+        this.soundFileName = "toilet_flush.wav";
+        playConstructionSound();
     }
 
     @Override

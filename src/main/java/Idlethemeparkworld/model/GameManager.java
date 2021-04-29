@@ -35,6 +35,7 @@ public class GameManager {
     private final AgentManager am;
     private final Statistics stats;
     private Board board;
+    private BGM bgm;
 
     public GameManager() {
         this.updateCycleRunning = false;
@@ -46,10 +47,11 @@ public class GameManager {
         this.gameFroze = false;
         this.park = new Park(10, 10, this);
         this.time = new Time();
-        this.finance = new Finance(100000);       //Normálisan 100K
+        this.finance = new Finance(50000);       //Normálisan 50K
         this.am = new AgentManager(park, this);
         this.stats = new Statistics(this);
         this.board = null;
+        this.bgm = new BGM("Chessington Entrance - Theme Park Music.wav");
     }
 
     public void setBoard(Board board) {

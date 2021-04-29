@@ -19,6 +19,7 @@ public class Carousel extends Attraction {
         this.runtime = 3;
         this.entryFee = 10;
         this.baseEntryFee = 10;
+        this.soundFileName = "carousel.wav";
     }
 
     /**
