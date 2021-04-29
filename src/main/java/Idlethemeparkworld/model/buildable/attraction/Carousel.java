@@ -21,6 +21,9 @@ public class Carousel extends Attraction {
         this.baseEntryFee = 10;
     }
 
+    /**
+     * Körhinta fejlesztése.
+     */
     @Override
     public void innerUpgrade() {
         switch (currentLevel) {

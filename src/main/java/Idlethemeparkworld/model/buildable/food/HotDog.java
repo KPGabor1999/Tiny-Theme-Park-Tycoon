@@ -19,6 +19,9 @@ public class HotDog extends FoodStall {
         this.upgradeCost = (int) (this.value * 0.75);
     }
 
+    /**
+     * Hotdogstand fejlesztése.
+     */
     @Override
     public void innerUpgrade() {
         switch (currentLevel) {

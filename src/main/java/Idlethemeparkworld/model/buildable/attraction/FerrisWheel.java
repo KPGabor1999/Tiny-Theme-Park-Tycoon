@@ -20,6 +20,9 @@ public class FerrisWheel extends Attraction {
         this.upgradeCost = (int)(this.value * 0.75);
     }
 
+    /**
+     * Óriáskerék fejlesztése.
+     */
     @Override
     public void innerUpgrade() {
         switch (currentLevel) {

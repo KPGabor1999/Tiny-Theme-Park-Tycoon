@@ -30,6 +30,9 @@ public class Statistics implements Updatable {
         this.visitorCount = new ArrayList<>();
     }
     
+    /**
+     * Eddigi játékstatisztikák törlése.
+     */
     public void reset(){
         times.clear();
         rating.clear();
@@ -37,6 +40,12 @@ public class Statistics implements Updatable {
         visitorCount.clear();
     }
 
+    /**
+     * Valamelyik adat statisztikáinak lekérése.
+     * @param <T>
+     * @param list
+     * @return 
+     */
     private <T> ArrayList<Pair<String, Double>> combineLists(ArrayList<T> list) {
         ArrayList<Pair<String, Double>> res = new ArrayList<>();
         for (int i = 0; i < rating.size(); i++) {
@@ -45,18 +54,34 @@ public class Statistics implements Updatable {
         return res;
     }
 
+    /**
+     * Park értékelési elõzmények lekérése.
+     * @return 
+     */
     public ArrayList<Pair<String, Double>> getRatingHistory() {
         return combineLists(rating);
     }
 
+    /**
+     * Park boldogságszint elõzményeinek lekérése.
+     * @return 
+     */
     public ArrayList<Pair<String, Double>> getHappinessHistory() {
         return combineLists(happiness);
     }
     
+    /**
+     * Látogatók számának elõzményeinek lekérése.
+     * @return 
+     */
     public ArrayList<Pair<String, Double>> getVisitorCountHistory() {
         return combineLists(visitorCount);
     }
     
+    /**
+     * Látogatók jelenlegi akcióinak lekérése (az egyik tortadiagramhoz).
+     * @return 
+     */
     public ArrayList<Pair<String, Double>> getVisitorAction() {
         ArrayList<Pair<String, Double>> res = new ArrayList<>();
         ArrayList<Visitor> visitors = gm.getAgentManager().getVisitors();
@@ -98,6 +123,10 @@ public class Statistics implements Updatable {
         return res;
     }
 
+    /**
+     * Látogatók jelenlegi állapotainak lekérése (szintén tortadiagrammhoz).
+     * @return 
+     */
     public ArrayList<Pair<String, Double>> getVisitorState() {
         ArrayList<Pair<String, Double>> res = new ArrayList<>();
         ArrayList<Visitor> visitors = gm.getAgentManager().getVisitors();
@@ -153,6 +182,10 @@ public class Statistics implements Updatable {
         return res;
     }
 
+    /**
+     * Jelenlegi épülettípusok lekérése (tortadiagramhoz).
+     * @return 
+     */
     public ArrayList<Pair<String, Double>> getBuildType() {
         ArrayList<Pair<String, Double>> res = new ArrayList<>();
         ArrayList<Building> buildings = gm.getPark().getBuildings();
@@ -175,6 +208,12 @@ public class Statistics implements Updatable {
         return res;
     }
 
+    /**
+     * Elõzménystatisztikai érték beszúrása a megfelelõ listába.
+     * @param <T>
+     * @param list
+     * @param value 
+     */
     private <T> void insertHistory(ArrayList<T> list, T value) {
         list.add(value);
         if (list.size() >= HISTORY_LENGTH) {
@@ -182,6 +221,9 @@ public class Statistics implements Updatable {
         }
     }
 
+    /**
+     * Elõzménystatisztikák frissítése minden attribútumra.
+     */
     private void updateHistories() {
         insertHistory(times, gm.getTime().toStringShort());
         insertHistory(rating, gm.getPark().getRating());
@@ -189,6 +231,10 @@ public class Statistics implements Updatable {
         insertHistory(visitorCount, gm.getAgentManager().getVisitorCount());
     }
 
+    /**
+     * Elõzménystatisztikák frissítése az udatecycle-ben.
+     * @param tickCount 
+     */
     @Override
     public void update(long tickCount) {
         if (tickCount % Time.convMinuteToTick(10) == 0) {

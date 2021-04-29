@@ -20,6 +20,9 @@ public class RollerCoaster extends Attraction {
         this.upgradeCost = (int)(this.value * 0.75);
     }
 
+    /**
+     * Hullámvasút frissítése.
+     */
     @Override
     public void innerUpgrade() {
         switch (currentLevel) {

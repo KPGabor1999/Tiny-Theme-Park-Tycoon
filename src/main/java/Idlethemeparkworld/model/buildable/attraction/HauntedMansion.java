@@ -20,6 +20,9 @@ public class HauntedMansion extends Attraction {
         this.upgradeCost = (int)(this.value * 0.75);
     }
 
+    /**
+     * Kísértetkastély frissítése.
+     */
     @Override
     public void innerUpgrade() {
         switch (currentLevel) {

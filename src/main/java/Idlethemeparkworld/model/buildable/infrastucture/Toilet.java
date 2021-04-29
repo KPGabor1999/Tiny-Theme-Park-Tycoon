@@ -43,6 +43,10 @@ public class Toilet extends Infrastructure implements Queueable {
         return queue.size();
     }
 
+    /**
+     * Járda adatainak lekérése (ezt írjuk ki a párbeszédablakba).
+     * @return 
+     */
     @Override
     public ArrayList<Pair<String, String>> getAllData() {
         ArrayList<Pair<String, String>> res = new ArrayList<>();
@@ -52,35 +56,63 @@ public class Toilet extends Infrastructure implements Queueable {
         return res;
     }
 
+    /**
+     * Látogató beállítása a sorba.
+     * @param visitor 
+     */
     @Override
     public void joinQueue(Visitor visitor) {
         queue.add(visitor);
     }
 
+    /**
+     * Látogató a sor elején áll?
+     * @param visitor
+     * @return 
+     */
     @Override
     public boolean isFirstInQueue(Visitor visitor) {
         return queue.peek().equals(visitor);
     }
 
+    /**
+     * Látogató elhagyja a sort.
+     * @param visitor 
+     */
     @Override
     public void leaveQueue(Visitor visitor) {
         queue.remove(visitor);
     }
     
+    /**
+     * Mûködik a mosdó?
+     * @return 
+     */
     @Override
     public boolean canService() {
         return occupied < capacity;
     }
 
+    /**
+     * Látogató belép a mosdóba.
+     * @param visitor 
+     */
     public void enter(Visitor visitor) {
         queue.poll();
         occupied++;
     }
 
+    /**
+     * Felszabadul egy hely a mosdóban.
+     */
     public void exit() {
         occupied--;
     }
 
+    /**
+     * Romlik a mosdó tisztasága.
+     * @param amount 
+     */
     public void decreaseHygiene(double amount) {
         cleanliness -= amount;
         if(cleanliness < 35) {
@@ -93,11 +125,19 @@ public class Toilet extends Infrastructure implements Queueable {
         }
     }
 
+    /**
+     * Takarításra szorul a mosdó?
+     * @return 
+     */
     @Override
     public boolean shouldClean() {
         return littering > 3 || cleanliness < 85;
     }
     
+    /**
+     * Mósdó tisztítása.
+     * @param amount 
+     */
     public void clean(int amount) {
         cleanliness += amount;
         cleanliness = Math.min(cleanliness, 100);

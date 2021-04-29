@@ -19,6 +19,9 @@ public class IceCream extends FoodStall {
         this.upgradeCost = (int) (this.value * 0.75);
     }
 
+    /**
+     * Fagyizó fejlesztése.
+     */
     @Override
     public void innerUpgrade() {
         switch (currentLevel) {

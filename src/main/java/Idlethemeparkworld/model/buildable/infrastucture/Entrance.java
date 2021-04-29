@@ -16,11 +16,19 @@ public class Entrance extends Infrastructure {
         this.buildingType = BuildType.ENTRANCE;
     }
 
+    /**
+     * A bejárat +5 ember jelenlétét engedélyezi a parkban.
+     * @return 
+     */
     @Override
     public int getRecommendedMax() {
         return (status == BuildingStatus.OPEN || status == BuildingStatus.OPEN) ? 5 : 0;
     }
 
+    /**
+     * Új látogatók betétele a parkba.
+     * @param visitor 
+     */
     public void enterPark(Visitor visitor) {
         if (visitor.canPay(value)) {
             visitor.pay(gm.getEntranceFee());

@@ -54,11 +54,6 @@ public abstract class FoodStall extends Building implements Queueable, Repairabl
     }
     
     @Override
-    public boolean shouldRepair(){
-        return condition < 90;
-    }
-    
-    @Override
     public double getCondition(){
         return condition;
     }   
@@ -67,7 +62,20 @@ public abstract class FoodStall extends Building implements Queueable, Repairabl
     public void setCondition(double condition) {
         this.condition = condition;
     }
+    
+    /**
+     * Javításra szorul-e a büfé?
+     * @return 
+     */
+    @Override
+    public boolean shouldRepair(){
+        return condition < 90;
+    }
 
+    /**
+     * Büfé adatainak összegyûjtése (ezeket írjuk ki a párbeszédablakba).
+     * @return 
+     */
     @Override
     public ArrayList<Pair<String, String>> getAllData() {
         ArrayList<Pair<String, String>> res = new ArrayList<>();
@@ -80,26 +88,49 @@ public abstract class FoodStall extends Building implements Queueable, Repairabl
     }
 
     //Methods for managing visitors:
+    
+    /**
+     * Látogató betétele a sorba.
+     * @param visitor 
+     */
     @Override
     public void joinQueue(Visitor visitor) {
         queue.add(visitor);
     }
 
+    /**
+     * Az adott látogató a sor elején áll?
+     * @param visitor
+     * @return 
+     */
     @Override
     public boolean isFirstInQueue(Visitor visitor) {
         return queue.peek().equals(visitor);
     }
 
+    /**
+     * Az adott látogató kiállítása a sorból.
+     * @param visitor 
+     */
     @Override
     public void leaveQueue(Visitor visitor) {
         queue.remove(visitor);
     }
 
+    /**
+     * Üzemel-e a büfé.
+     * @return 
+     */
     @Override
     public boolean canService() {
         return serviceTimer <= 0;
     }
 
+    /**
+     * Az adott látogató telt vesz.
+     * @param visitor
+     * @return 
+     */
     public FoodItem buyFood(Visitor visitor) {
         if (canService()) {
             if (visitor.canPay(foodPrice)) {
@@ -117,6 +148,10 @@ public abstract class FoodStall extends Building implements Queueable, Repairabl
         }
     }
     
+    /**
+     * Büfé állapotromlása.
+     * @param amount 
+     */
     private void changeCondition(double amount) {
         condition += amount;
         if(condition < 35) {
@@ -129,6 +164,9 @@ public abstract class FoodStall extends Building implements Queueable, Repairabl
         }
     }
 
+    /**
+     * Büfé állapotának frissítése.
+     */
     private void updateCondition() {
         switch (status) {
             case OPEN:
@@ -148,6 +186,10 @@ public abstract class FoodStall extends Building implements Queueable, Repairabl
         }
     }
 
+    /**
+     * Büfé állapotának átállítása manuálisan.
+     * @param status 
+     */
     @Override
     public void setStatus(BuildingStatus status) {
         if (this.status == BuildingStatus.FLOATING) {
@@ -157,6 +199,10 @@ public abstract class FoodStall extends Building implements Queueable, Repairabl
         super.setStatus(status);
     }
 
+    /**
+     * Büfé frissítése az updatecycle-ban.
+     * @param tickCount 
+     */
     @Override
     public void update(long tickCount) {
         super.update(tickCount);

@@ -72,7 +72,12 @@ public abstract class Attraction extends Building implements Queueable, Repairab
     public void setCondition(double condition) {
         this.condition = condition;
     }
+    
 
+    /**
+     * Maximum hány ember tartózkodhat a parkban?
+     * @return 
+     */
     @Override
     public int getRecommendedMax() {
         return (status == BuildingStatus.OPEN || status == BuildingStatus.OPEN) ? (int) Math.floor(capacity * 1.5) : 0;
@@ -90,6 +95,9 @@ public abstract class Attraction extends Building implements Queueable, Repairab
         return res;
     }
 
+    /**
+     * Attrakció elindítása.
+     */
     private void start() {
         status = BuildingStatus.RUNNING;
         statusTimer = 0;
@@ -105,6 +113,9 @@ public abstract class Attraction extends Building implements Queueable, Repairab
         gm.getFinance().earn(profit, FinanceType.RIDE_SELL);
     }
 
+    /**
+     * Attrakció leállítása.
+     */
     private void finish() {
         Range r = new Range((int) Math.floor(fun * condition / 100), fun);
         int rideEvent = 0;
@@ -121,6 +132,9 @@ public abstract class Attraction extends Building implements Queueable, Repairab
         status = BuildingStatus.OPEN;
     }
 
+    /**
+     * Sorban váró látogatók beültetése az attrakcióba.
+     */
     private void loadVisitors() {
         while (!queue.isEmpty() && onRide.size() < capacity) {
             Visitor v = queue.remove(0);
@@ -129,26 +143,47 @@ public abstract class Attraction extends Building implements Queueable, Repairab
         }
     }
 
+    /**
+     * Bátogató betétele a sorba.
+     * @param v 
+     */
     @Override
     public void joinQueue(Visitor v) {
         queue.add(v);
     }
 
+    /**
+     * Látogató kivétele a sorból.
+     * @param v 
+     */
     @Override
     public void leaveQueue(Visitor v) {
         queue.remove(v);
     }
 
+    /**
+     * Adott látogató a sor elején áll?
+     * @param v
+     * @return 
+     */
     @Override
     public boolean isFirstInQueue(Visitor v) {
         return false;
     }
 
+    /**
+     * Mûködik-e az attrakció?
+     * @return 
+     */
     @Override
     public boolean canService() {
         return true;
     }
     
+    /**
+     * Attrakció állapotának romlása.
+     * @param amount 
+     */
     private void changeCondition(double amount) {
         condition += amount;
         if(condition < 35) {
@@ -161,6 +196,9 @@ public abstract class Attraction extends Building implements Queueable, Repairab
         }
     }
 
+    /**
+     * Attrakció állapotának frissítése.
+     */
     private void updateCondition() {
         switch (status) {
             case OPEN:
@@ -180,6 +218,10 @@ public abstract class Attraction extends Building implements Queueable, Repairab
         }
     }
 
+    /**
+     * Attrakció állapotának beállítása manuálisan.
+     * @param status 
+     */
     @Override
     public void setStatus(BuildingStatus status) {
         if (this.status == BuildingStatus.FLOATING) {
@@ -190,6 +232,10 @@ public abstract class Attraction extends Building implements Queueable, Repairab
         super.setStatus(status);
     }
 
+    /**
+     * Attrakció frissítése az updatecycle-ben.
+     * @param tickCount 
+     */
     @Override
     public void update(long tickCount) {
         statusTimer++;
