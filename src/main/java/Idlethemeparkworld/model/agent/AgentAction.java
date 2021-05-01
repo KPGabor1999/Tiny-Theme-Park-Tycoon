@@ -3,6 +3,9 @@ package Idlethemeparkworld.model.agent;
 import Idlethemeparkworld.model.buildable.Building;
 import java.util.Objects;
 
+/**
+ * Wrapper class for agent actions that enables agents to target specific buildings with actions.
+ */
 public class AgentAction {
 
     private final AgentInnerLogic.AgentActionType action;

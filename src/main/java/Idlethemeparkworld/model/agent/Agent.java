@@ -12,6 +12,11 @@ import Idlethemeparkworld.model.buildable.BuildingStatus;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * Agent class, base class for all agents and people in the game.
+ * 
+ * Has basic movement/pathfinding functionality, render and state/action system.
+ */
 public abstract class Agent implements Updatable {
     protected static final int AGENT_HISTORY_LENGTH = 10;
     
@@ -64,26 +69,44 @@ public abstract class Agent implements Updatable {
         this.path = new ArrayList<>();
     }
 
+    /**
+     * @return name of the agent
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * @return type of the agent
+     */
     public AgentType getType() {
         return type;
     }
 
+    /**
+     * @return staff type of the agent in case the agent is a staff
+     */
     public StaffType getStaffType() {
         return staffType;
     }
     
+    /**
+     * @return state of the agent
+     */
     public AgentState getState(){
         return state;
     }
     
+    /**
+     * @return x coordinate of the agent
+     */
     public int getX(){
         return x;
     }
 
+    /**
+     * @return y coordinate of the agent
+     */
     public int getY(){
         return y;
     }

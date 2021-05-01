@@ -17,6 +17,11 @@ import Idlethemeparkworld.model.buildable.infrastucture.Toilet;
 import Idlethemeparkworld.model.buildable.infrastucture.TrashCan;
 import java.awt.Rectangle;
 
+/**
+ * Building types with data that hold static data (data that all buildings of that type share).
+ * 
+ * Includes the dimensions, prices, visuals and classes of each building type
+ */
 public enum BuildType {
     PAVEMENT(1, 1, "Pavement", "Use pavement tiles to connect buildings and help people get around.", 1000, Assets.Texture.PAVEMENT, new Rectangle(0,10,64,64)),
     TRASHCAN(1, 1, "Trash can", "", 1000, Assets.Texture.TRASHCAN, new Rectangle(0,10,64,64)),
@@ -48,6 +53,10 @@ public enum BuildType {
         this.lobbyArea = lobbyArea;
     }
 
+    /**
+     * @param type A building type
+     * @return the corresponding implementing building class of the building type
+     */
     public static Class GetClass(BuildType type) {
         switch (type) {
             case PAVEMENT:
@@ -81,30 +90,51 @@ public enum BuildType {
         }
     }
 
+    /**
+     * @return the width of the building type.
+     */
     public int getWidth() {
         return width;
     }
 
+    /**
+     * @return the length of the building type.
+     */
     public int getLength() {
         return length;
     }
 
+    /**
+     * @return a stylized name of the building type for display.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * @return a short description detailing the role of the building type.
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * @return the building cost of the type.
+     */
     public int getBuildCost() {
         return buildCost;
     }
 
+    /**
+     * @return a texture containing the visual image of the building type.
+     */
     public Texture getTexture() {
         return tex;
     }
     
+    /**
+     * @return rectangular area where the visitors will either wait, lobby or queue.
+     */
     public Rectangle getLobbyArea() {
         return lobbyArea;
     }

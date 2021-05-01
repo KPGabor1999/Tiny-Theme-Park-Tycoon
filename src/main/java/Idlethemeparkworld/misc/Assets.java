@@ -71,6 +71,9 @@ public class Assets {
             }
         }
 
+        /**
+         * @return an image containing the corresponding visuals
+         */
         public Image getAsset() {
             return asset;
         }

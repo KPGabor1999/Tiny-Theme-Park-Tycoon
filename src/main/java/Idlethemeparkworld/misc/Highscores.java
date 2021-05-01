@@ -15,6 +15,12 @@ public class Highscores {
     private boolean ascending;
     private String filename;
 
+    /**
+     * Creates a new highscores representation table
+     * @param maxscores The maximum amount of scores that can be in the leaderboards
+     * @param ascending Wether the sorting is by ascending order or descending
+     * @param filename The filename where the highscore table will be stored
+     */
     public Highscores(int maxscores, boolean ascending, String filename) {
         this.maxscores = maxscores;
         this.highscores = new ArrayList<>();
@@ -24,6 +30,9 @@ public class Highscores {
         saveHighscores();
     }
 
+    /**
+     * Loads and reads in the highscores from the specified file in the constructor
+     */
     private void readHighscores() {
         highscores.clear();
         try {
@@ -39,15 +48,27 @@ public class Highscores {
         }
     }
 
+    /**
+     * @return a list of highscores presorted
+     */
     public ArrayList<Highscore> getHighscores() {
         return highscores;
     }
     
+    /**
+     * Resets all highscores and saves it
+     */
     public void reset() {
         highscores.clear();
         saveHighscores();
     }
 
+    /**
+     * Adds a new highscore in the right position and removes the extra one if the number of highscores
+     * exceed the max
+     * @param name The name of the user/player
+     * @param score The highscore of the player
+     */
     public void putHighscore(String name, int score) {
         if (highscores.size() < maxscores) {
         insertScore(name, score);
@@ -67,6 +88,9 @@ public class Highscores {
         }
     }
 
+    /**
+     * Sorts the highscores based on the specified ordering in the constructor
+     */
     private void sortHighscores() {
         if(ascending){
             Collections.sort(highscores, (Highscore t, Highscore t1) -> t.getScore() - t1.getScore());
@@ -80,6 +104,11 @@ public class Highscores {
         saveHighscores();
     }
     
+    /**
+     * Saves the highscore table into the specified file given in the constructor.
+     * 
+     * Each highscore will be saved in a separate line in the following format: "name" \t "score"
+     */
     private void saveHighscores(){
         sortHighscores();
 

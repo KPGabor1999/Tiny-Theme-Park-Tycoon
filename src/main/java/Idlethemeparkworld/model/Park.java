@@ -16,6 +16,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * A park that holds all tile and building information.
+ */
 public class Park implements Updatable {
 
     private GameManager gm;
@@ -32,6 +35,9 @@ public class Park implements Updatable {
     private PathFinding pf;
     private Set<Building> reachable;
 
+    /**
+     * Creates a 10x10 park
+     */
     public Park() {
         initializePark(10, 10, null);
     }
@@ -55,17 +61,14 @@ public class Park implements Updatable {
         pf = new PathFinding(tiles, this);
         reachable = new HashSet<>();
 
-        //1.Make sure all tiles are empty
         this.buildings = new ArrayList<>();
         for (int row = 0; row < tiles.length; row++) {
             for (int column = 0; column < tiles[0].length; column++) {
                 tiles[row][column] = new Tile(column, row);
             }
         }
-        //2.Spawn in the gate tile
         build(BuildType.ENTRANCE, 0, 0, true);
 
-        //3. Install locked tiles
         for (int row = 0; row < tiles.length; row++) {
             for (int column = 0; column < tiles[0].length; column++) {
                 if (row > 10 || column > 5) {
@@ -91,10 +94,25 @@ public class Park implements Updatable {
         return tiles[y][x];
     }
 
+    /**
+     * Get a list of all buildings
+     * @return list of all buildings
+     */
     public synchronized ArrayList<Building> getBuildings() {
         return buildings;
     }
 
+    /**
+     * Checks if you can build a building type on a certain area.
+     * The x and y specify the upper left corner of the building.
+     * 
+     * We can build if the area is empty and there is at least one neighbouring pavement.
+     * 
+     * @param type The building type
+     * @param x The X coordinate
+     * @param y The Y coordinate
+     * @return whether we can build on this location
+     */
     public boolean canBuild(BuildType type, int x, int y) {
         if (checkEmptyArea(x, y, type.getWidth(), type.getLength())) {
             ArrayList<Tile> neighbours = getNeighbours(x, y, type.getLength(), type.getWidth());
@@ -105,11 +123,27 @@ public class Park implements Updatable {
         }
     }
     
+    /**
+     * Check if the area is legal, meaning all parts are inside the tile matrix
+     * @param x The X coordinate
+     * @param y The Y coordinate
+     * @param width The width of the building
+     * @param height The height of the building
+     * @return wether the location is legal
+     */
     private boolean checkLegalArea(int x, int y, int width, int height) {
         return (0 <= x && x+width-1 < getWidth())
                 && (0 <= y && y+height-1 < getHeight());
     }
 
+    /**
+     * Check if the area is empty, meaning there is only grass there(locked tiles will prevent building)
+     * @param x The X coordinate
+     * @param y The Y coordinate
+     * @param width The width of the building
+     * @param height The height of the building
+     * @return wether the location is free
+     */
     private boolean checkEmptyArea(int x, int y, int width, int height) {
         boolean isEmpty = true;
         if(!checkLegalArea(x, y, width, height)) {
@@ -123,17 +157,37 @@ public class Park implements Updatable {
         return isEmpty;
     }
 
+    /**
+     * Check if a singular coordinate is within the tile matrix
+     * @param x The X coordinate
+     * @param y The Y coordinate
+     * @return wether the coordinate is legal
+     */
     private boolean checkLegalCoordinate(int x, int y) {
         return (0 <= x && x < getWidth())
                 && (0 <= y && y < getHeight());
     }
 
+    /**
+     * Adds a single to a given list
+     * @param list The list to add the neighbour to
+     * @param x The X coordinate
+     * @param y The Y coordinate
+     */
     private void addNeighbour(ArrayList<Tile> list, int x, int y) {
         if (checkLegalCoordinate(x, y)) {
             list.add(tiles[y][x]);
         }
     }
 
+    /**
+     * Adds all neighbours in a certain line
+     * @param list The list to add the neighbours to
+     * @param startX X coordinate of the top left
+     * @param startY Y coordinate of the top left
+     * @param range The length of the line to scan
+     * @param isHorizontal whether the scan line should be horizontal or vertical
+     */
     private void addNeighbourRange(ArrayList<Tile> list, int startX, int startY, int range, boolean isHorizontal) {
         for (int i = 0; i < range; i++) {
             if (isHorizontal) {
@@ -144,6 +198,12 @@ public class Park implements Updatable {
         }
     }
 
+    /**
+     * Get pavement neighbours. This includes the entrance as that is walkable too.
+     * @param x The X coordinate
+     * @param y The Y coordinate
+     * @return list of pavement neighbours
+     */
     public ArrayList<Building> getPavementNeighbours(int x, int y) {
         ArrayList<Building> res = new ArrayList<>();
         ArrayList<Tile> neighbours = getNeighbours(x, y, 1, 1);
@@ -152,6 +212,12 @@ public class Park implements Updatable {
         return res;
     }
 
+    /**
+     * Get non-pavement neighbours. This includes the entrance as that is walkable too.
+     * @param x The X coordinate
+     * @param y The Y coordinate
+     * @return list of non-pavement neighbours
+     */
     public ArrayList<Building> getNonPavementOrEntranceNeighbours(int x, int y) {
         ArrayList<Building> res = new ArrayList<>();
         ArrayList<Tile> neighbours = getNeighbours(x, y, 1, 1);
@@ -160,6 +226,12 @@ public class Park implements Updatable {
         return res;
     }
 
+    /**
+     * Get pavement strictly non-eighbours
+     * @param x The X coordinate
+     * @param y The Y coordinate
+     * @return list of strictly non-pavement neighbours
+     */
     public ArrayList<Building> getNonPavementNeighbours(int x, int y) {
         ArrayList<Building> res = new ArrayList<>();
         ArrayList<Tile> neighbours = getNeighbours(x, y, 1, 1);
@@ -168,6 +240,12 @@ public class Park implements Updatable {
         return res;
     }
 
+    /**
+     * Get infrastructure neighbours
+     * @param x The X coordinate
+     * @param y The Y coordinate
+     * @return list of infrastructure neighbours
+     */
     public ArrayList<Building> getInfrastructureNeighbours(int x, int y) {
         ArrayList<Building> res = new ArrayList<>();
         ArrayList<Tile> neighbours = getNeighbours(x, y, 1, 1);
@@ -176,6 +254,13 @@ public class Park implements Updatable {
         return res;
     }
 
+    /**
+     * @param x The X coordinate
+     * @param y The Y coordinate
+     * @param width The width of the building
+     * @param height The height of the building
+     * @return neighbours of the building
+     */
     private ArrayList<Tile> getNeighbours(int x, int y, int height, int width) {
         ArrayList<Tile> neighbours = new ArrayList<>();
         addNeighbourRange(neighbours, x, y - 1, width, true); //top neighbours
@@ -193,6 +278,19 @@ public class Park implements Updatable {
         }
     }
 
+    /**
+     * Tries to build a building at a specified location.
+     * The location gives the top left tile of the building.
+     * 
+     * If using the force functionality, no buildable checks will be done and no monew will
+     * be deducted.
+     * 
+     * @param type The building type
+     * @param x The X coordinate
+     * @param y The Y coordinate
+     * @param force Whether to apply force building rules
+     * @return 
+     */
     public synchronized Building build(BuildType type, int x, int y, boolean force) {
         if (force || canBuild(type, x, y)) {
             Building newBuilding = null;
@@ -215,6 +313,9 @@ public class Park implements Updatable {
         return null;
     }
 
+    /**
+     * Updates all buildings.
+     */
     private void updateBuildings() {
         pf.updateTiles(tiles);
         reachable = pf.getReachableBuildings();
@@ -230,6 +331,10 @@ public class Park implements Updatable {
         }
     }
 
+    /**
+     * @param type Building type
+     * @return associated food price
+     */
     public int checkFoodPrice(BuildType type) {
         for (int i = 0; i < buildings.size(); i++) {
             if (buildings.get(i).getInfo() != BuildType.LOCKEDTILE
@@ -240,6 +345,11 @@ public class Park implements Updatable {
         return 0;
     }
 
+    /**
+     * Updates food prices in all buildings
+     * @param type building type
+     * @param price The new food price
+     */
     public void updateFoodPrice(BuildType type, int price) {
         for (int i = 0; i < buildings.size(); i++) {
             if (buildings.get(i).getInfo() != BuildType.LOCKEDTILE
@@ -249,6 +359,10 @@ public class Park implements Updatable {
         }
     }
 
+    /**
+     * @param type Building type
+     * @return associated base ticket price
+     */
     public int checkTicketPrice(BuildType type) {
         for (int i = 0; i < buildings.size(); i++) {
             if (buildings.get(i).getInfo() != BuildType.LOCKEDTILE
@@ -259,6 +373,10 @@ public class Park implements Updatable {
         return 0;
     }
 
+    /**
+     * @param type Building type
+     * @return associated ticket price
+     */
     public int getTicketPrice(BuildType type) {
         for (int i = 0; i < buildings.size(); i++) {
             if (buildings.get(i).getInfo() != BuildType.LOCKEDTILE
@@ -269,6 +387,11 @@ public class Park implements Updatable {
         return 0;
     }
 
+    /**
+     * Updates entry prices in all buildings
+     * @param type building type
+     * @param price The new entry cost
+     */
     public void updateTicketPrice(BuildType type, int price) {
         for (int i = 0; i < buildings.size(); i++) {
             if (buildings.get(i).getInfo() != BuildType.LOCKEDTILE
@@ -278,6 +401,12 @@ public class Park implements Updatable {
         }
     }
 
+    /**
+     * Demolishes a building at the given position.
+     * Position gives the top left tile of the building.
+     * @param x The X coordinate
+     * @param y The Y coordinate
+     */
     public synchronized void demolish(int x, int y) {
         Building building = tiles[y][x].getBuilding();
         setAreaToBuilding(x, y, building.getInfo().getLength(), building.getInfo().getWidth(), null);
@@ -294,21 +423,37 @@ public class Park implements Updatable {
         updateBuildings();
     }
 
+    /**
+     * Get the current park rating.
+     * 
+     * The calculation include factors such as cleanliness and littering, current happiness rating,
+     * visitor count and others.
+     * @return the current rating of the park
+     */
     public double getRating() {
         calculateParkRating();
         return rating;
     }
 
+    /**
+     * @return the total value of buildings including decayed
+     */
     public int getValue() {
         calculateValue();
         return parkValue;
     }
 
+    /**
+     * @return the total value of only active buildings
+     */
     public int getActiveValue() {
         calculateActiveValue();
         return activeParkValue;
     }
 
+    /**
+     * @return the recommended maximum amount of visitors
+     */
     public int getMaxGuest() {
         calculateMaxGuests();
         return maxGuests;
@@ -322,6 +467,12 @@ public class Park implements Updatable {
         }
     }
 
+    /**
+     * Calculates the park rating and updates it.
+     * 
+     * The calculation include factors such as cleanliness and littering, current happiness rating,
+     * visitor count and others.
+     */
     private void calculateParkRating() {
         rating = 9;
         //double sum = 0;
@@ -345,6 +496,10 @@ public class Park implements Updatable {
         rating = Math.max(rating, 0);
     }
 
+    /**
+     * Calculates the total value of the park, including decayed and inactive buildings.
+     * Values are the total amount of money spend on a building.
+     */
     private void calculateValue() {
         parkValue = 0;
         for (int i = 0; i < buildings.size(); i++) {
@@ -353,6 +508,10 @@ public class Park implements Updatable {
         parkValue += gm.getAgentManager().getVisitorValue();
     }
 
+    /**
+     * Calculates the total value of the park including only active buildings.
+     * Values are the total amount of money spend on a building.
+     */
     private void calculateActiveValue() {
         activeParkValue = 0;
         for (int i = 0; i < buildings.size(); i++) {
@@ -368,6 +527,9 @@ public class Park implements Updatable {
         }
     }
 
+    /**
+     * Sums together the total recommended max visitor count
+     */
     private void calculateMaxGuests() {
         maxGuests = 0;
         for (int i = 0; i < buildings.size(); i++) {

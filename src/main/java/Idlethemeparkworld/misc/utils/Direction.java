@@ -5,6 +5,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Direction enum that abstracts directional unit vectors
+ */
 public enum Direction {
     DOWN(0, 1), LEFT(-1, 0), UP(0, -1), RIGHT(1, 0);
 
