@@ -8,6 +8,11 @@ import Idlethemeparkworld.model.agent.Visitor;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * Agent manager for managing all agents(visitors, janitors and maintainers).
+ * 
+ * It handles keeping track, updating all agents and responsible for spawning and removal of agents.
+ */
 public class AgentManager implements Updatable {
     private static final String[] FIRST_NAMES = {
         "Creola",
@@ -83,6 +88,11 @@ public class AgentManager implements Updatable {
     
     private Visitor activeVisitor;
     
+    /**
+     * Creates a new agent manager for a park
+     * @param park The park to manage
+     * @param gm The game manager
+     */
     public AgentManager(Park park, GameManager gm){
         this.gm = gm;
         this.park = park;
@@ -99,12 +109,17 @@ public class AgentManager implements Updatable {
         spawnVisitor();
     }
     
+    /**
+     * Resets the agent manager to its initial state.
+     * This means removing all agents. You should call this every time a new game is started.
+     */
     public void reset(){
         Visitor.resetIDCounter();
-        this.visitorProbability = 0;
-        this.visitors.clear();
-        this.janitors.clear();
-        this.maintainers.clear();
+        visitorProbability = 0;
+        visitors.clear();
+        janitors.clear();
+        maintainers.clear();
+        activeVisitor = null;
         spawnVisitor();
     }
     
@@ -120,14 +135,26 @@ public class AgentManager implements Updatable {
         return rand.nextInt(50)+35;
     }
 
+    /**
+     * @return The highlighted visitor. This visitor will be visible on the map.
+     */
     public Visitor getActiveVisitor() {
         return activeVisitor;
     }
 
+    /**
+     * Picks a visitor and sets it to be highlighted.
+     * @param activeVisitor The visitor to be highlighted
+     */
     public void setActiveVisitor(Visitor activeVisitor) {
         this.activeVisitor = activeVisitor;
     }
     
+    /**
+     * Get the overall visitors happiness rating. Happiness rating is just an average of all currently visiting people.
+     * The happiness rating is clamped down to values between 0-10.
+     * @return happiness rating
+     */
     public double getVisitorHappinessRating(){
         double res = 0;
         for (int i = 0; i < visitors.size(); i++) {
@@ -136,6 +163,10 @@ public class AgentManager implements Updatable {
         return res/visitors.size()/10;
     }
     
+    /**
+     * Gets the total amount of money spent by all visitors
+     * @return 
+     */
     public int getVisitorValue(){
         int res = 0;
         for (int i = 0; i < visitors.size(); i++) {
@@ -144,6 +175,11 @@ public class AgentManager implements Updatable {
         return res;
     }
     
+    /**
+     * Updates the probabilities of how often to spawn in a visitor.
+     * 
+     * This relies on visitor counts, park suggested max, happiness and overall rating.
+     */
     private void updateVisitorProbability(){
         double prob = park.getRating()*5;
         
@@ -164,22 +200,36 @@ public class AgentManager implements Updatable {
         visitorProbability = prob;
     }
     
+    /**
+     * Removes an agent from the list
+     * @param agent The agent to be removed
+     */
     public void removeAgent(Agent agent){
         if(agent instanceof Visitor){
             visitors.remove((Visitor)agent);
         }
     }
     
+    /**
+     * The update cycle that runs each tick and will spawn in a new visitor based on the current probabilities
+     */
     private void spawnUpdate(){ 
         if(rand.nextInt(100)<visitorProbability){
             spawnVisitor();
         }
     }
     
+    /**
+     * @return the number of currently visiting people
+     */
     public int getVisitorCount(){
         return visitors.size();
     }
     
+    /**
+     * @param id The id of the visitor
+     * @return the visitor with the ID of id
+     */
     public Visitor getVisitor(int id){
         Visitor res = null;
         for (int i = 0; i < visitors.size() && res == null; i++) {
@@ -188,29 +238,41 @@ public class AgentManager implements Updatable {
         return res;
     }
     
+    /** 
+     * @return list all visitors
+     */
     public ArrayList<Visitor> getVisitors(){
         return visitors;
     }
 
+    /** 
+    * @return list all janitors
+    */
     public ArrayList<Janitor> getJanitors() {
         return janitors;
     }
 
+    /** 
+    * @return list all maintainers
+    */
     public ArrayList<Maintainer> getMaintainers() {
         return maintainers;
     }
     
+    /**
+     * Adjust the number of janitors to match the given amount.
+     * This means adding or removing depending on the situation.
+     * @param newNumberOfJanitors The new number of janitors
+     */
     public void manageJanitors(int newNumberOfJanitors){
         int currentNumberOfJanitors = janitors.size();
         
         if(currentNumberOfJanitors < newNumberOfJanitors){
-        //Annyi új takarítót adunk a listához, amennyit szükséges és minden létrehozást kiírunk a konzolra.
             int numberOfNewJanitors = newNumberOfJanitors - currentNumberOfJanitors;
             for(int count = 1; count <= numberOfNewJanitors; count++){
                 janitors.add(new Janitor(getRandomName(), park, this));
             }
         }else if (currentNumberOfJanitors > newNumberOfJanitors){
-        //Annyi új takarítót adunk a listából (randomra), amennyit szükséges és minden törlést kiírunk a konzolra.
             int numberOfJanitorsToFire = currentNumberOfJanitors - newNumberOfJanitors;
             for(int count = 1; count <= numberOfJanitorsToFire; count++){
                 int index = rand.nextInt(janitors.size());
@@ -219,17 +281,20 @@ public class AgentManager implements Updatable {
         }
     }
     
+    /**
+     * Adjust the number of maintainers to match the given amount.
+     * This means adding or removing depending on the situation.
+     * @param newNumberOfMaintainers The new number of maintainers
+     */
     public void manageMaintainers(int newNumberOfMaintainers){
         int currentNumberOfMaintainers = maintainers.size();
         
         if(currentNumberOfMaintainers < newNumberOfMaintainers){
-        //Annyi új karbantartót adunk a listához, amennyit szükséges és minden létrehozást kiírunk a konzolra.
             int numberOfNewMaintainers = newNumberOfMaintainers - currentNumberOfMaintainers;
             for(int count = 1; count <= numberOfNewMaintainers; count++){
                 maintainers.add(new Maintainer(getRandomName(), park, this));
             }
         }else if (currentNumberOfMaintainers > newNumberOfMaintainers){
-        //Annyi új takarítót adunk a listából (randomra), amennyit szükséges és minden törlést kiírunk a konzolra.
             int numberOfMaintainersToFire = currentNumberOfMaintainers - newNumberOfMaintainers;
             for(int count = 1; count <= numberOfMaintainersToFire; count++){
                 int index = rand.nextInt(maintainers.size());
