@@ -139,7 +139,7 @@ public class Board extends JPanel implements MouseWheelListener {
                     if (gm.getPark().getTile(mPos.x, mPos.y).getBuilding() != null) {
                         JFrame parentFrame = (JFrame) getRootPane().getParent();
                         BuildingOptionsDialog buildingOptions = new BuildingOptionsDialog(parentFrame, Board.this, mPos.x, mPos.y);
-                        buildingOptions.setLocationRelativeTo(Board.this);
+                        buildingOptions.setLocationRelativeTo(Board.this.getTopLevelAncestor());
                     }
                 }
             }
