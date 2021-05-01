@@ -3,22 +3,23 @@ package Idlethemeparkworld.misc;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Assets {
 
     public static enum Texture {
-        BURGERJOINT,
-        CAROUSEL,
-        FERRISWHEEL,
+        BURGERJOINT(3),
+        CAROUSEL(3),
+        FERRISWHEEL(3),
         GATE,
         GRASS,
-        HAUNTEDMANSION,
-        HOTDOGSTAND,
-        ICECREAMPARLOR,
+        HAUNTEDMANSION(3),
+        HOTDOGSTAND(3),
+        ICECREAMPARLOR(3),
         PAVEMENT,
-        ROLLERCOASTER,
-        SWINGINGSHIP,
-        TOILET,
+        ROLLERCOASTER(3),
+        SWINGINGSHIP(3),
+        TOILET(3),
         TRASHCAN,
         LOCKED,
         NOPATH,
@@ -40,32 +41,42 @@ public class Assets {
         NONE;
 
         private static final String ASSETS_FOLDER_PATH = "resources/";
-        private String filename;
         private BufferedImage asset;
-
+        private ArrayList<BufferedImage> assets;
+        
         Texture(String path) {
             if (!this.name().equals("NONE")) {
-                this.filename = path;
-                load();
+                load(path);
             } else {
-                filename = null;
                 asset = null;
+            }
+        }
+        
+        Texture(int versionCount) {
+            asset = null;
+            assets = new ArrayList<>();
+            for (int i = 1; i <= versionCount; i++) {
+                String file = ASSETS_FOLDER_PATH + name().replace("_", "").toLowerCase() + i + ".png";
+                try {
+                    BufferedImage assetData = ResourceLoader.loadImage(file);
+                    assets.add(assetData);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             }
         }
 
         Texture() {
             if (!this.name().equals("NONE")) {
-                this.filename = ASSETS_FOLDER_PATH + name().replace("_", "").toLowerCase() + ".png";
-                load();
+                load(ASSETS_FOLDER_PATH + name().replace("_", "").toLowerCase() + ".png");
             } else {
-                filename = null;
                 asset = null;
             }
         }
 
-        private void load() {
+        private void load(String path) {
             try {
-                asset = ResourceLoader.loadImage(filename);
+                asset = ResourceLoader.loadImage(path);
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -74,8 +85,12 @@ public class Assets {
         /**
          * @return an image containing the corresponding visuals
          */
-        public Image getAsset() {
+        public BufferedImage getAsset() {
             return asset;
+        }
+        
+        public ArrayList<BufferedImage> getAssets() {
+            return assets;
         }
     }
 }

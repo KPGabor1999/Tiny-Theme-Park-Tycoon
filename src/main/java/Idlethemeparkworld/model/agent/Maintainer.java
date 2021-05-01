@@ -61,7 +61,6 @@ public class Maintainer extends Agent {
      * @param building 
      */
     public static void alertOfCriticalBuilding(Building building){
-        System.out.println("ALERT!!");
         addAction(new AgentAction(AgentInnerLogic.AgentActionType.STAFFREPAIR, building));
     }
     
