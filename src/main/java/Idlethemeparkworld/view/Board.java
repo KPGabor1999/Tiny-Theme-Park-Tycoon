@@ -5,13 +5,13 @@ import Idlethemeparkworld.misc.Assets;
 import Idlethemeparkworld.misc.utils.Position;
 import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.GameManager;
-import Idlethemeparkworld.model.Park;
 import Idlethemeparkworld.model.administration.Finance;
 import Idlethemeparkworld.model.agent.Janitor;
 import Idlethemeparkworld.model.agent.Maintainer;
 import Idlethemeparkworld.model.agent.Visitor;
 import Idlethemeparkworld.model.buildable.Building;
 import Idlethemeparkworld.model.buildable.BuildingStatus;
+import Idlethemeparkworld.model.buildable.RandomSkin;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -139,7 +139,7 @@ public class Board extends JPanel implements MouseWheelListener {
                     if (gm.getPark().getTile(mPos.x, mPos.y).getBuilding() != null) {
                         JFrame parentFrame = (JFrame) getRootPane().getParent();
                         BuildingOptionsDialog buildingOptions = new BuildingOptionsDialog(parentFrame, Board.this, mPos.x, mPos.y);
-                        buildingOptions.setLocationRelativeTo(Board.this);
+                        buildingOptions.setLocationRelativeTo(Board.this.getTopLevelAncestor());
                     }
                 }
             }
@@ -268,8 +268,14 @@ public class Board extends JPanel implements MouseWheelListener {
             int y = buildings.get(i).getY();
             int h = buildings.get(i).getInfo().getLength();
             int w = buildings.get(i).getInfo().getWidth();
-
-            gr.drawImage(buildings.get(i).getInfo().getTexture().getAsset(), x * scaledCellSize, y * scaledCellSize, w * scaledCellSize, h * scaledCellSize, null);
+            
+            BufferedImage asset;
+            if(buildings.get(i).getInfo().getTexture().getAsset() != null){
+                asset = buildings.get(i).getInfo().getTexture().getAsset();
+            } else {
+                asset = buildings.get(i).getInfo().getTexture().getAssets().get(((RandomSkin)buildings.get(i)).getSkinID());
+            }
+            gr.drawImage(asset, x * scaledCellSize, y * scaledCellSize, w * scaledCellSize, h * scaledCellSize, null);
             if (buildings.get(i).getStatus() == BuildingStatus.FLOATING) {
                 gr.drawImage(Assets.Texture.NOPATH.getAsset(), x * scaledCellSize + w * scaledCellSize / 2 - 15, y * scaledCellSize + h * scaledCellSize / 2 - 15, 30, 30, null);
             }
@@ -333,8 +339,15 @@ public class Board extends JPanel implements MouseWheelListener {
         int y = pos[1];
         int h = type.getLength();
         int w = type.getWidth();
+        
+        BufferedImage asset;
+        if(type.getTexture().getAsset() != null){
+            asset = type.getTexture().getAsset();
+        } else {
+            asset = type.getTexture().getAssets().get(0);
+        }
 
-        gr.drawImage(type.getTexture().getAsset(), x * scaledCellSize, y * scaledCellSize, w * scaledCellSize, h * scaledCellSize, null);
+        gr.drawImage(asset, x * scaledCellSize, y * scaledCellSize, w * scaledCellSize, h * scaledCellSize, null);
         gr.fillRect(x * scaledCellSize, y * scaledCellSize, w * scaledCellSize, h * scaledCellSize);
     }
 

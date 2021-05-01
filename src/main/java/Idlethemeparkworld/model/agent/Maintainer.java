@@ -16,12 +16,14 @@ public class Maintainer extends Agent {
 
     private final int salary;
     private final static LinkedList<AgentAction> actionQueue = new LinkedList<>();
+    private Position lastEnter;
 
     public Maintainer(String name, Park park, AgentManager am) {
         super(name, park, am);
         this.type = AgentTypes.AgentType.STAFF;
         this.staffType = AgentTypes.StaffType.MAINTAINER;
         this.salary = 20;
+        this.lastEnter = null;
     }
 
     public int getSalary() {
@@ -99,6 +101,7 @@ public class Maintainer extends Agent {
                     boolean found = false;
                     for (int i = 0; i < buildings.size() && !found; i++) {
                         if (((Repairable)buildings.get(i)).shouldRepair()) {
+                            lastEnter = new Position(x,y);
                             moveTo(buildings.get(i).getX(), buildings.get(i).getY());
                             statusMaxTimer = Time.convMinuteToTick(rand.nextInt(4)+1);
                             setState(AgentInnerLogic.AgentState.FIXING);
@@ -120,7 +123,12 @@ public class Maintainer extends Agent {
             case FIXING:
                 if(statusTimer > statusMaxTimer){
                     repair(currentBuilding);
-                    moveToRandomNeighbourPavementTile();
+                    if(lastEnter != null) {
+                        moveTo(lastEnter.x, lastEnter.y);
+                        lastEnter = null;
+                    } else {
+                        moveToRandomNeighbourPavementTile();
+                    }
                     resetAction();
                 }
                 break;

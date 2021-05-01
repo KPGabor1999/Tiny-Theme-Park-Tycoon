@@ -21,6 +21,9 @@ import Idlethemeparkworld.model.buildable.infrastucture.TrashCan;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ * Visitor agents that can enter the park and act as guests, spending time and money.
+ */
 public class Visitor extends Agent {
     
     private static int ID = 0;
@@ -59,6 +62,15 @@ public class Visitor extends Agent {
         ID = 0;
     }
 
+    /**
+     * Create a new visitor with a given name and a starting happiness value.
+     * 
+     * Happiness should be between 0-100
+     * @param name Name of the visitor
+     * @param startingHappiness The starting happiness of the visitor
+     * @param park The park the visitor will visit
+     * @param am The agent manager that the visitor will belong to
+     */
     public Visitor(String name, int startingHappiness, Park park, AgentManager am) {
         super(name, park, am);
         this.id = ID;
@@ -122,6 +134,9 @@ public class Visitor extends Agent {
         }
     }
 
+    /**
+     * Updates the current action and loads in a new one if the current action has been done
+     */
     private void updateCurrentAction() {
         if (currentAction == null) {
             if (!actionQueue.isEmpty()) {
@@ -135,6 +150,10 @@ public class Visitor extends Agent {
         }
     }
 
+    /**
+     * Decays old agent thoughts
+     * @param tickCount Current tickCount
+     */
     private void updateThought(long tickCount) {
         for (int i = 0; i < thoughts.size(); i++) {
             if (tickCount - thoughts.get(i).timeCreated > Time.convMinuteToTick(5)) {
@@ -143,6 +162,10 @@ public class Visitor extends Agent {
         }
     }
 
+    /**
+     * Maps different thoughts to happiness changes
+     * @param thoughtType thought type
+     */
     private void thoughtToHappiness(AgentThoughts thoughtType) {
         switch (thoughtType) {
             case CANTAFFORD:
@@ -177,12 +200,25 @@ public class Visitor extends Agent {
         }
     }
 
+    /**
+     * Adds a new action tot eh action queue.
+     * 
+     * If an action with the same type is already queued for the visitor, then it won't be added.
+     * @param action The action to queue.
+     */
     private void addAction(AgentAction action) {
         if (!actionQueue.contains(action)) {
             actionQueue.add(action);
         }
     }
 
+    /**
+     * Maps thoughts to actions.
+     * 
+     * Note: Not all thoughts generate a new action, and if an action already is in the queue
+     * it won't be added once it has been done or decayed
+     * @param thoughtType The thought type
+     */
     private void thoughtToAction(AgentThoughts thoughtType) {
         switch (thoughtType) {
             case NOMONEY:
@@ -217,10 +253,21 @@ public class Visitor extends Agent {
         }
     }
     
+    /**
+     * Inserts a new thought and automatically sets the creation time to the current tickCount
+     * @param thoughtType The thought type
+     * @param subject The subject of the thought
+     */
     private void insertThought(AgentThoughts thoughtType, Building subject) {
         insertThought(thoughtType, subject, tickCount);
     }
 
+    /**
+     * Inserts a new thought and with a specific tickcount spawn
+     * @param thoughtType The thought type
+     * @param subject The subject of the thought
+     * @param tickCount The spawning tick count time
+     */
     private void insertThought(AgentThoughts thoughtType, Building subject, long tickCount) {
         AgentThought thought = new AgentThought(thoughtType, subject, tickCount);
         if (!thoughts.contains(thought)) {
@@ -230,6 +277,20 @@ public class Visitor extends Agent {
         }
     }
 
+    /**
+     * Maps conditions to thoughts. 
+     * These conditions that can trigger lower and upper bound thoughts are: hunger, thirst and energy.
+     * 
+     * If the condition reaches 0, then the visitor will want to leave and their happiness will be multiplied by the leave multiplier.
+     * @param condition The condition value
+     * @param lowerThreshold The threshold for the lower thought
+     * @param tickCount The current tick count
+     * @param positive The positive thought that should be triggered when the condition is above 95
+     * @param negative The negative thought that should be triggered when the condition is below the threshold
+     * @param leaveHappinessMultiplier The leave thought happiness multiplier 
+     * @param homeOnNegative Whether there is a chance to leave on the simple lower threshold
+     * @return 
+     */
     private boolean conditionToThought(double condition, int lowerThreshold, long tickCount, AgentThoughts positive, AgentThoughts negative, double leaveHappinessMultiplier, boolean homeOnNegative) {
         if (condition < lowerThreshold) {
             if (condition <= 0) {
@@ -255,6 +316,10 @@ public class Visitor extends Agent {
         return false;
     }
 
+    /**
+     * Generates all kinds of thoughts based on current condition, action and environment
+     * @param tickCount The current tick count
+     */
     private void generateThoughts(long tickCount) {
         if (cash < 100) {
             if (cash <= 0) {
@@ -277,6 +342,10 @@ public class Visitor extends Agent {
         }
     }
 
+    /**
+     * Updates the conditions based on the current state of the visitor.
+     * More intense states drain more conditions.
+     */
     private void updateState() {
         switch (state) {
             case IDLE:
@@ -314,6 +383,15 @@ public class Visitor extends Agent {
         toilet -= 0.5;
     }
 
+    /**
+     * The main hub for all the action performer functions.
+     * 
+     * Note: Every function has it's own separate processing function.
+     * 
+     * To add a new action, create a processing function that runs through all the different states and then
+     * connect it through this hub function
+     * @param tickCount The current tick count
+     */
     private void performAction(long tickCount) {
         if (currentAction != null) {
             switch (currentAction.getAction()) {
@@ -331,6 +409,9 @@ public class Visitor extends Agent {
         }
     }
 
+    /**
+     * Normalizes conditions and statuses so it is between 0 and 100
+     */
     private void normalizeStatuses() {
         energy = Math.min(AGENT_STATUS_MAXIMUM, Math.max(0, energy));
         hunger = Math.min(AGENT_STATUS_MAXIMUM, Math.max(0, hunger));
@@ -338,6 +419,11 @@ public class Visitor extends Agent {
         toilet = Math.min(AGENT_STATUS_MAXIMUM, Math.max(0, toilet));
     }
 
+    /**
+     * Action processer for leaving the park.
+     * 
+     * And agent will try to pathfind to the entrance and walk straight out.
+     */
     private void leaveParkCycle() {
         switch (state) {
             case IDLE:
@@ -356,13 +442,27 @@ public class Visitor extends Agent {
                 break;
         }
     }
-
+    
+    /**
+     * Action processer for entering the park.
+     * 
+     * And agent will pay the entrance fee and then start having fun.
+     */
     private void enterCycle() {
         Entrance entrance = (Entrance) currentBuilding;
         entrance.enterPark(this);
         resetAction();
     }
 
+    /**
+     * Action processer for attractions
+     * 
+     * When starting out the visitor will try to find an attraction. This can be done in two ways.<br>
+     * 1.Randomly roaming around and on a chance deciding if a neighbouring attraction is good enough<br>
+     * 2.Looking at a specific attraction and then pathfinding to that<br>
+     * 
+     * Then it gets into the queue, once the attraction finishes the visitor is updated with the attraction report.
+     */
     private void attractionCycle() {
         Attraction attr;
         switch (state) {
@@ -405,6 +505,15 @@ public class Visitor extends Agent {
         }
     }
 
+    /**
+     * Action processer for toilets
+     * 
+     * When starting out the visitor will try to find an toilet. This can be done in two ways.<br>
+     * 1.Randomly roaming around and then entering any free toilets<br>
+     * 2.Looking at a specific toilet and then pathfinding to that<br>
+     * 
+     * Then it gets into the queue, shits for a random amount of time, drinks and then leaves
+     */
     private void toiletCycle() {
         Toilet tlt;
         switch (state) {
@@ -473,6 +582,12 @@ public class Visitor extends Agent {
         }
     }
 
+    /**
+     * Action processer for sitting down
+     * 
+     * The visitor will randomly choose a pavement and sit down. The visitor will stay like this for a random amount of time.
+     * (between 6-12 minutes).
+     */
     private void sitCycle() {
         switch (state) {
             case IDLE:
@@ -501,6 +616,16 @@ public class Visitor extends Agent {
         }
     }
 
+    /**
+     * Action processer for eating
+     * 
+     * When starting out the visitor will try to find an food stall. This can be done in two ways.<br>
+     * 1.Randomly roaming around and on a chance deciding if a neighbouring food stall is good enough<br>
+     * 2.Looking at a specific food stall and then pathfinding to that<br>
+     * 
+     * Then it gets into the queue, and when its in first place, then get the menu, buy a food and start eating.
+     * Once finished, the visitor tries to take out the trash.
+     */
     private void eatCycle() {
         FoodStall stall;
         switch (state) {
@@ -578,6 +703,16 @@ public class Visitor extends Agent {
         }
     }
 
+    /**
+     * Action processer for littering
+     * 
+     * When starting out the visitor will try to find an trash can. This can be done in two ways.<br>
+     * 1.Randomly roaming around and on a chance deciding if a neighbouring trash can is good enough<br>
+     * 2.Looking at a specific trash can and then pathfinding to that<br>
+     * 
+     * Once found, the trash is put in the bin. However, if the visitor can't find a trash can in time, the visitor will
+     * just simply throw down the rubbish onto the pavement.
+     */
     private void litterCycle() {
         switch (state) {
             case IDLE:
@@ -611,6 +746,10 @@ public class Visitor extends Agent {
         }
     }
     
+    /**
+     * Wanders around randomly and if found, then tries to enter the target building
+     * @param buildingClass The current target building class
+     */
     private void wandering(Class buildingClass){
         if (statusTimer > patience) {
             addHappiness(-10);
@@ -678,6 +817,9 @@ public class Visitor extends Agent {
         }
     }
 
+    /**
+     * Moves the visitor to a random neighbouring pavement tile
+     */
     private void moveToRandomNeighbourPavement() {
         ArrayList<Building> paves = park.getPavementNeighbours(x, y);
         if (paves.size() > 0) {
@@ -686,7 +828,6 @@ public class Visitor extends Agent {
             checkLittering();
         }
     }
-    
     
     @Override
     protected void moveOnPath(){
@@ -705,6 +846,10 @@ public class Visitor extends Agent {
         }
     }
     
+    /**
+     * Checks how bad the littering is on the current tile.
+     * If it's good then the visitor will think "clean", if it's bad then the visitor will think "too much litter";
+     */
     private void checkLittering(){
         if(((Infrastructure)currentBuilding).getLittering() < 1){
             if(rand.nextInt(10) < 3){
@@ -717,6 +862,11 @@ public class Visitor extends Agent {
         }
     }
 
+    /**
+     * Utility function for finding a particular building type from the list of buildings
+     * @param clazz The class type of the building
+     * @return A random building of the correct type
+     */
     private Building findType(Class clazz){
         ArrayList<Building> buildings = new ArrayList<>();
         park.getBuildings().forEach((b) -> {
@@ -731,19 +881,36 @@ public class Visitor extends Agent {
         }
     }
     
+    /**
+     * @param amount The amount to potentially pay
+     * @return whether the visitor can afford to pay
+     */
     public boolean canPay(int amount) {
         return amount <= cash;
     }
 
+    /**
+     * Make the visitor pay a specified amount
+     * @param amount The amount to pay
+     */
     public void pay(int amount) {
         cash -= amount;
         cashSpent += amount;
     }
 
+    /**
+     * Sets the visitor state to be on a ride
+     */
     public void setOnRide() {
         setState(AgentState.ONRIDE);
     }
 
+    /**
+     * Send a ride event to the visitor.<br>
+     * 
+     * The visitor will then adjust the happiness based on the received event.
+     * @param rideEvent The ridevent, containing how fun the ride was
+     */
     public void sendRideEvent(int rideEvent) {
         addHappiness(rideEvent);
         if(happiness > rand.nextInt(100)){
@@ -753,10 +920,16 @@ public class Visitor extends Agent {
         this.resetAction();
     }
 
+    /**
+     * @return the amount of money the visitor has spent so far
+     */
     public int getCashSpent() {
         return cashSpent;
     }
     
+    /**
+     * @return All data in a list of strings format
+     */
     public ArrayList<String> getAllData() {
         ArrayList<String> res = new ArrayList<>();
         res.add(state.toString());
@@ -777,34 +950,61 @@ public class Visitor extends Agent {
         return res;
     }
 
+    /**
+     * @return patience of the visitor
+     */
     public int getPatience() {
         return patience;
     }
 
+    /**
+     * @return energy of the visitor
+     */
     public double getEnergy() {
         return energy;
     }
 
+    /**
+     * @return happiness of the visitor
+     */
     public double getHappiness() {
         return happiness;
     }
     
+    /**
+     * Adds some happiness to the visitor
+     * @param value Amount to add to happiness
+     */
     public void addHappiness(int value) {
         happiness = Math.max(0, Math.min(happiness+value, 100));
     }
 
+    /**
+     * @return hunger of the visitor
+     */
     public double getHunger() {
         return hunger;
     }
 
+    /**
+     * @return thirst of the visitor
+     */
     public double getThirst() {
         return thirst;
     }
 
+    /**
+     * @return toilet of the visitor
+     */
     public double getToilet() {
         return toilet;
     }
 
+    /**
+     * Get if the visitor is in a location where it can be rendered.
+     * 
+     * @return whether the player can be rendered.
+     */
     public boolean shouldRender() {
         switch (state) {
             case IDLE:
@@ -825,14 +1025,23 @@ public class Visitor extends Agent {
         }
     }
     
+    /**
+     * @return id of visitor
+     */
     public int getID(){
         return id;
     }
     
+    /**
+     * @return skin id of visitor
+     */
     public int getSkinID() {
         return skinID;
     }
     
+    /**
+     * @return current action of visitor
+     */
     public AgentAction getAction(){
         return currentAction;
     }

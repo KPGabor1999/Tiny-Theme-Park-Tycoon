@@ -10,11 +10,12 @@ import Idlethemeparkworld.misc.utils.Pair;
 import Idlethemeparkworld.model.administration.Finance.FinanceType;
 import Idlethemeparkworld.model.agent.Maintainer;
 import Idlethemeparkworld.model.buildable.Queueable;
+import Idlethemeparkworld.model.buildable.RandomSkin;
 import Idlethemeparkworld.model.buildable.Repairable;
 import java.util.ArrayList;
 import java.util.Random;
 
-public abstract class Attraction extends Building implements Queueable, Repairable {
+public abstract class Attraction extends Building implements Queueable, Repairable, RandomSkin {
 
     protected int fun;
     protected int capacity;
@@ -29,6 +30,7 @@ public abstract class Attraction extends Building implements Queueable, Repairab
     protected ArrayList<Visitor> onRide;
 
     protected Random rand;
+    protected final int skinID;
 
     public Attraction(GameManager gm) {
         super(gm);
@@ -36,7 +38,12 @@ public abstract class Attraction extends Building implements Queueable, Repairab
         this.onRide = new ArrayList<>();
         this.rand = new Random();
         this.condition = 100;
+        this.skinID = rand.nextInt(3);
         playConstructionSound();
+    }
+    
+    public int getSkinID(){
+        return skinID;
     }
 
     public int getQueueLength() {

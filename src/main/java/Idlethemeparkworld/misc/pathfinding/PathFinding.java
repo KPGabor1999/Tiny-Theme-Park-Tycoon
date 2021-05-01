@@ -10,12 +10,20 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Pathfinding for parks, supporting reachable buildings and paths between locations
+ */
 public class PathFinding {
     private Tile[][] tiles;
     private final ArrayList<Tile> reachables;
     private final ArrayList<Node> discovered;
     private Park park;
 
+    /**
+     * Creates a new pathfinding agent for a given park
+     * @param tiles The tiles of the park
+     * @param park Th park for which the pathfinding will work
+     */
     public PathFinding(Tile[][] tiles, Park park) {
         this.tiles = tiles;
         this.reachables = new ArrayList<>();
@@ -23,10 +31,23 @@ public class PathFinding {
         this.park = park;
     }
 
+    /**
+     * Updates the inner representation of the pathfinding.
+     * 
+     * You should call this every time the representation of the park changes. Not
+     * doing so will result in faulty pathfinging and potentially app breaking exceptions
+     * @param tiles The new representation of park tiles
+     */
     public void updateTiles(Tile[][] tiles) {
         this.tiles = tiles;
     }
 
+    /**
+     * Get all the reachable buildings from (0,0). We are assuming the entrance is always at (0,0).
+     * 
+     * Note: The method uses prim's algorithm 
+     * @return a list of all the reachable buildings 
+     */
     public Set<Building> getReachableBuildings() {
         resetReachables();
         Set<Building> result = new HashSet<>();
@@ -48,6 +69,17 @@ public class PathFinding {
         return result;
     }
     
+    /**
+     * Get a shortest path from a starting position to a specified building.
+     * The path will only only use neighbouring pavement tiles (distinction between tiles and buildings is important).
+     * 
+     * The algorithm uses a simple bfs.
+     * 
+     * Note: if starting position is not a neighbour with any pavement tiles then the pathfinding will not work
+     * @param start The position of the starting tile
+     * @param destination The destination building
+     * @return A list of positions that go from the start(exclusive) to the destination(inclusive)
+     */
     public ArrayList<Position> getPath(Position start, Building destination){
         resetPathFinding();
         
@@ -103,11 +135,13 @@ public class PathFinding {
         return path;
     }
     
+    /** Resets all states for path finding */
     private void resetPathFinding() {
         discovered.clear();
         park.getBuildings().forEach((b) -> b.setVisited(false));
     }
 
+    /** Resets all states for reachables logic */
     private void resetReachables() {
         reachables.clear();
         for (int i = 0; i < tiles.length; i++) {
@@ -117,10 +151,21 @@ public class PathFinding {
         }
     }
 
+    /**
+     * @param x X coord of the tile
+     * @param y Y coord of the tile
+     * @return if a given position is legal. (A valid coordinate in the tile matrix)
+     */
     private boolean checkCellExists(int x, int y) {
         return 0 <= x && x < tiles[0].length && 0 <= y && y < tiles.length;
     }
 
+    /**
+     * Get all the neighbouring pavements of the given tile not yet visited by pathfinding.
+     * @param x X coord of the tile
+     * @param y Y coord of the tile
+     * @return the list of neighbouring pavements
+     */
     private ArrayList<Tile> getUnvisitedNeighbourPavementList(int x, int y) {
         ArrayList<Tile> neighbours = getAllNeighbours(x, y);
 
@@ -129,6 +174,14 @@ public class PathFinding {
         return neighbours;
     }
 
+    /**
+     * Get all the neighbouring buildings of the given tile not yet visited by pathfinding.
+     * 
+     * A building is a neigbour, if it has a direct face to the tile.
+     * @param x X coord of the tile
+     * @param y Y coord of the tile
+     * @return the list of neighbouring buildings
+     */
     private ArrayList<Building> getUnvisitedNeighbourBuildingList(int x, int y) {
         ArrayList<Tile> neighbours = getAllNeighbours(x, y);
         ArrayList<Building> neighbourBuildings = new ArrayList<>();
@@ -143,6 +196,14 @@ public class PathFinding {
         return neighbourBuildings;
     }
 
+    /**
+     * Get all of the neighbouring tiles of a given tile.
+     * 
+     * This will not return out of bound tiles.
+     * @param x X coord of the tile
+     * @param y Y coord of the tile
+     * @return All legal neighbour tiles
+     */
     private ArrayList<Tile> getAllNeighbours(int x, int y) {
         ArrayList<Tile> neighbours = new ArrayList<>();
 

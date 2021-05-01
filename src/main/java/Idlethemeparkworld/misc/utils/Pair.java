@@ -2,20 +2,36 @@ package Idlethemeparkworld.misc.utils;
 
 import java.util.Objects;
 
+/**
+ * A key-value pair for use in maps
+ * @param <K> Key type
+ * @param <V> Value type
+ */
 public class Pair<K, V> {
 
     private final K key;
     private final V value;
 
+    /**
+     * Creates a new key-value pair 
+     * @param key The key, usually unique
+     * @param value The value to store
+     */
     public Pair(K key, V value) {
         this.key = key;
         this.value = value;
     }
 
+    /**
+     * @return The key of the pair
+     */
     public K getKey() {
         return key;
     }
 
+    /**
+     * @return The value of the pair
+     */
     public V getValue() {
         return value;
     }

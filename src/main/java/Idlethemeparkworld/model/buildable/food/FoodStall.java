@@ -10,10 +10,12 @@ import Idlethemeparkworld.model.agent.Maintainer;
 import Idlethemeparkworld.model.agent.Visitor;
 import Idlethemeparkworld.model.buildable.BuildingStatus;
 import Idlethemeparkworld.model.buildable.Queueable;
+import Idlethemeparkworld.model.buildable.RandomSkin;
 import Idlethemeparkworld.model.buildable.Repairable;
 import java.util.LinkedList;
+import java.util.Random;
 
-public abstract class FoodStall extends Building implements Queueable, Repairable {
+public abstract class FoodStall extends Building implements Queueable, Repairable, RandomSkin {
 
     protected LinkedList<Visitor> queue;
     protected int serviceTime;
@@ -23,6 +25,9 @@ public abstract class FoodStall extends Building implements Queueable, Repairabl
     protected Range drinkQuality;
     protected Range servingSize;
     protected double condition;
+    
+    protected Random rand;
+    protected final int skinID;
 
     protected FoodStall(GameManager gm) {
         super(gm);
@@ -34,10 +39,16 @@ public abstract class FoodStall extends Building implements Queueable, Repairabl
         this.drinkQuality = new Range(45, 90);
         this.servingSize = new Range(5, 15);
         this.condition = 100;
+        this.rand = new Random();
+        this.skinID = rand.nextInt(3);
         this.soundFileName = "nom_nom_nom.wav";
         playConstructionSound();
     }
 
+    public int getSkinID(){
+        return skinID;
+    }
+    
     public int getFoodPrice() {
         return foodPrice;
     }
