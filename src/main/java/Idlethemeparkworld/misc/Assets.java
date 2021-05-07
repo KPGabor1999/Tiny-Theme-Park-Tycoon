@@ -19,7 +19,7 @@ public class Assets {
         PAVEMENT,
         ROLLERCOASTER(3),
         SWINGINGSHIP(3),
-        TOILET(3),
+        TOILET,
         TRASHCAN,
         LOCKED,
         NOPATH,
