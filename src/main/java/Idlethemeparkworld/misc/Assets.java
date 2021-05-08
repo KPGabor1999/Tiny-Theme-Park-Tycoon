@@ -34,6 +34,7 @@ public class Assets {
         NPC8,
         NPC9,
         NPC10,
+        POPUP,
         
         JANITOR,
         MAINTAINER,
