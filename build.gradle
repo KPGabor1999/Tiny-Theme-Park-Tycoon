@@ -1,3 +1,6 @@
+plugins {
+  id 'com.github.johnrengelman.shadow' version '7.0.0'
+}
 apply plugin: 'java'
 apply plugin: 'jacoco'
 apply plugin: 'application'
@@ -15,6 +18,7 @@ dependencies {
     testImplementation     'junit:junit:4.13'
     implementation group: 'org.jfree', name: 'jfreechart', version: '1.5.0'
     implementation group: 'org.jfree', name: 'jcommon', version: '1.0.24'
+    implementation group: 'com.github.jengelman.gradle.plugins', name: 'shadow', version: '6.1.0'
 }
 
 jar {
