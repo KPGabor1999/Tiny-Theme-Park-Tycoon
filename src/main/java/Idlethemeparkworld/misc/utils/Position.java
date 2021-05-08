@@ -57,6 +57,11 @@ public class Position {
                 (int) Math.round(y + (other.y - y) * ratio));
     }
 
+    public double distance(Position other){
+        double total = Math.abs(other.x-x)^2 + Math.abs(other.y-y)^2;
+        return Math.sqrt(total);
+    }
+    
     @Override
     public int hashCode() {
         int hash = 7;

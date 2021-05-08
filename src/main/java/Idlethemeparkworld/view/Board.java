@@ -5,6 +5,7 @@ import Idlethemeparkworld.misc.Assets;
 import Idlethemeparkworld.misc.utils.Position;
 import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.GameManager;
+import Idlethemeparkworld.model.Popup;
 import Idlethemeparkworld.model.administration.Finance;
 import Idlethemeparkworld.model.agent.Janitor;
 import Idlethemeparkworld.model.agent.Maintainer;
@@ -26,6 +27,7 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Random;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -47,6 +49,8 @@ public class Board extends JPanel implements MouseWheelListener {
     private final boolean[] canBuild;
     private final int[] pos;
     
+    private Random rand;
+    
     private BufferedImage parkRender;
     private JPanel gameArea;
 
@@ -59,6 +63,7 @@ public class Board extends JPanel implements MouseWheelListener {
         this.canBuild = new boolean[1];
         this.dragged = false;
         this.gameArea = gameArea;
+        this.rand = new Random();
         Timer timer = new Timer(19, new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 Board.this.repaint();
@@ -136,7 +141,12 @@ public class Board extends JPanel implements MouseWheelListener {
                     }
                     Board.this.exitBuildMode();
                 } else {
-                    if (gm.getPark().getTile(mPos.x, mPos.y).getBuilding() != null) {
+                    Position normalized = retrieveNormalizedCoords(e);
+                    if(gm.getPark().getPopup(normalized.x, normalized.y) != null){
+                        Popup p = gm.getPark().getPopup(normalized.x, normalized.y);
+                        gm.getFinance().earn(rand.nextInt(500)+250, Finance.FinanceType.BONUS);
+                        gm.getPark().popPopup(p);
+                    } else if (gm.getPark().getTile(mPos.x, mPos.y).getBuilding() != null) {
                         JFrame parentFrame = (JFrame) getRootPane().getParent();
                         BuildingOptionsDialog buildingOptions = new BuildingOptionsDialog(parentFrame, Board.this, mPos.x, mPos.y);
                         buildingOptions.setLocationRelativeTo(Board.this.getTopLevelAncestor());
@@ -209,6 +219,13 @@ public class Board extends JPanel implements MouseWheelListener {
         }
     }
 
+    private Position retrieveNormalizedCoords(MouseEvent e) {
+        int x = (int)Math.round(e.getX()/scale);
+        int y = (int)Math.round(e.getY()/scale);
+        
+        return new Position(x, y);
+    }
+    
     private Position retrieveCoords(MouseEvent e) {
         Dimension sizes = Board.this.getSize();
         int x = Math.floorDiv(e.getX(), sizes.width / gm.getPark().getWidth());
@@ -325,6 +342,13 @@ public class Board extends JPanel implements MouseWheelListener {
             Position position = maintainers.get(i).calculateExactPosition(scaledCellSize);
 
             gr.drawImage(Assets.Texture.MAINTAINER.getAsset(), (int)Math.floor((position.x-3)*scale), (int)Math.floor((position.y-18)*scale), scaledAgentSize.width, scaledAgentSize.height, null);
+        }
+        
+        ArrayList<Popup> popups = gm.getPark().getPopups();
+        for (int i = 0; i < popups.size(); i++) {
+            Position position = new Position((int)popups.get(i).getCircle().getCenterX(), (int)popups.get(i).getCircle().getCenterY());
+                  
+            gr.drawImage(Assets.Texture.POPUP.getAsset(), (int)Math.floor((position.x-15)*scale), (int)Math.floor((position.y-15)*scale), (int)Math.round(30*scale),  (int)Math.round(30*scale), null);
         }
     }
 

@@ -19,7 +19,7 @@ public class Assets {
         PAVEMENT,
         ROLLERCOASTER(3),
         SWINGINGSHIP(3),
-        TOILET(3),
+        TOILET,
         TRASHCAN,
         LOCKED,
         NOPATH,
@@ -34,6 +34,7 @@ public class Assets {
         NPC8,
         NPC9,
         NPC10,
+        POPUP,
         
         JANITOR,
         MAINTAINER,

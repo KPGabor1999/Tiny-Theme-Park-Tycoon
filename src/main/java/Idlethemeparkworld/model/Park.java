@@ -1,6 +1,7 @@
 package Idlethemeparkworld.model;
 
 import Idlethemeparkworld.misc.pathfinding.PathFinding;
+import Idlethemeparkworld.misc.utils.Circle;
 import Idlethemeparkworld.model.administration.Finance;
 import Idlethemeparkworld.model.buildable.Building;
 import Idlethemeparkworld.model.buildable.BuildingStatus;
@@ -34,6 +35,8 @@ public class Park implements Updatable {
 
     private PathFinding pf;
     private Set<Building> reachable;
+    
+    private ArrayList<Popup> popups;
 
     /**
      * Creates a 10x10 park
@@ -56,6 +59,7 @@ public class Park implements Updatable {
         parkValue = 0;
         activeParkValue = 0;
         maxGuests = 0;
+        popups = new ArrayList<>();
 
         tiles = new Tile[rows][columns];
         pf = new PathFinding(tiles, this);
@@ -465,6 +469,14 @@ public class Park implements Updatable {
         if (tickCount % Time.convMinuteToTick(15) == 0) {
             gm.getFinance().pay(500, Finance.FinanceType.UPKEEP);
         }
+        if (tickCount % Time.convMinuteToTick(1) == 0){
+            for (int i = 0; i < popups.size(); i++) {
+                popups.get(i).update(tickCount);
+                if(popups.get(i).getDurationSeconds() == 0){
+                    popups.remove(i);
+                }
+            }
+        }
     }
 
     /**
@@ -535,5 +547,33 @@ public class Park implements Updatable {
         for (int i = 0; i < buildings.size(); i++) {
             maxGuests += buildings.get(i).getRecommendedMax();
         }
+    }
+
+    public ArrayList<Popup> getPopups() {
+        return popups;
+    }
+    
+    public Popup getPopup(int x, int y){
+        Popup res = null;
+        boolean found = false;
+        for (int i = 0; i < popups.size() && !found; i++){
+            if(popups.get(i).getCircle().contains(x,y)){
+                res = popups.get(i);
+                found = true;
+            }
+        }
+        return res;
+    }
+    
+    public void addPopup(int x, int y){
+        Circle circle = new Circle();
+        circle.setCenterX(x);
+        circle.setCenterY(y);
+        circle.setRadius(15);
+        popups.add(new Popup(circle));
+    }
+    
+    public void popPopup(Popup p){
+        popups.remove(p);
     }
 }

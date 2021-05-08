@@ -275,6 +275,11 @@ public class Visitor extends Agent {
             thoughtToHappiness(thoughtType);
             thoughtToAction(thoughtType);
         }
+        if(thoughtType == AgentThoughts.WOW){
+            if(rand.nextDouble()>0.982){
+                this.park.addPopup(x+xOffset, y+yOffset);
+            }
+        }
     }
 
     /**

@@ -35,4 +35,4 @@ gradle-app.setting
 com_crashlytics_export_strings.xml
 
 ## misc
-leaderboard.txt
+*.txt
