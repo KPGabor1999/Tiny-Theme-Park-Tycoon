@@ -22,7 +22,7 @@ build:
   - if: $CI_COMMIT_TAG
     when: never
   - if: '$CI_COMMIT_BRANCH != "master"'
-  script: gradlew --build-cache assemble
+  script: ./gradlew --build-cache assemble
   cache:
     key: "$CI_COMMIT_REF_NAME"
     policy: push
@@ -37,7 +37,7 @@ build-weekly:
       when: never
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
   script:
-    - gradlew --build-cache assemble
+    - ./gradlew --build-cache assemble
     - mv "build/libs/Idle theme park world-all.jar" .
     - mv "./Idle theme park world-all.jar" "./ITPW.jar"
   artifacts:
@@ -55,7 +55,7 @@ build-master:
     - if: '$CI_COMMIT_BRANCH == "master"'
     - if: $CI_COMMIT_TAG
   script: 
-    - gradlew --build-cache assemble
+    - ./gradlew --build-cache assemble
     - mv "build/libs/Idle theme park world-all.jar" .
     - mv "./Idle theme park world-all.jar" "./ITPW.jar"
   cache:
