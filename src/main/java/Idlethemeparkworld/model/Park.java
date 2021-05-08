@@ -1,6 +1,7 @@
 package Idlethemeparkworld.model;
 
 import Idlethemeparkworld.misc.pathfinding.PathFinding;
+import Idlethemeparkworld.misc.utils.Circle;
 import Idlethemeparkworld.model.administration.Finance;
 import Idlethemeparkworld.model.buildable.Building;
 import Idlethemeparkworld.model.buildable.BuildingStatus;
@@ -15,7 +16,6 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-import javafx.scene.shape.Circle;
 
 /**
  * A park that holds all tile and building information.

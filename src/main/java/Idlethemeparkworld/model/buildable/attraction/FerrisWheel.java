@@ -34,6 +34,11 @@ public class FerrisWheel extends Attraction {
                 break;
             case 2:
                 this.fun *= 1.5;
+                this.runtime -= 1;    
+                this.upgradeCost *= 2;                
+                break;
+            case 3:
+                this.fun *= 1.5;
                 this.runtime -= 1;                    
                 break;
             default:

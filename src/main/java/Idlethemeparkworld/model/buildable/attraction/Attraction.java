@@ -42,6 +42,7 @@ public abstract class Attraction extends Building implements Queueable, Repairab
         playConstructionSound();
     }
     
+    @Override
     public int getSkinID(){
         return skinID;
     }

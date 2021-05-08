@@ -1,6 +1,6 @@
 package Idlethemeparkworld.model;
 
-import javafx.scene.shape.Circle;
+import Idlethemeparkworld.misc.utils.Circle;
 
 public class Popup implements Updatable{
     private Circle circle;
