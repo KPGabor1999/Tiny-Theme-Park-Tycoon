@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class Assets {
     
     public static enum Sounds {
-        BGM,
+        BGM("theme"),
         BOO_LAUGH,
         CAROUSEL,
         CASH_REGISTER,
@@ -29,9 +29,18 @@ public class Assets {
         NONE;
 
         private static final String ASSETS_FOLDER_PATH = "resources/sounds/";
+        private final String filename;
+        
+        private Sounds(){
+            this.filename = name().toLowerCase();
+        }
+        
+        private Sounds(String filename){
+            this.filename = filename;
+        }
         
         public URL getSoundFile(){
-            return ResourceLoader.loadResource(ASSETS_FOLDER_PATH + name().toLowerCase() + ".wav");
+            return ResourceLoader.loadResource(ASSETS_FOLDER_PATH + filename + ".wav");
         }
     }
 

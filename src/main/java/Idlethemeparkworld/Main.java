@@ -343,6 +343,13 @@ public class Main extends JFrame {
 
         gameArea.addMouseListener(ma);
         gameArea.addMouseMotionListener(ma);
+        
+        Thread t = new Thread(){
+            public void run(){
+                Sound.playSound(Assets.Sounds.BGM, true);
+            }
+        };
+        t.start();
 
         setResizable(false);
         setLocationRelativeTo(null);
