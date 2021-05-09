@@ -1,5 +1,6 @@
 package modeltest;
 
+import Idlethemeparkworld.misc.Sound;
 import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.GameManager;
 import Idlethemeparkworld.model.Park;
@@ -8,9 +9,15 @@ import Idlethemeparkworld.model.buildable.BuildingStatus;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import org.junit.Before;
 import org.junit.Test;
 
 public class ParkTest {
+    
+    @Before
+    public void before(){
+        Sound.disableSound();
+    }
 
     @Test
     public void parkCreation(){
