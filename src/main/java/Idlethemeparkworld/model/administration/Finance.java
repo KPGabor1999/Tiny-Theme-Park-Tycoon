@@ -180,7 +180,8 @@ public class Finance implements Updatable {
         if(range.inRange(amount)){
             interestRate = getInterestRate(amount, dayDuration);
             principal = amount;
-            calculatedPay = (int)Math.floor(interestRate*5*principal);
+            double finalInterest = Math.pow(interestRate, dayDuration/5.0);
+            calculatedPay = (int)Math.floor(finalInterest*principal);
             dailyFee = Math.floorDiv(calculatedPay, dayDuration);
             paybackDuration = dayDuration;
             earn(amount, FinanceType.LOANED);
