@@ -11,7 +11,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 public class ParkTest {
-    
+
     @Test
     public void parkCreation(){
         GameManager gm = new GameManager();

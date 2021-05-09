@@ -6,10 +6,10 @@ import java.util.Random;
 public class Weather implements Updatable {
 
     public enum weatherType{
-        SUNNY(240, 240, 0, 60),
-        RAINING(95, 134, 173, 60),
-        CLOUDY(84, 184, 184, 60),
-        SNOWING(255, 255, 255, 60),
+        SUNNY(240, 240, 0, 40),
+        RAINING(95, 134, 173, 40),
+        CLOUDY(84, 184, 184, 40),
+        SNOWING(255, 255, 255, 40),
         CLEAR(0,0,0,0);
         
         private final Color color;

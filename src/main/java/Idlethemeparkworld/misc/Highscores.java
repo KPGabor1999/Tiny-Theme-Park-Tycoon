@@ -25,7 +25,7 @@ public class Highscores {
         this.maxscores = maxscores;
         this.highscores = new ArrayList<>();
         this.ascending = ascending;
-        this.filename = filename;
+        this.filename = filename + ".txt";
         readHighscores();
         saveHighscores();
     }

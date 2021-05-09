@@ -12,44 +12,35 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class Sound {
-    private static double volume = 0.02;
-    private static boolean test = false;
+    private static double volume = 0.1;
     
     public static void setVolume(double vol){
         volume = vol;
     }
-    
-    public static void setTest(){
-        test = true;
-    }
 
     public static Clip playSound(Sounds sound, boolean continuous){
-        if(!test){
-            URL fileURL = sound.getSoundFile();
+        URL fileURL = sound.getSoundFile();
 
-            AudioInputStream audioIn;
-            Clip clip = null;
-            try {
-                audioIn = AudioSystem.getAudioInputStream(fileURL);
-                clip = AudioSystem.getClip();
-                clip.open(audioIn);
-                FloatControl gain = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);        
-                gain.setValue(20f * (float) Math.log10(volume));
-                if(continuous){
-                    clip.loop(LOOP_CONTINUOUSLY);
-                } else {
-                    clip.start();
-                }
-            } catch (UnsupportedAudioFileException e) {
-                System.err.println("Unsupported audio file!");
-            } catch (IOException e) {
-                System.err.println("File not found!");
-            } catch (LineUnavailableException e) {
-                System.err.println("Line parsing error!");
+        AudioInputStream audioIn;
+        Clip clip = null;
+        try {
+            audioIn = AudioSystem.getAudioInputStream(fileURL);
+            clip = AudioSystem.getClip();
+            clip.open(audioIn);
+            FloatControl gain = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);        
+            gain.setValue(20f * (float) Math.log10(volume));
+            if(continuous){
+                clip.loop(LOOP_CONTINUOUSLY);
+            } else {
+                clip.start();
             }
-            return clip;
-        } else {
-            return null;
+        } catch (UnsupportedAudioFileException e) {
+            System.err.println("Unsupported audio file!");
+        } catch (IOException e) {
+            System.err.println("File not found!");
+        } catch (LineUnavailableException e) {
+            System.err.println("Line parsing error!");
         }
+        return clip;
     }
 }
