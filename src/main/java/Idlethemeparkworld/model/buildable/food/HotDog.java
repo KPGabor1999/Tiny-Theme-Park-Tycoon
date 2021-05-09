@@ -12,7 +12,7 @@ public class HotDog extends FoodStall {
         this.y = y;
         this.value = BuildType.HOTDOGSTAND.getBuildCost();
         this.buildingType = BuildType.HOTDOGSTAND;
-        this.serviceTime = Time.convMinuteToTick(1);
+        this.serviceTime = Time.convRealLifeSecondToTick(1);
         this.foodPrice = 10;
         this.foodQuality.setRange(40, 75);
         this.upkeepCost = 13;
@@ -26,13 +26,13 @@ public class HotDog extends FoodStall {
     public void innerUpgrade() {
         switch (currentLevel) {
             case 1:
-                this.serviceTime += Time.convMinuteToTick(0.3);
+                this.serviceTime += Time.convRealLifeSecondToTick(0.3);
                 this.foodQuality.add(5, 5);
                 this.upkeepCost += 10;
                 this.upgradeCost *= 2;
                 break;
             case 2:
-                this.serviceTime += Time.convMinuteToTick(0.3);
+                this.serviceTime += Time.convRealLifeSecondToTick(0.3);
                 this.foodQuality.add(5, 5);
                 this.upkeepCost += 10;
                 break;

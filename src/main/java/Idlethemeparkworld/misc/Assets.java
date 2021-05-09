@@ -98,8 +98,8 @@ public class Assets {
                 try {
                     BufferedImage assetData = ResourceLoader.loadImage(file);
                     assets.add(assetData);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
+                } catch (Exception ex) {
+                    
                 }
             }
         }

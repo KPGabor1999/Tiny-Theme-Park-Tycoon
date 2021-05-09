@@ -41,17 +41,28 @@ public class InformationBar extends JPanel {
         add(happinessLabel);
 
         updateInfobar();
-        Timer timeTimer = new Timer(500, new ActionListener() {
+        Timer timeTimer = new Timer(100, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateTime();
+            }
+        });
+        timeTimer.start();
+        
+        Timer dataTimer = new Timer(500, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 updateInfobar();
             }
         });
-        timeTimer.start();
+        dataTimer.start();
     }
 
-    public void updateInfobar() {
+    public void updateTime(){
         timeLabel.setText(gm.getTime().toString());
+    }
+    
+    public void updateInfobar() {
         moneyLabel.setText(gm.getFinance().toString());
         visitorCountLabel.setText("Visitors: " + gm.getAgentManager().getVisitorCount());
         happinessLabel.setText("Happiness: " + String.format("%.02f", gm.getAgentManager().getVisitorHappinessRating()));

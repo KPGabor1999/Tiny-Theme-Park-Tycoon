@@ -81,7 +81,7 @@ public class Visitor extends Agent {
         this.cashSpent = 0;
         this.currentAction = new AgentAction(AgentActionType.ENTERPARK, null);
 
-        this.patience = Time.convMinuteToTick(rand.nextInt(7)+6);
+        this.patience = Time.convRealLifeSecondToTick(rand.nextInt(7)+6);
         this.energy = 100;
         this.happiness = startingHappiness;
         this.hunger = rand.nextInt(25)+75;
@@ -156,7 +156,7 @@ public class Visitor extends Agent {
      */
     private void updateThought(long tickCount) {
         for (int i = 0; i < thoughts.size(); i++) {
-            if (tickCount - thoughts.get(i).timeCreated > Time.convMinuteToTick(5)) {
+            if (tickCount - thoughts.get(i).timeCreated > Time.convRealLifeSecondToTick(5)) {
                 thoughts.remove(i);
             }
         }
@@ -376,7 +376,7 @@ public class Visitor extends Agent {
             case BUYING:
                 break;
             case FLOATING:
-                if (statusTimer > Time.convMinuteToTick(5)) {
+                if (statusTimer > Time.convRealLifeSecondToTick(5)) {
                     remove();
                 }
             default:
@@ -558,7 +558,7 @@ public class Visitor extends Agent {
                         if (tlt.canService()) {
                             tlt.enter(this);
                             setState(AgentState.SHITTING);
-                            statusMaxTimer = Time.convMinuteToTick(rand.nextInt(5) + 2);
+                            statusMaxTimer = Time.convRealLifeSecondToTick(rand.nextInt(5) + 2);
                         }
                     }
                 }
@@ -605,7 +605,7 @@ public class Visitor extends Agent {
                 }
                 if (rand.nextBoolean()) {
                     statusTimer = 0;
-                    statusMaxTimer = Time.convMinuteToTick(rand.nextInt(6)+6);
+                    statusMaxTimer = Time.convRealLifeSecondToTick(rand.nextInt(6)+6);
                     setState(AgentState.SITTING);
                 } else {
                     moveToRandomNeighbourPavement();
@@ -690,7 +690,7 @@ public class Visitor extends Agent {
                 if(currentBuilding instanceof Pavement){
                     moveToRandomNeighbourPavement();
                 }
-                if (statusTimer > Time.convMinuteToTick(item.consumeTime)) {
+                if (statusTimer > Time.convRealLifeSecondToTick(item.consumeTime)) {
                     if(rand.nextInt(200)<item.hunger+thirst){
                         insertThought(AgentThoughts.WOW, null);
                     }

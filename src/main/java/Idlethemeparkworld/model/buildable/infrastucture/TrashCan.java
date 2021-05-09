@@ -91,6 +91,6 @@ public class TrashCan extends Infrastructure {
      */
     @Override
     public int getRecommendedMax() {
-        return 5;
+        return 4;
     }
 }

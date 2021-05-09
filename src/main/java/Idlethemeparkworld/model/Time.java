@@ -6,7 +6,7 @@ package Idlethemeparkworld.model;
  */
 public class Time implements Updatable {
 
-    private static final int MINUTE_DURATION = 24;
+    private static final int MINUTE_DURATION = 6;
 
     private int ticks;
 
@@ -71,6 +71,10 @@ public class Time implements Updatable {
      */
     public static int convMinuteToTick(double min) {
         return (int) Math.round(min * MINUTE_DURATION);
+    }
+    
+    public static int convRealLifeSecondToTick(double seconds) {
+        return (int) Math.round(seconds * 24);
     }
     
     /**

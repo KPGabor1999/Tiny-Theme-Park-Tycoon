@@ -249,7 +249,7 @@ public abstract class Attraction extends Building implements Queueable, Repairab
         statusTimer++;
         switch (status) {
             case RUNNING:
-                if (statusTimer >= Time.convMinuteToTick(runtime)) {
+                if (statusTimer >= Time.convRealLifeSecondToTick(runtime)) {
                     finish();
                 }
                 break;
