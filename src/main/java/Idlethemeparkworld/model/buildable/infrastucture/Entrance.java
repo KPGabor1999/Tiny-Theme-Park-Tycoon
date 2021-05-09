@@ -3,6 +3,7 @@ package Idlethemeparkworld.model.buildable.infrastucture;
 import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.GameManager;
 import Idlethemeparkworld.model.administration.Finance;
+import Idlethemeparkworld.model.agent.AgentThought;
 import Idlethemeparkworld.model.agent.Visitor;
 import Idlethemeparkworld.model.buildable.BuildingStatus;
 
@@ -18,7 +19,7 @@ public class Entrance extends Infrastructure {
     }
 
     /**
-     * A bejárat +5 ember jelenlétét engedélyezi a parkban.
+     * A bejï¿½rat +5 ember jelenlï¿½tï¿½t engedï¿½lyezi a parkban.
      * @return 
      */
     @Override
@@ -27,7 +28,7 @@ public class Entrance extends Infrastructure {
     }
 
     /**
-     * Új látogatók betétele a parkba.
+     * ï¿½j lï¿½togatï¿½k betï¿½tele a parkba.
      * @param visitor 
      */
     public void enterPark(Visitor visitor) {

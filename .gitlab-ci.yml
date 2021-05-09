@@ -22,7 +22,7 @@ build:
   - if: $CI_COMMIT_TAG
     when: never
   - if: '$CI_COMMIT_BRANCH != "master"'
-  script: gradle --build-cache assemble
+  script: ./gradlew --build-cache assemble
   cache:
     key: "$CI_COMMIT_REF_NAME"
     policy: push
@@ -37,9 +37,9 @@ build-weekly:
       when: never
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
   script:
-    - gradle --build-cache assemble
-    - mv "build/libs/Idle theme park world.jar" .
-    - mv "./Idle theme park world.jar" "./ITPW.jar"
+    - ./gradlew --build-cache assemble
+    - mv "build/libs/Idle theme park world-all.jar" .
+    - mv "./Idle theme park world-all.jar" "./ITPW.jar"
   artifacts:
     name: "Build$(date +\"%Y%m%d\")"
     paths:
@@ -55,9 +55,9 @@ build-master:
     - if: '$CI_COMMIT_BRANCH == "master"'
     - if: $CI_COMMIT_TAG
   script: 
-    - gradle --build-cache assemble
-    - mv "build/libs/Idle theme park world.jar" .
-    - mv "./Idle theme park world.jar" "./ITPW.jar"
+    - ./gradlew --build-cache assemble
+    - mv "build/libs/Idle theme park world-all.jar" .
+    - mv "./Idle theme park world-all.jar" "./ITPW.jar"
   cache:
     key: "$CI_COMMIT_REF_NAME"
     policy: push
@@ -72,7 +72,7 @@ build-master:
 
 test:
   stage: test
-  script: gradle check
+  script: ./gradlew check
   cache:
     key: "$CI_COMMIT_REF_NAME"
     policy: pull
@@ -109,7 +109,6 @@ scheduled-tag:
   script:
     - git config user.email "${GITLAB_USER_EMAIL}"
     - git config user.name "${GITLAB_USER_NAME}"
-    - git remote rm api-origin
     - git remote add api-origin https://oauth2:${GITLAB_ACCESS_TOKEN}@szofttech.inf.elte.hu/${CI_PROJECT_PATH}
     - git tag -a "Snapshot$(date +%Y%m)" -m "Auto-Release"
     - git push api-origin "Snapshot$(date +%Y%m)"
