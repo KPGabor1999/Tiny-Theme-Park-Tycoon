@@ -89,7 +89,7 @@ public class ParkTest {
         p.getRating();
         assertEquals(p.getActiveValue(), 34000);
         p.getPathfinding();
-        assertEquals(p.getMaxGuest(), 19);
+        assertEquals(p.getMaxGuest(), 15);
         p.update(0);
         assertEquals(p.checkFoodPrice(BuildType.BURGERJOINT), 15);
         assertEquals(p.checkFoodPrice(BuildType.HOTDOGSTAND), 0);
