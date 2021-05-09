@@ -11,14 +11,13 @@ targetCompatibility = 1.8
 mainClassName = 'Idlethemeparkworld.Main'
 
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 dependencies {
     testImplementation     'junit:junit:4.13'
     implementation group: 'org.jfree', name: 'jfreechart', version: '1.5.0'
     implementation group: 'org.jfree', name: 'jcommon', version: '1.0.24'
-    implementation group: 'com.github.jengelman.gradle.plugins', name: 'shadow', version: '6.1.0'
 }
 
 jar {
