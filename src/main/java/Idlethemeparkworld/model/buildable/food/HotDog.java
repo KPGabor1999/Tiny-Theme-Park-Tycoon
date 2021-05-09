@@ -15,7 +15,7 @@ public class HotDog extends FoodStall {
         this.serviceTime = Time.convMinuteToTick(1);
         this.foodPrice = 10;
         this.foodQuality.setRange(40, 75);
-        this.upkeepCost = 10;
+        this.upkeepCost = 13;
         this.upgradeCost = (int) (this.value * 0.75);
     }
 

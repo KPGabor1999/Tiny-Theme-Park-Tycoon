@@ -15,7 +15,7 @@ public class Hamburger extends FoodStall {
         this.serviceTime = Time.convMinuteToTick(1);
         this.foodPrice = 15;
         this.foodQuality.setRange(50, 90);
-        this.upkeepCost = 30;
+        this.upkeepCost = 15;
         this.upgradeCost = (int) (this.value * 0.75);
     }
 

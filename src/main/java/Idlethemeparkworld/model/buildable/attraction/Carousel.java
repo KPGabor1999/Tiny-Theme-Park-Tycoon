@@ -14,7 +14,7 @@ public class Carousel extends Attraction {
         this.value = buildingType.getBuildCost();
         this.upgradeCost = (int)(this.value * 0.75);
 
-        this.upkeepCost = 11;
+        this.upkeepCost = 6;
         this.fun = 12;
         this.capacity = 10;
         this.runtime = 3;
