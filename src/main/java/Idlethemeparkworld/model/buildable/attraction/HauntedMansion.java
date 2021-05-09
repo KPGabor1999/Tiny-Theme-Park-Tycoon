@@ -1,5 +1,6 @@
 package Idlethemeparkworld.model.buildable.attraction;
 
+import Idlethemeparkworld.misc.Assets;
 import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.GameManager;
 
@@ -18,7 +19,7 @@ public class HauntedMansion extends Attraction {
         this.entryFee = 15;
         this.baseEntryFee = 15;
         this.upgradeCost = (int)(this.value * 0.75);
-        this.soundFileName = "boo_laugh.wav";
+        this.sound = Assets.Sounds.BOO_LAUGH;
     }
 
     /**

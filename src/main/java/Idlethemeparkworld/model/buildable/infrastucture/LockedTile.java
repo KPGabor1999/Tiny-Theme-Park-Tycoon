@@ -1,5 +1,6 @@
 package Idlethemeparkworld.model.buildable.infrastucture;
 
+import Idlethemeparkworld.misc.Assets;
 import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.GameManager;
 
@@ -14,7 +15,7 @@ public class LockedTile extends Infrastructure {
         this.y = y;
         this.buildingType = BuildType.LOCKEDTILE;
         this.unlockCost = BuildType.LOCKEDTILE.getBuildCost();
-        this.soundFileName = "nature.wav";
+        this.sound = Assets.Sounds.NATURE;
     }
 
     public int getUnlockCost() {

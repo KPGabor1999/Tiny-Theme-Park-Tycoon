@@ -1,9 +1,9 @@
 package Idlethemeparkworld.model.buildable.infrastucture;
 
+import Idlethemeparkworld.misc.Assets;
 import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.GameManager;
 import Idlethemeparkworld.model.administration.Finance;
-import Idlethemeparkworld.model.agent.AgentThought;
 import Idlethemeparkworld.model.agent.Visitor;
 import Idlethemeparkworld.model.buildable.BuildingStatus;
 
@@ -15,7 +15,7 @@ public class Entrance extends Infrastructure {
         this.x = x;
         this.y = y;
         this.buildingType = BuildType.ENTRANCE;
-        this.soundFileName = "crowd_ambience.wav";
+        this.sound = Assets.Sounds.CROWD_AMBIANCE;
     }
 
     /**

@@ -1,5 +1,6 @@
 package Idlethemeparkworld.model.buildable.infrastucture;
 
+import Idlethemeparkworld.misc.Assets;
 import Idlethemeparkworld.misc.utils.Pair;
 import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.GameManager;
@@ -16,8 +17,7 @@ public class Pavement extends Infrastructure {
         this.y = y;
         this.buildingType = BuildType.PAVEMENT;
         this.value = BuildType.PAVEMENT.getBuildCost();
-        this.soundFileName = "crowd_ambience.wav";
-        playConstructionSound();
+        this.sound = Assets.Sounds.CROWD_AMBIANCE;
     }
 
     /**

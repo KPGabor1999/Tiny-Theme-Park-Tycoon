@@ -1,5 +1,7 @@
 package Idlethemeparkworld.model;
 
+import Idlethemeparkworld.misc.Assets;
+import Idlethemeparkworld.misc.Sound;
 import Idlethemeparkworld.misc.pathfinding.PathFinding;
 import Idlethemeparkworld.misc.utils.Circle;
 import Idlethemeparkworld.model.administration.Finance;
@@ -311,6 +313,9 @@ public class Park implements Updatable {
             updateBuildings();
             if(gm != null){
                 gm.checkWin();
+            }
+            if(!force){
+                //Sound.playSound(Assets.Sounds.CONSTRUCTION, false);
             }
             return newBuilding;
         }

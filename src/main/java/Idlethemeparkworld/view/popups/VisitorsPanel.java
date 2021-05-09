@@ -14,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.Timer;
 
 public class VisitorsPanel extends JPanel {
@@ -23,6 +24,8 @@ public class VisitorsPanel extends JPanel {
     private final JPanel visitorDetails;
     private final JPanel noInfo;
     private final JPanel allInfo;
+    
+    private JTextArea content;
     
     private ArrayList<JLabel> info;
     
@@ -56,14 +59,14 @@ public class VisitorsPanel extends JPanel {
         noInfo = new JPanel();
         noInfo.setLayout(new BoxLayout(noInfo, BoxLayout.PAGE_AXIS));
         noInfo.add(new JLabel("No data (visitor has left)."));
+        JPanel fullInfo = new JPanel();
         allInfo = new JPanel();
-        allInfo.setLayout(new GridLayout(11, 2));
+        allInfo.setLayout(new GridLayout(10, 2));
         info = new ArrayList<>();
         addDoubleLabel("State: ");
         addDoubleLabel("Location: ");
         addDoubleLabel("Cash: ");
         addDoubleLabel("Cash spent: ");
-        addDoubleLabel("Thoughts: ");
         addDoubleLabel("Current action: ");
         addDoubleLabel("Happiness: ");
         addDoubleLabel("Hunger: ");
@@ -71,8 +74,19 @@ public class VisitorsPanel extends JPanel {
         addDoubleLabel("Toilet: ");
         addDoubleLabel("Energy: ");
         
+        JPanel thoughts = new JPanel();
+        thoughts.add(new JLabel("Thoughts: "));
+        content = new JTextArea(6, 20);
+        content.setLineWrap(true);
+        content.setWrapStyleWord(true);
+        content.setEditable(false);
+        thoughts.add(content);
+        
+        fullInfo.add(allInfo);
+        fullInfo.add(thoughts);
+        
         visitorDetails.add(noInfo, "noinfo");
-        visitorDetails.add(allInfo, "allinfo");
+        visitorDetails.add(fullInfo, "allinfo");
         add(visitorDetails);
         
         updateVisitor();
@@ -93,7 +107,7 @@ public class VisitorsPanel extends JPanel {
         });
         timeTimer.start();
         
-        this.setPreferredSize(new Dimension(400,500));
+        this.setPreferredSize(new Dimension(325,350));
     }
     
     private void addDoubleLabel(String labelText){
@@ -122,10 +136,12 @@ public class VisitorsPanel extends JPanel {
             ((CardLayout) (visitorDetails.getLayout())).show(visitorDetails, "noinfo");
         } else {
             ArrayList<String> data = currentVisitor.getAllData();
-            for (int i = 0; i < 11; i++) {
+            for (int i = 0; i < 10; i++) {
                 info.get(i).setText(data.get(i));
                 info.get(i).revalidate();
             }
+            content.setText(data.get(10));
+            content.revalidate();
             ((CardLayout) (visitorDetails.getLayout())).show(visitorDetails, "allinfo");
         }
     }

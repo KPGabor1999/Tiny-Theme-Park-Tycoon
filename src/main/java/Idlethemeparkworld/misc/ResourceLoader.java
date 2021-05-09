@@ -8,6 +8,18 @@ import javax.imageio.ImageIO;
 
 public class ResourceLoader {
     /**
+     * Loads in a recourse as an URL. You can use it for anything
+     * 
+     * Note: The files should be in the resources folder 
+     * 
+     * @param resName A relative path in the resources folder
+     * @return an URL from the file
+     */
+    public static URL loadResource(String resName) {
+        return ResourceLoader.class.getClassLoader().getResource(resName);
+    }
+    
+    /**
      * Loads in a recourse as an inputstream. You can use it for anything not an image, like a text file or config file.
      * 
      * Note: The files should be in the resources folder 
@@ -15,7 +27,7 @@ public class ResourceLoader {
      * @param resName A relative path in the resources folder
      * @return an inputstream from the file
      */
-    public static InputStream loadResource(String resName) {
+    public static InputStream loadInputStream(String resName) {
         return ResourceLoader.class.getClassLoader().getResourceAsStream(resName);
     }
 

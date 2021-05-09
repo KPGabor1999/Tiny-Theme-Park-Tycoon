@@ -1,5 +1,6 @@
 package Idlethemeparkworld.model.buildable.attraction;
 
+import Idlethemeparkworld.misc.Assets;
 import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.GameManager;
 
@@ -18,7 +19,7 @@ public class SwingingShip extends Attraction {
         this.entryFee = 15;
         this.baseEntryFee = 15;
         this.upgradeCost = (int)(this.value * 0.75);
-        this.soundFileName = "you_are_a_pirate.wav";
+        this.sound = Assets.Sounds.YOU_ARE_A_PIRATE;
     }
 
     /**

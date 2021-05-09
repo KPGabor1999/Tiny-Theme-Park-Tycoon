@@ -1,5 +1,6 @@
 package Idlethemeparkworld.model.buildable.food;
 
+import Idlethemeparkworld.misc.Assets;
 import Idlethemeparkworld.model.buildable.Building;
 import java.util.ArrayList;
 import Idlethemeparkworld.misc.utils.Pair;
@@ -41,8 +42,7 @@ public abstract class FoodStall extends Building implements Queueable, Repairabl
         this.condition = 100;
         this.rand = new Random();
         this.skinID = rand.nextInt(3);
-        this.soundFileName = "nom_nom_nom.wav";
-        playConstructionSound();
+        this.sound = Assets.Sounds.NOM_NOM_NOM;
     }
 
     public int getSkinID(){

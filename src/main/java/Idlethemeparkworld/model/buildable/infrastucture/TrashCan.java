@@ -1,5 +1,6 @@
 package Idlethemeparkworld.model.buildable.infrastucture;
 
+import Idlethemeparkworld.misc.Assets;
 import Idlethemeparkworld.model.BuildType;
 import java.util.ArrayList;
 import Idlethemeparkworld.misc.utils.Pair;
@@ -20,8 +21,7 @@ public class TrashCan extends Infrastructure {
         this.capacity = 30;
         this.filled = 0;
         this.value = BuildType.TRASHCAN.getBuildCost();
-        this.soundFileName = "paper_crumbling.wav";
-        playConstructionSound();
+        this.sound = Assets.Sounds.PAPER_CRUMBLING;
     }
 
     public double getCapacity() {

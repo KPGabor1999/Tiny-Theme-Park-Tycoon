@@ -48,6 +48,6 @@ public class AgentThought {
 
     @Override
     public String toString() {
-        return "AgentThought{" + thoughtType + '}';
+        return thoughtType.toString();
     }
 }

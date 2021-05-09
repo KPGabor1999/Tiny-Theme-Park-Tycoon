@@ -39,7 +39,6 @@ public abstract class Attraction extends Building implements Queueable, Repairab
         this.rand = new Random();
         this.condition = 100;
         this.skinID = rand.nextInt(3);
-        playConstructionSound();
     }
     
     @Override
