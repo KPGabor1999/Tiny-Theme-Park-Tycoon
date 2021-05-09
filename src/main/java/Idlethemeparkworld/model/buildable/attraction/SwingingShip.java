@@ -12,7 +12,7 @@ public class SwingingShip extends Attraction {
         this.y = y;
         this.value = BuildType.SWINGINGSHIP.getBuildCost();
         this.buildingType = BuildType.SWINGINGSHIP;
-        this.upkeepCost = 15;
+        this.upkeepCost = 8;
         this.fun = 15;
         this.capacity = 10;
         this.runtime = 3;

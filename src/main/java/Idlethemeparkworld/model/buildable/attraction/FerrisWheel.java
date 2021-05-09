@@ -12,7 +12,7 @@ public class FerrisWheel extends Attraction {
         this.y = y;
         this.value = BuildType.FERRISWHEEL.getBuildCost();
         this.buildingType = BuildType.FERRISWHEEL;
-        this.upkeepCost = 18;
+        this.upkeepCost = 9;
         this.fun = 25;
         this.capacity = 25;
         this.runtime = 7;
