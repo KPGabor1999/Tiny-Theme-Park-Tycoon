@@ -1,6 +1,8 @@
 package Idlethemeparkworld;
 
+import Idlethemeparkworld.misc.Assets;
 import Idlethemeparkworld.misc.Highscores;
+import Idlethemeparkworld.misc.Sound;
 import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.GameManager;
 import Idlethemeparkworld.view.HighscoreWindow;
@@ -35,13 +37,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
 import java.io.IOException;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JViewport;
@@ -222,7 +218,7 @@ public class Main extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 Main.this.adminDialog = new AdministrationDialog(Main.this, "Administration", board);
                 adminDialog.setLocationRelativeTo(Main.this);
-                playSound("cash_register.wav");
+                Sound.playSound(Assets.Sounds.CASH_REGISTER, false);
             }
         });
 
@@ -423,26 +419,6 @@ public class Main extends JFrame {
             ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, ClassLoader.getSystemClassLoader().getResourceAsStream("resources/RetroGaming.ttf")));
         } catch (IOException | FontFormatException e) {
             System.err.println(e);
-        }
-    }
-    
-    private void playSound(String fileName){
-        File file = new File("C:\\Users\\KrazyXL\\idle-theme-park-world\\src\\main\\resources\\resources\\sounds\\" + fileName);
-        
-        AudioInputStream audioIn;
-        try {
-            audioIn = AudioSystem.getAudioInputStream(file);
-            Clip clip;
-            clip = AudioSystem.getClip();
-            clip.open(audioIn);
-            clip.start();
-        } catch (UnsupportedAudioFileException ex) {
-            System.err.println("A megadott hangfájl nem támogatott!");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            System.err.println("IOException");
-        } catch (LineUnavailableException ex) {
-            System.err.println("LineUnavailableException");
         }
     }
 }

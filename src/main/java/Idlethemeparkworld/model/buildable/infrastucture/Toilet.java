@@ -1,5 +1,6 @@
 package Idlethemeparkworld.model.buildable.infrastucture;
 
+import Idlethemeparkworld.misc.Assets;
 import Idlethemeparkworld.model.BuildType;
 import java.util.ArrayList;
 import Idlethemeparkworld.misc.utils.Pair;
@@ -28,8 +29,7 @@ public class Toilet extends Infrastructure implements Queueable {
         this.capacity = 10;
         this.cleanliness = 100;
         this.value = BuildType.TOILET.getBuildCost();
-        this.soundFileName = "toilet_flush.wav";
-        playConstructionSound();
+        this.sound = Assets.Sounds.TOILET_FLUSH;
     }
 
     @Override

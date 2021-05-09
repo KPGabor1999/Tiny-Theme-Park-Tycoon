@@ -1,17 +1,12 @@
 package Idlethemeparkworld.model.buildable;
 
+import Idlethemeparkworld.misc.Assets;
+import Idlethemeparkworld.misc.Assets.Sounds;
+import Idlethemeparkworld.misc.Sound;
 import java.util.ArrayList;
 import Idlethemeparkworld.misc.utils.Pair;
 import Idlethemeparkworld.misc.utils.Position;
 import Idlethemeparkworld.model.GameManager;
-import java.io.File;
-import java.io.IOException;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import static javax.sound.sampled.Clip.LOOP_CONTINUOUSLY;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
 
 public abstract class Building extends Buildable {
 
@@ -24,14 +19,14 @@ public abstract class Building extends Buildable {
     
     protected boolean visited;
     
-    protected String soundFileName;
+    protected Sounds sound;
  
     public Building(GameManager gm) {
         super(gm);
         this.status = BuildingStatus.OPEN;
         this.maxLevel = 3;
         this.currentLevel = 1;
-        this.soundFileName = "";
+        this.sound = Sounds.NONE;
     }
 
     public void setStatus(BuildingStatus status) {
@@ -80,24 +75,8 @@ public abstract class Building extends Buildable {
         return upgradeCost;
     }
     
-    public void playConstructionSound(){
-        File file = new File("C:\\Users\\KrazyXL\\idle-theme-park-world\\src\\main\\resources\\resources\\sounds\\construction.wav");
-        
-        AudioInputStream audioIn;
-        try {
-            audioIn = AudioSystem.getAudioInputStream(file);
-            Clip clip;
-            clip = AudioSystem.getClip();
-            clip.open(audioIn);
-            clip.start();
-        } catch (UnsupportedAudioFileException ex) {
-            System.err.println("A megadott hangfájl nem támogatott!");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            System.err.println("IOException");
-        } catch (LineUnavailableException ex) {
-            System.err.println("LineUnavailableException");
-        }
+    public Sounds getSound(){
+        return sound;
     }
 
     public boolean canUpgrade() {
@@ -119,26 +98,6 @@ public abstract class Building extends Buildable {
     protected void innerUpgrade() {}
 
     public abstract ArrayList<Pair<String, String>> getAllData();
-    
-    public void playSound(){
-        File file = new File("C:\\Users\\KrazyXL\\idle-theme-park-world\\src\\main\\resources\\resources\\sounds\\" + soundFileName);
-        
-        AudioInputStream audioIn;
-        try {
-            audioIn = AudioSystem.getAudioInputStream(file);
-            Clip clip;
-            clip = AudioSystem.getClip();
-            clip.open(audioIn);
-            clip.start();
-        } catch (UnsupportedAudioFileException ex) {
-            System.err.println("A megadott hangfájl nem támogatott!");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            System.err.println("IOException");
-        } catch (LineUnavailableException ex) {
-            System.err.println("LineUnavailableException");
-        }
-    }
 
     @Override
     public int hashCode() {

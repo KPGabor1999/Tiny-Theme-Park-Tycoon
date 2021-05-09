@@ -1,5 +1,6 @@
 package Idlethemeparkworld.model.buildable.attraction;
 
+import Idlethemeparkworld.misc.Assets.Sounds;
 import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.GameManager;
 
@@ -19,7 +20,7 @@ public class Carousel extends Attraction {
         this.runtime = 3;
         this.entryFee = 10;
         this.baseEntryFee = 10;
-        this.soundFileName = "carousel.wav";
+        this.sound = Sounds.CAROUSEL;
     }
 
     /**

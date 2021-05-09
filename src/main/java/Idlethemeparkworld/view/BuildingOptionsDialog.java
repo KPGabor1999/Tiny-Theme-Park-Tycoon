@@ -1,5 +1,8 @@
 package Idlethemeparkworld.view;
 
+import Idlethemeparkworld.misc.Assets;
+import Idlethemeparkworld.misc.Assets.Sounds;
+import Idlethemeparkworld.misc.Sound;
 import Idlethemeparkworld.model.buildable.Building;
 import Idlethemeparkworld.model.buildable.infrastucture.Entrance;
 import Idlethemeparkworld.model.buildable.infrastucture.LockedTile;
@@ -109,7 +112,7 @@ public class BuildingOptionsDialog extends JDialog {
                         BuildingOptionsDialog.this.board.getGameManager().getPark().demolish(currentBuilding.getX(), currentBuilding.getY());
                         BuildingOptionsDialog.this.board.refresh();
                         BuildingOptionsDialog.this.board.drawParkRender();
-                        currentBuilding.playConstructionSound();
+                        Sound.playSound(Assets.Sounds.CONSTRUCTION, false);
                     }
                 });
                 this.getContentPane().add(unlockButton);
@@ -118,7 +121,9 @@ public class BuildingOptionsDialog extends JDialog {
             this.setVisible(true);
         }
         
-        currentBuilding.playSound();
+        if(currentBuilding.getSound() != Sounds.NONE){
+            Sound.playSound(currentBuilding.getSound(), false);
+        }
     }
 
     private void upgradeBuilding() {

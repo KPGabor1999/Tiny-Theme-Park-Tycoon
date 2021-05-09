@@ -1,5 +1,6 @@
 package Idlethemeparkworld.model.buildable.attraction;
 
+import Idlethemeparkworld.misc.Assets;
 import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.GameManager;
 
@@ -18,7 +19,7 @@ public class FerrisWheel extends Attraction {
         this.entryFee = 20;
         this.baseEntryFee = 20;        
         this.upgradeCost = (int)(this.value * 0.75);
-        this.soundFileName = "cog_spinning.wav";
+        this.sound = Assets.Sounds.COG_SPINNING;
     }
 
     /**

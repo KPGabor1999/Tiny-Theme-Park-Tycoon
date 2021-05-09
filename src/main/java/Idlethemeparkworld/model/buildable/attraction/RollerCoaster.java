@@ -1,5 +1,6 @@
 package Idlethemeparkworld.model.buildable.attraction;
 
+import Idlethemeparkworld.misc.Assets;
 import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.GameManager;
 
@@ -18,7 +19,7 @@ public class RollerCoaster extends Attraction {
         this.entryFee = 25;
         this.baseEntryFee = 25;        
         this.upgradeCost = (int)(this.value * 0.75);
-        this.soundFileName = "people_screams.wav";
+        this.sound = Assets.Sounds.PEOPLE_SCREAMS;
     }
 
     /**

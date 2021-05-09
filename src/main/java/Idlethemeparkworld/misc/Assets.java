@@ -1,11 +1,39 @@
 package Idlethemeparkworld.misc;
 
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class Assets {
+    
+    public static enum Sounds {
+        BGM,
+        BOO_LAUGH,
+        CAROUSEL,
+        CASH_REGISTER,
+        COG_SPINNING,
+        CONSTRUCTION,
+        CROWD_AMBIANCE,
+        EXPLOSION,
+        NATURE,
+        NOM_NOM_NOM,
+        PAPER_CRUMBLING,
+        PEOPLE_SCREAMS,
+        THEME,
+        TOILET_FLUSH,
+        UGH,
+        WRONG_ANSWER,
+        YOU_ARE_A_PIRATE,
+        
+        NONE;
+
+        private static final String ASSETS_FOLDER_PATH = "resources/sounds/";
+        
+        public URL getSoundFile(){
+            return ResourceLoader.loadResource(ASSETS_FOLDER_PATH + name().toLowerCase() + ".wav");
+        }
+    }
 
     public static enum Texture {
         BURGERJOINT(3),
