@@ -12,7 +12,7 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class Sound {
-    private static double volume = 0.1;
+    private static double volume = 0.02;
 
     public static Clip playSound(Sounds sound, boolean continuous){
         URL fileURL = sound.getSoundFile();

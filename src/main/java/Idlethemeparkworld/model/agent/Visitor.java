@@ -941,7 +941,6 @@ public class Visitor extends Agent {
         res.add("X:" + x + "/Y:" + y);
         res.add(Integer.toString(cash));
         res.add(Integer.toString(cashSpent));
-        res.add(thoughts.toString());
         if(currentAction == null){
             res.add("None");
         } else {
@@ -952,6 +951,7 @@ public class Visitor extends Agent {
         res.add(String.format("%.1f",thirst));
         res.add(String.format("%.1f",toilet));
         res.add(String.format("%.1f",energy));
+        res.add(thoughts.toString());
         return res;
     }
 

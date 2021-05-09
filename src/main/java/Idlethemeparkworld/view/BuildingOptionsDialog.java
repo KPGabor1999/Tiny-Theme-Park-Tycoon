@@ -131,14 +131,14 @@ public class BuildingOptionsDialog extends JDialog {
         int upgradeCost = currentBuilding.getUpgradeCost();
         if (funds <= upgradeCost) {
             new Notification(this.getOwner(), "Problem", "Insufficient funds for upgrade.");
-            playSound("wrong_answer.wav");
+            Sound.playSound(Sounds.WRONG_ANSWER, false);
         } else {
             board.getGameManager().getFinance().pay(upgradeCost, Finance.FinanceType.UPGRADE);
             currentBuilding.upgrade();
             instanceCount--;
             this.dispose();
             new Notification(this.getOwner(), "Success", "Building successfully upgraded.");
-            playSound("construction.wav");
+            Sound.playSound(Sounds.CONSTRUCTION, false);
         }
     }
 
@@ -152,29 +152,9 @@ public class BuildingOptionsDialog extends JDialog {
                 BuildingOptionsDialog.this.board.getGameManager().getPark().demolish(currentBuilding.getX(), currentBuilding.getY());
                 BuildingOptionsDialog.this.board.drawParkRender();
                 BuildingOptionsDialog.this.board.refresh();
-                playSound("explosion.wav");
+                Sound.playSound(Sounds.EXPLOSION, false);
             }
         });
-        playSound("ugh.wav");
-    }
-    
-    private void playSound(String fileName){
-        File file = new File("C:\\Users\\KrazyXL\\idle-theme-park-world\\src\\main\\resources\\resources\\sounds\\" + fileName);
-        
-        AudioInputStream audioIn;
-        try {
-            audioIn = AudioSystem.getAudioInputStream(file);
-            Clip clip;
-            clip = AudioSystem.getClip();
-            clip.open(audioIn);
-            clip.start();
-        } catch (UnsupportedAudioFileException ex) {
-            System.err.println("A megadott hangfájl nem támogatott!");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            System.err.println("IOException");
-        } catch (LineUnavailableException ex) {
-            System.err.println("LineUnavailableException");
-        }
+        Sound.playSound(Sounds.UGH, false);
     }
 }

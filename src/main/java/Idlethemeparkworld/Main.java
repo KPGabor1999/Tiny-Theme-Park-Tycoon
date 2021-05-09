@@ -23,6 +23,7 @@ import javax.swing.JMenuItem;
 import javax.swing.WindowConstants;
 import Idlethemeparkworld.view.AdministrationDialog;
 import Idlethemeparkworld.view.Board;
+import Idlethemeparkworld.view.BuildingOptionsDialog;
 import Idlethemeparkworld.view.InformationBar;
 import Idlethemeparkworld.view.popups.CreditPanel;
 import Idlethemeparkworld.view.popups.FinancePanel;
@@ -37,6 +38,8 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -133,6 +136,12 @@ public class Main extends JFrame {
                 frame.pack();
                 frame.setLocationRelativeTo(Main.this);
                 frame.setVisible(true);
+                frame.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosing(WindowEvent e) {
+                    gm.getAgentManager().setActiveVisitor(null);
+                }
+            });
             }
         });
         
