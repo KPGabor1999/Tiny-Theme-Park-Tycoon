@@ -315,7 +315,7 @@ public class Park implements Updatable {
                 gm.checkWin();
             }
             if(!force){
-                Sound.playSound(Assets.Sounds.CONSTRUCTION, false);
+                //Sound.playSound(Assets.Sounds.CONSTRUCTION, false);
             }
             return newBuilding;
         }
