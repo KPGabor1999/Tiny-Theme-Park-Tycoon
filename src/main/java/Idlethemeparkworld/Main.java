@@ -272,7 +272,7 @@ public class Main extends JFrame {
         d.height *= 1.5;
         d.width *= 1.5;
         gameArea.setPreferredSize(d);
-        gameArea.setBackground(new Color(0, 130, 14, 255));
+        gameArea.setBackground(new Color(0, 100, 0, 255));
         gameArea.setLayout(new GridBagLayout());
         gameArea.add(board);
 

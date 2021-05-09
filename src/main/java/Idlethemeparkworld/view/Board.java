@@ -6,6 +6,7 @@ import Idlethemeparkworld.misc.utils.Position;
 import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.GameManager;
 import Idlethemeparkworld.model.Popup;
+import Idlethemeparkworld.model.Weather;
 import Idlethemeparkworld.model.administration.Finance;
 import Idlethemeparkworld.model.agent.Janitor;
 import Idlethemeparkworld.model.agent.Maintainer;
@@ -350,6 +351,9 @@ public class Board extends JPanel implements MouseWheelListener {
                   
             gr.drawImage(Assets.Texture.POPUP.getAsset(), (int)Math.floor((position.x-15)*scale), (int)Math.floor((position.y-15)*scale), (int)Math.round(30*scale),  (int)Math.round(30*scale), null);
         }
+        
+        gr.setColor(Weather.getInstance().getSkyColor());
+        gr.fillRect(0, 0, this.getWidth(), this.getHeight());
     }
 
     private void drawGhost(Graphics2D gr) {
