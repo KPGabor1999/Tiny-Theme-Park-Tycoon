@@ -109,7 +109,6 @@ scheduled-tag:
   script:
     - git config user.email "${GITLAB_USER_EMAIL}"
     - git config user.name "${GITLAB_USER_NAME}"
-    - git remote rm api-origin
     - git remote add api-origin https://oauth2:${GITLAB_ACCESS_TOKEN}@szofttech.inf.elte.hu/${CI_PROJECT_PATH}
     - git tag -a "Snapshot$(date +%Y%m)" -m "Auto-Release"
     - git push api-origin "Snapshot$(date +%Y%m)"
