@@ -23,10 +23,10 @@ import javax.swing.JMenuItem;
 import javax.swing.WindowConstants;
 import Idlethemeparkworld.view.AdministrationDialog;
 import Idlethemeparkworld.view.Board;
-import Idlethemeparkworld.view.BuildingOptionsDialog;
 import Idlethemeparkworld.view.InformationBar;
 import Idlethemeparkworld.view.popups.CreditPanel;
 import Idlethemeparkworld.view.popups.FinancePanel;
+import Idlethemeparkworld.view.popups.NewsFeedPanel;
 import Idlethemeparkworld.view.popups.StatsPanel;
 import Idlethemeparkworld.view.popups.VisitorsPanel;
 import java.awt.Component;
@@ -145,6 +145,18 @@ public class Main extends JFrame {
             }
         });
         
+        JMenuItem news = new JMenuItem(new AbstractAction("News") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFrame frame = new JFrame("News");
+                frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                frame.getContentPane().add(new NewsFeedPanel());
+                frame.pack();
+                frame.setLocationRelativeTo(Main.this);
+                frame.setVisible(true);
+            }
+        });
+        
         JMenuItem credit = new JMenuItem(new AbstractAction("Credits") {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -170,6 +182,7 @@ public class Main extends JFrame {
         menuGame.add(statistics);
         menuGame.add(visitors);
         menuGame.add(finances);
+        menuGame.add(news);
         menuGame.addSeparator();
         menuGame.add(credit);
         menuGame.add(menuGameExit);

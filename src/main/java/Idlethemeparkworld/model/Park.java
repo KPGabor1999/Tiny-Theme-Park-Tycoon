@@ -339,7 +339,7 @@ public class Park implements Updatable {
             }
         }
     }
-
+    
     /**
      * @param type Building type
      * @return associated food price

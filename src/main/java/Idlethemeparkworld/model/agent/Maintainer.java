@@ -2,6 +2,7 @@ package Idlethemeparkworld.model.agent;
 
 import Idlethemeparkworld.misc.utils.Position;
 import Idlethemeparkworld.model.AgentManager;
+import Idlethemeparkworld.model.News;
 import Idlethemeparkworld.model.Park;
 import Idlethemeparkworld.model.Time;
 import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentState;
@@ -24,6 +25,7 @@ public class Maintainer extends Agent {
         this.staffType = AgentTypes.StaffType.MAINTAINER;
         this.salary = 20;
         this.lastEnter = null;
+        News.getInstance().addNews("A new maintainer has been hired!");
     }
 
     public int getSalary() {

@@ -2,6 +2,7 @@ package Idlethemeparkworld.model.agent;
 
 import Idlethemeparkworld.misc.utils.Position;
 import Idlethemeparkworld.model.AgentManager;
+import Idlethemeparkworld.model.News;
 import Idlethemeparkworld.model.Park;
 import Idlethemeparkworld.model.Time;
 import Idlethemeparkworld.model.Updatable;
@@ -24,6 +25,7 @@ public class Janitor extends Agent implements Updatable {
         this.type = AgentTypes.AgentType.STAFF;
         this.staffType = AgentTypes.StaffType.JANITOR;
         this.salary = 8;
+        News.getInstance().addNews("A new janitor has been hired!");
     }
 
     public int getSalary() {

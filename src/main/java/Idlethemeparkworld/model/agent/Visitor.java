@@ -3,8 +3,11 @@ package Idlethemeparkworld.model.agent;
 import Idlethemeparkworld.misc.utils.Position;
 import Idlethemeparkworld.model.AgentManager;
 import Idlethemeparkworld.model.BuildType;
+import Idlethemeparkworld.model.News;
 import Idlethemeparkworld.model.Park;
 import Idlethemeparkworld.model.Time;
+import Idlethemeparkworld.model.Weather;
+import Idlethemeparkworld.model.Weather.WeatherType;
 import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentActionType;
 import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentState;
 import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentThoughts;
@@ -277,7 +280,8 @@ public class Visitor extends Agent {
         }
         if(thoughtType == AgentThoughts.WOW){
             if(rand.nextDouble()>0.982){
-                this.park.addPopup(x+xOffset, y+yOffset);
+                this.park.addPopup(x*64+xOffset, y*64+yOffset);
+                News.getInstance().addNews(name + " is feeling exceptionally well!");
             }
         }
     }
@@ -346,6 +350,38 @@ public class Visitor extends Agent {
             insertThought(AgentThoughts.WANTTHRILL, null, tickCount);
         }
     }
+    
+    private void changeEnergy(double amount){
+        double multi = 1;
+        switch(Weather.getInstance().getWeather()){
+            case NIGHT: multi = 1.2; break;
+            default: break;
+        }
+        energy += amount * multi;
+    }
+    
+    private void changeHunger(double amount){
+        double multi = 1;
+        switch(Weather.getInstance().getWeather()){
+            case NIGHT: multi = 0.9; break;
+            case SUNNY: multi = 1.1; break;
+            default: break;
+        }
+        hunger += amount * multi;
+    }
+    
+    private void changeThirst(double amount){
+        double multi = 1;
+        switch(Weather.getInstance().getWeather()){
+            case SNOWING:
+            case RAINING:
+            case NIGHT: multi = 0.8; break;
+            case CLOUDY: multi = 0.8; break;
+            case SUNNY: multi = 1.5; break;
+            default: break;
+        }
+        hunger += amount * multi;
+    }
 
     /**
      * Updates the conditions based on the current state of the visitor.
@@ -354,24 +390,24 @@ public class Visitor extends Agent {
     private void updateState() {
         switch (state) {
             case IDLE:
-                energy += 0.5;
+                changeEnergy(0.5);
                 break;
             case ENTERINGPARK:
             case LEAVINGPARK:
             case WANDERING:
             case WALKING:
-                energy -= 0.45;
-                hunger -= 0.35;
-                thirst -= 0.35;
+                changeEnergy(-0.45);
+                changeHunger(-0.35);
+                changeThirst(-0.35);
                 break;
             case ONRIDE:
-                energy -= 0.35;
-                hunger -= 0.25;
-                thirst -= 0.25;
+                changeEnergy(-0.35);
+                changeHunger(-0.25);
+                changeThirst(-0.25);
                 break;
             case SITTING:
-                energy += 2;
-                hunger -= 0.2;
+                changeEnergy(0.2);
+                changeHunger(-0.2);
                 break;
             case BUYING:
                 break;
@@ -382,9 +418,9 @@ public class Visitor extends Agent {
             default:
                 break;
         }
-        energy -= 0.25;
-        hunger -= 0.45;
-        thirst -= 0.35;
+        changeEnergy(-0.25);
+        changeHunger(-0.45);
+        changeThirst(-0.35);
         toilet -= 0.5;
     }
 
@@ -694,8 +730,8 @@ public class Visitor extends Agent {
                     if(rand.nextInt(200)<item.hunger+thirst){
                         insertThought(AgentThoughts.WOW, null);
                     }
-                    hunger += item.hunger;
-                    thirst += item.thirst;
+                    changeHunger(item.hunger);
+                    changeThirst(item.thirst);
                     if(currentBuilding instanceof FoodStall){
                         moveTo(lastEnter.x, lastEnter.y);
                     }
@@ -831,6 +867,21 @@ public class Visitor extends Agent {
             int nextIndex = rand.nextInt(paves.size());
             moveTo(paves.get(nextIndex).getX(), paves.get(nextIndex).getY());
             checkLittering();
+        }
+    }
+    
+    @Override
+    protected void moveTo(int x, int y){
+        super.moveTo(x, y);
+        double chanceForAccident = 0.0001;
+        if(Weather.getInstance().getWeather() == WeatherType.RAINING 
+                || Weather.getInstance().getWeather() == WeatherType.SNOWING ){
+            chanceForAccident = 0.0005;
+        }
+        if(rand.nextDouble() < chanceForAccident){
+            happiness *= 0.5;
+            insertThought(AgentThoughts.INJURED, null);
+            News.getInstance().addNews(name + " has injured themselves at a " + currentBuilding.getInfo().getName() + "(" + x + "," + y + ")");
         }
     }
     

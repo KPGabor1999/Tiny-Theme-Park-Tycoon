@@ -1,5 +1,6 @@
 package Idlethemeparkworld.model.buildable.food;
 
+import Idlethemeparkworld.misc.utils.Range;
 import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.GameManager;
 import Idlethemeparkworld.model.Time;
@@ -15,6 +16,7 @@ public class Hamburger extends FoodStall {
         this.serviceTime = Time.convRealLifeSecondToTick(1);
         this.foodPrice = 15;
         this.foodQuality.setRange(50, 90);
+        this.drinkQuality = new Range(50, 60);
         this.upkeepCost = 15;
         this.upgradeCost = (int) (this.value * 0.75);
     }

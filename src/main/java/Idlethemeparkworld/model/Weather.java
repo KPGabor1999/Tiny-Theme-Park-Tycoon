@@ -30,6 +30,11 @@ public class Weather implements Updatable {
         public static boolean isNight(WeatherType type){
             return type == NIGHT;
         }
+
+        @Override
+        public String toString() {
+            return name().toLowerCase();
+        }
     }
 
     private static Weather instance = null;
@@ -74,6 +79,7 @@ public class Weather implements Updatable {
         weatherTimer = duration;
         transitionDuration = Time.convMinuteToTick(transitionTime);
         transitionTimer = transitionDuration;
+        News.getInstance().addNews("The weather is changing to " + weather.toString());
     }
     
     private void setNewRandomWeather() {
@@ -83,7 +89,7 @@ public class Weather implements Updatable {
         } else {
             nextWeather = WeatherType.CLEAR;
         }
-        setNewWeather(nextWeather, rand.nextInt(60*2)+60*1, 15);
+        setNewWeather(nextWeather, rand.nextInt(60*4)+60*1, 15);
     }
 
     public Color getSkyColor() {
