@@ -3,6 +3,7 @@ package Idlethemeparkworld.model.buildable.attraction;
 import Idlethemeparkworld.misc.Assets;
 import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.GameManager;
+import Idlethemeparkworld.model.Weather;
 
 public class RollerCoaster extends Attraction {
 
@@ -41,6 +42,19 @@ public class RollerCoaster extends Attraction {
                 break;
             default:
                 break;
+        }
+    }
+    
+    @Override
+    protected double getWeatherMultiplier(){
+        switch(Weather.getInstance().getWeather()){
+            case SUNNY: return 1.3;
+            case RAINING: return 0.7;
+            case SNOWING: return 0.6;
+            case NIGHT: return 0.9;
+            case CLOUDY: return 1.3;
+            case CLEAR: return 1.1;
+            default: return 1;
         }
     }
 }

@@ -8,6 +8,7 @@ import Idlethemeparkworld.model.buildable.Building;
 import Idlethemeparkworld.model.buildable.BuildingStatus;
 import Idlethemeparkworld.misc.utils.Pair;
 import Idlethemeparkworld.model.News;
+import Idlethemeparkworld.model.Weather;
 import Idlethemeparkworld.model.administration.Finance.FinanceType;
 import Idlethemeparkworld.model.agent.Maintainer;
 import Idlethemeparkworld.model.buildable.Queueable;
@@ -82,7 +83,11 @@ public abstract class Attraction extends Building implements Queueable, Repairab
         this.condition = condition;
     }
     
-
+    public int getFun(){
+        return (int)Math.round(fun * getWeatherMultiplier());
+    }
+    
+    
     /**
      * Maximum hány ember tartózkodhat a parkban?
      * @return 
@@ -94,7 +99,7 @@ public abstract class Attraction extends Building implements Queueable, Repairab
 
     public ArrayList<Pair<String, String>> getAllData() {
         ArrayList<Pair<String, String>> res = new ArrayList<>();
-        res.add(new Pair<>("Fun: ", Integer.toString(fun)));
+        res.add(new Pair<>("Fun: ", Integer.toString(getFun())));
         res.add(new Pair<>("In queue: ", Integer.toString(queue.size())));
         res.add(new Pair<>("On ride/capacity: ", onRide.size() + "/" + capacity));
         res.add(new Pair<>("Runtime: ", Integer.toString(runtime)));
@@ -116,17 +121,21 @@ public abstract class Attraction extends Building implements Queueable, Repairab
                 onRide.get(i).pay(entryFee);
                 profit += entryFee;
             } else {
-                onRide.get(i).sendRideEvent(0);
+                onRide.get(i).sendRideEvent(0, entryFee);
             }
         }
         gm.getFinance().earn(profit, FinanceType.RIDE_SELL);
     }
 
+    protected double getWeatherMultiplier(){
+        return 1;
+    }
+    
     /**
      * Attrakció leállítása.
      */
     private void finish() {
-        Range r = new Range((int) Math.floor(fun * condition / 100), fun);
+        Range r = new Range((int) Math.floor(getFun() * 0.9 * condition / 100), getFun());
         int rideEvent = 0;
         if (rand.nextInt(100) < condition * 1.5) {
             rideEvent = r.getNextRandom();
@@ -135,7 +144,7 @@ public abstract class Attraction extends Building implements Queueable, Repairab
             rideEvent = (rand.nextInt(15) + 10) * (-1);
         }
         for (int i = 0; i < onRide.size(); i++) {
-            onRide.get(i).sendRideEvent(rideEvent);
+            onRide.get(i).sendRideEvent(rideEvent, entryFee);
         }
         onRide.clear();
         changeCondition(-0.47);

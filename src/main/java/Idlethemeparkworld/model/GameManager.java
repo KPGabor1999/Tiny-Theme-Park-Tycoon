@@ -29,7 +29,7 @@ public class GameManager {
     private boolean gameFroze;
     private boolean sandboxMode;
 
-    private static final double[] GAME_SPEEDS = {0.5, 1, 2};
+    private static final double[] GAME_SPEEDS = {0.5, 1, 2, 3};
     private int gameSpeed;
 
     private int entranceFee;

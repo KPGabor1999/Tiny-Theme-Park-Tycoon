@@ -12,7 +12,7 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class Sound {
-    private static double volume = 1.0;
+    private static double volume = 0.5;
     private static boolean soundsDisabled = false;
     
     public static void setVolume(double vol){

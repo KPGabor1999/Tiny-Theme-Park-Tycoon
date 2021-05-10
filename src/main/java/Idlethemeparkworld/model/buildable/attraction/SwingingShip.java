@@ -3,6 +3,7 @@ package Idlethemeparkworld.model.buildable.attraction;
 import Idlethemeparkworld.misc.Assets;
 import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.GameManager;
+import Idlethemeparkworld.model.Weather;
 
 public class SwingingShip extends Attraction {
 
@@ -39,6 +40,18 @@ public class SwingingShip extends Attraction {
                 break;
             default:
                 break;
+        }
+    }
+    
+    @Override
+    protected double getWeatherMultiplier(){
+        switch(Weather.getInstance().getWeather()){
+            case RAINING: return 0.7;
+            case SNOWING: return 0.9;
+            case NIGHT: return 0.8;
+            case CLOUDY: return 1.2;
+            case CLEAR: return 1.2;
+            default: return 1;
         }
     }
 }

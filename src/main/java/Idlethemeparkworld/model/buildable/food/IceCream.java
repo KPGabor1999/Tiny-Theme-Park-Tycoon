@@ -1,9 +1,11 @@
 package Idlethemeparkworld.model.buildable.food;
 
+import Idlethemeparkworld.misc.utils.Pair;
 import Idlethemeparkworld.misc.utils.Range;
 import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.GameManager;
 import Idlethemeparkworld.model.Time;
+import Idlethemeparkworld.model.Weather;
 
 public class IceCream extends FoodStall {
 
@@ -42,6 +44,17 @@ public class IceCream extends FoodStall {
                 break;
             default:
                 break;
+        }
+    }
+    
+    @Override
+    protected Pair<Double,Double> getWeatherMultiplier(){
+        switch(Weather.getInstance().getWeather()){
+            case SUNNY: return new Pair(1.6,1.7);
+            case SNOWING: return new Pair(0.3,0.3);
+            case CLOUDY: return new Pair(1,0.9);
+            case RAINING: return new Pair(0.6,0.6);
+            default: return new Pair(1,1);
         }
     }
 }

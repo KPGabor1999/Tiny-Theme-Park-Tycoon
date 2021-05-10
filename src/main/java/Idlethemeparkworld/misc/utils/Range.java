@@ -55,6 +55,14 @@ public class Range {
         low += a;
         high += b;
     }
+    
+    public Range newRangeByMultiplier(double aMulti, double bMulti) {
+        return new Range((int)Math.round(low*aMulti),(int)Math.round(high*bMulti));
+    }
+    
+    public Range newRangeByMultiplier(double multiplier) {
+        return new Range((int)Math.round(low*multiplier),(int)Math.round(high*multiplier));
+    }
 
     public int getLow() {
         return low;

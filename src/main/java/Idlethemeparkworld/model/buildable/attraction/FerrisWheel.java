@@ -3,6 +3,7 @@ package Idlethemeparkworld.model.buildable.attraction;
 import Idlethemeparkworld.misc.Assets;
 import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.GameManager;
+import Idlethemeparkworld.model.Weather;
 
 public class FerrisWheel extends Attraction {
 
@@ -44,6 +45,19 @@ public class FerrisWheel extends Attraction {
                 break;
             default:
                 break;
+        }
+    }
+    
+    @Override
+    protected double getWeatherMultiplier(){
+        switch(Weather.getInstance().getWeather()){
+            case SUNNY: return 0.9;
+            case RAINING: return 0.8;
+            case SNOWING: return 0.9;
+            case NIGHT: return 1.3;
+            case CLOUDY: return 0.9;
+            case CLEAR: return 1.3;
+            default: return 1;
         }
     }
 }

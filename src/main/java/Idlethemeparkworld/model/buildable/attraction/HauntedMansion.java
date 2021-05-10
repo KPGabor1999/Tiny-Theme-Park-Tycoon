@@ -3,6 +3,7 @@ package Idlethemeparkworld.model.buildable.attraction;
 import Idlethemeparkworld.misc.Assets;
 import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.GameManager;
+import Idlethemeparkworld.model.Weather;
 
 public class HauntedMansion extends Attraction {
 
@@ -39,6 +40,14 @@ public class HauntedMansion extends Attraction {
                 break;
             default:
                 break;
+        }
+    }
+    
+    @Override
+    protected double getWeatherMultiplier(){
+        switch(Weather.getInstance().getWeather()){
+            case NIGHT: return 1.4;
+            default: return 1;
         }
     }
 }

@@ -94,7 +94,8 @@ public abstract class FoodStall extends Building implements Queueable, Repairabl
     public ArrayList<Pair<String, String>> getAllData() {
         ArrayList<Pair<String, String>> res = new ArrayList<>();
         res.add(new Pair<>("Food price: ", Integer.toString(foodPrice)));
-        res.add(new Pair<>("Food quality: ", "(" + foodQuality.getLow() + "-" + foodQuality.getHigh() + ")"));
+        res.add(new Pair<>("Food quality: ", "(" + getFoodQuality().getLow() + "-" + getFoodQuality().getHigh() + ")"));
+        res.add(new Pair<>("Drink quality: ", "(" + getDrinkQuality().getLow() + "-" + getDrinkQuality().getHigh() + ")"));
         res.add(new Pair<>("Upkeep cost: ", Integer.toString(upkeepCost)));
         res.add(new Pair<>("Condition: ", String.format("%.2f", condition)));
         res.add(new Pair<>("In queue: ", Integer.toString(queue.size())));
@@ -139,6 +140,18 @@ public abstract class FoodStall extends Building implements Queueable, Repairabl
     public boolean canService() {
         return serviceTimer <= 0;
     }
+    
+    protected Pair<Double,Double> getWeatherMultiplier(){
+        return new Pair(1,1);
+    }
+    
+    public Range getFoodQuality(){
+        return foodQuality.newRangeByMultiplier(getWeatherMultiplier().getKey());
+    }
+    
+    public Range getDrinkQuality(){
+        return drinkQuality.newRangeByMultiplier(getWeatherMultiplier().getValue());
+    }
 
     /**
      * Az adott látogató telt vesz.
@@ -153,7 +166,7 @@ public abstract class FoodStall extends Building implements Queueable, Repairabl
                 leaveQueue(visitor);
                 serviceTimer = serviceTime;
                 changeCondition(-0.27);
-                return new FoodItem(foodQuality.getNextRandom(), drinkQuality.getNextRandom(), servingSize.getNextRandom());
+                return new FoodItem(getFoodQuality().getNextRandom(), getDrinkQuality().getNextRandom(), servingSize.getNextRandom(), foodPrice);
             } else {
                 return new FoodItem();
             }
