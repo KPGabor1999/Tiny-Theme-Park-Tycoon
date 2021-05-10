@@ -28,13 +28,13 @@ public class HotDog extends FoodStall {
             case 1:
                 this.serviceTime += Time.convRealLifeSecondToTick(0.3);
                 this.foodQuality.add(5, 5);
-                this.upkeepCost += 10;
+                this.upkeepCost += 5;
                 this.upgradeCost *= 2;
                 break;
             case 2:
                 this.serviceTime += Time.convRealLifeSecondToTick(0.3);
                 this.foodQuality.add(5, 5);
-                this.upkeepCost += 10;
+                this.upkeepCost += 5;
                 break;
             default:
                 break;

@@ -52,7 +52,7 @@ public class GameManager {
         this.park = new Park(10, 10, this);
         this.time = new Time();
         Weather.getInstance().setTime(time);
-        this.finance = new Finance(300000);
+        this.finance = new Finance(50000);
         this.am = new AgentManager(park, this);
         this.stats = new Statistics(this);
         this.board = null;
