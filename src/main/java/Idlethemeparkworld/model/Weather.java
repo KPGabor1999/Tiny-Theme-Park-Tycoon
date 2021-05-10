@@ -1,26 +1,33 @@
 package Idlethemeparkworld.model;
 
+import Idlethemeparkworld.misc.Assets.Texture;
 import java.awt.Color;
 import java.util.Random;
 
 public class Weather implements Updatable {
 
     public enum WeatherType {
-        SUNNY(240, 240, 0, 60),
-        RAINING(20, 60, 150, 80),
-        CLOUDY(150, 184, 184, 60),
-        SNOWING(255, 255, 255, 110),
-        NIGHT(0, 0, 65, 145),
-        CLEAR(0, 0, 0, 0);
+        SUNNY(240, 240, 0, 60, Texture.SUNNY),
+        RAINING(20, 60, 150, 80, Texture.RAINY),
+        CLOUDY(150, 184, 184, 60, Texture.CLOUDY),
+        SNOWING(255, 255, 255, 110, Texture.SNOWY),
+        NIGHT(0, 0, 65, 145, Texture.NIGHT),
+        CLEAR(0, 0, 0, 0, Texture.CLEAR);
 
         private final Color color;
+        private Texture asset;
 
-        private WeatherType(int r, int g, int b, int a) {
-            color = new Color(r, g, b, a);
+        private WeatherType(int r, int g, int b, int a, Texture asset) {
+            this.color = new Color(r, g, b, a);
+            this.asset = asset;
         }
 
         public Color getColor() {
             return color;
+        }
+        
+        public Texture getAsset() {
+            return asset;
         }
         
         public static WeatherType[] getDayTypes(){

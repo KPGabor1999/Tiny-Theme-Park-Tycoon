@@ -73,6 +73,13 @@ public class Assets {
         NPC10,
         POPUP,
         
+        NIGHT,
+        SUNNY,
+        RAINY,
+        SNOWY,
+        CLEAR,
+        CLOUDY,
+        
         JANITOR,
         MAINTAINER,
         
