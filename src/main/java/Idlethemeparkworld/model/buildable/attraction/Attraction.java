@@ -7,6 +7,7 @@ import Idlethemeparkworld.model.agent.Visitor;
 import Idlethemeparkworld.model.buildable.Building;
 import Idlethemeparkworld.model.buildable.BuildingStatus;
 import Idlethemeparkworld.misc.utils.Pair;
+import Idlethemeparkworld.model.News;
 import Idlethemeparkworld.model.administration.Finance.FinanceType;
 import Idlethemeparkworld.model.agent.Maintainer;
 import Idlethemeparkworld.model.buildable.Queueable;
@@ -130,6 +131,7 @@ public abstract class Attraction extends Building implements Queueable, Repairab
         if (rand.nextInt(100) < condition * 1.5) {
             rideEvent = r.getNextRandom();
         } else {
+            News.getInstance().addNews("A breakdown has happened at an attraction at "+x+","+y+"!");
             rideEvent = (rand.nextInt(15) + 10) * (-1);
         }
         for (int i = 0; i < onRide.size(); i++) {
@@ -193,8 +195,12 @@ public abstract class Attraction extends Building implements Queueable, Repairab
      * @param amount 
      */
     private void changeCondition(double amount) {
+        double original = condition;
         condition += amount;
         if(condition < 35) {
+            if(original >= 35){
+                News.getInstance().addNews("Condition of attraction(" + x + "," + y + ") is below critical threshold!");
+            }
             Maintainer.alertOfCriticalBuilding(this);
         }
         if (condition <= 0) {
@@ -249,7 +255,7 @@ public abstract class Attraction extends Building implements Queueable, Repairab
         statusTimer++;
         switch (status) {
             case RUNNING:
-                if (statusTimer >= Time.convMinuteToTick(runtime)) {
+                if (statusTimer >= Time.convRealLifeSecondToTick(runtime)) {
                     finish();
                 }
                 break;

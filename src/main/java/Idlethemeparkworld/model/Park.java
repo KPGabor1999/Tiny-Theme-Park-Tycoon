@@ -339,7 +339,7 @@ public class Park implements Updatable {
             }
         }
     }
-
+    
     /**
      * @param type Building type
      * @return associated food price
@@ -471,10 +471,10 @@ public class Park implements Updatable {
     @Override
     public synchronized void update(long tickCount) {
         buildings.forEach(b -> b.update(tickCount));
-        if (tickCount % Time.convMinuteToTick(15) == 0) {
-            gm.getFinance().pay(500, Finance.FinanceType.UPKEEP);
+        if (tickCount % Time.convMinuteToTick(30) == 0) {
+            gm.getFinance().pay(200, Finance.FinanceType.UPKEEP);
         }
-        if (tickCount % Time.convMinuteToTick(1) == 0){
+        if (tickCount % Time.convRealLifeSecondToTick(1) == 0){
             for (int i = 0; i < popups.size(); i++) {
                 popups.get(i).update(tickCount);
                 if(popups.get(i).getDurationSeconds() == 0){

@@ -2,6 +2,7 @@ package Idlethemeparkworld.model.agent;
 
 import Idlethemeparkworld.misc.utils.Position;
 import Idlethemeparkworld.model.AgentManager;
+import Idlethemeparkworld.model.News;
 import Idlethemeparkworld.model.Park;
 import Idlethemeparkworld.model.Time;
 import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentState;
@@ -24,6 +25,7 @@ public class Maintainer extends Agent {
         this.staffType = AgentTypes.StaffType.MAINTAINER;
         this.salary = 20;
         this.lastEnter = null;
+        News.getInstance().addNews("A new maintainer has been hired!");
     }
 
     public int getSalary() {
@@ -103,7 +105,7 @@ public class Maintainer extends Agent {
                         if (((Repairable)buildings.get(i)).shouldRepair()) {
                             lastEnter = new Position(x,y);
                             moveTo(buildings.get(i).getX(), buildings.get(i).getY());
-                            statusMaxTimer = Time.convMinuteToTick(rand.nextInt(4)+1);
+                            statusMaxTimer = Time.convRealLifeSecondToTick(rand.nextInt(4)+1);
                             setState(AgentInnerLogic.AgentState.FIXING);
                             found = true;
                         }
@@ -116,7 +118,7 @@ public class Maintainer extends Agent {
             case WALKING:
                 moveOnPath();
                 if (path.isEmpty() && currentBuilding instanceof Attraction || currentBuilding instanceof FoodStall) {
-                    statusMaxTimer = Time.convMinuteToTick(rand.nextInt(4)+1);
+                    statusMaxTimer = Time.convRealLifeSecondToTick(rand.nextInt(4)+1);
                     setState(AgentInnerLogic.AgentState.FIXING);
                 }
                 break;
@@ -133,7 +135,7 @@ public class Maintainer extends Agent {
                 }
                 break;
             case FLOATING:
-                if (statusTimer > Time.convMinuteToTick(5)) {
+                if (statusTimer > Time.convRealLifeSecondToTick(5)) {
                     moveTo(0,0);
                     resetAction();
                 }

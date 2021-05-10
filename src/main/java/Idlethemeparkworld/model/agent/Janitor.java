@@ -2,6 +2,7 @@ package Idlethemeparkworld.model.agent;
 
 import Idlethemeparkworld.misc.utils.Position;
 import Idlethemeparkworld.model.AgentManager;
+import Idlethemeparkworld.model.News;
 import Idlethemeparkworld.model.Park;
 import Idlethemeparkworld.model.Time;
 import Idlethemeparkworld.model.Updatable;
@@ -24,6 +25,7 @@ public class Janitor extends Agent implements Updatable {
         this.type = AgentTypes.AgentType.STAFF;
         this.staffType = AgentTypes.StaffType.JANITOR;
         this.salary = 8;
+        News.getInstance().addNews("A new janitor has been hired!");
     }
 
     public int getSalary() {
@@ -98,7 +100,7 @@ public class Janitor extends Agent implements Updatable {
                 if(this.state != AgentState.WALKING){
                     moveToRandomNeighbourTile();
                     if (currentBuilding instanceof Infrastructure && ((Infrastructure)currentBuilding).shouldClean()) {
-                        statusMaxTimer = Time.convMinuteToTick(rand.nextInt(4)+1);
+                        statusMaxTimer = Time.convRealLifeSecondToTick(rand.nextInt(4)+1);
                         setState(AgentState.CLEANING);
                     }
                 }
@@ -106,7 +108,7 @@ public class Janitor extends Agent implements Updatable {
             case WALKING:
                 moveOnPath();
                 if (path.isEmpty() && currentBuilding instanceof Infrastructure) {
-                    statusMaxTimer = Time.convMinuteToTick(rand.nextInt(4)+1);
+                    statusMaxTimer = Time.convRealLifeSecondToTick(rand.nextInt(4)+1);
                     setState(AgentState.CLEANING);
                 }
                 break;
@@ -117,7 +119,7 @@ public class Janitor extends Agent implements Updatable {
                 }
                 break;
             case FLOATING:
-                if (statusTimer > Time.convMinuteToTick(5)) {
+                if (statusTimer > Time.convRealLifeSecondToTick(5)) {
                     moveTo(0,0);
                 }
                 break;

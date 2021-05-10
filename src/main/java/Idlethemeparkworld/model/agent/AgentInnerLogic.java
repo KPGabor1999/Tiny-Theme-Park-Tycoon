@@ -20,6 +20,7 @@ public class AgentInnerLogic {
         THIRSTY,
         NOTTHIRSTY,
         TOILET,
+        INJURED,
 
         TOOMUCHLITTER,
         CLEAN,

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import Idlethemeparkworld.misc.utils.Pair;
 import Idlethemeparkworld.misc.utils.Range;
 import Idlethemeparkworld.model.GameManager;
+import Idlethemeparkworld.model.News;
 import Idlethemeparkworld.model.administration.Finance;
 import Idlethemeparkworld.model.agent.Maintainer;
 import Idlethemeparkworld.model.agent.Visitor;
@@ -37,7 +38,7 @@ public abstract class FoodStall extends Building implements Queueable, Repairabl
         this.serviceTimer = 0;
         this.foodPrice = 0;
         this.foodQuality = new Range(45, 55);
-        this.drinkQuality = new Range(45, 90);
+        this.drinkQuality = new Range(30, 50);
         this.servingSize = new Range(5, 15);
         this.condition = 100;
         this.rand = new Random();
@@ -166,8 +167,12 @@ public abstract class FoodStall extends Building implements Queueable, Repairabl
      * @param amount 
      */
     private void changeCondition(double amount) {
+        double original = condition;
         condition += amount;
         if(condition < 35) {
+            if(original >= 35){
+                News.getInstance().addNews("Condition of food stall(" + x + "," + y + ") is below critical threshold!");
+            }
             Maintainer.alertOfCriticalBuilding(this);
         }
         if (condition <= 0) {

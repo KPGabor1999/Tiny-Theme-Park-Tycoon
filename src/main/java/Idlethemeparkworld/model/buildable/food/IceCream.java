@@ -1,5 +1,6 @@
 package Idlethemeparkworld.model.buildable.food;
 
+import Idlethemeparkworld.misc.utils.Range;
 import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.GameManager;
 import Idlethemeparkworld.model.Time;
@@ -12,9 +13,10 @@ public class IceCream extends FoodStall {
         this.y = y;
         this.value = BuildType.ICECREAMPARLOR.getBuildCost();
         this.buildingType = BuildType.ICECREAMPARLOR;
-        this.serviceTime = Time.convMinuteToTick(1);
+        this.serviceTime = Time.convRealLifeSecondToTick(1);
         this.foodPrice = 5;
         this.foodQuality.setRange(30, 70);
+        this.drinkQuality = new Range(75, 90);
         this.upkeepCost = 10;
         this.upgradeCost = (int) (this.value * 0.75);
     }
@@ -26,14 +28,16 @@ public class IceCream extends FoodStall {
     public void innerUpgrade() {
         switch (currentLevel) {
             case 1:
-                this.serviceTime += Time.convMinuteToTick(0.3);
+                this.serviceTime += Time.convRealLifeSecondToTick(0.3);
                 this.foodQuality.add(5, 5);
+                this.drinkQuality.add(5, 5);
                 this.upkeepCost += 10;
                 this.upgradeCost *= 2;
                 break;
             case 2:
-                this.serviceTime += Time.convMinuteToTick(0.3);
+                this.serviceTime += Time.convRealLifeSecondToTick(0.3);
                 this.foodQuality.add(5, 5);
+                this.drinkQuality.add(10, 5);
                 this.upkeepCost += 10;
                 break;
             default:

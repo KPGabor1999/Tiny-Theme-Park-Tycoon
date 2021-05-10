@@ -1,5 +1,6 @@
 package modeltest;
 
+import Idlethemeparkworld.misc.Sound;
 import Idlethemeparkworld.misc.utils.Position;
 import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.GameManager;
@@ -7,9 +8,15 @@ import Idlethemeparkworld.model.Park;
 import Idlethemeparkworld.model.buildable.Building;
 import java.util.ArrayList;
 import static org.junit.Assert.assertEquals;
+import org.junit.Before;
 import org.junit.Test;
 
 public class PathFindingTest {
+    
+    @Before
+    public void before(){
+        Sound.disableSound();
+    }
     
     @Test
     public void getterTest(){

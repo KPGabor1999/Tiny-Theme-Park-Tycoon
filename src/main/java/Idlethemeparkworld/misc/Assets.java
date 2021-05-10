@@ -73,6 +73,13 @@ public class Assets {
         NPC10,
         POPUP,
         
+        NIGHT,
+        SUNNY,
+        RAINY,
+        SNOWY,
+        CLEAR,
+        CLOUDY,
+        
         JANITOR,
         MAINTAINER,
         
@@ -98,8 +105,8 @@ public class Assets {
                 try {
                     BufferedImage assetData = ResourceLoader.loadImage(file);
                     assets.add(assetData);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
+                } catch (Exception ex) {
+                    
                 }
             }
         }

@@ -7,6 +7,7 @@ import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.GameManager;
 import Idlethemeparkworld.model.Popup;
 import Idlethemeparkworld.model.Weather;
+import Idlethemeparkworld.model.Weather.WeatherType;
 import Idlethemeparkworld.model.administration.Finance;
 import Idlethemeparkworld.model.agent.Janitor;
 import Idlethemeparkworld.model.agent.Maintainer;

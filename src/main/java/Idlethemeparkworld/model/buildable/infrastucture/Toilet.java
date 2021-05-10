@@ -34,7 +34,7 @@ public class Toilet extends Infrastructure implements Queueable {
 
     @Override
     public int getRecommendedMax() {
-        return capacity;
+        return 6;
     }
 
     public double getCleanliness() {

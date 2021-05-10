@@ -5,6 +5,7 @@ import Idlethemeparkworld.model.BuildType;
 import java.util.ArrayList;
 import Idlethemeparkworld.misc.utils.Pair;
 import Idlethemeparkworld.model.GameManager;
+import Idlethemeparkworld.model.News;
 import Idlethemeparkworld.model.agent.Janitor;
 
 public class TrashCan extends Infrastructure {
@@ -65,6 +66,7 @@ public class TrashCan extends Infrastructure {
                 Janitor.alertOfCriticalBuilding(this);
             }
             if (isFull()) {
+                News.getInstance().addNews("Thrashcan at (" + x + "," + y + ") is full!");
                 filled = capacity;
             }
         }
@@ -91,6 +93,6 @@ public class TrashCan extends Infrastructure {
      */
     @Override
     public int getRecommendedMax() {
-        return 5;
+        return 4;
     }
 }
