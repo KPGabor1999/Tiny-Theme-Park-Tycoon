@@ -30,17 +30,17 @@ public class FerrisWheel extends Attraction {
     public void innerUpgrade() {
         switch (currentLevel) {
             case 1:
-                this.fun *= 1.5;
+                this.fun *= 1.1;
                 this.runtime -= 1;                
                 this.upgradeCost *= 2;
                 break;
             case 2:
-                this.fun *= 1.5;
+                this.fun *= 1.1;
                 this.runtime -= 1;    
                 this.upgradeCost *= 2;                
                 break;
             case 3:
-                this.fun *= 1.5;
+                this.fun *= 1.1;
                 this.runtime -= 1;                    
                 break;
             default:

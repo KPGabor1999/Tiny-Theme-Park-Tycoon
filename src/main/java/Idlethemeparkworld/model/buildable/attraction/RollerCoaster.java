@@ -30,13 +30,13 @@ public class RollerCoaster extends Attraction {
     public void innerUpgrade() {
         switch (currentLevel) {
             case 1:
-                this.fun *= 1.5;
+                this.fun *= 1.35;
                 this.capacity += 4;
                 this.runtime -= 0.5;
                 this.upgradeCost *= 2;
                 break;
             case 2:
-                this.fun *= 1.5;
+                this.fun *= 1.35;
                 this.capacity += 4;
                 this.runtime -= 0.5;
                 break;
