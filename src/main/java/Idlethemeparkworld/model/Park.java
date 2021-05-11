@@ -47,14 +47,31 @@ public class Park implements Updatable {
         initializePark(10, 10, null);
     }
 
+    /**
+     * Creates a new square park of given size and sets the parent game manager
+     * @param size size of the sides of the park
+     * @param gm parent owning game manager
+     */
     public Park(int size, GameManager gm) {
         initializePark(size, size, gm);
     }
 
+    /**
+     * Creates a new rectangle park of given sizes and sets the parent game manager
+     * @param rows the width of the park
+     * @param columns the height of the park
+     * @param gm parent owning game manager
+     */
     public Park(int rows, int columns, GameManager gm) {
         initializePark(rows, columns, gm);
     }
 
+    /**
+     * Initializes the park by placing the entrance, resetting all fields and spawning in the locked tiles.
+     * @param rows the width of the park
+     * @param columns the height of the park
+     * @param gm parent owning game manager
+     */
     public void initializePark(int rows, int columns, GameManager gm) {
         this.gm = gm;
         rating = 0;
@@ -84,18 +101,33 @@ public class Park implements Updatable {
         }
     }
 
+    /**
+     * @return the pathfinding system of the current park
+     */
     public PathFinding getPathfinding() {
         return pf;
     }
 
+    /**
+     * @return the width of the park
+     */
     public int getWidth() {
         return tiles[0].length;
     }
 
+    /**
+     * @return the height of the park
+     */
     public int getHeight() {
         return tiles.length;
     }
 
+    /**
+     * Get a tile at a given position
+     * @param x x coordinate of the tile 
+     * @param y y coordinate of the tile 
+     * @return the searched tile
+     */
     public Tile getTile(int x, int y) {
         return tiles[y][x];
     }
@@ -492,20 +524,29 @@ public class Park implements Updatable {
      */
     private void calculateParkRating() {
         rating = 9;
-        double negative = 0;
+        int total = 0;
+        int dirty = 0;
         for (int i = 0; i < buildings.size(); i++) {
             if (buildings.get(i) instanceof Toilet) {
-                negative += 100-((Toilet) buildings.get(i)).getCleanliness();
+                total++;
+                if(((Toilet) buildings.get(i)).getCleanliness() < 50){
+                    dirty++;
+                }
             } else if (buildings.get(i) instanceof Infrastructure) {
-                negative += ((Infrastructure) buildings.get(i)).getLittering();
+                total++;
+                if(((Infrastructure) buildings.get(i)).getLittering() > 5){
+                    dirty++;
+                }
             }
         }
+        double negative = (double)dirty/total*2;
+        negative = Math.min(negative, 2);
+        rating -= negative;
+        
         rating = (rating + gm.getAgentManager().getVisitorHappinessRating()) / 2;
         rating -= 3;
         rating += Math.min(gm.getAgentManager().getVisitorCount() / 70.0, 3.0);
-        negative *= 0.05;
-        negative = Math.min(negative, 2);
-        rating -= negative;
+        
         rating = Math.min(rating, 10);
         rating = Math.max(rating, 0);
     }

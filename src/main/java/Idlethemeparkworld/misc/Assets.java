@@ -54,7 +54,7 @@ public class Assets {
         HOTDOGSTAND(3),
         ICECREAMPARLOR(3),
         PAVEMENT,
-        ROLLERCOASTER(3),
+        ROLLERCOASTER,
         SWINGINGSHIP(3),
         TOILET,
         TRASHCAN,
@@ -87,43 +87,47 @@ public class Assets {
 
         private static final String ASSETS_FOLDER_PATH = "resources/";
         private BufferedImage asset;
+        private BufferedImage nightAsset;
         private ArrayList<BufferedImage> assets;
-        
-        Texture(String path) {
-            if (!this.name().equals("NONE")) {
-                load(path);
-            } else {
-                asset = null;
-            }
-        }
+        private ArrayList<BufferedImage> nightAssets;
         
         Texture(int versionCount) {
             asset = null;
+            nightAsset = null;
             assets = new ArrayList<>();
+            nightAssets = new ArrayList<>();
             for (int i = 1; i <= versionCount; i++) {
                 String file = ASSETS_FOLDER_PATH + name().replace("_", "").toLowerCase() + i + ".png";
+                String nightFile = ASSETS_FOLDER_PATH + name().replace("_", "").toLowerCase() + i + "night.png";
+                try {
+                    BufferedImage assetData = ResourceLoader.loadImage(nightFile);
+                    nightAssets.add(assetData);
+                } catch (Exception ex) {
+                    
+                }
                 try {
                     BufferedImage assetData = ResourceLoader.loadImage(file);
                     assets.add(assetData);
                 } catch (Exception ex) {
-                    
                 }
             }
         }
 
         Texture() {
             if (!this.name().equals("NONE")) {
-                load(ASSETS_FOLDER_PATH + name().replace("_", "").toLowerCase() + ".png");
+                asset = null;
+                nightAsset = null;
+                try {
+                asset = ResourceLoader.loadImage(ASSETS_FOLDER_PATH + name().replace("_", "").toLowerCase() + ".png");
+                } catch (Exception ex) {
+                }
+                try {
+                    nightAsset = ResourceLoader.loadImage(ASSETS_FOLDER_PATH + name().replace("_", "").toLowerCase() + "night.png");
+                } catch (Exception ex) {
+                }
             } else {
                 asset = null;
-            }
-        }
-
-        private void load(String path) {
-            try {
-                asset = ResourceLoader.loadImage(path);
-            } catch (IOException ex) {
-                ex.printStackTrace();
+                nightAsset = null;
             }
         }
 
@@ -136,6 +140,14 @@ public class Assets {
         
         public ArrayList<BufferedImage> getAssets() {
             return assets;
+        }
+        
+        public BufferedImage getNightAsset() {
+            return nightAsset;
+        }
+        
+        public ArrayList<BufferedImage> getNightAssets() {
+            return nightAssets;
         }
     }
 }

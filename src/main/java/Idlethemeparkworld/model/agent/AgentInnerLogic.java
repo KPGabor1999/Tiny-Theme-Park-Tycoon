@@ -1,5 +1,7 @@
 package Idlethemeparkworld.model.agent;
 
+import java.util.Random;
+
 public class AgentInnerLogic {
 
     public enum AgentThoughts {
@@ -74,26 +76,31 @@ public class AgentInnerLogic {
     }
     
     public enum Reviews {
-        GOOD("It's pretty good"),
-        DECENT("It's alright"),
-        BAD("It's pretty underwhelming"),
+        GOOD(new String[]{"It's pretty good", "Enjoyable!", "Very nice", "Had fun", "5/5", "Enjoyed it", "I liked it!"}),
+        DECENT(new String[]{"It's alright", "It's not bad", "Decent", "4/5", "It's pretty okay"}),
+        BAD(new String[]{"It's pretty underwhelming", "It's pretty bad", "I didn't like it", "It's boring", "Not good at all"}),
         GOODVALUE("It's a good bang for your buck"),
         BADVALUE("It's definitely not worth it."),
-        AMAZING("Wow, absolutely amazing!"),
-        BREAKDOWN("There was a breakdown, awful");
+        AMAZING(new String[]{"Wow, absolutely amazing!", "11/10", "The absolute best!", "Wow, just wow!", "Simply the best"}),
+        BREAKDOWN(new String[]{"There was a breakdown, awful", "No service"});
         
-        private final String text;
+        private final String[] texts;
+        private Random rand = new Random();
         
         private Reviews(){
-            this.text = "";
+            this.texts = new String[0];
         }
         
         private Reviews(String text){
-            this.text = text;
+            this.texts = new String[]{text};
+        }
+        
+        private Reviews(String[] texts){
+            this.texts = texts;
         }
         
         public String getReviewText(){
-            return text;
+            return texts[rand.nextInt(texts.length)];
         }
     }
 }

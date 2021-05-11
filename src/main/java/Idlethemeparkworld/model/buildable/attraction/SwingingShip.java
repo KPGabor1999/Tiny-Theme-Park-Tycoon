@@ -18,7 +18,7 @@ public class SwingingShip extends Attraction {
         this.capacity = 10;
         this.runtime = 3;
         this.entryFee = 15;
-        this.baseEntryFee = 15;
+        this.baseEntryFee = 20;
         this.upgradeCost = (int)(this.value * 0.75);
         this.sound = Assets.Sounds.YOU_ARE_A_PIRATE;
     }
@@ -30,12 +30,12 @@ public class SwingingShip extends Attraction {
     public void innerUpgrade() {
         switch (currentLevel) {
             case 1:
-                this.fun *= 1.5;
+                this.fun *= 1.4;
                 this.capacity += 5;
                 this.upgradeCost *= 2;
                 break;
             case 2:
-                this.fun *= 1.5;
+                this.fun *= 1.4;
                 this.capacity += 5;
                 break;
             default:

@@ -52,7 +52,7 @@ public class GameManager {
         this.park = new Park(10, 10, this);
         this.time = new Time();
         Weather.getInstance().setTime(time);
-        this.finance = new Finance(50000);
+        this.finance = new Finance(60000);
         this.am = new AgentManager(park, this);
         this.stats = new Statistics(this);
         this.board = null;
@@ -175,6 +175,8 @@ public class GameManager {
         time.reset();
         finance.init();
         am.reset();
+        Weather.getInstance().reset();
+        News.getInstance().reset();
     }
 
     /**
@@ -248,7 +250,7 @@ public class GameManager {
             }
             int maxLevelCount = 0;
             for(Building building : buildings) {
-                if((building instanceof Attraction || building instanceof FoodStall) && building.getCurrentLevel() == building.getMaxLevel()){
+                if((building instanceof Attraction || building instanceof FoodStall) && building.getCurrentLevel() >= building.getMaxLevel()){
                     maxLevelCount++;
                 }
             }

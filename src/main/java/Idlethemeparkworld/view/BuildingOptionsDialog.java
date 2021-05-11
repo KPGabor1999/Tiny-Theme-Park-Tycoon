@@ -82,7 +82,7 @@ public class BuildingOptionsDialog extends JDialog {
                 });
                     
                 JTextArea reviewArea;
-                reviewArea = new JTextArea(8, 40);
+                reviewArea = new JTextArea(8, 50);
                 reviewArea.setLineWrap(true);
                 reviewArea.setWrapStyleWord(true);
                 reviewArea.setEditable(false);

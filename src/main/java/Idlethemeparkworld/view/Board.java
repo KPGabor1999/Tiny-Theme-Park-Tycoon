@@ -7,7 +7,6 @@ import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.GameManager;
 import Idlethemeparkworld.model.Popup;
 import Idlethemeparkworld.model.Weather;
-import Idlethemeparkworld.model.Weather.WeatherType;
 import Idlethemeparkworld.model.administration.Finance;
 import Idlethemeparkworld.model.agent.Janitor;
 import Idlethemeparkworld.model.agent.Maintainer;
@@ -54,7 +53,7 @@ public class Board extends JPanel implements MouseWheelListener {
     private Random rand;
     
     private BufferedImage parkRender;
-    private JPanel gameArea;
+    private final JPanel gameArea;
 
     public Board(GameManager gm, Main main, JPanel gameArea) {
         this.gm = gm;
@@ -346,15 +345,38 @@ public class Board extends JPanel implements MouseWheelListener {
             gr.drawImage(Assets.Texture.MAINTAINER.getAsset(), (int)Math.floor((position.x-3)*scale), (int)Math.floor((position.y-18)*scale), scaledAgentSize.width, scaledAgentSize.height, null);
         }
         
+        gr.setColor(Weather.getInstance().getSkyColor());
+        gr.fillRect(0, 0, this.getWidth(), this.getHeight());
+        
+        if(Weather.getInstance().lightsOn()){
+            ArrayList<Building> buildings = gm.getPark().getBuildings();
+            for (int i = 0; i < buildings.size(); i++) {
+                int x = buildings.get(i).getX();
+                int y = buildings.get(i).getY();
+                int h = buildings.get(i).getInfo().getLength();
+                int w = buildings.get(i).getInfo().getWidth();
+
+                BufferedImage asset = null;
+                if(buildings.get(i).getInfo().getTexture().getAsset() != null){
+                    asset = buildings.get(i).getInfo().getTexture().getNightAsset();
+                } else {
+                    if(buildings.get(i).getInfo().getTexture().getNightAssets().size() > 0){
+                        asset = buildings.get(i).getInfo().getTexture().getNightAssets().get(((RandomSkin)buildings.get(i)).getSkinID());
+                    }
+                }
+
+                if (buildings.get(i).getStatus() != BuildingStatus.DECAYED && asset != null) {
+                    gr.drawImage(asset, x * scaledCellSize, y * scaledCellSize, w * scaledCellSize, h * scaledCellSize, null);
+                }
+            }
+        }
+        
         ArrayList<Popup> popups = gm.getPark().getPopups();
         for (int i = 0; i < popups.size(); i++) {
             Position position = new Position((int)popups.get(i).getCircle().getCenterX(), (int)popups.get(i).getCircle().getCenterY());
                   
             gr.drawImage(Assets.Texture.POPUP.getAsset(), (int)Math.floor((position.x-15)*scale), (int)Math.floor((position.y-15)*scale), (int)Math.round(30*scale),  (int)Math.round(30*scale), null);
         }
-        
-        gr.setColor(Weather.getInstance().getSkyColor());
-        gr.fillRect(0, 0, this.getWidth(), this.getHeight());
     }
 
     private void drawGhost(Graphics2D gr) {

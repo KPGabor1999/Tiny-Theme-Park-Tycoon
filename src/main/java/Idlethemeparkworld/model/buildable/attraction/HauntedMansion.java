@@ -30,12 +30,12 @@ public class HauntedMansion extends Attraction {
     public void innerUpgrade() {
         switch (currentLevel) {
             case 1:
-                this.fun *= 1.5;
+                this.fun *= 1.3;
                 this.capacity += 5;
                 this.upgradeCost *= 2;
                 break;
             case 2:
-                this.fun *= 1.5;
+                this.fun *= 1.3;
                 this.capacity += 5;
                 break;
             default:

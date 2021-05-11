@@ -11,22 +11,43 @@ import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
+/**
+ * The sounds class that's responsible for playing any kind of sound defined within the assets.
+ */
 public class Sound {
     private static double volume = 0.5;
     private static boolean soundsDisabled = false;
     
+    /**
+     * Sets the output volume of all new sounds.
+     * Doesn't set the bgm and other looping sounds.
+     * @param vol New volume from 0-1
+     */
     public static void setVolume(double vol){
         volume = vol;
     }
     
+    /**
+     * @return The current volume between 0-1
+     */
     public static double getVolume(){
         return volume;
     }
     
+    /**
+     * Disables all sounds
+     */
     public static void disableSound(){
         soundsDisabled = true;
     }
 
+    /**
+     * Plays a particular sound either continously or one time.
+     * The list of sounds can be found in assets.
+     * @param sound The sound asset
+     * @param continuous Wether to play the sound continously looping or just once
+     * @return A clip containing the playing sound
+     */
     public static Clip playSound(Sounds sound, boolean continuous){
         if(!soundsDisabled){
             URL fileURL = sound.getSoundFile();
