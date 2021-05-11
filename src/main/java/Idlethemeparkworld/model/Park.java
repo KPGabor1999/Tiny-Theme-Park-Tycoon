@@ -77,7 +77,7 @@ public class Park implements Updatable {
 
         for (int row = 0; row < tiles.length; row++) {
             for (int column = 0; column < tiles[0].length; column++) {
-                if (row > 9 || column > 9) {
+                if (row > 5 || column > 5) {
                     build(BuildType.LOCKEDTILE, column, row, true);
                 }
             }

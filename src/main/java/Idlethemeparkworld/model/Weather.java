@@ -53,10 +53,12 @@ public class Weather implements Updatable {
 
     private Time time;
     private final Random rand;
+    private boolean firstDay;
 
     private Weather() {
         this.rand = new Random();
         this.weather = null;
+        firstDay = true;
         setNewRandomWeather();
         transitionTimer = 0;
     }
@@ -66,6 +68,7 @@ public class Weather implements Updatable {
     }
 
     public void reset() {
+        firstDay = true;
         setNewRandomWeather();
     }
 
@@ -108,7 +111,10 @@ public class Weather implements Updatable {
     }
     
     public boolean lightsOn(){
-        return time.getHours() >= 4 && time.getHours() < 5;
+        if(firstDay){
+            return false;
+        }
+        return time.getHours() > 21 || time.getHours() < 4;
     }
 
     public WeatherType getWeather() {
@@ -119,8 +125,11 @@ public class Weather implements Updatable {
     public void update(long tickCount) {
         if (tickCount % 6 == 0) {
             if(!WeatherType.isNight(weather)){
-                if(time.getHours() >= 3 && time.getHours() < 5){
-                    setNewWeather(WeatherType.NIGHT, 2*60, 60);
+                if(time.getHours() >= 21){
+                    if(firstDay){
+                        firstDay = false;
+                    }
+                    setNewWeather(WeatherType.NIGHT, 7*60, 60);
                 }
             }
             weatherTimer--;
