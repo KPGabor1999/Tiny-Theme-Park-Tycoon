@@ -381,7 +381,7 @@ public class Visitor extends Agent {
             case SUNNY: multi = 1.5; break;
             default: break;
         }
-        hunger += amount * multi;
+        thirst += amount * multi;
     }
 
     /**
@@ -613,7 +613,7 @@ public class Visitor extends Agent {
                         insertThought(AgentThoughts.TOOMUCHLITTER, currentBuilding);
                     }
                     toilet = 100;
-                    thirst += rand.nextInt(40)+50;
+                    changeThirst(rand.nextInt(40)+50);
                     tlt.decreaseHygiene(rand.nextDouble()*1.5);
                     tlt.exit();
                     moveTo(lastEnter.x, lastEnter.y);

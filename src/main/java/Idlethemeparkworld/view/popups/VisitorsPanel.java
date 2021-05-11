@@ -112,9 +112,9 @@ public class VisitorsPanel extends JPanel {
     
     private void addDoubleLabel(String labelText){
         allInfo.add(new JLabel(labelText));
-        JLabel content = new JLabel();
-        info.add(content);
-        allInfo.add(content);
+        JLabel data = new JLabel();
+        info.add(data);
+        allInfo.add(data);
     }
     
     private void updateVisitorList(){

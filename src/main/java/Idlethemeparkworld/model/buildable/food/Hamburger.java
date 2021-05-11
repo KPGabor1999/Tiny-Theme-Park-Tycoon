@@ -48,10 +48,10 @@ public class Hamburger extends FoodStall {
     @Override
     protected Pair<Double,Double> getWeatherMultiplier(){
         switch(Weather.getInstance().getWeather()){
-            case SUNNY: return new Pair(1,1.1);
-            case SNOWING: return new Pair(1,0.8);
+            case SUNNY: return new Pair(1.0,1.1);
+            case SNOWING: return new Pair(1.0,0.8);
             case CLOUDY: return new Pair(1.2,0.8);
-            default: return new Pair(1,1);
+            default: return new Pair(1.0,1.0);
         }
     }
 }

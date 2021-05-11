@@ -160,7 +160,7 @@ public abstract class FoodStall extends Building implements Queueable, Repairabl
     }
     
     protected Pair<Double,Double> getWeatherMultiplier(){
-        return new Pair(1,1);
+        return new Pair(1.0,1.0);
     }
     
     public Range getFoodQuality(){

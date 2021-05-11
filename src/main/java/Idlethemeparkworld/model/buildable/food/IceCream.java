@@ -52,9 +52,9 @@ public class IceCream extends FoodStall {
         switch(Weather.getInstance().getWeather()){
             case SUNNY: return new Pair(1.6,1.7);
             case SNOWING: return new Pair(0.3,0.3);
-            case CLOUDY: return new Pair(1,0.9);
+            case CLOUDY: return new Pair(1.0,0.9);
             case RAINING: return new Pair(0.6,0.6);
-            default: return new Pair(1,1);
+            default: return new Pair(1.0,1.0);
         }
     }
 }
