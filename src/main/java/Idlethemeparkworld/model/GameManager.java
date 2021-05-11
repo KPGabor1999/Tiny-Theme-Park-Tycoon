@@ -175,6 +175,7 @@ public class GameManager {
         time.reset();
         finance.init();
         am.reset();
+        Weather.getInstance().reset();
     }
 
     /**

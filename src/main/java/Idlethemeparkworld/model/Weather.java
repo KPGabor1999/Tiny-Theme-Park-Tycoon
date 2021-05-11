@@ -96,7 +96,7 @@ public class Weather implements Updatable {
         } else {
             nextWeather = WeatherType.CLEAR;
         }
-        setNewWeather(nextWeather, rand.nextInt(60*4)+60*1, 15);
+        setNewWeather(nextWeather, rand.nextInt(60*4)+60*1, 30);
     }
 
     public Color getSkyColor() {
@@ -106,6 +106,10 @@ public class Weather implements Updatable {
             return weather.getColor();
         }
     }
+    
+    public boolean lightsOn(){
+        return time.getHours() >= 4 && time.getHours() < 5;
+    }
 
     public WeatherType getWeather() {
         return weather;
@@ -113,10 +117,10 @@ public class Weather implements Updatable {
 
     @Override
     public void update(long tickCount) {
-        if (tickCount % 24 == 0) {
+        if (tickCount % 6 == 0) {
             if(!WeatherType.isNight(weather)){
-                if(time.getHours() >= 21){
-                    setNewWeather(WeatherType.NIGHT, 7*60, 60);
+                if(time.getHours() >= 3 && time.getHours() < 5){
+                    setNewWeather(WeatherType.NIGHT, 2*60, 60);
                 }
             }
             weatherTimer--;
