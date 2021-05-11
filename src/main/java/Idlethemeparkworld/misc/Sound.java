@@ -19,6 +19,10 @@ public class Sound {
         volume = vol;
     }
     
+    public static double getVolume(){
+        return volume;
+    }
+    
     public static void disableSound(){
         soundsDisabled = true;
     }
