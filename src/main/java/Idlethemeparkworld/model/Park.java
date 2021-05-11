@@ -497,7 +497,7 @@ public class Park implements Updatable {
         for (int i = 0; i < buildings.size(); i++) {
             //sum += buildings.get(i).getRating();
             if (buildings.get(i) instanceof Toilet) {
-                negative += ((Toilet) buildings.get(i)).getCleanliness();
+                negative += 100-((Toilet) buildings.get(i)).getCleanliness();
             } else if (buildings.get(i) instanceof Infrastructure) {
                 negative += ((Infrastructure) buildings.get(i)).getLittering();
             }
@@ -505,7 +505,7 @@ public class Park implements Updatable {
         //rating = sum/buildings.size();
         rating = (rating + gm.getAgentManager().getVisitorHappinessRating()) / 2;
         rating -= 3;
-        rating += Math.min(gm.getAgentManager().getVisitorCount() / 200.0, 3.0);
+        rating += Math.min(gm.getAgentManager().getVisitorCount() / 70.0, 3.0);
         negative *= 0.05;
         negative = Math.min(negative, 2);
         rating -= negative;

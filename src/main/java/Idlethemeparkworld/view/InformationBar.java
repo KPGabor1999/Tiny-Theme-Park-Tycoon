@@ -91,7 +91,7 @@ public class InformationBar extends JPanel {
     public void updateInfobar() {
         moneyLabel.setText(gm.getFinance().toString());
         visitorCountLabel.setText("Visitors:" + gm.getAgentManager().getVisitorCount());
-        happinessLabel.setText("Rating:" + String.format("%.02f", gm.getAgentManager().getVisitorHappinessRating()));
+        happinessLabel.setText("Happiness:" + String.format("%.02f", gm.getAgentManager().getVisitorHappinessRating()));
         ImageIcon icon = new ImageIcon(Weather.getInstance().getWeather().getAsset().getAsset());
         weatherLabel.setIcon(new ImageIcon(icon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH)));
     }
