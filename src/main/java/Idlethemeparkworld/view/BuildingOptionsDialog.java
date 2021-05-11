@@ -10,25 +10,21 @@ import Idlethemeparkworld.view.popups.Confirm;
 import Idlethemeparkworld.view.popups.Notification;
 import Idlethemeparkworld.misc.utils.Pair;
 import Idlethemeparkworld.model.administration.Finance;
+import Idlethemeparkworld.model.buildable.Reviewable;
 import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.Timer;
 
 public class BuildingOptionsDialog extends JDialog {
 
@@ -51,8 +47,8 @@ public class BuildingOptionsDialog extends JDialog {
                     BuildingOptionsDialog.this.dispose();
                 }
             });
-            this.setLayout(new BoxLayout(this.getContentPane(), BoxLayout.PAGE_AXIS));
-            this.setResizable(false);
+            setLayout(new BoxLayout(this.getContentPane(), BoxLayout.PAGE_AXIS));
+            setResizable(false);
 
             JLabel nameLabel;
             if (currentBuilding.getMaxLevel() != 0) {
@@ -61,12 +57,12 @@ public class BuildingOptionsDialog extends JDialog {
                 nameLabel = new JLabel(currentBuilding.getInfo().getName());
             }
             nameLabel.setAlignmentX(CENTER_ALIGNMENT);
-            this.getContentPane().add(nameLabel);
+            add(nameLabel);
 
             if (!currentBuilding.getInfo().getDescription().isEmpty()) {
                 JLabel descriptionLabel = new JLabel(currentBuilding.getInfo().getDescription());
                 descriptionLabel.setAlignmentX(CENTER_ALIGNMENT);
-                this.getContentPane().add(descriptionLabel);
+                add(descriptionLabel);
             }
 
             ArrayList<Pair<String, String>> info = currentBuilding.getAllData();
@@ -75,8 +71,25 @@ public class BuildingOptionsDialog extends JDialog {
                 statsPanel.add(new JLabel(p.getKey()));
                 statsPanel.add(new JLabel(p.getValue()));
             }
-            this.getContentPane().add(statsPanel);
-
+            add(statsPanel);
+            
+            if (currentBuilding instanceof Reviewable) {
+                StringBuilder sb = new StringBuilder();
+                ArrayList<String> reviews = ((Reviewable)currentBuilding).getReviews();
+                sb.append("== Reviews ==\n");
+                reviews.forEach(review -> {
+                    sb.append(review).append("\n");
+                });
+                    
+                JTextArea reviewArea;
+                reviewArea = new JTextArea(8, 40);
+                reviewArea.setLineWrap(true);
+                reviewArea.setWrapStyleWord(true);
+                reviewArea.setEditable(false);
+                reviewArea.setText(sb.toString());
+                add(reviewArea);
+            }
+            
             if (currentBuilding.getMaxLevel() != 0 && !board.getGameManager().gameFroze()) {
                 JButton upgradeButton = new JButton("Upgrade: costs " + currentBuilding.getUpgradeCost() + "$");
                 upgradeButton.setAlignmentX(CENTER_ALIGNMENT);
@@ -87,7 +100,7 @@ public class BuildingOptionsDialog extends JDialog {
                     }
                 });
                 upgradeButton.setEnabled(currentBuilding.canUpgrade());
-                this.getContentPane().add(upgradeButton);
+                add(upgradeButton);
             }
 
             if (!(currentBuilding instanceof Entrance) && !(currentBuilding instanceof LockedTile) && !board.getGameManager().gameFroze()) {
@@ -99,7 +112,7 @@ public class BuildingOptionsDialog extends JDialog {
                         BuildingOptionsDialog.this.demolishBuilding();
                     }
                 });
-                this.getContentPane().add(demolishButton);
+                add(demolishButton);
             } else if (currentBuilding instanceof LockedTile && !board.getGameManager().gameFroze()) {
                 JButton unlockButton = new JButton("Unlock for " + ((LockedTile) currentBuilding).getUnlockCost() + "$");
                 unlockButton.setAlignmentX(CENTER_ALIGNMENT);
@@ -115,10 +128,10 @@ public class BuildingOptionsDialog extends JDialog {
                         Sound.playSound(Assets.Sounds.CONSTRUCTION, false);
                     }
                 });
-                this.getContentPane().add(unlockButton);
+                add(unlockButton);
             }
-            this.pack();
-            this.setVisible(true);
+            pack();
+            setVisible(true);
         }
         
         if(currentBuilding.getSound() != Sounds.NONE){

@@ -8,16 +8,18 @@ import Idlethemeparkworld.misc.utils.Range;
 import Idlethemeparkworld.model.GameManager;
 import Idlethemeparkworld.model.News;
 import Idlethemeparkworld.model.administration.Finance;
+import Idlethemeparkworld.model.agent.AgentInnerLogic;
 import Idlethemeparkworld.model.agent.Maintainer;
 import Idlethemeparkworld.model.agent.Visitor;
 import Idlethemeparkworld.model.buildable.BuildingStatus;
 import Idlethemeparkworld.model.buildable.Queueable;
 import Idlethemeparkworld.model.buildable.RandomSkin;
 import Idlethemeparkworld.model.buildable.Repairable;
+import Idlethemeparkworld.model.buildable.Reviewable;
 import java.util.LinkedList;
 import java.util.Random;
 
-public abstract class FoodStall extends Building implements Queueable, Repairable, RandomSkin {
+public abstract class FoodStall extends Building implements Queueable, Repairable, RandomSkin, Reviewable {
 
     protected LinkedList<Visitor> queue;
     protected int serviceTime;
@@ -30,6 +32,8 @@ public abstract class FoodStall extends Building implements Queueable, Repairabl
     
     protected Random rand;
     protected final int skinID;
+    
+    protected ArrayList<String> reviews;
 
     protected FoodStall(GameManager gm) {
         super(gm);
@@ -44,6 +48,7 @@ public abstract class FoodStall extends Building implements Queueable, Repairabl
         this.rand = new Random();
         this.skinID = rand.nextInt(3);
         this.sound = Assets.Sounds.NOM_NOM_NOM;
+        this.reviews = new ArrayList<>();
     }
 
     public int getSkinID(){
@@ -56,6 +61,19 @@ public abstract class FoodStall extends Building implements Queueable, Repairabl
 
     public int getQueueLength() {
         return queue.size();
+    }
+    
+    @Override
+    public void addReview(String name, AgentInnerLogic.Reviews review){
+        reviews.add(name+": "+review.getReviewText());
+        if(reviews.size() > 6){
+            reviews.remove(0);
+        }
+    }
+
+    @Override
+    public ArrayList<String> getReviews() {
+        return reviews;
     }
 
     @Override

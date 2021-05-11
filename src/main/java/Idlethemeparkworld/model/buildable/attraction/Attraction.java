@@ -8,16 +8,17 @@ import Idlethemeparkworld.model.buildable.Building;
 import Idlethemeparkworld.model.buildable.BuildingStatus;
 import Idlethemeparkworld.misc.utils.Pair;
 import Idlethemeparkworld.model.News;
-import Idlethemeparkworld.model.Weather;
 import Idlethemeparkworld.model.administration.Finance.FinanceType;
+import Idlethemeparkworld.model.agent.AgentInnerLogic;
 import Idlethemeparkworld.model.agent.Maintainer;
 import Idlethemeparkworld.model.buildable.Queueable;
 import Idlethemeparkworld.model.buildable.RandomSkin;
 import Idlethemeparkworld.model.buildable.Repairable;
+import Idlethemeparkworld.model.buildable.Reviewable;
 import java.util.ArrayList;
 import java.util.Random;
 
-public abstract class Attraction extends Building implements Queueable, Repairable, RandomSkin {
+public abstract class Attraction extends Building implements Queueable, Repairable, RandomSkin, Reviewable {
 
     protected int fun;
     protected int capacity;
@@ -33,6 +34,8 @@ public abstract class Attraction extends Building implements Queueable, Repairab
 
     protected Random rand;
     protected final int skinID;
+    
+    protected ArrayList<String> reviews;
 
     public Attraction(GameManager gm) {
         super(gm);
@@ -41,6 +44,7 @@ public abstract class Attraction extends Building implements Queueable, Repairab
         this.rand = new Random();
         this.condition = 100;
         this.skinID = rand.nextInt(3);
+        this.reviews = new ArrayList<>();
     }
     
     @Override
@@ -67,6 +71,19 @@ public abstract class Attraction extends Building implements Queueable, Repairab
     public void setEntryFee(int number) {
         this.entryFee = number;
     }
+    
+    @Override
+    public void addReview(String name, AgentInnerLogic.Reviews review){
+        reviews.add(name+": "+review.getReviewText());
+        if(reviews.size() > 6){
+            reviews.remove(0);
+        }
+    }
+
+    @Override
+    public ArrayList<String> getReviews() {
+        return reviews;
+    }
 
     @Override
     public boolean shouldRepair(){
@@ -86,7 +103,6 @@ public abstract class Attraction extends Building implements Queueable, Repairab
     public int getFun(){
         return (int)Math.round(fun * getWeatherMultiplier());
     }
-    
     
     /**
      * Maximum hány ember tartózkodhat a parkban?
