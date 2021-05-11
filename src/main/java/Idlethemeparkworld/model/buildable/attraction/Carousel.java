@@ -3,6 +3,7 @@ package Idlethemeparkworld.model.buildable.attraction;
 import Idlethemeparkworld.misc.Assets.Sounds;
 import Idlethemeparkworld.model.BuildType;
 import Idlethemeparkworld.model.GameManager;
+import Idlethemeparkworld.model.Weather;
 
 public class Carousel extends Attraction {
 
@@ -40,6 +41,17 @@ public class Carousel extends Attraction {
                 break;
             default:
                 break;
+        }
+    }
+    
+    @Override
+    protected double getWeatherMultiplier(){
+        switch(Weather.getInstance().getWeather()){
+            case SUNNY: return 1.1;
+            case RAINING: return 1.2;
+            case SNOWING: return 0.9;
+            case NIGHT: return 1.2;
+            default: return 1;
         }
     }
 }

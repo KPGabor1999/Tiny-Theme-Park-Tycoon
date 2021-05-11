@@ -29,7 +29,7 @@ public class GameManager {
     private boolean gameFroze;
     private boolean sandboxMode;
 
-    private static final double[] GAME_SPEEDS = {0.5, 1, 2};
+    private static final double[] GAME_SPEEDS = {0.5, 1, 2, 3};
     private int gameSpeed;
 
     private int entranceFee;
@@ -52,7 +52,7 @@ public class GameManager {
         this.park = new Park(10, 10, this);
         this.time = new Time();
         Weather.getInstance().setTime(time);
-        this.finance = new Finance(300000);
+        this.finance = new Finance(50000);
         this.am = new AgentManager(park, this);
         this.stats = new Statistics(this);
         this.board = null;

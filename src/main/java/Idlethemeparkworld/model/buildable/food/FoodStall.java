@@ -8,16 +8,18 @@ import Idlethemeparkworld.misc.utils.Range;
 import Idlethemeparkworld.model.GameManager;
 import Idlethemeparkworld.model.News;
 import Idlethemeparkworld.model.administration.Finance;
+import Idlethemeparkworld.model.agent.AgentInnerLogic;
 import Idlethemeparkworld.model.agent.Maintainer;
 import Idlethemeparkworld.model.agent.Visitor;
 import Idlethemeparkworld.model.buildable.BuildingStatus;
 import Idlethemeparkworld.model.buildable.Queueable;
 import Idlethemeparkworld.model.buildable.RandomSkin;
 import Idlethemeparkworld.model.buildable.Repairable;
+import Idlethemeparkworld.model.buildable.Reviewable;
 import java.util.LinkedList;
 import java.util.Random;
 
-public abstract class FoodStall extends Building implements Queueable, Repairable, RandomSkin {
+public abstract class FoodStall extends Building implements Queueable, Repairable, RandomSkin, Reviewable {
 
     protected LinkedList<Visitor> queue;
     protected int serviceTime;
@@ -30,6 +32,8 @@ public abstract class FoodStall extends Building implements Queueable, Repairabl
     
     protected Random rand;
     protected final int skinID;
+    
+    protected ArrayList<String> reviews;
 
     protected FoodStall(GameManager gm) {
         super(gm);
@@ -44,6 +48,7 @@ public abstract class FoodStall extends Building implements Queueable, Repairabl
         this.rand = new Random();
         this.skinID = rand.nextInt(3);
         this.sound = Assets.Sounds.NOM_NOM_NOM;
+        this.reviews = new ArrayList<>();
     }
 
     public int getSkinID(){
@@ -56,6 +61,19 @@ public abstract class FoodStall extends Building implements Queueable, Repairabl
 
     public int getQueueLength() {
         return queue.size();
+    }
+    
+    @Override
+    public void addReview(String name, AgentInnerLogic.Reviews review){
+        reviews.add(name+": "+review.getReviewText());
+        if(reviews.size() > 6){
+            reviews.remove(0);
+        }
+    }
+
+    @Override
+    public ArrayList<String> getReviews() {
+        return reviews;
     }
 
     @Override
@@ -94,7 +112,8 @@ public abstract class FoodStall extends Building implements Queueable, Repairabl
     public ArrayList<Pair<String, String>> getAllData() {
         ArrayList<Pair<String, String>> res = new ArrayList<>();
         res.add(new Pair<>("Food price: ", Integer.toString(foodPrice)));
-        res.add(new Pair<>("Food quality: ", "(" + foodQuality.getLow() + "-" + foodQuality.getHigh() + ")"));
+        res.add(new Pair<>("Food quality: ", "(" + getFoodQuality().getLow() + "-" + getFoodQuality().getHigh() + ")"));
+        res.add(new Pair<>("Drink quality: ", "(" + getDrinkQuality().getLow() + "-" + getDrinkQuality().getHigh() + ")"));
         res.add(new Pair<>("Upkeep cost: ", Integer.toString(upkeepCost)));
         res.add(new Pair<>("Condition: ", String.format("%.2f", condition)));
         res.add(new Pair<>("In queue: ", Integer.toString(queue.size())));
@@ -139,6 +158,18 @@ public abstract class FoodStall extends Building implements Queueable, Repairabl
     public boolean canService() {
         return serviceTimer <= 0;
     }
+    
+    protected Pair<Double,Double> getWeatherMultiplier(){
+        return new Pair(1.0,1.0);
+    }
+    
+    public Range getFoodQuality(){
+        return foodQuality.newRangeByMultiplier(getWeatherMultiplier().getKey());
+    }
+    
+    public Range getDrinkQuality(){
+        return drinkQuality.newRangeByMultiplier(getWeatherMultiplier().getValue());
+    }
 
     /**
      * Az adott látogató telt vesz.
@@ -153,7 +184,7 @@ public abstract class FoodStall extends Building implements Queueable, Repairabl
                 leaveQueue(visitor);
                 serviceTimer = serviceTime;
                 changeCondition(-0.27);
-                return new FoodItem(foodQuality.getNextRandom(), drinkQuality.getNextRandom(), servingSize.getNextRandom());
+                return new FoodItem(getFoodQuality().getNextRandom(), getDrinkQuality().getNextRandom(), servingSize.getNextRandom(), foodPrice);
             } else {
                 return new FoodItem();
             }

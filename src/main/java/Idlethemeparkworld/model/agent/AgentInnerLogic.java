@@ -72,4 +72,28 @@ public class AgentInnerLogic {
 
         NONE
     }
+    
+    public enum Reviews {
+        GOOD("It's pretty good"),
+        DECENT("It's alright"),
+        BAD("It's pretty underwhelming"),
+        GOODVALUE("It's a good bang for your buck"),
+        BADVALUE("It's definitely not worth it."),
+        AMAZING("Wow, absolutely amazing!"),
+        BREAKDOWN("There was a breakdown, awful");
+        
+        private final String text;
+        
+        private Reviews(){
+            this.text = "";
+        }
+        
+        private Reviews(String text){
+            this.text = text;
+        }
+        
+        public String getReviewText(){
+            return text;
+        }
+    }
 }

@@ -48,6 +48,10 @@ public class AgentThought {
 
     @Override
     public String toString() {
-        return thoughtType.toString();
+        if(subject != null){
+            return thoughtType.toString()+" at ("+subject.getX()+","+subject.getY()+")\n";
+        } else {
+            return thoughtType.toString()+"\n";
+        }
     }
 }

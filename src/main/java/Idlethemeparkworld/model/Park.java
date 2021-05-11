@@ -77,7 +77,7 @@ public class Park implements Updatable {
 
         for (int row = 0; row < tiles.length; row++) {
             for (int column = 0; column < tiles[0].length; column++) {
-                if (row > 10 || column > 5) {
+                if (row > 5 || column > 5) {
                     build(BuildType.LOCKEDTILE, column, row, true);
                 }
             }
@@ -492,20 +492,17 @@ public class Park implements Updatable {
      */
     private void calculateParkRating() {
         rating = 9;
-        //double sum = 0;
         double negative = 0;
         for (int i = 0; i < buildings.size(); i++) {
-            //sum += buildings.get(i).getRating();
             if (buildings.get(i) instanceof Toilet) {
-                negative += ((Toilet) buildings.get(i)).getCleanliness();
+                negative += 100-((Toilet) buildings.get(i)).getCleanliness();
             } else if (buildings.get(i) instanceof Infrastructure) {
                 negative += ((Infrastructure) buildings.get(i)).getLittering();
             }
         }
-        //rating = sum/buildings.size();
         rating = (rating + gm.getAgentManager().getVisitorHappinessRating()) / 2;
         rating -= 3;
-        rating += Math.min(gm.getAgentManager().getVisitorCount() / 200.0, 3.0);
+        rating += Math.min(gm.getAgentManager().getVisitorCount() / 70.0, 3.0);
         negative *= 0.05;
         negative = Math.min(negative, 2);
         rating -= negative;

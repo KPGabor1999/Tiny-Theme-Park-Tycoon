@@ -11,6 +11,7 @@ import Idlethemeparkworld.model.Weather.WeatherType;
 import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentActionType;
 import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentState;
 import Idlethemeparkworld.model.agent.AgentInnerLogic.AgentThoughts;
+import Idlethemeparkworld.model.agent.AgentInnerLogic.Reviews;
 import Idlethemeparkworld.model.buildable.Building;
 import Idlethemeparkworld.model.buildable.BuildingStatus;
 import Idlethemeparkworld.model.buildable.attraction.Attraction;
@@ -173,7 +174,7 @@ public class Visitor extends Agent {
         switch (thoughtType) {
             case CANTAFFORD:
             case BADVALUE:
-                addHappiness(-5);
+                addHappiness(-7);
                 break;
             case LOST:
             case TOOMUCHLITTER:
@@ -196,7 +197,7 @@ public class Visitor extends Agent {
                 break;
             case GOODVALUE:
             case CLEAN:
-                addHappiness(5);
+                addHappiness(4);
                 break;
             default:
                 break;
@@ -380,7 +381,7 @@ public class Visitor extends Agent {
             case SUNNY: multi = 1.5; break;
             default: break;
         }
-        hunger += amount * multi;
+        thirst += amount * multi;
     }
 
     /**
@@ -532,7 +533,8 @@ public class Visitor extends Agent {
                 wandering(Attraction.class); break;
             case QUEUING:
                 attr = ((Attraction) currentBuilding);
-                if (statusTimer > this.patience) {
+                double ratio = attr.getCapacity()/10;
+                if (statusTimer > this.patience*ratio) {
                     attr.leaveQueue(this);
                     moveTo(lastEnter.x, lastEnter.y);
                     addHappiness(-5);
@@ -608,10 +610,10 @@ public class Visitor extends Agent {
                             insertThought(AgentThoughts.CLEAN, null);
                         }
                     } else if(tlt.getCleanliness() < 25){
-                        insertThought(AgentThoughts.TOOMUCHLITTER, null);
+                        insertThought(AgentThoughts.TOOMUCHLITTER, currentBuilding);
                     }
                     toilet = 100;
-                    thirst += rand.nextInt(40)+50;
+                    changeThirst(rand.nextInt(40)+50);
                     tlt.decreaseHygiene(rand.nextDouble()*1.5);
                     tlt.exit();
                     moveTo(lastEnter.x, lastEnter.y);
@@ -715,6 +717,30 @@ public class Visitor extends Agent {
                         moveTo(lastEnter.x, lastEnter.y);
                         resetAction();
                     } else {
+                        double total = item.hunger*((100-hunger)/100) + item.thirst*((100-thirst)/100);
+                        if(rand.nextInt(200)<item.hunger+thirst && rand.nextDouble() > 0.95){
+                            stall.addReview(name, Reviews.AMAZING);
+                        }
+                        Reviews review;
+                        if(total / item.cost > 2.75) {
+                            insertThought(AgentThoughts.GOODVALUE, currentBuilding);
+                            review = Reviews.GOODVALUE;
+                        } else if(total / item.cost < 1.25) {
+                            insertThought(AgentThoughts.BADVALUE, currentBuilding);
+                            review = Reviews.BADVALUE;
+                        } else {
+                            int expectedMax = stall.getFoodQuality().getHigh()+stall.getDrinkQuality().getHigh();
+                            if(item.hunger+item.thirst < expectedMax * 0.6){
+                                review = Reviews.BAD;
+                            } else if(item.hunger+item.thirst > expectedMax * 0.9){
+                                review = Reviews.GOOD;
+                            } else {
+                                review = Reviews.DECENT;
+                            }
+                        }
+                        if(rand.nextDouble() > 0.9){
+                            stall.addReview(name, review);
+                        }
                         if(rand.nextInt(10)>7){
                             moveTo(lastEnter.x, lastEnter.y);
                         }
@@ -880,7 +906,7 @@ public class Visitor extends Agent {
         }
         if(rand.nextDouble() < chanceForAccident){
             happiness *= 0.5;
-            insertThought(AgentThoughts.INJURED, null);
+            insertThought(AgentThoughts.INJURED, currentBuilding);
             News.getInstance().addNews(name + " has injured themselves at a " + currentBuilding.getInfo().getName() + "(" + x + "," + y + ")");
         }
     }
@@ -913,7 +939,7 @@ public class Visitor extends Agent {
             }
         } else if(((Infrastructure)currentBuilding).getLittering() > 7){
             if(rand.nextInt(10) < 4){
-                insertThought(AgentThoughts.TOOMUCHLITTER, null);
+                insertThought(AgentThoughts.TOOMUCHLITTER, currentBuilding);
             }
         }
     }
@@ -966,11 +992,36 @@ public class Visitor extends Agent {
      * 
      * The visitor will then adjust the happiness based on the received event.
      * @param rideEvent The ridevent, containing how fun the ride was
+     * @param cost The cost of the ride
      */
-    public void sendRideEvent(int rideEvent) {
+    public void sendRideEvent(int rideEvent, int cost) {
+        Attraction attr = (Attraction) currentBuilding;
         addHappiness(rideEvent);
         if(happiness > rand.nextInt(100)){
             insertThought(AgentThoughts.WOW, null);
+            if(rand.nextDouble() > 0.95){
+                attr.addReview(name, Reviews.AMAZING);
+            }
+        }
+        Reviews review;
+        if((double)rideEvent / cost > 1.4) {
+            insertThought(AgentThoughts.GOODVALUE, currentBuilding);
+            review = Reviews.GOODVALUE;
+        } else if((double)rideEvent / cost < 0.75) {
+            insertThought(AgentThoughts.BADVALUE, currentBuilding);
+            review = Reviews.BADVALUE;
+        } else {
+            int expectedMax = attr.getFun();
+            if(rideEvent < expectedMax * 0.6){
+                review = Reviews.BAD;
+            } else if(rideEvent > expectedMax * 0.9){
+                review = Reviews.GOOD;
+            } else {
+                review = Reviews.DECENT;
+            }
+        }
+        if(rand.nextDouble() > 0.95){
+            attr.addReview(name, review);
         }
         moveTo(lastEnter.x, lastEnter.y);
         this.resetAction();

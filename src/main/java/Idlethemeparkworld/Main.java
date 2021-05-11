@@ -41,12 +41,17 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
+import javax.swing.JSlider;
 import javax.swing.JViewport;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.UIManager;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.plaf.FontUIResource;
 
 public class Main extends JFrame {
@@ -62,6 +67,8 @@ public class Main extends JFrame {
     GameManager gm;
     Highscores campaignHighscores;
     Highscores sandboxHighscores;
+    
+    Clip bgm;
 
     public Board getBoard() {
         return board;
@@ -169,6 +176,30 @@ public class Main extends JFrame {
                 frame.setVisible(true);
             }
         });
+        
+        JSlider volumeSlider = new JSlider(0, 100);
+        volumeSlider.setMajorTickSpacing(50);
+        volumeSlider.setPaintLabels(true);
+        volumeSlider.setValue((int)Math.round(Sound.getVolume()*100));
+        
+        volumeSlider.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent evt) {
+                JSlider slider = (JSlider) evt.getSource();
+                if (!slider.getValueIsAdjusting()) {
+                    int value = slider.getValue();
+                    double volume = value/100.0;
+                    Sound.setVolume(volume);
+                    
+                    bgm.stop();
+                    bgm.flush();
+                    FloatControl fc = (FloatControl) bgm.getControl(FloatControl.Type.MASTER_GAIN);
+                    fc.setValue(20f * (float) Math.log10(volume));
+                    int oldFrame = bgm.getFramePosition();
+                    bgm.loop(javax.sound.midi.Sequencer.LOOP_CONTINUOUSLY);
+                    bgm.setFramePosition(oldFrame % bgm.getFrameLength());
+                }
+            }
+        });
 
         JMenuItem menuGameExit = new JMenuItem(new AbstractAction("Exit") {
             @Override
@@ -183,6 +214,8 @@ public class Main extends JFrame {
         menuGame.add(visitors);
         menuGame.add(finances);
         menuGame.add(news);
+        menuGame.addSeparator();
+        menuGame.add(volumeSlider);
         menuGame.addSeparator();
         menuGame.add(credit);
         menuGame.add(menuGameExit);
@@ -359,7 +392,7 @@ public class Main extends JFrame {
         
         Thread t = new Thread(){
             public void run(){
-                Sound.playSound(Assets.Sounds.BGM, true);
+                bgm = Sound.playSound(Assets.Sounds.BGM, true);
             }
         };
         t.start();
