@@ -1,6 +1,8 @@
 
 # Tiny Theme Park Tycoon
 
+![screenshot](images/screenshot.png)
+
 A simple theme park managment game written in Java.
 
 Check out the final release on itch.io: https://realkrazyxl.itch.io/tiny-theme-park-tycoon
