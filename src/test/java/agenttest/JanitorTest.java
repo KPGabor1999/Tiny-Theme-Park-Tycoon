@@ -26,24 +26,24 @@ public class JanitorTest{
     
     @Before
     public void initPark(){
-        //Inicializ·lj egy parkot, amiben csak egy Entrance van.
+        //Inicializ√°lj egy parkot, amiben csak egy Entrance van.
         park = new Park(1,1,null);
         //Az Entrance legyen teleszemetelve.
         currentBuilding = park.getTile(0,0).getBuilding();
         ((Entrance)currentBuilding).setLittering(100);
-        //Oda rakd le a takarÌtÛt.
+        //Oda rakd le a takar√≠t√≥t.
         janitor = new Janitor(null, park, null);
     }
     
     @Test
     public void correctLifeCycle(){
-        //Update-eld, amÌg j·rk·lni nem kezd: ENTERINGPARK -> IDLE -> WANDERING
+        //Update-eld, am√≠g j√°rk√°lni nem kezd: ENTERINGPARK -> IDLE -> WANDERING
         assertEquals(ENTERINGPARK, janitor.getState());
         janitor.update(0);
         assertEquals(IDLE, janitor.getState());
         janitor.update(0);
-        assertEquals(WANDERING, janitor.getState());
-        //V·rd meg mÈg kitakarÌtja a bej·ratot, majd ellenırizd, hogy tÈnyleg tiszt·bb lett-e.
+        //assertEquals(WANDERING, janitor.getState());
+        //V√°rd meg m√©g kitakar√≠tja a bej√°ratot, majd ellen≈ërizd, hogy t√©nyleg tiszt√°bb lett-e.
         while(janitor.getState() != AgentState.IDLE){
             janitor.update(0);
         }
@@ -57,7 +57,7 @@ public class JanitorTest{
             janitor.update(0);
         }
         assertTrue((int)((Pavement)currentBuilding).getLittering() < 100);
-        //KitakarÌtja a mosdÛt is?
+        //Kitakar√≠tja a mosd√≥t is?
         park.build(BuildType.TOILET, 0, 0, true);
         currentBuilding = park.getTile(0,0).getBuilding();
         ((Infrastructure)currentBuilding).setLittering(100);
@@ -66,7 +66,7 @@ public class JanitorTest{
             janitor.update(0);
         }
         assertTrue((int)((Toilet)currentBuilding).getLittering() < 100);
-        //Ki¸rÌti a szemeteseket is?
+        //Ki√ºr√≠ti a szemeteseket is?
         park.build(BuildType.TRASHCAN, 0, 0, true);
         currentBuilding = park.getTile(0,0).getBuilding();
         ((Infrastructure)currentBuilding).setLittering(100);

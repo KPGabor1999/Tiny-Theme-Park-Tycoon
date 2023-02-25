@@ -112,7 +112,7 @@ public abstract class Agent implements Updatable {
     }
     
     /**
-     * Hol van most a karakter a képernyõn?
+     * Hol van most a karakter a kÃ©pernyÅ‘n?
      * @param cellSize
      * @return 
      */
@@ -122,7 +122,7 @@ public abstract class Agent implements Updatable {
     }
     
     /**
-     * Karakter állapotának beállítása manuálisan.
+     * Karakter Ã¡llapotÃ¡nak beÃ¡llÃ­tÃ¡sa manuÃ¡lisan.
      * @param newState 
      */
     protected void setState(AgentState newState){
@@ -131,7 +131,7 @@ public abstract class Agent implements Updatable {
     }
     
     /**
-     * Karakter ellenõrzi, hogy lebegõ státuszban van-e?
+     * Karakter ellenÅ‘rzi, hogy lebegÅ‘ stÃ¡tuszban van-e?
      */
     protected void checkFloating(){
         if(park.getTile(x, y).isEmpty() || park.getTile(x, y).getBuilding().getStatus() == BuildingStatus.FLOATING){
@@ -148,7 +148,7 @@ public abstract class Agent implements Updatable {
     }
     
     /**
-     * Karakter jelenlegi akciójának kinullázása.
+     * Karakter jelenlegi akciÃ³jÃ¡nak kinullÃ¡zÃ¡sa.
      */
     protected void resetAction(){
         setState(AgentState.IDLE);
@@ -156,7 +156,7 @@ public abstract class Agent implements Updatable {
     }
     
     /**
-     * Karakter léptetése a kiválasztott útvonalon.
+     * Karakter lÃ©ptetÃ©se a kivÃ¡lasztott Ãºtvonalon.
      */
     protected void moveOnPath(){
         if(path.size() > 0){
@@ -171,7 +171,7 @@ public abstract class Agent implements Updatable {
     }
     
     /**
-     * Karakter áthelyezése ide.
+     * Karakter Ã¡thelyezÃ©se ide.
      * @param x
      * @param y 
      */
@@ -192,7 +192,7 @@ public abstract class Agent implements Updatable {
     }
     
     /**
-     * Épp mozog-e a karakter.
+     * Ã‰pp mozog-e a karakter.
      */
     protected void checkMove(){
         if(isMoving){
@@ -202,21 +202,21 @@ public abstract class Agent implements Updatable {
     }
     
     /**
-     * Karakter törlése.
+     * Karakter tÃ¶rlÃ©se.
      */
     protected void remove(){
         am.removeAgent(this);
     }
     
     /**
-     * Frissítjük, melyik épületben van a karakter.
+     * FrissÃ­tjÃ¼k, melyik Ã©pÃ¼letben van a karakter.
      */
     protected void updateCurBuilding(){
         currentBuilding = park.getTile(x, y).getBuilding();
     }
     
     /**
-     * Karakter frissítése az updatecycle-ben.
+     * Karakter frissÃ­tÃ©se az updatecycle-ben.
      * @param tickCount 
      */
     @Override

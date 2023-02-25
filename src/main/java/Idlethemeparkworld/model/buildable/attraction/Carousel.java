@@ -25,7 +25,7 @@ public class Carousel extends Attraction {
     }
 
     /**
-     * Körhinta fejlesztése.
+     * KÃ¶rhinta fejlesztÃ©se.
      */
     @Override
     public void innerUpgrade() {

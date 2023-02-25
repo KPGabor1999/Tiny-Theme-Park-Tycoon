@@ -19,7 +19,7 @@ public class CreditPanel extends JPanel {
     public CreditPanel() {
         setLayout(new GridLayout(3, 2));
 
-        add(new JLabel("Korom P·l G·bor"));
+        add(new JLabel("Korom P√°l G√°bor"));
         JLabel hyperlink1 = new JLabel("Personal website");
         hyperlink1.setForeground(Color.BLUE.darker());
         hyperlink1.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -34,7 +34,7 @@ public class CreditPanel extends JPanel {
             }
         });
         add(hyperlink1);
-        add(new JLabel("Schmidt Rich·rd"));
+        add(new JLabel("Schmidt Rich√°rd"));
         JLabel hyperlink2 = new JLabel("Personal website");
         hyperlink2.setForeground(Color.BLUE.darker());
         hyperlink2.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));

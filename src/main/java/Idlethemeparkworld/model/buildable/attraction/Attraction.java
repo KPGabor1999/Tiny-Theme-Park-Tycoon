@@ -105,7 +105,7 @@ public abstract class Attraction extends Building implements Queueable, Repairab
     }
     
     /**
-     * Maximum hány ember tartózkodhat a parkban?
+     * Maximum hÃ¡ny ember tartÃ³zkodhat a parkban?
      * @return 
      */
     @Override
@@ -126,7 +126,7 @@ public abstract class Attraction extends Building implements Queueable, Repairab
     }
 
     /**
-     * Attrakció elindítása.
+     * AttrakciÃ³ elindÃ­tÃ¡sa.
      */
     private void start() {
         status = BuildingStatus.RUNNING;
@@ -148,7 +148,7 @@ public abstract class Attraction extends Building implements Queueable, Repairab
     }
     
     /**
-     * Attrakció leállítása.
+     * AttrakciÃ³ leÃ¡llÃ­tÃ¡sa.
      */
     private void finish() {
         Range r = new Range((int) Math.floor(getFun() * 0.9 * condition / 100), getFun());
@@ -168,7 +168,7 @@ public abstract class Attraction extends Building implements Queueable, Repairab
     }
 
     /**
-     * Sorban váró látogatók beültetése az attrakcióba.
+     * Sorban vÃ¡rÃ³ lÃ¡togatÃ³k beÃ¼ltetÃ©se az attrakciÃ³ba.
      */
     private void loadVisitors() {
         while (!queue.isEmpty() && onRide.size() < capacity) {
@@ -179,7 +179,7 @@ public abstract class Attraction extends Building implements Queueable, Repairab
     }
 
     /**
-     * Bátogató betétele a sorba.
+     * LÃ¡togatÃ³ betÃ©tele a sorba.
      * @param v 
      */
     @Override
@@ -188,7 +188,7 @@ public abstract class Attraction extends Building implements Queueable, Repairab
     }
 
     /**
-     * Látogató kivétele a sorból.
+     * LÃ¡togatÃ³ kivÃ©tele a sorbÃ³l.
      * @param v 
      */
     @Override
@@ -197,7 +197,7 @@ public abstract class Attraction extends Building implements Queueable, Repairab
     }
 
     /**
-     * Adott látogató a sor elején áll?
+     * Adott lÃ¡togatÃ³ a sor elejÃ©n Ã¡ll?
      * @param v
      * @return 
      */
@@ -207,7 +207,7 @@ public abstract class Attraction extends Building implements Queueable, Repairab
     }
 
     /**
-     * Mûködik-e az attrakció?
+     * MÅ±kÃ¶dik-e az attrakciÃ³?
      * @return 
      */
     @Override
@@ -216,7 +216,7 @@ public abstract class Attraction extends Building implements Queueable, Repairab
     }
     
     /**
-     * Attrakció állapotának romlása.
+     * AttrakciÃ³ Ã¡llapotÃ¡nak romlÃ¡sa.
      * @param amount 
      */
     private void changeCondition(double amount) {
@@ -236,7 +236,7 @@ public abstract class Attraction extends Building implements Queueable, Repairab
     }
 
     /**
-     * Attrakció állapotának frissítése.
+     * AttrakciÃ³ Ã¡llapotÃ¡nak frissÃ­tÃ©se.
      */
     private void updateCondition() {
         switch (status) {
@@ -258,7 +258,7 @@ public abstract class Attraction extends Building implements Queueable, Repairab
     }
 
     /**
-     * Attrakció állapotának beállítása manuálisan.
+     * AttrakciÃ³ Ã¡llapotÃ¡nak beÃ¡llÃ­tÃ¡sa manuÃ¡lisan.
      * @param status 
      */
     @Override
@@ -272,7 +272,7 @@ public abstract class Attraction extends Building implements Queueable, Repairab
     }
 
     /**
-     * Attrakció frissítése az updatecycle-ben.
+     * AttrakciÃ³ frissÃ­tÃ©se az updatecycle-ben.
      * @param tickCount 
      */
     @Override

@@ -96,7 +96,7 @@ public abstract class FoodStall extends Building implements Queueable, Repairabl
     }
     
     /**
-     * Javításra szorul-e a büfé?
+     * JavÃ­tÃ¡sra szorul-e a bÃ¼fÃ©?
      * @return 
      */
     @Override
@@ -105,7 +105,7 @@ public abstract class FoodStall extends Building implements Queueable, Repairabl
     }
 
     /**
-     * Büfé adatainak összegyûjtése (ezeket írjuk ki a párbeszédablakba).
+     * BÃ¼fÃ© adatainak Ã¶sszegyÅ±jtÃ©se (ezeket Ã­rjuk ki a pÃ¡rbeszÃ©dablakba).
      * @return 
      */
     @Override
@@ -123,7 +123,7 @@ public abstract class FoodStall extends Building implements Queueable, Repairabl
     //Methods for managing visitors:
     
     /**
-     * Látogató betétele a sorba.
+     * LÃ¡togatÃ³ betÃ©tele a sorba.
      * @param visitor 
      */
     @Override
@@ -132,7 +132,7 @@ public abstract class FoodStall extends Building implements Queueable, Repairabl
     }
 
     /**
-     * Az adott látogató a sor elején áll?
+     * Az adott lÃ¡togatÃ³ a sor elejÃ©n Ã¡ll?
      * @param visitor
      * @return 
      */
@@ -142,7 +142,7 @@ public abstract class FoodStall extends Building implements Queueable, Repairabl
     }
 
     /**
-     * Az adott látogató kiállítása a sorból.
+     * Az adott lÃ¡togatÃ³ kiÃ¡llÃ­tÃ¡sa a sorbÃ³l.
      * @param visitor 
      */
     @Override
@@ -151,7 +151,7 @@ public abstract class FoodStall extends Building implements Queueable, Repairabl
     }
 
     /**
-     * Üzemel-e a büfé.
+     * Ãœzemel-e a bÃ¼fÃ©.
      * @return 
      */
     @Override
@@ -172,7 +172,7 @@ public abstract class FoodStall extends Building implements Queueable, Repairabl
     }
 
     /**
-     * Az adott látogató telt vesz.
+     * Az adott lÃ¡togatÃ³ telt vesz.
      * @param visitor
      * @return 
      */
@@ -194,7 +194,7 @@ public abstract class FoodStall extends Building implements Queueable, Repairabl
     }
     
     /**
-     * Büfé állapotromlása.
+     * BÃ¼fÃ© Ã¡llapotromlÃ¡sa.
      * @param amount 
      */
     private void changeCondition(double amount) {
@@ -214,7 +214,7 @@ public abstract class FoodStall extends Building implements Queueable, Repairabl
     }
 
     /**
-     * Büfé állapotának frissítése.
+     * BÃ¼fÃ© Ã¡llapotÃ¡nak frissÃ­tÃ©se.
      */
     private void updateCondition() {
         switch (status) {
@@ -236,7 +236,7 @@ public abstract class FoodStall extends Building implements Queueable, Repairabl
     }
 
     /**
-     * Büfé állapotának átállítása manuálisan.
+     * BÃ¼fÃ© Ã¡llapotÃ¡nak Ã¡tÃ¡llÃ­tÃ¡sa manuÃ¡lisan.
      * @param status 
      */
     @Override
@@ -249,7 +249,7 @@ public abstract class FoodStall extends Building implements Queueable, Repairabl
     }
 
     /**
-     * Büfé frissítése az updatecycle-ban.
+     * BÃ¼fÃ© frissÃ­tÃ©se az updatecycle-ban.
      * @param tickCount 
      */
     @Override

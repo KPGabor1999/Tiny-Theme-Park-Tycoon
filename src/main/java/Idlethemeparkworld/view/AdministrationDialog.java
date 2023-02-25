@@ -78,7 +78,7 @@ public class AdministrationDialog extends JDialog {
             });
             this.getContentPane().setLayout(new BoxLayout(this.getContentPane(), Y_AXIS));
 
-            //BelÈpı
+            //Bel√©p≈ë
             entryPriceSettingPanel = new JPanel(new GridLayout(1, 2));
             this.getContentPane().add(entryPriceSettingPanel);
             ticketPriceLabel = new JLabel("Entry fee:");
@@ -91,7 +91,7 @@ public class AdministrationDialog extends JDialog {
             entryPriceSettingPanel.add(ticketPriceLabel);
             entryPriceSettingPanel.add(ticketPriceSlider);
 
-            //…telek
+            //√âtelek
             foodPricesLabel = new JLabel("Food prices");
             foodPricesLabel.setAlignmentX(CENTER_ALIGNMENT);
             foodPricesLabel.setBorder(new EmptyBorder(5, 0, 5, 0));
@@ -100,7 +100,7 @@ public class AdministrationDialog extends JDialog {
             foodPriceSettingsPanel = new JPanel(new GridLayout(4, 2));
             this.getContentPane().add(foodPriceSettingsPanel);
 
-            //JÈgkrÈmes
+            //J√©gkr√©mes
             iceCreamPriceLabel = new JLabel("Ice cream prices:");
             iceCreamPriceLabel.setBorder(new EmptyBorder(3, 0, 3, 0));
             foodPriceSettingsPanel.add(iceCreamPriceLabel);
@@ -190,7 +190,7 @@ public class AdministrationDialog extends JDialog {
                 });
             }
 
-            //AttrakciÛk
+            //Attrakci√≥k
             ticketPricesLabel = new JLabel("Activity prices");
             ticketPricesLabel.setAlignmentX(CENTER_ALIGNMENT);
             ticketPricesLabel.setBorder(new EmptyBorder(5, 0, 5, 0));
@@ -388,7 +388,7 @@ public class AdministrationDialog extends JDialog {
             janitorNumberSlider.addChangeListener(new ChangeListener() {
                 @Override
                 public void stateChanged(ChangeEvent event) {
-                    //A be·llÌtott ÈrtÈk alapj·n menedzselj¸k a takarÌtÛk list·j·t.
+                    //A be√°ll√≠tott √©rt√©k alapj√°n menedzselj√ºk a takar√≠t√≥k list√°j√°t.
                     JSlider slider = (JSlider) event.getSource();
                     if (!slider.getValueIsAdjusting()) {
                         int numberOfJanitors = slider.getValue();
@@ -402,7 +402,7 @@ public class AdministrationDialog extends JDialog {
             maintainerNumberSlider.addChangeListener(new ChangeListener() {
                 @Override
                 public void stateChanged(ChangeEvent event) {
-                    //A be·llÌtott ÈrtÈk alapj·n menedzselj¸k a takarÌtÛk list·j·t.
+                    //A be√°ll√≠tott √©rt√©k alapj√°n menedzselj√ºk a takar√≠t√≥k list√°j√°t.
                     JSlider slider = (JSlider) event.getSource();
                     if (!slider.getValueIsAdjusting()) {
                         int numberOfMaintainers = slider.getValue();

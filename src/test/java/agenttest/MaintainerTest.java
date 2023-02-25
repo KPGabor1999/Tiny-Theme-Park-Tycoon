@@ -32,58 +32,58 @@ public class MaintainerTest {
     
     @Before
     public void initPark(){
-        //Inicializ·lj egy parkot.
+        //Inicializ√°lj egy parkot.
         park = new Park(1,1,null);
-        //Oda rakd le a karbantartÛt.
+        //Oda rakd le a karbantart√≥t.
         maintainer = new Maintainer(null, park, null);
     }
     
     public void correctLifeCycle(){
-        //Update-eld, amÌg j·rk·lni nem kezd: ENTERINGPARK -> IDLE -> WANDERING
+        //Update-eld, am√≠g j√°rk√°lni nem kezd: ENTERINGPARK -> IDLE -> WANDERING
         assertEquals(ENTERINGPARK, maintainer.getState());
         maintainer.update(0);
         assertEquals(IDLE, maintainer.getState());
         maintainer.update(0);
         assertEquals(WANDERING, maintainer.getState());
-        //MegjavÌtja a kˆrhint·t?
+        //Megjav√≠tja a k√∂rhint√°t?
         park.build(BuildType.CAROUSEL, 0, 0, true);
         currentBuilding = park.getTile(0,0).getBuilding();
         ((Attraction)currentBuilding).setCondition(0);
         maintainer.update(0);
-        assertEquals(FIXING, maintainer.getState());    //…szreveszi, hogy az attrakciÛ javÌt·sra szorul.
-        maintainer.update(0);                           //MegjavÌtja.
+        assertEquals(FIXING, maintainer.getState());    //√âszreveszi, hogy az attrakci√≥ jav√≠t√°sra szorul.
+        maintainer.update(0);                           //Megjav√≠tja.
         assertEquals(0, (int)((Carousel)currentBuilding).getCondition());
-        //MegjavÌtja az Ûri·skereket?
+        //Megjav√≠tja az √≥ri√°skereket?
         park.build(BuildType.FERRISWHEEL, 0, 0, true);
         currentBuilding = park.getTile(0,0).getBuilding();
         ((Attraction)currentBuilding).setCondition(0);
         maintainer.update(0);
         maintainer.update(0);
         assertEquals(0, (int)((FerrisWheel)currentBuilding).getCondition());
-        //MegjavÌtja a rÈmsÈgek h·z·t?
+        //Megjav√≠tja a r√©ms√©gek h√°z√°t?
         park.build(BuildType.HAUNTEDMANSION, 0, 0, true);
         currentBuilding = park.getTile(0,0).getBuilding();
         ((Attraction)currentBuilding).setCondition(0);
         maintainer.update(0);
         maintainer.update(0);
         assertEquals(0, (int)((HauntedMansion)currentBuilding).getCondition());
-        //MegjavÌtja a hull·mvasutat?
+        //Megjav√≠tja a hull√°mvasutat?
         park.build(BuildType.ROLLERCOASTER, 0, 0, true);
         currentBuilding = park.getTile(0,0).getBuilding();
         ((Attraction)currentBuilding).setCondition(0);
         maintainer.update(0);
         maintainer.update(0);
         assertEquals(0, (int)((RollerCoaster)currentBuilding).getCondition());
-        //MegjavÌtja a hajÛhint·t?
+        //Megjav√≠tja a haj√≥hint√°t?
         park.build(BuildType.SWINGINGSHIP, 0, 0, true);
         currentBuilding = park.getTile(0,0).getBuilding();
         ((Attraction)currentBuilding).setCondition(0);
         maintainer.update(0);
         maintainer.update(0);
         assertEquals(0, (int)((SwingingShip)currentBuilding).getCondition());
-        //Ellenırizd, hogy a javÌt·sok ut·n vissza·ll-e WANDERING-be.
+        //Ellen≈ërizd, hogy a jav√≠t√°sok ut√°n vissza√°ll-e WANDERING-be.
         assertEquals(WANDERING, maintainer.getState());
     }
     
-    //Tesztelj¸k minden attrakciÛra?
+    //Tesztelj√ºk minden attrakci√≥ra?
 }

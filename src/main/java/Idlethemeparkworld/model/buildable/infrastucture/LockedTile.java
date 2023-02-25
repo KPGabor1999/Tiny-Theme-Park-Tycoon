@@ -23,7 +23,7 @@ public class LockedTile extends Infrastructure {
     }
     
     /**
-     * Ez nem tesz hozz· a parban lÈvı embrek sz·m·hoz.
+     * Ez nem tesz hozz√° a parban l√©v≈ë emberek sz√°m√°hoz.
      * @return 
      */
     @Override

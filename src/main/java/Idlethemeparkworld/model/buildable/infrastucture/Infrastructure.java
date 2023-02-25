@@ -24,7 +24,7 @@ public abstract class Infrastructure extends Building {
     }
 
     /**
-     * Szemetelés az adott mezõn.
+     * SzemetelÃ©s az adott mezÅ‘n.
      * @param amount 
      */
     public void litter(double amount) {
@@ -35,7 +35,7 @@ public abstract class Infrastructure extends Building {
     }
     
     /**
-     * Ráfér-e az épületre a takarítás?
+     * RÃ¡fÃ©r-e az Ã©pÃ¼letre a takarÃ­tÃ¡s?
      * @return 
      */
     public boolean shouldClean() {
@@ -43,7 +43,7 @@ public abstract class Infrastructure extends Building {
     }
 
     /**
-     * Épület felsöprése.
+     * Ã‰pÃ¼let felsÃ¶prÃ©se.
      * @param amount 
      */
     public void sweep(double amount) {
@@ -52,7 +52,7 @@ public abstract class Infrastructure extends Building {
     }
 
     /**
-     * Épület adatainak lekérése (ezeket írjuk ki a párbaszédablakba).
+     * Ã‰pÃ¼let adatainak lekÃ©rÃ©se (ezeket Ã­rjuk ki a pÃ¡rbaszÃ©dablakba).
      * @return 
      */
     @Override

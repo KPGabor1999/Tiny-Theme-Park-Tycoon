@@ -31,7 +31,7 @@ public class Statistics implements Updatable {
     }
     
     /**
-     * Eddigi játékstatisztikák törlése.
+     * Eddigi jÃ¡tÃ©kstatisztikÃ¡k tÃ¶rlÃ©se.
      */
     public void reset(){
         times.clear();
@@ -41,7 +41,7 @@ public class Statistics implements Updatable {
     }
 
     /**
-     * Valamelyik adat statisztikáinak lekérése.
+     * Valamelyik adat statisztikÃ¡inak lekÃ©rÃ©se.
      * @param <T>
      * @param list
      * @return 
@@ -55,7 +55,7 @@ public class Statistics implements Updatable {
     }
 
     /**
-     * Park értékelési elõzmények lekérése.
+     * Park Ã©rtÃ©kelÃ©si elÅ‘zmÃ©nyek lekÃ©rÃ©se.
      * @return 
      */
     public ArrayList<Pair<String, Double>> getRatingHistory() {
@@ -63,7 +63,7 @@ public class Statistics implements Updatable {
     }
 
     /**
-     * Park boldogságszint elõzményeinek lekérése.
+     * Park boldogsÃ¡gszint elÅ‘zmÃ©nyeinek lekÃ©rÃ©se.
      * @return 
      */
     public ArrayList<Pair<String, Double>> getHappinessHistory() {
@@ -71,7 +71,7 @@ public class Statistics implements Updatable {
     }
     
     /**
-     * Látogatók számának elõzményeinek lekérése.
+     * LÃ¡togatÃ³k szÃ¡mÃ¡nak elÅ‘zmÃ©nyeinek lekÃ©rÃ©se.
      * @return 
      */
     public ArrayList<Pair<String, Double>> getVisitorCountHistory() {
@@ -79,7 +79,7 @@ public class Statistics implements Updatable {
     }
     
     /**
-     * Látogatók jelenlegi akcióinak lekérése (az egyik tortadiagramhoz).
+     * LÃ¡togatÃ³k jelenlegi akciÃ³inak lekÃ©rÃ©se (az egyik tortadiagramhoz).
      * @return 
      */
     public ArrayList<Pair<String, Double>> getVisitorAction() {
@@ -124,7 +124,7 @@ public class Statistics implements Updatable {
     }
 
     /**
-     * Látogatók jelenlegi állapotainak lekérése (szintén tortadiagrammhoz).
+     * LÃ¡togatÃ³k jelenlegi Ã¡llapotainak lekÃ©rÃ©se (szintÃ©n tortadiagrammhoz).
      * @return 
      */
     public ArrayList<Pair<String, Double>> getVisitorState() {
@@ -183,7 +183,7 @@ public class Statistics implements Updatable {
     }
 
     /**
-     * Jelenlegi épülettípusok lekérése (tortadiagramhoz).
+     * Jelenlegi Ã©pÃ¼lettÃ­pusok lekÃ©rÃ©se (tortadiagramhoz).
      * @return 
      */
     public ArrayList<Pair<String, Double>> getBuildType() {
@@ -209,7 +209,7 @@ public class Statistics implements Updatable {
     }
 
     /**
-     * Elõzménystatisztikai érték beszúrása a megfelelõ listába.
+     * ElÅ‘zmÃ©nystatisztikai Ã©rtÃ©k beszÃºrÃ¡sa a megfelelÅ‘ listÃ¡ba.
      * @param <T>
      * @param list
      * @param value 
@@ -222,7 +222,7 @@ public class Statistics implements Updatable {
     }
 
     /**
-     * Elõzménystatisztikák frissítése minden attribútumra.
+     * ElÅ‘zmÃ©nystatisztikÃ¡k frissÃ­tÃ©se minden attribÃºtumra.
      */
     private void updateHistories() {
         insertHistory(times, gm.getTime().toStringShort());
@@ -232,7 +232,7 @@ public class Statistics implements Updatable {
     }
 
     /**
-     * Elõzménystatisztikák frissítése az udatecycle-ben.
+     * ElÅ‘zmÃ©nystatisztikÃ¡k frissÃ­tÃ©se az udatecycle-ben.
      * @param tickCount 
      */
     @Override

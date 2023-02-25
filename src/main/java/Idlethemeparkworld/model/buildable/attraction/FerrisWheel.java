@@ -24,7 +24,7 @@ public class FerrisWheel extends Attraction {
     }
 
     /**
-     * Óriáskerék fejlesztése.
+     * Ã“riÃ¡skerÃ©k fejlesztÃ©se.
      */
     @Override
     public void innerUpgrade() {

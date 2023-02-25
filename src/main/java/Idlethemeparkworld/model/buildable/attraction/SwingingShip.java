@@ -24,7 +24,7 @@ public class SwingingShip extends Attraction {
     }
 
     /**
-     * Hajóhinta frissítése.
+     * HajÃ³hinta frissÃ­tÃ©se.
      */
     @Override
     public void innerUpgrade() {

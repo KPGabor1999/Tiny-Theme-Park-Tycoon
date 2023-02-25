@@ -21,16 +21,16 @@ public class ToiletTest {
     
     @Test
     public void correctQueueManagement(){
-        //LÈtrehozunk egy parkot, egy mosdÛt Ès egy l·togatÛt.
+        //L√©trehozunk egy parkot, egy mosd√≥t √©s egy l√°togat√≥t.
         park = new Park(1, 1, null);
         toilet = new Toilet(0, 0, null);
         visitor = new Visitor(null, 100, park, null);
-        //A l·togatÛ be·ll a sorba.
+        //A l√°togat√≥ be√°ll a sorba.
         toilet.joinQueue(visitor);
         assertEquals(1, toilet.getQueueLength());
-        //’ az elsı a sorban.
+        //≈ê az els≈ë a sorban.
         assertTrue(toilet.isFirstInQueue(visitor));
-        //VÈg¸l elhagyja a sort.
+        //V√©g√ºl elhagyja a sort.
         toilet.leaveQueue(visitor);
         assertEquals(0, toilet.getQueueLength());
     }

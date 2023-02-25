@@ -59,7 +59,7 @@ public class Finance implements Updatable {
     }
 
     /**
-     * Kezdõtõke beállítása és elkezdimérni a statisztikákat.
+     * KezdÅ‘tÅ‘ke beÃ¡llÃ­tÃ¡sa Ã©s elkezdi mÃ©rni a statisztikÃ¡kat.
      */
     public void init() {
         this.funds = initialFunds;
@@ -73,7 +73,7 @@ public class Finance implements Updatable {
     }
     
     /**
-     * Eddigi pénzügyi statisztikák törlése.
+     * Eddigi pÃ©nzÃ¼gyi statisztikÃ¡k tÃ¶rlÃ©se.
      */
     public void resetFinanceData(){
         for (FinanceType type : FinanceType.values()) {
@@ -82,7 +82,7 @@ public class Finance implements Updatable {
     }
     
     /**
-     * Eddigi pénzügyi statisztikák lekérése.
+     * Eddigi pÃ©nzÃ¼gyi statisztikÃ¡k lekÃ©rÃ©se.
      * @return 
      */
     public HashMap<FinanceType, Integer> getFinanceData(){
@@ -90,7 +90,7 @@ public class Finance implements Updatable {
     }
 
     /**
-     * Van-e elég pénzed a vásárlás összegéhez?
+     * Van-e elÃ©g pÃ©nzed a vÃ¡sÃ¡rlÃ¡s Ã¶sszegÃ©hez?
      * @param cost
      * @return 
      */
@@ -99,7 +99,7 @@ public class Finance implements Updatable {
     }
 
     /**
-     * Pénz fizetése.
+     * PÃ©nz fizetÃ©se.
      * @param cost
      * @param type 
      */
@@ -109,7 +109,7 @@ public class Finance implements Updatable {
     }
 
     /**
-     * Pénz megkeresése.
+     * PÃ©nz megkeresÃ©se.
      * @param amount
      * @param type 
      */
@@ -119,7 +119,7 @@ public class Finance implements Updatable {
     }
     
     /**
-     * Eddigi pénzügyi statisztikák lekérése szövegesen.
+     * Eddigi pÃ©nzÃ¼gyi statisztikÃ¡k lekÃ©rÃ©se szÃ¶vegesen.
      * @return 
      */
     public String getFinancialDataString(){

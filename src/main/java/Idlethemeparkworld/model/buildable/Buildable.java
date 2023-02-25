@@ -31,7 +31,7 @@ public abstract class Buildable implements Updatable {
     }
 
     /**
-     * Frissítéskor minden épület után levonódik a fenntartási költsége.
+     * FrissÃ­tÃ©skor minden Ã©pÃ¼let utÃ¡n levonÃ³dik a fenntartÃ¡si kÃ¶ltsÃ©ge.
      * @param tickCount 
      */
     @Override

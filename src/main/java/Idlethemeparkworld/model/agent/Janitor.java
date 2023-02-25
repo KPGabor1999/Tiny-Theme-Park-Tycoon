@@ -33,7 +33,7 @@ public class Janitor extends Agent implements Updatable {
     }
 
     /**
-     * Takarító frissítése az updatecycle-ben.
+     * TakarÃ­tÃ³ frissÃ­tÃ©se az updatecycle-ben.
      * @param tickCount 
      */
     @Override
@@ -49,7 +49,7 @@ public class Janitor extends Agent implements Updatable {
     }
     
     /**
-     * Új teendõ kijelölése a takarítónak.
+     * Ãšj teendÅ‘ kijelÃ¶lÃ©se a takarÃ­tÃ³nak.
      * @param action 
      */
     private static void addAction(AgentAction action) {
@@ -59,7 +59,7 @@ public class Janitor extends Agent implements Updatable {
     }
     
     /**
-     * Felhívjuk egy takarító figyelmét arra, hogy egy épület sürgõsen takarításra szorul.
+     * FelhÃ­vjuk egy takarÃ­tÃ³ figyelmÃ©t arra, hogy egy Ã©pÃ¼let sÃ¼rgÅ‘sen takarÃ­tÃ¡sra szorul.
      * @param building 
      */
     public static void alertOfCriticalBuilding(Building building){
@@ -67,7 +67,7 @@ public class Janitor extends Agent implements Updatable {
     }
     
     /**
-     * Cselekvés a teendõlista szerint.
+     * CselekvÃ©s a teendÅ‘lista szerint.
      */
     private void checkActionQueue(){
         if(actionQueue.isEmpty()){
@@ -85,7 +85,7 @@ public class Janitor extends Agent implements Updatable {
     }
 
     /**
-     * Takarító állapotának frissítése.
+     * TakarÃ­tÃ³ Ã¡llapotÃ¡nak frissÃ­tÃ©se.
      */
     private void updateState() {
         switch (state) {
@@ -129,7 +129,7 @@ public class Janitor extends Agent implements Updatable {
     }
 
     /**
-     * Átlépés egy véletlen szomszédos mezõre, ami nem fû vagy lezárt mezõ.
+     * ÃtlÃ©pÃ©s egy vÃ©letlen szomszÃ©dos mezÅ‘re, ami nem fÅ± vagy lezÃ¡rt mezÅ‘.
      */
     private void moveToRandomNeighbourTile() {
         ArrayList<Building> neighbours = park.getInfrastructureNeighbours(x, y);
@@ -141,7 +141,7 @@ public class Janitor extends Agent implements Updatable {
     }
 
     /**
-     * Infrastrukturális elem kitakarítása.
+     * InfrastrukturÃ¡lis elem kitakarÃ­tÃ¡sa.
      * @param currentBuilding 
      */
     private void clean(Building currentBuilding) {

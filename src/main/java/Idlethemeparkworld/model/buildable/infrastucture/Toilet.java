@@ -46,7 +46,7 @@ public class Toilet extends Infrastructure implements Queueable {
     }
 
     /**
-     * Járda adatainak lekérése (ezt írjuk ki a párbeszédablakba).
+     * JÃ¡rda adatainak lekÃ©rÃ©se (ezt Ã­rjuk ki a pÃ¡rbeszÃ©dablakba).
      * @return 
      */
     @Override
@@ -59,7 +59,7 @@ public class Toilet extends Infrastructure implements Queueable {
     }
 
     /**
-     * Látogató beállítása a sorba.
+     * LÃ¡togatÃ³ beÃ¡llÃ­tÃ¡sa a sorba.
      * @param visitor 
      */
     @Override
@@ -68,7 +68,7 @@ public class Toilet extends Infrastructure implements Queueable {
     }
 
     /**
-     * Látogató a sor elején áll?
+     * LÃ¡togatÃ³ a sor elejÃ©n Ã¼l?
      * @param visitor
      * @return 
      */
@@ -78,7 +78,7 @@ public class Toilet extends Infrastructure implements Queueable {
     }
 
     /**
-     * Látogató elhagyja a sort.
+     * LÃ¡togatÃ³ elhagyja a sort.
      * @param visitor 
      */
     @Override
@@ -87,7 +87,7 @@ public class Toilet extends Infrastructure implements Queueable {
     }
     
     /**
-     * Mûködik a mosdó?
+     * MÅ±kÃ¶dik a mosdÃ³?
      * @return 
      */
     @Override
@@ -96,7 +96,7 @@ public class Toilet extends Infrastructure implements Queueable {
     }
 
     /**
-     * Látogató belép a mosdóba.
+     * LÃ¡togatÃ³ belÃ©p a mosdÃ³ba.
      * @param visitor 
      */
     public void enter(Visitor visitor) {
@@ -105,14 +105,14 @@ public class Toilet extends Infrastructure implements Queueable {
     }
 
     /**
-     * Felszabadul egy hely a mosdóban.
+     * Felszabadul egy hely a mosdÃ³ban.
      */
     public void exit() {
         occupied--;
     }
 
     /**
-     * Romlik a mosdó tisztasága.
+     * Romlik a mosdÃ³ tisztasÃ¡ga.
      * @param amount 
      */
     public void decreaseHygiene(double amount) {
@@ -128,7 +128,7 @@ public class Toilet extends Infrastructure implements Queueable {
     }
 
     /**
-     * Takarításra szorul a mosdó?
+     * TakarÃ­tÃ¡sra szorul a mosdÃ³?
      * @return 
      */
     @Override
@@ -137,7 +137,7 @@ public class Toilet extends Infrastructure implements Queueable {
     }
     
     /**
-     * Mósdó tisztítása.
+     * MosdÃ³ tisztÃ­tÃ¡sa.
      * @param amount 
      */
     public void clean(int amount) {

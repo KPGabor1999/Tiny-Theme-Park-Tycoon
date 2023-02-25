@@ -21,7 +21,7 @@ public class Pavement extends Infrastructure {
     }
 
     /**
-     * Egy járdaelem +1 ember jelenlétét engedélyezi a parkban.
+     * Egy jÃ¡rdaelem +1 ember jelenlÃ©tÃ©t engedÃ©lyezi a parkban.
      * @return 
      */
     @Override
@@ -30,7 +30,7 @@ public class Pavement extends Infrastructure {
     }
 
     /**
-     * Járda adatainak lekérése (ezt írjuk ki a párbeszédablakba).
+     * JÃ¡rda adatainak lekÃ©rÃ©se (ezt Ã­rjuk ki a pÃ¡rbeszÃ©dablakba).
      * @return 
      */
     @Override

@@ -24,7 +24,7 @@ public class RollerCoaster extends Attraction {
     }
 
     /**
-     * Hullámvasút frissítése.
+     * HullÃ¡mvasÃºt frissÃ­tÃ©se.
      */
     @Override
     public void innerUpgrade() {

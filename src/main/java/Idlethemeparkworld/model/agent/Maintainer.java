@@ -33,7 +33,7 @@ public class Maintainer extends Agent {
     }
     
     /**
-     * Karbantartó frissítése az updatecycle-ben.
+     * KarbantartÃ³ frissÃ­tÃ©se az updatecycle-ben.
      * @param tickCount 
      */
     @Override
@@ -49,7 +49,7 @@ public class Maintainer extends Agent {
     }
     
     /**
-     * Új teendõ kijelölése a karbantartónak.
+     * Ãšj teendÅ‘ kijelÃ¶lÃ©se a karbantartÃ³nak.
      * @param action 
      */
     private static void addAction(AgentAction action) {
@@ -59,7 +59,7 @@ public class Maintainer extends Agent {
     }
     
     /**
-     * Felhívjuk egy karbantartó figyelmét arra, hogy egy épület sürgõsen takarításra szorul.
+     * FelhÃ­vjuk egy karbantartÃ³ figyelmÃ©t arra, hogy egy Ã©pÃ¼let sÃ¼rgÅ‘sen takarÃ­tÃ¡sra szorul.
      * @param building 
      */
     public static void alertOfCriticalBuilding(Building building){
@@ -67,7 +67,7 @@ public class Maintainer extends Agent {
     }
     
     /**
-     * Cselekvés a teendõlista szerint.
+     * CselekvÃ©s a teendÅ‘lista szerint.
      */
     private void checkActionQueue(){
         if(actionQueue.isEmpty()){
@@ -85,7 +85,7 @@ public class Maintainer extends Agent {
     }
 
     /**
-     * Karbantartó állapotának frissítése.
+     * KarbantartÅ‘ Ã¡llapotÃ¡nak frissÃ­tÃ©se.
      */
     private void updateState() {
         switch (state) {
@@ -146,7 +146,7 @@ public class Maintainer extends Agent {
     }
 
     /**
-     * Átlépés egy véletlen szomszédos mezõre, ami nem fû vagy lezárt mezõ.
+     * ÃtlÃ©pÃ©s egy vÃ©letlen szomszÃ©dos mezÅ‘re, ami nem fÅ± vagy lezÃ¡rt mezÅ‘.
      */
     private void moveToRandomNeighbourPavementTile() {
         ArrayList<Building> neighbours = park.getPavementNeighbours(x, y);
@@ -158,7 +158,7 @@ public class Maintainer extends Agent {
     }
 
     /**
-     * Attrakció vagy büfé megjavítása.
+     * AttrakciÃ³ vagy bÃ¼fÃ© megjavÃ­tÃ¡sa.
      * @param currentBuilding 
      */
     private void repair(Building currentBuilding) {

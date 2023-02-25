@@ -84,7 +84,7 @@ public abstract class Building extends Buildable {
     }
 
     /**
-     * Épület fejlesztése.
+     * Ã‰pÃ¼let fejlesztÃ©se.
      */
     public void upgrade() {
         if (canUpgrade()) {

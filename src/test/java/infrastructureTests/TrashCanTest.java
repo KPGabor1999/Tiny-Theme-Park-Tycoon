@@ -17,12 +17,12 @@ public class TrashCanTest {
     
     @Test
     public void corectUseOfTrashCan(){
-        //Hozz létre egy üres szemeteskukát.
+        //Hozz lÃ©tre egy Ã¼res szemeteskukÃ¡t.
         trashCan = new TrashCan(0,0,null);
-        //Tedd tele szeméttel.
+        //Tedd tele szemÃ©ttel.
         trashCan.use(trashCan.getCapacity());
         assertTrue(trashCan.isFull());
-        //Nem lehet túltölteni.
+        //Nem lehet tÃºltÃ¶lteni.
         trashCan.use(trashCan.getCapacity());
         assertEquals((int)trashCan.getCapacity(), (int)trashCan.getFilled());
     }

@@ -24,7 +24,7 @@ public class Hamburger extends FoodStall {
     }
 
     /**
-     * Hamburgerezı fejlesztÈse.
+     * Hamburgerez≈ë fejleszt√©se.
      */
     @Override
     public void innerUpgrade() {

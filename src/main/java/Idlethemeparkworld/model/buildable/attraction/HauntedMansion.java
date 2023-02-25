@@ -24,7 +24,7 @@ public class HauntedMansion extends Attraction {
     }
 
     /**
-     * Kísértetkastély frissítése.
+     * KÃ­sÃ©rtetkastÃ©ly frissÃ­tÃ©se.
      */
     @Override
     public void innerUpgrade() {

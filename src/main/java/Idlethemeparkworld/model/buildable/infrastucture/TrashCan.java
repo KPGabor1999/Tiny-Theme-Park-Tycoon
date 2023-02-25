@@ -34,7 +34,7 @@ public class TrashCan extends Infrastructure {
     }
     
     /**
-     * Ideje kiüríteni a szemetest?
+     * Ideje kiÃ¼rÃ­teni a szemetest?
      * @return 
      */
     @Override
@@ -43,7 +43,7 @@ public class TrashCan extends Infrastructure {
     }
 
     /**
-     * Szemetes adatainak lekérése (kiíratáshoz).
+     * Szemetes adatainak lekÃ©rÃ©se (kiÃ­ratÃ¡shoz).
      * @return 
      */
     @Override
@@ -56,7 +56,7 @@ public class TrashCan extends Infrastructure {
     }
 
     /**
-     * Szemetes használata.
+     * Szemetes hasznÃ¡lata.
      * @param amount 
      */
     public void use(double amount) {
@@ -81,14 +81,14 @@ public class TrashCan extends Infrastructure {
     }
 
     /**
-     * Szemetes kiürítése.
+     * Szemetes kiÃ¼rÃ­tÃ©se.
      */
     public void empty() {
         filled = 0;
     }
 
     /**
-     * Egy szemetes lerakása +5 ember tartózkodását engedélyezi a parkban.
+     * Egy szemetes lerakÃ¡sa +5 ember tartÃ³zkodÃ¡sÃ¡t engedÃ©lyezi a parkban.
      * @return 
      */
     @Override

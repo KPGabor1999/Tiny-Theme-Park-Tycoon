@@ -24,7 +24,7 @@ public class IceCream extends FoodStall {
     }
 
     /**
-     * Fagyizó fejlesztése.
+     * FagyizÃ³ fejlesztÃ©se.
      */
     @Override
     public void innerUpgrade() {

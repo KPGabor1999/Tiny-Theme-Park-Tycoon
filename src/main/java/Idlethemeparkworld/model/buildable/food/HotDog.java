@@ -22,7 +22,7 @@ public class HotDog extends FoodStall {
     }
 
     /**
-     * Hotdogstand fejlesztése.
+     * Hotdogstand fejlesztÃ©se.
      */
     @Override
     public void innerUpgrade() {
